@@ -62,7 +62,7 @@ public class ShuffleboardManager {
   public void practiceChooserUpdate() {
     m_practiceMode.addOption(PracticeModeType.TUNE_HEADING_PID.toString(), PracticeModeType.TUNE_HEADING_PID);
     m_practiceMode.addOption(PracticeModeType.TUNE_MODULE_DRIVE.toString(), PracticeModeType.TUNE_MODULE_DRIVE);
-    m_practiceMode.addOption(PracticeModeType.TUNE_MODULE_TURN_ANGLE.toString(), PracticeModeType.TUNE_MODULE_TURN_ANGLE);
+    m_practiceMode.addOption(PracticeModeType.TUNE_MODULE_TURN.toString(), PracticeModeType.TUNE_MODULE_TURN);
     m_practiceMode.setDefaultOption(PracticeModeType.NONE.toString(), PracticeModeType.NONE);
   }
 

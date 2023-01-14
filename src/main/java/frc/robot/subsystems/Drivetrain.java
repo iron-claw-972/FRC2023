@@ -127,7 +127,7 @@ public class Drivetrain extends SubsystemBase {
     } else if (Robot.shuffleboard.getPracticeModeType() == PracticeModeType.TUNE_MODULE_DRIVE) {
       testDriveVel();
       return;
-    } else if (Robot.shuffleboard.getPracticeModeType() == PracticeModeType.TUNE_MODULE_TURN_ANGLE){
+    } else if (Robot.shuffleboard.getPracticeModeType() == PracticeModeType.TUNE_MODULE_TURN){
       testTurnAngle();
       return;
     }
@@ -160,10 +160,10 @@ public class Drivetrain extends SubsystemBase {
   private void testDriveVel() {
     double value = Robot.shuffleboard.getRequestedVelocity();
     m_swerveModuleStates = new SwerveModuleState[] {
-      new SwerveModuleState(-value, new Rotation2d(Units.degreesToRadians(-45))),
+      new SwerveModuleState(value, new Rotation2d(Units.degreesToRadians(135))),
       new SwerveModuleState(value, new Rotation2d(Units.degreesToRadians(45))),
-      new SwerveModuleState(-value, new Rotation2d(Units.degreesToRadians(45))),
-      new SwerveModuleState(value, new Rotation2d(Units.degreesToRadians(-45)))
+      new SwerveModuleState(value, new Rotation2d(Units.degreesToRadians(225))),
+      new SwerveModuleState(value, new Rotation2d(Units.degreesToRadians(345)))
     };
     setModuleStates(m_swerveModuleStates);
   }
