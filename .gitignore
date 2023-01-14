@@ -160,6 +160,3 @@ bin/
 
 # Simulation GUI and other tools window save file
 *-window.json
-
-# File that has git and version data
-src/main/java/frc/robot/util/BuildData.java

@@ -14,7 +14,7 @@ import frc.robot.constants.Constants;
 
 public class PathGroupLoader{
 
-  private static HashMap<String, ArrayList<PathPlannerTrajectory>> pathGroups = new HashMap<String, ArrayList<PathPlannerTrajectory>>();
+  private static HashMap<String, ArrayList<PathPlannerTrajectory>> pathGroups = new HashMap<>();
 
   public static void loadPathGroups() {
     double totalTime = 0;
@@ -24,7 +24,7 @@ public class PathGroupLoader{
         if (file.isFile() && file.getName().indexOf(".") != -1) {
           long startTime = System.nanoTime();
           String name = file.getName().substring(0, file.getName().indexOf("."));
-          pathGroups.put(name, PathPlanner.loadPathGroup(name, new PathConstraints(Constants.auto.kMaxAutoSpeed, Constants.auto.kMaxAutoAccel)));
+          pathGroups.put(name, new ArrayList<>(PathPlanner.loadPathGroup(name, new PathConstraints(Constants.auto.kMaxAutoSpeed, Constants.auto.kMaxAutoAccel))));
           double time = (System.nanoTime() - startTime) / 1000000.0;
           totalTime += time;
           System.out.println("Processed file: " + file.getName() + ", took " + time + " milliseconds.");
@@ -42,8 +42,10 @@ public class PathGroupLoader{
 
   public static ArrayList<PathPlannerTrajectory> getPathGroup(String pathGroupName) {
     if (pathGroups.get(pathGroupName) == null) {
-      System.out.println("Error retrieving " + pathGroupName + " path!");
+      System.out.println("Error retriving " + pathGroupName + " path!");
     }
     return pathGroups.get(pathGroupName);
   }
+
+
 }
