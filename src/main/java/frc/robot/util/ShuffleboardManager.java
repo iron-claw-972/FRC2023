@@ -22,6 +22,7 @@ public class ShuffleboardManager {
 
   GenericEntry m_heading = m_driveTab.add("Set Heading (-pi to pi)", 0).getEntry();
   GenericEntry m_velocity = m_swerveModulesTab.add("Set Drive Velocity", 0).getEntry();
+  GenericEntry m_turn = m_swerveModulesTab.add("Set Drive Turn", 0).getEntry();
 
   GenericEntry m_commandScheduler = m_mainTab.add("Command Scheduler", "NULL").getEntry();
 
@@ -61,6 +62,7 @@ public class ShuffleboardManager {
   public void practiceChooserUpdate() {
     m_practiceMode.addOption(PracticeModeType.TUNE_HEADING_PID.toString(), PracticeModeType.TUNE_HEADING_PID);
     m_practiceMode.addOption(PracticeModeType.TUNE_MODULE_DRIVE.toString(), PracticeModeType.TUNE_MODULE_DRIVE);
+    m_practiceMode.addOption(PracticeModeType.TUNE_MODULE_TURN_ANGLE.toString(), PracticeModeType.TUNE_MODULE_TURN_ANGLE);
     m_practiceMode.setDefaultOption(PracticeModeType.NONE.toString(), PracticeModeType.NONE);
   }
 
@@ -71,6 +73,10 @@ public class ShuffleboardManager {
   public double getRequestedVelocity() {
     return m_velocity.getDouble(0);
   }
+
+  public double getRequestedTurnAngle() {
+    return m_turn.getDouble(0);
+}
 
   public void loadCommandSchedulerShuffleboard(){
     CommandScheduler.getInstance().onCommandInitialize(command -> m_commandScheduler.setString(command.getName() + " initialized."));
