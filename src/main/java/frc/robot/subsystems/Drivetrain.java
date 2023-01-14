@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.util.PracticeModeType;
+import frc.robot.subsystems.Module;
 
 /** Represents a swerve drive style drivetrain.
  * Module IDs are:
@@ -26,13 +27,10 @@ import frc.robot.util.PracticeModeType;
 */
 public class Drivetrain extends SubsystemBase {
 
-  // public final Translation2d[] m_moduleLocations = new Translation2d[]{
-    // new Translation2d(Constants.drive.kTrackWidth / 2, Constants.drive.kTrackWidth / 2),
-    // new Translation2d(Constants.drive.kTrackWidth / 2, -Constants.drive.kTrackWidth / 2),
-    // new Translation2d(-Constants.drive.kTrackWidth / 2, Constants.drive.kTrackWidth / 2),
-    // new Translation2d(-Constants.drive.kTrackWidth / 2, -Constants.drive.kTrackWidth / 2)
-  // };
-  // public final SwerveModulePosition[] m_swerveModulePositions = new SwerveModulePosition[4];
+  public boolean isSlewDrive = false;
+
+
+  // Swerve modules and other
   public SwerveModuleState[] m_swerveModuleStates = new SwerveModuleState[] {
     new SwerveModuleState(),
     new SwerveModuleState(),
@@ -40,26 +38,26 @@ public class Drivetrain extends SubsystemBase {
     new SwerveModuleState()
   };
 
-  public final SwerveModule[] m_modules = new SwerveModule[]{
-    new SwerveModule(
+  public final Module[] m_modules = new Module[]{
+    Module.create(
       Constants.drive.kDriveFrontLeft,
       Constants.drive.kSteerFrontLeft,
       Constants.drive.kEncoderFrontLeft,
       Constants.drive.kSteerOffsetFrontLeft
     ),
-    new SwerveModule(
+    Module.create(
       Constants.drive.kDriveFrontRight,
       Constants.drive.kSteerFrontRight,
       Constants.drive.kEncoderFrontRight,
       Constants.drive.kSteerOffsetFrontRight
     ),
-    new SwerveModule(
+    Module.create(
       Constants.drive.kDriveBackLeft,
       Constants.drive.kSteerBackLeft,
       Constants.drive.kEncoderBackLeft,
       Constants.drive.kSteerOffsetBackLeft
     ),
-    new SwerveModule(
+    Module.create(
       Constants.drive.kDriveBackRight,
       Constants.drive.kSteerBackRight,
       Constants.drive.kEncoderBackRight,
@@ -74,19 +72,24 @@ public class Drivetrain extends SubsystemBase {
     new Translation2d(-Constants.drive.kTrackWidth / 2, -Constants.drive.kTrackWidth / 2)
   );
 
+  // Pigeon
   private final WPI_Pigeon2 m_pigeon = new WPI_Pigeon2(Constants.drive.kPigeon, Constants.kCanivoreCAN);
   private boolean m_hasResetYaw = false;
 
   public double headingPIDOutput = 0;
 
-
+  // Odometry
   private final SwerveDriveOdometry m_odometry;
-
-  public boolean isSlewDrive = false;
+  private Pose2d m_robotPose = new Pose2d();
   
+  // PID Controllers
   private PIDController xController = new PIDController(0, 0, 0);
   private PIDController yController = new PIDController(0, 0, 0);
   private PIDController rotationController = new PIDController(0.1, 0, 0);
+
+  // Characterizing
+  private boolean m_isCharacterizing = false;
+  private double m_charactericationVolts = 0;
 
   public Drivetrain() {
     m_odometry = new SwerveDriveOdometry(m_kinematics, m_pigeon.getRotation2d(), getModulePositions());
@@ -94,7 +97,17 @@ public class Drivetrain extends SubsystemBase {
 
   @Override
   public void periodic() {
-    updateOdometry();
+
+    if (m_isCharacterizing) {
+      for (Module module : m_modules) {
+        module.characterize(m_charactericationVolts);
+      }
+    } else {
+      updateOdometry();
+
+    }
+
+    
   }
 
   public void setPigeonYaw(double degrees) {
@@ -132,6 +145,10 @@ public class Drivetrain extends SubsystemBase {
       return;
     }
 
+    if (Robot.isReal()) {
+      m_pigeon.getSimCollection().addHeading(rot * 0.02);
+    }
+
     m_swerveModuleStates =
         m_kinematics.toSwerveModuleStates(
             fieldRelative
@@ -154,6 +171,7 @@ public class Drivetrain extends SubsystemBase {
       new SwerveModuleState(-headingPIDOutput, new Rotation2d(Units.degreesToRadians(45))),
       new SwerveModuleState(headingPIDOutput, new Rotation2d(Units.degreesToRadians(-45)))
     };
+
     setModuleStates(m_swerveModuleStates);
   }
 
@@ -182,9 +200,9 @@ public class Drivetrain extends SubsystemBase {
 
   /** Updates the field relative position of the robot. */
   public void updateOdometry() {
-    m_odometry.update(
-        m_pigeon.getRotation2d(),
-        getModulePositions()
+    m_robotPose = m_odometry.update(
+      m_pigeon.getRotation2d(),
+      getModulePositions()
     );
   }
 
@@ -200,13 +218,18 @@ public class Drivetrain extends SubsystemBase {
     return rawGyros[id] * Math.PI / 180;
   }
 
-
+  /**
+   * Toggles the drive mode.
+   */
   public void toggleDriveMode() {
     isSlewDrive = !isSlewDrive;
   }
 
+  /**
+   * Gets the current robot pose from the odometry.
+   */
   public Pose2d getPose() {
-    return m_odometry.getPoseMeters();
+    return m_robotPose;
   }
 
   /**
@@ -251,12 +274,11 @@ public class Drivetrain extends SubsystemBase {
   /**
    * Sets the desired states for all swerve modules.
    * 
-   * @param swerveModuleStates an array of module states to set swerve modules to
+   * @param swerveModuleStates an array of module states to set swerve modules to. Order of the array matters here!
    */
   public void setModuleStates(SwerveModuleState[] swerveModuleStates) {
     for (int i = 0; i < 4; i++) {
-      m_modules[i].setDesiredState(swerveModuleStates[i]);
-    }
+      m_modules[i].setDesiredState(swerveModuleStates[i]);    }
   }
 
   public PIDController getXController() {
@@ -267,6 +289,21 @@ public class Drivetrain extends SubsystemBase {
   }
   public PIDController getRotationController() {
     return rotationController;
+  }
+
+  /** Runs forwards at the commanded voltage. */
+  public void runCharacterizationVolts(double volts) {
+    m_isCharacterizing = true;
+    m_charactericationVolts = volts;
+  }
+
+  /** Returns the average drive velocity in radians/sec. */
+  public double getCharacterizationVelocity() {
+    double driveVelocityAverage = 0.0;
+    for (Module module : m_modules) {
+      driveVelocityAverage += module.getCharacterizationVelocity();
+    }
+    return driveVelocityAverage / 4.0;
   }
 
 }

@@ -14,12 +14,13 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.util.MotorFactory;
 import frc.robot.util.PracticeModeType;
 
-public class SwerveModule {
+public class ModuleReal extends Module {
   private final WPI_TalonFX m_driveMotor;
   private final WPI_TalonFX m_steerMotor;
 
@@ -48,12 +49,14 @@ public class SwerveModule {
   public double turnFeedforward = 0.0;
   public double turnOutput = 0.0;
 
-  public SwerveModule(
-      int driveMotorPort,
-      int steerMotorPort,
-      int encoderPort,
-      double encoderOffset) {
+  public ModuleReal(
+    int driveMotorPort,
+    int steerMotorPort,
+    int encoderPort,
+    double encoderOffset
+  ) {
     
+    super();
     m_driveMotor = MotorFactory.createTalonFX(driveMotorPort, Constants.kCanivoreCAN, 40, 80, 1, NeutralMode.Brake);
     m_steerMotor = MotorFactory.createTalonFX(steerMotorPort, Constants.kCanivoreCAN, 30, 60, 1, NeutralMode.Brake);
 
@@ -139,10 +142,12 @@ public class SwerveModule {
     m_turningPIDController.reset(angle);
   }
 
+  @Override
   public double getAngle() {
     return m_encoder.getAbsolutePosition() - m_offset;
   }
 
+  @Override
   public double getDriveVelocity() {
     return m_driveEncoder.getRate();
   }
@@ -151,9 +156,36 @@ public class SwerveModule {
     return m_drivePIDController;
   }
 
+  @Override
+  public double getTurnFeedForward() {
+    return turnFeedforward;
+  }
+
+  @Override
+  public double getTurnOutput() {
+    return turnOutput;
+  }
+
   public void stop() {
     m_driveMotor.set(0);
     m_steerMotor.set(0);
+  }
+
+  public void setDriveVoltage(double voltage) {
+    m_driveMotor.setVoltage(voltage);
+  }
+
+  public void setTurnVoltage(double voltage) {
+    m_steerMotor.setVoltage(voltage);
+  }
+
+  public void characterize(double volts) {
+    m_driveMotor.setVoltage(volts);
+    m_steerMotor.setVoltage(m_turnFeedforward.calculate(Units.degreesToRadians(getAngle()), 0.0));
+  }
+
+  public double getCharacterizationVelocity() {
+    return m_driveEncoder.getRate();
   }
 
 }
