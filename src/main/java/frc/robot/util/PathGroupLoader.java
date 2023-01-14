@@ -1,8 +1,8 @@
 package frc.robot.util;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
@@ -14,7 +14,7 @@ import frc.robot.constants.Constants;
 
 public class PathGroupLoader{
 
-  private static HashMap<String, ArrayList<PathPlannerTrajectory>> pathGroups = new HashMap<String, ArrayList<PathPlannerTrajectory>>();
+  private static HashMap<String, List<PathPlannerTrajectory>> pathGroups = new HashMap<String, List<PathPlannerTrajectory>>();
 
   public static void loadPathGroups() {
     double totalTime = 0;
@@ -40,7 +40,7 @@ public class PathGroupLoader{
     System.out.println("File processing took a total of " + totalTime + " milliseconds");
   }
 
-  public static ArrayList<PathPlannerTrajectory> getPathGroup(String pathGroupName) {
+  public static List<PathPlannerTrajectory> getPathGroup(String pathGroupName) {
     if (pathGroups.get(pathGroupName) == null) {
       System.out.println("Error retrieving " + pathGroupName + " path!");
     }

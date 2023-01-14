@@ -1,9 +1,8 @@
 package frc.robot.util;
 
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -22,7 +21,7 @@ public class ShuffleboardManager {
   ShuffleboardTab m_autoTab = Shuffleboard.getTab("Auto");
   ShuffleboardTab m_testTab = Shuffleboard.getTab("Test");
 
-  NetworkTableEntry m_commandScheduler = m_mainTab.add("Command Scheduler", "NULL").getEntry();
+  GenericEntry m_commandScheduler = m_mainTab.add("Command Scheduler", "NULL").getEntry();
 
   public void setup() {
     LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
@@ -58,13 +57,12 @@ public class ShuffleboardManager {
   }
 
   public void loadCommandSchedulerShuffleboard() {
-    CommandScheduler.getInstance()
-        .onCommandInitialize(
-            command -> m_commandScheduler.setString(command.getName() + " initialized."));
-    CommandScheduler.getInstance()
-        .onCommandInterrupt(
-            command -> m_commandScheduler.setString(command.getName() + " interrupted."));
-    CommandScheduler.getInstance()
-        .onCommandFinish(command -> m_commandScheduler.setString(command.getName() + " finished."));
+    // Set the scheduler to log Shuffleboard events for command initialize, interrupt, finish
+
+    CommandScheduler.getInstance().onCommandInitialize(command -> Shuffleboard.addEventMarker("Command initialized", command.getName(), EventImportance.kNormal));
+
+    CommandScheduler.getInstance().onCommandInterrupt(command -> Shuffleboard.addEventMarker("Command interrupted", command.getName(), EventImportance.kNormal));
+
+    CommandScheduler.getInstance().onCommandFinish(command -> Shuffleboard.addEventMarker("Command finished", command.getName(), EventImportance.kNormal));
   }
 }
