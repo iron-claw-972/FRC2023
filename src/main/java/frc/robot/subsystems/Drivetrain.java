@@ -163,7 +163,7 @@ public class Drivetrain extends SubsystemBase {
       new SwerveModuleState(value, new Rotation2d(Units.degreesToRadians(135))),
       new SwerveModuleState(value, new Rotation2d(Units.degreesToRadians(45))),
       new SwerveModuleState(value, new Rotation2d(Units.degreesToRadians(225))),
-      new SwerveModuleState(value, new Rotation2d(Units.degreesToRadians(345)))
+      new SwerveModuleState(value, new Rotation2d(Units.degreesToRadians(315)))
     };
     setModuleStates(m_swerveModuleStates);
   }
