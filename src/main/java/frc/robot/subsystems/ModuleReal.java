@@ -19,6 +19,7 @@ import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.util.MotorFactory;
 import frc.robot.util.PracticeModeType;
+import frc.robot.util.ShuffleboardManager;
 
 public class ModuleReal extends Module {
   private final WPI_TalonFX m_driveMotor;
@@ -37,7 +38,7 @@ public class ModuleReal extends Module {
       new TrapezoidProfile.Constraints(
           Constants.drive.kMaxAngularSpeed, Constants.drive.kMaxAngularAccel));
 
-  private final SimpleMotorFeedforward m_driveFeedforward = new SimpleMotorFeedforward(Constants.drive.kDriveKS,
+  private SimpleMotorFeedforward m_driveFeedforward = new SimpleMotorFeedforward(Constants.drive.kDriveKS,
       Constants.drive.kDriveKV);
   private final SimpleMotorFeedforward m_turnFeedforward = new SimpleMotorFeedforward(Constants.drive.kSteerKS,
       Constants.drive.kSteerKV);
@@ -186,6 +187,10 @@ public class ModuleReal extends Module {
 
   public double getCharacterizationVelocity() {
     return m_driveEncoder.getRate();
+  }
+
+  public void getShuffleboardFeedForwardValues(){
+    m_driveFeedforward = new SimpleMotorFeedforward(ShuffleboardManager.getStaticFeedforward(), ShuffleboardManager.getVelocityFeedforward())
   }
 
 }

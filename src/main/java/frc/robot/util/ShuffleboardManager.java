@@ -26,6 +26,8 @@ public class ShuffleboardManager {
   GenericEntry m_heading = m_driveTab.add("Set Heading (-pi to pi)", 0).getEntry();
   GenericEntry m_velocity = m_swerveModulesTab.add("Set Drive Velocity", 0).getEntry();
   GenericEntry m_turn = m_swerveModulesTab.add("Set Drive Turn", 0).getEntry();
+  GenericEntry m_staticFeedforward = m_swerveModulesTab.add("Set Static Feedforward", 0).getEntry();
+  GenericEntry m_velFeedforward = m_swerveModulesTab.add("Set Vel Feedforward", 0).getEntry();
 
   GenericEntry m_commandScheduler = m_mainTab.add("Command Scheduler", "NULL").getEntry();
 
@@ -80,7 +82,14 @@ public class ShuffleboardManager {
 
   public double getRequestedTurnAngle() {
     return m_turn.getDouble(0);
-}
+  }
+  public double getStaticFeedforward() {
+    return m_staticFeedforward.getDouble(0);
+  }
+  public double getVelocityFeedforward() {
+    return m_velFeedforward.getDouble(0);
+  }
+
 
   public void loadCommandSchedulerShuffleboard(){
     CommandScheduler.getInstance().onCommandInitialize(command -> m_commandScheduler.setString(command.getName() + " initialized."));
@@ -108,10 +117,10 @@ public class ShuffleboardManager {
     // m_swerveModulesTab.addNumber("BL desired angle", () -> Robot.drive.swerveModuleStates[2].angle.getDegrees());
     // m_swerveModulesTab.addNumber("BR desired angle", () -> Robot.drive.swerveModuleStates[3].angle.getDegrees());
 
-    m_swerveModulesTab.addNumber("FL FF", () -> Robot.drive.m_modules[0].getTurnFeedForward());
-    m_swerveModulesTab.addNumber("FR FF", () -> Robot.drive.m_modules[1].getTurnFeedForward());
-    m_swerveModulesTab.addNumber("BL FF", () -> Robot.drive.m_modules[2].getTurnFeedForward());
-    m_swerveModulesTab.addNumber("BR FF", () -> Robot.drive.m_modules[3].getTurnFeedForward());
+    // m_swerveModulesTab.addNumber("FL FF", () -> Robot.drive.m_modules[0].getTurnFeedForward());
+    // m_swerveModulesTab.addNumber("FR FF", () -> Robot.drive.m_modules[1].getTurnFeedForward());
+    // m_swerveModulesTab.addNumber("BL FF", () -> Robot.drive.m_modules[2].getTurnFeedForward());
+    // m_swerveModulesTab.addNumber("BR FF", () -> Robot.drive.m_modules[3].getTurnFeedForward());
 
     m_swerveModulesTab.addNumber("FL PID Output", () -> Robot.drive.m_modules[0].getTurnOutput());
     m_swerveModulesTab.addNumber("FR PID Output", () -> Robot.drive.m_modules[1].getTurnOutput());
