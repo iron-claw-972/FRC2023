@@ -1,5 +1,6 @@
 package frc.robot.util;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -88,10 +89,10 @@ public class ShuffleboardManager {
   }
 
   private void setupDrivetrain() {
-    m_swerveModulesTab.addNumber("Angle Front Left",  () -> Robot.drive.m_modules[0].getAngle());
-    m_swerveModulesTab.addNumber("Angle Front Right", () -> Robot.drive.m_modules[1].getAngle());
-    m_swerveModulesTab.addNumber("Angle Back Left",   () -> Robot.drive.m_modules[2].getAngle());
-    m_swerveModulesTab.addNumber("Angle Back Right",  () -> Robot.drive.m_modules[3].getAngle());
+    m_swerveModulesTab.addNumber("Angle Front Left",  () -> Units.radiansToDegrees(Robot.drive.m_modules[0].getAngle()));
+    m_swerveModulesTab.addNumber("Angle Front Right", () -> Units.radiansToDegrees(Robot.drive.m_modules[1].getAngle()));
+    m_swerveModulesTab.addNumber("Angle Back Left",   () -> Units.radiansToDegrees(Robot.drive.m_modules[2].getAngle()));
+    m_swerveModulesTab.addNumber("Angle Back Right",  () -> Units.radiansToDegrees(Robot.drive.m_modules[3].getAngle()));
 
     m_driveTab.addNumber("Gyro X", () -> Robot.drive.getAngularRate(0));
     m_driveTab.addNumber("Gyro Y", () -> Robot.drive.getAngularRate(1));
