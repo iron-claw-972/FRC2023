@@ -54,7 +54,7 @@ public class ShuffleboardManager {
 
   public void autoChooserUpdate() {
     m_autoCommand.addOption("Do Nothing", new PrintCommand("This will do nothing!"));
-    m_autoCommand.setDefaultOption("TestAuto", new PathPlannerCommand("TestAuto", 0)); 
+    // m_autoCommand.setDefaultOption("TestAuto", new PathPlannerCommand("TestAuto", 0)); 
     m_autoCommand.addOption("FeedForwardCharacterization", new FeedForwardCharacterization(Robot.drive, true, new FeedForwardCharacterizationData("drive"), Robot.drive::runCharacterizationVolts, Robot.drive::getCharacterizationVelocity));
   }
 
