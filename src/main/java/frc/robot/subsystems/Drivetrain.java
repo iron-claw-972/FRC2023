@@ -145,9 +145,8 @@ public class Drivetrain extends SubsystemBase {
       return;
     }
 
-    if (!Robot.isReal()) {
+    if (Robot.isReal()) {
       m_pigeon.getSimCollection().addHeading(rot * 0.02);
-      return;
     }
 
     m_swerveModuleStates =
@@ -190,10 +189,10 @@ public class Drivetrain extends SubsystemBase {
   private void testTurnAngle() {
     double value = Robot.shuffleboard.getRequestedTurnAngle();
     m_swerveModuleStates = new SwerveModuleState[] {
-      new SwerveModuleState(0.01, new Rotation2d(Units.degreesToRadians(value))),
-      new SwerveModuleState(0.01, new Rotation2d(Units.degreesToRadians(value))),
-      new SwerveModuleState(0.01, new Rotation2d(Units.degreesToRadians(value))),
-      new SwerveModuleState(0.01, new Rotation2d(Units.degreesToRadians(value)))
+      new SwerveModuleState(0, new Rotation2d(Units.degreesToRadians(value))),
+      new SwerveModuleState(0, new Rotation2d(Units.degreesToRadians(value))),
+      new SwerveModuleState(0, new Rotation2d(Units.degreesToRadians(value))),
+      new SwerveModuleState(0, new Rotation2d(Units.degreesToRadians(value)))
     };
     setModuleStates(m_swerveModuleStates);
   }
