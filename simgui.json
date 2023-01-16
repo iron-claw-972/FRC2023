@@ -1,0 +1,9 @@
+{
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/Shuffleboard/Drive/xController": "PIDController",
+      "/Shuffleboard/Main/Practice Mode Type Chooser": "String Chooser"
+    }
+  }
+}

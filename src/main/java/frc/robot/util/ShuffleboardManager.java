@@ -1,5 +1,9 @@
 package frc.robot.util;
 
+
+import java.util.HashMap;
+import java.util.Map;
+
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -13,16 +17,22 @@ import frc.robot.Robot;
 import frc.robot.commands.FeedForwardCharacterization;
 import frc.robot.commands.FeedForwardCharacterization.FeedForwardCharacterizationData;
 import frc.robot.commands.auto.PathPlannerCommand;
+import frc.robot.constants.Constants;
+import frc.robot.subsystems.Module;
+import frc.robot.subsystems.ModuleReal;
 
 public class ShuffleboardManager {
 
   SendableChooser<Command> m_autoCommand = new SendableChooser<>();
-
+  Map<Module,Double> velModulesSaver=new HashMap<Module,Double>();
+  Map<Module,Double> staticModulesSaver=new HashMap<Module,Double>();
+  Module dummy_module= new ModuleReal(0, 0, 0, 0);
+  Module prev_module= dummy_module;
   ShuffleboardTab m_mainTab = Shuffleboard.getTab("Main");
   public ShuffleboardTab m_driveTab = Shuffleboard.getTab("Drive");
   ShuffleboardTab m_swerveModulesTab = Shuffleboard.getTab("Swerve Modules");
   ShuffleboardTab m_autoTab = Shuffleboard.getTab("Auto");
-
+  
   GenericEntry m_heading = m_driveTab.add("Set Heading (-pi to pi)", 0).getEntry();
   GenericEntry m_velocity = m_swerveModulesTab.add("Set Drive Velocity", 0).getEntry();
   GenericEntry m_turn = m_swerveModulesTab.add("Set Drive Turn", 0).getEntry();
@@ -32,16 +42,25 @@ public class ShuffleboardManager {
   GenericEntry m_commandScheduler = m_mainTab.add("Command Scheduler", "NULL").getEntry();
 
   SendableChooser<PracticeModeType> m_practiceMode = new SendableChooser<>();
+  SendableChooser<Module> m_module = new SendableChooser<>();
+
   
   public void setup() {
     LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
 
     autoChooserUpdate();
     practiceChooserUpdate();
-
+    moduleChooserUpdate();
+    staticModulesSaver.put(dummy_module,Constants.drive.kSteerKS );
+    velModulesSaver.put(dummy_module,Constants.drive.kDriveKV );
+    for(int i=0;i<4;i++){
+      staticModulesSaver.put(Robot.drive.m_modules[i],Constants.drive.kSteerKS );
+      velModulesSaver.put(Robot.drive.m_modules[i],Constants.drive.kDriveKV );
+      
+    }
     m_autoTab.add("Auto Chooser", m_autoCommand);
     m_mainTab.add("Practice Mode Type Chooser", m_practiceMode);
-
+    m_swerveModulesTab.add("Module Feedforward", m_module);
     setupDrivetrain();
 
     m_driveTab.add("xController", Robot.drive.getXController());
@@ -60,7 +79,27 @@ public class ShuffleboardManager {
     // m_autoCommand.setDefaultOption("TestAuto", new PathPlannerCommand("TestAuto", 0)); 
     m_autoCommand.addOption("FeedForwardCharacterization", new FeedForwardCharacterization(Robot.drive, true, new FeedForwardCharacterizationData("drive"), Robot.drive::runCharacterizationVolts, Robot.drive::getCharacterizationVelocity));
   }
+  public void moduleChooserUpdate(){
+    m_module.addOption("Front Left", Robot.drive.m_modules[0]);
+    m_module.addOption("Front Right", Robot.drive.m_modules[1]);
+    m_module.addOption("Back Left ", Robot.drive.m_modules[2]);
+    m_module.addOption("Back Right", Robot.drive.m_modules[3]);
+    
 
+    m_module.setDefaultOption("NONE", dummy_module);
+
+  }
+  public void getModulefeedforward(){
+    if (prev_module!=m_module.getSelected()){
+      // m_staticFeedforward.setDouble(staticModulesSaver.get(m_module.getSelected()));
+      m_velFeedforward.setDouble(velModulesSaver.get(m_module.getSelected()));
+      prev_module=m_module.getSelected();
+    }
+    staticModulesSaver.replace(m_module.getSelected(),m_velFeedforward.getDouble(0) );
+    velModulesSaver.replace(m_module.getSelected(),m_velFeedforward.getDouble(0) );
+    
+    m_module.getSelected().getShuffleboardFeedForwardValues(staticModulesSaver.get(m_module.getSelected()),velModulesSaver.get(m_module.getSelected()));
+  }
   public PracticeModeType getPracticeModeType() {
     return m_practiceMode.getSelected();
   }
@@ -89,7 +128,6 @@ public class ShuffleboardManager {
   public double getVelocityFeedforward() {
     return m_velFeedforward.getDouble(0);
   }
-
 
   public void loadCommandSchedulerShuffleboard(){
     CommandScheduler.getInstance().onCommandInitialize(command -> m_commandScheduler.setString(command.getName() + " initialized."));
@@ -128,10 +166,10 @@ public class ShuffleboardManager {
     m_swerveModulesTab.addNumber("BR PID Output", () -> Robot.drive.m_modules[3].getTurnOutput());
 
 
-    m_swerveModulesTab.addNumber("Vel Front Right", () -> Robot.drive.m_modules[0].getDriveVelocity());
-    m_swerveModulesTab.addNumber("Vel Front Left", () -> Robot.drive.m_modules[1].getDriveVelocity());
-    m_swerveModulesTab.addNumber("Vel Back Right", () -> Robot.drive.m_modules[2].getDriveVelocity());
-    m_swerveModulesTab.addNumber("Vel Back Left", () -> Robot.drive.m_modules[3].getDriveVelocity());
+    m_swerveModulesTab.addNumber("Vel Front Left", () -> Robot.drive.m_modules[0].getDriveVelocity());
+    m_swerveModulesTab.addNumber("Vel Front Right", () -> Robot.drive.m_modules[1].getDriveVelocity());
+    m_swerveModulesTab.addNumber("Vel Back Left", () -> Robot.drive.m_modules[2].getDriveVelocity());
+    m_swerveModulesTab.addNumber("Vel Back Right", () -> Robot.drive.m_modules[3].getDriveVelocity());
   }
 
 }

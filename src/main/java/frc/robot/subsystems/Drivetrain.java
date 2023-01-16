@@ -139,6 +139,7 @@ public class Drivetrain extends SubsystemBase {
       return;
     } else if (Robot.shuffleboard.getPracticeModeType() == PracticeModeType.TUNE_MODULE_DRIVE) {
       testDriveVel();
+      Robot.shuffleboard.getModulefeedforward();
       return;
     } else if (Robot.shuffleboard.getPracticeModeType() == PracticeModeType.TUNE_MODULE_TURN){
       testTurnAngle();

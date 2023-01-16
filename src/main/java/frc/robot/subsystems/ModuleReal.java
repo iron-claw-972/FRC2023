@@ -189,8 +189,8 @@ public class ModuleReal extends Module {
     return m_driveEncoder.getRate();
   }
 
-  public void getShuffleboardFeedForwardValues(){
-    // m_driveFeedforward = new SimpleMotorFeedforward(ShuffleboardManager.getStaticFeedforward(), ShuffleboardManager.getVelocityFeedforward())
+  public void getShuffleboardFeedForwardValues(double staticFeedforward, double VelocityFeedforward){
+    m_driveFeedforward = new SimpleMotorFeedforward(staticFeedforward, VelocityFeedforward);
   }
 
 }

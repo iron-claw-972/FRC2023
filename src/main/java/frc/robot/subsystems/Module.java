@@ -27,7 +27,7 @@ public abstract class Module {
   public abstract double getDriveVelocity();
   public abstract double getCharacterizationVelocity();
   public abstract void setDesiredState(SwerveModuleState state);
-
+  public abstract void getShuffleboardFeedForwardValues(double staticFeedforward, double VelocityFeedforward);
   public abstract void characterize(double volts);
   
 }
