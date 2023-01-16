@@ -27,7 +27,7 @@ public class DriveConstants {
     public final int kDriveFrontRight = 4; 
     public final int kSteerFrontRight = 5;
     public final int kEncoderFrontRight = 6; 
-    public final double kSteerOffsetFrontRight = -1.179;
+    public final double kSteerOffsetFrontRight = -2.764;
 
     public final int kDriveBackLeft = 7; 
     public final int kSteerBackLeft = 8;

@@ -58,7 +58,7 @@ public class ModuleReal extends Module {
   ) {
     
     super();
-    m_driveMotor = MotorFactory.createTalonFX(driveMotorPort, Constants.kCanivoreCAN, 40, 80, 1, NeutralMode.Brake);
+    m_driveMotor = MotorFactory.createTalonFX(driveMotorPort, Constants.kRioCAN, 40, 80, 1, NeutralMode.Brake);
     m_steerMotor = MotorFactory.createTalonFX(steerMotorPort, Constants.kCanivoreCAN, 30, 60, 1, NeutralMode.Brake);
 
     m_driveMotor.setNeutralMode(NeutralMode.Brake);
@@ -190,7 +190,7 @@ public class ModuleReal extends Module {
   }
 
   public void getShuffleboardFeedForwardValues(){
-    m_driveFeedforward = new SimpleMotorFeedforward(ShuffleboardManager.getStaticFeedforward(), ShuffleboardManager.getVelocityFeedforward())
+    // m_driveFeedforward = new SimpleMotorFeedforward(ShuffleboardManager.getStaticFeedforward(), ShuffleboardManager.getVelocityFeedforward())
   }
 
 }
