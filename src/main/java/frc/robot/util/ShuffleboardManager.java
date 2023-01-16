@@ -6,6 +6,7 @@ import java.util.Map;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -27,6 +28,7 @@ public class ShuffleboardManager {
   Map<Module,Double> velModulesSaver=new HashMap<Module,Double>();
   Map<Module,Double> staticModulesSaver=new HashMap<Module,Double>();
   Module dummy_module= new ModuleReal(0, 0, 0, 0);
+  Module all_Module= new ModuleReal(0, 0, 0, 0);
   Module prev_module= dummy_module;
   ShuffleboardTab m_mainTab = Shuffleboard.getTab("Main");
   public ShuffleboardTab m_driveTab = Shuffleboard.getTab("Drive");
@@ -53,6 +55,8 @@ public class ShuffleboardManager {
     moduleChooserUpdate();
     staticModulesSaver.put(dummy_module,Constants.drive.kSteerKS );
     velModulesSaver.put(dummy_module,Constants.drive.kDriveKV );
+    staticModulesSaver.put(all_Module,Constants.drive.kSteerKS );
+    velModulesSaver.put(all_Module,Constants.drive.kDriveKV );
     for(int i=0;i<4;i++){
       staticModulesSaver.put(Robot.drive.m_modules[i],Constants.drive.kSteerKS );
       velModulesSaver.put(Robot.drive.m_modules[i],Constants.drive.kDriveKV );
@@ -84,17 +88,22 @@ public class ShuffleboardManager {
     m_module.addOption("Front Right", Robot.drive.m_modules[1]);
     m_module.addOption("Back Left ", Robot.drive.m_modules[2]);
     m_module.addOption("Back Right", Robot.drive.m_modules[3]);
-    
+    m_module.addOption("all", all_Module );
 
     m_module.setDefaultOption("NONE", dummy_module);
 
   }
   public void getModulefeedforward(){
     if (prev_module!=m_module.getSelected()){
-      // m_staticFeedforward.setDouble(staticModulesSaver.get(m_module.getSelected()));
+      m_staticFeedforward.setDouble(staticModulesSaver.get(m_module.getSelected()));
       m_velFeedforward.setDouble(velModulesSaver.get(m_module.getSelected()));
       prev_module=m_module.getSelected();
     }
+    if (m_module.getSelected()==all_Module){
+      for(int i=0;i<4;i++){
+        Robot.drive.m_modules[i].getShuffleboardFeedForwardValues(staticModulesSaver.get(m_module.getSelected()), velModulesSaver.get(m_module.getSelected()));
+      }
+    }  
     staticModulesSaver.replace(m_module.getSelected(),m_velFeedforward.getDouble(0) );
     velModulesSaver.replace(m_module.getSelected(),m_velFeedforward.getDouble(0) );
     
