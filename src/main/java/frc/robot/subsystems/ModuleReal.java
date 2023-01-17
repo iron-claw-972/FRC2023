@@ -57,7 +57,8 @@ public class ModuleReal extends Module {
     double encoderOffset
   ) {
     
-    super();
+    super(); // TODO: what is this for
+
     m_driveMotor = MotorFactory.createTalonFX(driveMotorPort, Constants.kRioCAN, 40, 80, 1, NeutralMode.Brake);
     m_steerMotor = MotorFactory.createTalonFX(steerMotorPort, Constants.kCanivoreCAN, 30, 60, 1, NeutralMode.Brake);
 
@@ -182,6 +183,8 @@ public class ModuleReal extends Module {
 
   public void characterize(double volts) {
     m_driveMotor.setVoltage(volts);
+
+    // TODO: Feedforward takes a velocity setpoint, but this is inputing an angular position. I'm not sure what the intent is either.
     m_steerMotor.setVoltage(m_turnFeedforward.calculate(Units.degreesToRadians(getAngle()), 0.0));
   }
 

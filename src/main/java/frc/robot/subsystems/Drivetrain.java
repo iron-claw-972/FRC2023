@@ -27,8 +27,7 @@ import frc.robot.subsystems.Module;
 */
 public class Drivetrain extends SubsystemBase {
 
-  public boolean isSlewDrive = false;
-
+  public boolean isSlewDrive = false; //TODO: what is this variable used for? It was here for testing slew but that isn't needed anymore
 
   // Swerve modules and other
   public SwerveModuleState[] m_swerveModuleStates = new SwerveModuleState[] {
@@ -89,7 +88,7 @@ public class Drivetrain extends SubsystemBase {
 
   // Characterizing
   private boolean m_isCharacterizing = false;
-  private double m_charactericationVolts = 0;
+  private double m_charactericationVolts = 0; //TODO: read this variable name, slowly.
 
   public Drivetrain() {
     m_odometry = new SwerveDriveOdometry(m_kinematics, m_pigeon.getRotation2d(), getModulePositions());
@@ -104,10 +103,7 @@ public class Drivetrain extends SubsystemBase {
       }
     } else {
       updateOdometry();
-
     }
-
-    
   }
 
   public void setPigeonYaw(double degrees) {
@@ -134,6 +130,7 @@ public class Drivetrain extends SubsystemBase {
    */
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
 
+    // TODO: we should move this somewhere else. drive() should just drive
     if (Robot.shuffleboard.getPracticeModeType() == PracticeModeType.TUNE_HEADING_PID) {
       runHeadingPID();
       return;
@@ -266,9 +263,9 @@ public class Drivetrain extends SubsystemBase {
    * @return an array of all swerve module positions
    */
   public SwerveModulePosition[] getModulePositions() {
-    SwerveModulePosition[] positions = new SwerveModulePosition[4];
+    SwerveModulePosition[] positions = new SwerveModulePosition[4]; // TODO: use {} to make this more concise
     for (int i = 0; i < 4; i++) {
-      positions[i] = new SwerveModulePosition();
+      positions[i] = new SwerveModulePosition(); // TODO: this is just making an array of empty positions
     }
     return positions;
   }
@@ -280,7 +277,8 @@ public class Drivetrain extends SubsystemBase {
    */
   public void setModuleStates(SwerveModuleState[] swerveModuleStates) {
     for (int i = 0; i < 4; i++) {
-      m_modules[i].setDesiredState(swerveModuleStates[i]);    }
+      m_modules[i].setDesiredState(swerveModuleStates[i]);
+    }
   }
 
   public PIDController getXController() {

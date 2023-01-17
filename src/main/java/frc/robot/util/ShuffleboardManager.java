@@ -25,11 +25,12 @@ import frc.robot.subsystems.ModuleReal;
 public class ShuffleboardManager {
 
   SendableChooser<Command> m_autoCommand = new SendableChooser<>();
-  Map<Module,Double> velModulesSaver=new HashMap<Module,Double>();
-  Map<Module,Double> staticModulesSaver=new HashMap<Module,Double>();
-  Module dummy_module= new ModuleReal(0, 0, 0, 0);
-  Module all_Module= new ModuleReal(0, 0, 0, 0);
-  Module prev_module= dummy_module;
+  Map<Module,Double> velModulesSaver = new HashMap<Module,Double>();
+  Map<Module,Double> staticModulesSaver = new HashMap<Module,Double>();
+  Module dummy_module = new ModuleReal(0, 0, 0, 0);
+  Module all_Module = new ModuleReal(0, 0, 0, 0);
+  Module prev_module = dummy_module;
+
   ShuffleboardTab m_mainTab = Shuffleboard.getTab("Main");
   public ShuffleboardTab m_driveTab = Shuffleboard.getTab("Drive");
   ShuffleboardTab m_swerveModulesTab = Shuffleboard.getTab("Swerve Modules");
@@ -57,10 +58,9 @@ public class ShuffleboardManager {
     velModulesSaver.put(dummy_module,Constants.drive.kDriveKV );
     staticModulesSaver.put(all_Module,Constants.drive.kSteerKS );
     velModulesSaver.put(all_Module,Constants.drive.kDriveKV );
-    for(int i=0;i<4;i++){
+    for (int i=0;i<4;i++){
       staticModulesSaver.put(Robot.drive.m_modules[i],Constants.drive.kSteerKS );
       velModulesSaver.put(Robot.drive.m_modules[i],Constants.drive.kDriveKV );
-      
     }
     m_autoTab.add("Auto Chooser", m_autoCommand);
     m_mainTab.add("Practice Mode Type Chooser", m_practiceMode);
@@ -95,14 +95,14 @@ public class ShuffleboardManager {
   }
   public void getModulefeedforward(){
     //revert to previous saved feed forward data
-    if (prev_module!=m_module.getSelected()){
+    if (prev_module != m_module.getSelected()){
       m_staticFeedforward.setDouble(staticModulesSaver.get(m_module.getSelected()));
       m_velFeedforward.setDouble(velModulesSaver.get(m_module.getSelected()));
-      prev_module=m_module.getSelected();
+      prev_module = m_module.getSelected();
     }
     //to set all modules to same feedforward values
-    if (m_module.getSelected()==all_Module){
-      for(int i=0;i<4;i++){
+    if (m_module.getSelected() == all_Module){
+      for(int i = 0; i < 4; i++){
         Robot.drive.m_modules[i].getShuffleboardFeedForwardValues(staticModulesSaver.get(m_module.getSelected()), velModulesSaver.get(m_module.getSelected()));
       }
     }  
