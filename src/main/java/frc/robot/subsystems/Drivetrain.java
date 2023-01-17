@@ -15,8 +15,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
-import frc.robot.util.PracticeModeType;
-import frc.robot.subsystems.Module;
+import frc.robot.util.TestType;
 
 /** Represents a swerve drive style drivetrain.
  * Module IDs are:
@@ -131,14 +130,14 @@ public class Drivetrain extends SubsystemBase {
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
 
     // TODO: we should move this somewhere else. drive() should just drive
-    if (Robot.shuffleboard.getPracticeModeType() == PracticeModeType.TUNE_HEADING_PID) {
+    if (Robot.shuffleboard.getPracticeModeType() == TestType.TUNE_HEADING_PID) {
       runHeadingPID();
       return;
-    } else if (Robot.shuffleboard.getPracticeModeType() == PracticeModeType.TUNE_MODULE_DRIVE) {
+    } else if (Robot.shuffleboard.getPracticeModeType() == TestType.TUNE_MODULE_DRIVE) {
       testDriveVel();
       Robot.shuffleboard.getModulefeedforward();
       return;
-    } else if (Robot.shuffleboard.getPracticeModeType() == PracticeModeType.TUNE_MODULE_TURN){
+    } else if (Robot.shuffleboard.getPracticeModeType() == TestType.TUNE_MODULE_TURN){
       testTurnAngle();
       return;
     }

@@ -24,13 +24,6 @@ public abstract class Module {
     return null;
   }
 
-  // public Module(int driveMotorID, int steerMotorID, int encoderID, double steerOffset) {
-    // this.driveMotorID = driveMotorID;
-    // this.steerMotorID = steerMotorID;
-    // this.encoderID = encoderID;
-    // this.steerOffset = steerOffset;
-  // }
-
   public abstract double getAngle();
   public abstract double getTurnFeedForward();
   public abstract double getTurnOutput();

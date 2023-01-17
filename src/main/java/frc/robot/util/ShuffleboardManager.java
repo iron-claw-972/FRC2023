@@ -44,7 +44,7 @@ public class ShuffleboardManager {
 
   GenericEntry m_commandScheduler = m_mainTab.add("Command Scheduler", "NULL").getEntry();
 
-  SendableChooser<PracticeModeType> m_practiceMode = new SendableChooser<>();
+  SendableChooser<TestType> m_practiceMode = new SendableChooser<>();
   SendableChooser<Module> m_module = new SendableChooser<>();
 
   
@@ -112,15 +112,15 @@ public class ShuffleboardManager {
     
     m_module.getSelected().getShuffleboardFeedForwardValues(staticModulesSaver.get(m_module.getSelected()),velModulesSaver.get(m_module.getSelected()));
   }
-  public PracticeModeType getPracticeModeType() {
+  public TestType getPracticeModeType() {
     return m_practiceMode.getSelected();
   }
 
   public void practiceChooserUpdate() {
-    m_practiceMode.addOption(PracticeModeType.TUNE_HEADING_PID.toString(), PracticeModeType.TUNE_HEADING_PID);
-    m_practiceMode.addOption(PracticeModeType.TUNE_MODULE_DRIVE.toString(), PracticeModeType.TUNE_MODULE_DRIVE);
-    m_practiceMode.addOption(PracticeModeType.TUNE_MODULE_TURN.toString(), PracticeModeType.TUNE_MODULE_TURN);
-    m_practiceMode.setDefaultOption(PracticeModeType.NONE.toString(), PracticeModeType.NONE);
+    m_practiceMode.addOption(TestType.TUNE_HEADING_PID.toString(), TestType.TUNE_HEADING_PID);
+    m_practiceMode.addOption(TestType.TUNE_MODULE_DRIVE.toString(), TestType.TUNE_MODULE_DRIVE);
+    m_practiceMode.addOption(TestType.TUNE_MODULE_TURN.toString(), TestType.TUNE_MODULE_TURN);
+    m_practiceMode.setDefaultOption(TestType.NONE.toString(), TestType.NONE);
   }
 
   public double getRequestedHeading() {

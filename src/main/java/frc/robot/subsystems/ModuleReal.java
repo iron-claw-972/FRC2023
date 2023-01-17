@@ -18,7 +18,7 @@ import edu.wpi.first.math.util.Units;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.util.MotorFactory;
-import frc.robot.util.PracticeModeType;
+import frc.robot.util.TestType;
 import frc.robot.util.ShuffleboardManager;
 
 public class ModuleReal extends Module {
@@ -59,8 +59,10 @@ public class ModuleReal extends Module {
     
     super(); // TODO: what is this for
 
-    m_driveMotor = MotorFactory.createTalonFX(driveMotorPort, Constants.kRioCAN, 40, 80, 1, NeutralMode.Brake);
-    m_steerMotor = MotorFactory.createTalonFX(steerMotorPort, Constants.kCanivoreCAN, 30, 60, 1, NeutralMode.Brake);
+    m_driveMotor = MotorFactory.createTalonFX(driveMotorPort, Constants.kRioCAN);
+    m_steerMotor = MotorFactory.createTalonFX(steerMotorPort, Constants.kCanivoreCAN);
+    // m_driveMotor = MotorFactory.createTalonFX(driveMotorPort, Constants.kRioCAN, 40, 80, 1, NeutralMode.Brake);
+    // m_steerMotor = MotorFactory.createTalonFX(steerMotorPort, Constants.kCanivoreCAN, 30, 60, 1, NeutralMode.Brake);
 
     m_driveMotor.setNeutralMode(NeutralMode.Brake);
     m_steerMotor.setNeutralMode(NeutralMode.Brake);
@@ -77,7 +79,7 @@ public class ModuleReal extends Module {
 
     m_encoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
 
-    m_encoder.configFeedbackCoefficient(2 * Math.PI / Constants.kCANcoderResolution, "rad", SensorTimeBase.PerSecond);
+    m_encoder.configFeedbackCoefficient(2 * Math.PI / Constants.kCancoderResolution, "rad", SensorTimeBase.PerSecond);
 
     m_offset = encoderOffset;
 
@@ -85,7 +87,7 @@ public class ModuleReal extends Module {
     // distance traveled for one rotation of the wheel divided by the encoder
     // resolution.
     m_driveEncoder.setDistancePerPulse(
-        2 * Math.PI * Constants.drive.kWheelRadius / Constants.drive.kDriveGearRatio / Constants.kEncoderResolution);
+        2 * Math.PI * Constants.drive.kWheelRadius / Constants.drive.kDriveGearRatio / Constants.kCancoderResolution);
 
     // Limit the PID Controller's input range between -pi and pi and set the input
     // to be continuous. Factor in the offset amount.
@@ -103,12 +105,12 @@ public class ModuleReal extends Module {
    * @param desiredState Desired state with speed and angle.
    */
   public void setDesiredState(SwerveModuleState desiredState) {
-    if (Math.abs(desiredState.speedMetersPerSecond) < 0.001 && Robot.shuffleboard.getPracticeModeType() != PracticeModeType.TUNE_HEADING_PID) {
+    if (Math.abs(desiredState.speedMetersPerSecond) < 0.001 && Robot.shuffleboard.getPracticeModeType() != TestType.TUNE_HEADING_PID) {
       stop();
       return;
     }
 
-    if (Robot.shuffleboard.getPracticeModeType() != PracticeModeType.TUNE_HEADING_PID) {
+    if (Robot.shuffleboard.getPracticeModeType() != TestType.TUNE_HEADING_PID) {
       // Optimize the reference state to avoid spinning further than 90 degrees
       desiredState = SwerveModuleState.optimize(desiredState, new Rotation2d(getAngle()));
     }

@@ -27,9 +27,10 @@ public class Robot extends TimedRobot {
 
   private Command m_autoCommand;
   
-  public static ShuffleboardManager shuffleboard = new ShuffleboardManager();
-  public static Drivetrain drive = new Drivetrain();
+  public static ShuffleboardManager shuffleboard;
+  public static Drivetrain drive;
  
+  private static boolean isTestMode = false;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -40,11 +41,15 @@ public class Robot extends TimedRobot {
 
     // This is really annoying so it's disabled
     DriverStation.silenceJoystickConnectionWarning(true);
+
+    // load paths before auto starts
     PathGroupLoader.loadPathGroups();
 
+    // make subsystems
+    shuffleboard = new ShuffleboardManager();
+    drive = new Drivetrain();
+
     shuffleboard.setup();
-
-
 
     Driver.configureControls();
     Operator.configureControls();
@@ -74,6 +79,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     CommandScheduler.getInstance().cancelAll();
+    isTestMode = false;
   }
 
   @Override
@@ -87,6 +93,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
 
+    isTestMode = false;
     drive.initializePigeonYaw();
 
     if (m_autoCommand != null) {
@@ -113,6 +120,7 @@ public class Robot extends TimedRobot {
     if (m_autoCommand != null) {
       m_autoCommand.cancel();
     }
+    isTestMode = false;
   }
 
   /**
@@ -126,6 +134,7 @@ public class Robot extends TimedRobot {
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
+    isTestMode = true;
   }
 
   /**
@@ -142,5 +151,9 @@ public class Robot extends TimedRobot {
    */
   public Command getAutonomousCommand() {
     return shuffleboard.getAutonomousCommand();
+  }
+
+  public static boolean isTestMode() {
+    return isTestMode;
   }
 }
