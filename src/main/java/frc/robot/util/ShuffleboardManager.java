@@ -94,17 +94,20 @@ public class ShuffleboardManager {
 
   }
   public void getModulefeedforward(){
+    //revert to previous saved feed forward data
     if (prev_module!=m_module.getSelected()){
       m_staticFeedforward.setDouble(staticModulesSaver.get(m_module.getSelected()));
       m_velFeedforward.setDouble(velModulesSaver.get(m_module.getSelected()));
       prev_module=m_module.getSelected();
     }
+    //to set all modules to same feedforward values
     if (m_module.getSelected()==all_Module){
       for(int i=0;i<4;i++){
         Robot.drive.m_modules[i].getShuffleboardFeedForwardValues(staticModulesSaver.get(m_module.getSelected()), velModulesSaver.get(m_module.getSelected()));
       }
     }  
-    staticModulesSaver.replace(m_module.getSelected(),m_velFeedforward.getDouble(0) );
+    // update saved feedforward data
+    staticModulesSaver.replace(m_module.getSelected(),m_staticFeedforward.getDouble(0) );
     velModulesSaver.replace(m_module.getSelected(),m_velFeedforward.getDouble(0) );
     
     m_module.getSelected().getShuffleboardFeedForwardValues(staticModulesSaver.get(m_module.getSelected()),velModulesSaver.get(m_module.getSelected()));
