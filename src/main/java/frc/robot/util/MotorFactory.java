@@ -59,9 +59,9 @@ public class MotorFactory {
     talon.enableVoltageCompensation(true);
     talon.setNeutralMode(NeutralMode.Brake);
 
-    LogManager.addDouble("Current/" + talon.getDeviceID(), () -> talon.getStatorCurrent());
-    LogManager.addDouble("Temperature/" + talon.getDeviceID(), () -> talon.getTemperature());
-    LogManager.addDouble("RPM/" + talon.getDeviceID(), () -> talon.getSelectedSensorVelocity() / Constants.falcon.kResolution * 10 * 60);
+    LogManager.addDouble("TalonFX/Current/" + talon.getDeviceID(), () -> talon.getStatorCurrent());
+    LogManager.addDouble("TalonFX/Temperature/" + talon.getDeviceID(), () -> talon.getTemperature());
+    LogManager.addDouble("TalonFX/RPM/" + talon.getDeviceID(), () -> talon.getSelectedSensorVelocity() / Constants.falcon.kResolution * 10 * 60);
 
     return talon;
   }
