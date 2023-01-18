@@ -22,15 +22,14 @@ public class DefaultDriveCommand extends CommandBase {
   @Override
   public void execute() {
 
-    // TODO: we should move this somewhere else. drive() should just drive
-    if (Robot.shuffleboard.getPracticeModeType() == TestType.TUNE_HEADING_PID) {
+    if (Robot.shuffleboard.getTestModeType() == TestType.TUNE_HEADING_PID) {
       runHeadingPID();
       return;
-    } else if (Robot.shuffleboard.getPracticeModeType() == TestType.TUNE_MODULE_DRIVE) {
+    } else if (Robot.shuffleboard.getTestModeType() == TestType.TUNE_MODULE_DRIVE) {
       testDriveVel();
       Robot.shuffleboard.getModulefeedforward();
       return;
-    } else if (Robot.shuffleboard.getPracticeModeType() == TestType.TUNE_MODULE_TURN){
+    } else if (Robot.shuffleboard.getTestModeType() == TestType.TUNE_MODULE_TURN){
       testTurnAngle();
       return;
     }
