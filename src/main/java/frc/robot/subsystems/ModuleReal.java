@@ -38,8 +38,7 @@ public class ModuleReal extends Module {
       new TrapezoidProfile.Constraints(
           Constants.drive.kMaxAngularSpeed, Constants.drive.kMaxAngularAccel));
 
-  private SimpleMotorFeedforward m_driveFeedforward = new SimpleMotorFeedforward(Constants.drive.kDriveKS,
-      Constants.drive.kDriveKV);
+  private SimpleMotorFeedforward m_driveFeedforward;
   private final SimpleMotorFeedforward m_turnFeedforward = new SimpleMotorFeedforward(Constants.drive.kSteerKS,
       Constants.drive.kSteerKV);
       
@@ -54,7 +53,9 @@ public class ModuleReal extends Module {
     int driveMotorPort,
     int steerMotorPort,
     int encoderPort,
-    double encoderOffset
+    double encoderOffset,
+    double feedforwardKS,
+    double feedforwardKV
   ) {
     
     super();
@@ -93,6 +94,7 @@ public class ModuleReal extends Module {
     m_steerMotor.setInverted(true);
 
     m_turningPIDController.reset(getAngle()); // reset the PID, and the Trapezoid motion profile needs to know the starting state
+    m_driveFeedforward = new SimpleMotorFeedforward(feedforwardKS,feedforwardKV);
   }
 
 

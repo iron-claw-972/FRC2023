@@ -43,25 +43,33 @@ public class Drivetrain extends SubsystemBase {
       Constants.drive.kDriveFrontLeft,
       Constants.drive.kSteerFrontLeft,
       Constants.drive.kEncoderFrontLeft,
-      Constants.drive.kSteerOffsetFrontLeft
+      Constants.drive.kSteerOffsetFrontLeft,
+      Constants.drive.kDriveKSFrontLeft,
+      Constants.drive.kDriveKVFrontLeft
     ),
     Module.create(
       Constants.drive.kDriveFrontRight,
       Constants.drive.kSteerFrontRight,
       Constants.drive.kEncoderFrontRight,
-      Constants.drive.kSteerOffsetFrontRight
+      Constants.drive.kSteerOffsetFrontRight,
+      Constants.drive.kDriveKSFrontRight,
+      Constants.drive.kDriveKVFrontRight
     ),
-    Module.create(
+    Module.create(                                  
       Constants.drive.kDriveBackLeft,
       Constants.drive.kSteerBackLeft,
       Constants.drive.kEncoderBackLeft,
-      Constants.drive.kSteerOffsetBackLeft
+      Constants.drive.kSteerOffsetBackLeft,
+      Constants.drive.kDriveKSBackLeft,
+      Constants.drive.kDriveKVBackLeft
     ),
     Module.create(
       Constants.drive.kDriveBackRight,
       Constants.drive.kSteerBackRight,
       Constants.drive.kEncoderBackRight,
-      Constants.drive.kSteerOffsetBackRight
+      Constants.drive.kSteerOffsetBackRight,
+      Constants.drive.kDriveKSBackRight,
+      Constants.drive.kDriveKVBackRight
     )
   };
 

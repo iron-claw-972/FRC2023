@@ -5,9 +5,9 @@ import frc.robot.Robot;
 
 public abstract class Module {
   
-  public static Module create(int driveMotorID, int steerMotorID, int encoderID, double steerOffset) {
+  public static Module create(int driveMotorID, int steerMotorID, int encoderID, double steerOffset ,double feedforwardKS, double feedforwardKV) {
     if (Robot.isReal()) {
-      return new ModuleReal(driveMotorID, steerMotorID, encoderID, steerOffset);
+      return new ModuleReal(driveMotorID, steerMotorID, encoderID, steerOffset, feedforwardKS, feedforwardKV);
     } else {
       // return new ModuleSim(driveMotorID, steerMotorID, encoderID, steerOffset);
     }
