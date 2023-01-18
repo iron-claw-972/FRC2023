@@ -20,12 +20,6 @@ public class DefaultDriveCommand extends CommandBase {
         double xSpeed = Driver.getForwardTranslation();
         double ySpeed = Driver.getSideTranslation();
         double rot = Driver.getRotation();
-
-        if (Robot.drive.isSlewDrive) {
-            xSpeed = Driver.getForwardTranslationSlew();
-            ySpeed = Driver.getSideTranslationSlew();
-            rot = Driver.getRotationSlew();
-        }
     
         m_drive.drive(xSpeed, ySpeed, rot, true);
     }

@@ -15,8 +15,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
-import frc.robot.util.PracticeModeType;
-import frc.robot.subsystems.Module;
+import frc.robot.util.TestType;
 
 /** Represents a swerve drive style drivetrain.
  * Module IDs are:
@@ -26,9 +25,6 @@ import frc.robot.subsystems.Module;
  * 4: Back right
 */
 public class Drivetrain extends SubsystemBase {
-
-  public boolean isSlewDrive = false;
-
 
   // Swerve modules and other
   public SwerveModuleState[] m_swerveModuleStates = new SwerveModuleState[] {
@@ -97,7 +93,7 @@ public class Drivetrain extends SubsystemBase {
 
   // Characterizing
   private boolean m_isCharacterizing = false;
-  private double m_charactericationVolts = 0;
+  private double m_characterizationVolts = 0;
 
   public Drivetrain() {
     m_odometry = new SwerveDriveOdometry(m_kinematics, m_pigeon.getRotation2d(), getModulePositions());
@@ -108,14 +104,11 @@ public class Drivetrain extends SubsystemBase {
 
     if (m_isCharacterizing) {
       for (Module module : m_modules) {
-        module.characterize(m_charactericationVolts);
+        module.characterize(m_characterizationVolts);
       }
     } else {
       updateOdometry();
-
     }
-
-    
   }
 
   public void setPigeonYaw(double degrees) {
@@ -142,14 +135,15 @@ public class Drivetrain extends SubsystemBase {
    */
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
 
-    if (Robot.shuffleboard.getPracticeModeType() == PracticeModeType.TUNE_HEADING_PID) {
+    // TODO: we should move this somewhere else. drive() should just drive
+    if (Robot.shuffleboard.getPracticeModeType() == TestType.TUNE_HEADING_PID) {
       runHeadingPID();
       return;
-    } else if (Robot.shuffleboard.getPracticeModeType() == PracticeModeType.TUNE_MODULE_DRIVE) {
+    } else if (Robot.shuffleboard.getPracticeModeType() == TestType.TUNE_MODULE_DRIVE) {
       testDriveVel();
       Robot.shuffleboard.getModulefeedforward();
       return;
-    } else if (Robot.shuffleboard.getPracticeModeType() == PracticeModeType.TUNE_MODULE_TURN){
+    } else if (Robot.shuffleboard.getPracticeModeType() == TestType.TUNE_MODULE_TURN){
       testTurnAngle();
       return;
     }
@@ -229,13 +223,6 @@ public class Drivetrain extends SubsystemBase {
   }
 
   /**
-   * Toggles the drive mode.
-   */
-  public void toggleDriveMode() {
-    isSlewDrive = !isSlewDrive;
-  }
-
-  /**
    * Gets the current robot pose from the odometry.
    */
   public Pose2d getPose() {
@@ -274,10 +261,13 @@ public class Drivetrain extends SubsystemBase {
    * @return an array of all swerve module positions
    */
   public SwerveModulePosition[] getModulePositions() {
-    SwerveModulePosition[] positions = new SwerveModulePosition[4];
-    for (int i = 0; i < 4; i++) {
-      positions[i] = new SwerveModulePosition();
-    }
+    // TODO: Need to test if this works
+    SwerveModulePosition[] positions = new SwerveModulePosition[]{
+      new SwerveModulePosition(m_modules[0].getDriveVelocity(), Rotation2d.fromDegrees(m_modules[0].getAngle())),
+      new SwerveModulePosition(m_modules[1].getDriveVelocity(), Rotation2d.fromDegrees(m_modules[1].getAngle())),
+      new SwerveModulePosition(m_modules[2].getDriveVelocity(), Rotation2d.fromDegrees(m_modules[2].getAngle())),
+      new SwerveModulePosition(m_modules[3].getDriveVelocity(), Rotation2d.fromDegrees(m_modules[3].getAngle()))
+    };
     return positions;
   }
 
@@ -288,7 +278,8 @@ public class Drivetrain extends SubsystemBase {
    */
   public void setModuleStates(SwerveModuleState[] swerveModuleStates) {
     for (int i = 0; i < 4; i++) {
-      m_modules[i].setDesiredState(swerveModuleStates[i]);    }
+      m_modules[i].setDesiredState(swerveModuleStates[i]);
+    }
   }
 
   public PIDController getXController() {
@@ -304,7 +295,7 @@ public class Drivetrain extends SubsystemBase {
   /** Runs forwards at the commanded voltage. */
   public void runCharacterizationVolts(double volts) {
     m_isCharacterizing = true;
-    m_charactericationVolts = volts;
+    m_characterizationVolts = volts;
   }
 
   /** Returns the average drive velocity in radians/sec. */

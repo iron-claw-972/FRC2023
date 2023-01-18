@@ -20,15 +20,15 @@ import frc.robot.commands.FeedForwardCharacterization.FeedForwardCharacterizatio
 import frc.robot.commands.auto.PathPlannerCommand;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.Module;
-import frc.robot.subsystems.ModuleReal;
+import frc.robot.subsystems.Module;
 
 public class ShuffleboardManager {
 
   SendableChooser<Command> m_autoCommand = new SendableChooser<>();
   Map<Module,Double> m_velModulesSaver=new HashMap<Module,Double>();
   Map<Module,Double> m_staticModulesSaver=new HashMap<Module,Double>();
-  Module m_dummyModule = new ModuleReal(0, 0, 0, 0,0,0);
-  Module m_allModule = new ModuleReal(0, 0, 0, 0,0,0);
+  Module m_dummyModule = Module.create(0, 0, 0, 0.0, 0.0, 0.0);
+  Module m_allModule = Module.create(0, 0, 0, 0.0, 0.0, 0.0);
   Module m_prevModule = m_dummyModule;
   ShuffleboardTab m_mainTab = Shuffleboard.getTab("Main");
   public ShuffleboardTab m_driveTab = Shuffleboard.getTab("Drive");
@@ -43,7 +43,7 @@ public class ShuffleboardManager {
 
   GenericEntry m_commandScheduler = m_mainTab.add("Command Scheduler", "NULL").getEntry();
 
-  SendableChooser<PracticeModeType> m_practiceMode = new SendableChooser<>();
+  SendableChooser<TestType> m_testMode = new SendableChooser<>();
   SendableChooser<Module> m_module = new SendableChooser<>();
 
   
@@ -55,7 +55,7 @@ public class ShuffleboardManager {
     moduleChooserSetup();
     
     m_autoTab.add("Auto Chooser", m_autoCommand);
-    m_mainTab.add("Practice Mode Type Chooser", m_practiceMode);
+    m_mainTab.add("Practice Mode Type Chooser", m_testMode);
     m_swerveModulesTab.add("Module Feedforward", m_module);
     setupDrivetrain();
 
@@ -99,31 +99,33 @@ public class ShuffleboardManager {
   }
 
   public void getModulefeedforward(){
-    if (m_prevModule!=m_module.getSelected()){
+    //revert to previous saved feed forward data
+    if (m_prevModule != m_module.getSelected()){
       m_staticFeedforward.setDouble(m_staticModulesSaver.get(m_module.getSelected()));
       m_velFeedforward.setDouble(m_velModulesSaver.get(m_module.getSelected()));
-      m_prevModule=m_module.getSelected();
+      m_prevModule = m_module.getSelected();
     }
-    if (m_module.getSelected()==m_allModule){
-      for(int i=0;i<4;i++){
+    //to set all modules to same feedforward values
+    if (m_module.getSelected() == m_allModule){
+      for(int i = 0; i < 4; i++){
         Robot.drive.m_modules[i].getShuffleboardFeedForwardValues(m_staticModulesSaver.get(m_module.getSelected()), m_velModulesSaver.get(m_module.getSelected()));
       }
     }  
-    m_staticModulesSaver.replace(m_module.getSelected(),m_velFeedforward.getDouble(0) );
+    // update saved feedforward data
+    m_staticModulesSaver.replace(m_module.getSelected(),m_staticFeedforward.getDouble(0) );
     m_velModulesSaver.replace(m_module.getSelected(),m_velFeedforward.getDouble(0) );
     
     m_module.getSelected().getShuffleboardFeedForwardValues(m_staticModulesSaver.get(m_module.getSelected()),m_velModulesSaver.get(m_module.getSelected()));
   }
-  
-  public PracticeModeType getPracticeModeType() {
-    return m_practiceMode.getSelected();
+  public TestType getTestModeType() {
+    return m_testMode.getSelected();
   }
 
   public void practiceChooserUpdate() {
-    m_practiceMode.addOption(PracticeModeType.TUNE_HEADING_PID.toString(), PracticeModeType.TUNE_HEADING_PID);
-    m_practiceMode.addOption(PracticeModeType.TUNE_MODULE_DRIVE.toString(), PracticeModeType.TUNE_MODULE_DRIVE);
-    m_practiceMode.addOption(PracticeModeType.TUNE_MODULE_TURN.toString(), PracticeModeType.TUNE_MODULE_TURN);
-    m_practiceMode.setDefaultOption(PracticeModeType.NONE.toString(), PracticeModeType.NONE);
+    m_testMode.addOption(TestType.TUNE_HEADING_PID.toString(), TestType.TUNE_HEADING_PID);
+    m_testMode.addOption(TestType.TUNE_MODULE_DRIVE.toString(), TestType.TUNE_MODULE_DRIVE);
+    m_testMode.addOption(TestType.TUNE_MODULE_TURN.toString(), TestType.TUNE_MODULE_TURN);
+    m_testMode.setDefaultOption(TestType.NONE.toString(), TestType.NONE);
   }
 
   public double getRequestedHeading() {
