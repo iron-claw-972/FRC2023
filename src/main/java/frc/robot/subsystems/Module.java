@@ -29,9 +29,9 @@ public class Module {
    * @param steerOffset the offset of the CANcoder's angle
    * @return
    */
-  public static Module create(int driveMotorID, int steerMotorID, int encoderID, double steerOffset) {
+  public static Module create(int driveMotorID, int steerMotorID, int encoderID, double steerOffset, double feedforwardKS, double feedforwardKV) {
     if (Robot.isReal()) {
-      return new Module(driveMotorID, steerMotorID, encoderID, steerOffset);
+      return new Module(driveMotorID, steerMotorID, encoderID, steerOffset, feedforwardKS, feedforwardKV);
     } else {
       return new ModuleSim(driveMotorID, steerMotorID, encoderID, steerOffset);
     }
@@ -54,8 +54,7 @@ public class Module {
       new TrapezoidProfile.Constraints(
           Constants.drive.kMaxAngularSpeed, Constants.drive.kMaxAngularAccel));
 
-  private SimpleMotorFeedforward m_driveFeedforward = new SimpleMotorFeedforward(Constants.drive.kDriveKS,
-      Constants.drive.kDriveKV);
+  private SimpleMotorFeedforward m_driveFeedforward;
   private final SimpleMotorFeedforward m_turnFeedforward = new SimpleMotorFeedforward(Constants.drive.kSteerKS,
       Constants.drive.kSteerKV);
       
@@ -82,7 +81,9 @@ public class Module {
     int driveMotorPort,
     int steerMotorPort,
     int encoderPort,
-    double encoderOffset
+    double encoderOffset,
+    double feedforwardKS,
+    double doublefeedforwardKV
   ) {
     
     m_driveMotor = MotorFactory.createTalonFX(driveMotorPort, Constants.kRioCAN);
@@ -120,6 +121,8 @@ public class Module {
     m_steerMotor.setInverted(true);
 
     m_turningPIDController.reset(getAngle()); // reset the PID, and the Trapezoid motion profile needs to know the starting state
+
+    m_driveFeedforward = new SimpleMotorFeedforward(feedforwardKS, doublefeedforwardKV);
   }
 
 
@@ -129,12 +132,12 @@ public class Module {
    * @param desiredState Desired state with speed and angle.
    */
   public void setDesiredState(SwerveModuleState desiredState) {
-    if (Math.abs(desiredState.speedMetersPerSecond) < 0.001 && Robot.shuffleboard.getPracticeModeType() != TestType.TUNE_HEADING_PID) {
+    if (Math.abs(desiredState.speedMetersPerSecond) < 0.001 && Robot.shuffleboard.getTestModeType() != TestType.TUNE_HEADING_PID) {
       stop();
       return;
     }
 
-    if (Robot.shuffleboard.getPracticeModeType() != TestType.TUNE_HEADING_PID) {
+    if (Robot.shuffleboard.getTestModeType() != TestType.TUNE_HEADING_PID) {
       // Optimize the reference state to avoid spinning further than 90 degrees
       desiredState = SwerveModuleState.optimize(desiredState, new Rotation2d(getAngle()));
     }

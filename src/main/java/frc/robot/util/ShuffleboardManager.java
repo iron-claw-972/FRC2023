@@ -20,12 +20,11 @@ import frc.robot.subsystems.Module;
 public class ShuffleboardManager {
 
   SendableChooser<Command> m_autoCommand = new SendableChooser<>();
-  Map<Module,Double> velModulesSaver = new HashMap<Module,Double>();
-  Map<Module,Double> staticModulesSaver = new HashMap<Module,Double>();
-  Module dummy_module = new Module(0, 0, 0, 0);
-  Module all_Module = new Module(0, 0, 0, 0);
-  Module prev_module = dummy_module;
-
+  Map<Module,Double> m_velModulesSaver=new HashMap<Module,Double>();
+  Map<Module,Double> m_staticModulesSaver=new HashMap<Module,Double>();
+  Module m_dummyModule = Module.create(0, 0, 0, 0.0, 0.0, 0.0);
+  Module m_allModule = Module.create(0, 0, 0, 0.0, 0.0, 0.0);
+  Module m_prevModule = m_dummyModule;
   ShuffleboardTab m_mainTab = Shuffleboard.getTab("Main");
   public ShuffleboardTab m_driveTab = Shuffleboard.getTab("Drive");
   ShuffleboardTab m_swerveModulesTab = Shuffleboard.getTab("Swerve Modules");
@@ -39,7 +38,7 @@ public class ShuffleboardManager {
 
   GenericEntry m_commandScheduler = m_mainTab.add("Command Scheduler", "NULL").getEntry();
 
-  SendableChooser<TestType> m_practiceMode = new SendableChooser<>();
+  SendableChooser<TestType> m_testMode = new SendableChooser<>();
   SendableChooser<Module> m_module = new SendableChooser<>();
 
   
@@ -48,17 +47,10 @@ public class ShuffleboardManager {
 
     autoChooserUpdate();
     practiceChooserUpdate();
-    moduleChooserUpdate();
-    staticModulesSaver.put(dummy_module,Constants.drive.kSteerKS );
-    velModulesSaver.put(dummy_module,Constants.drive.kDriveKV );
-    staticModulesSaver.put(all_Module,Constants.drive.kSteerKS );
-    velModulesSaver.put(all_Module,Constants.drive.kDriveKV );
-    for (int i=0;i<4;i++){
-      staticModulesSaver.put(Robot.drive.m_modules[i],Constants.drive.kSteerKS );
-      velModulesSaver.put(Robot.drive.m_modules[i],Constants.drive.kDriveKV );
-    }
+    moduleChooserSetup();
+    
     m_autoTab.add("Auto Chooser", m_autoCommand);
-    m_mainTab.add("Practice Mode Type Chooser", m_practiceMode);
+    m_mainTab.add("Practice Mode Type Chooser", m_testMode);
     m_swerveModulesTab.add("Module Feedforward", m_module);
     setupDrivetrain();
 
@@ -77,44 +69,57 @@ public class ShuffleboardManager {
     m_autoCommand.addOption("Do Nothing", new PrintCommand("This will do nothing!"));
     // m_autoCommand.setDefaultOption("TestAuto", new PathPlannerCommand("TestAuto", 0)); 
   }
-  public void moduleChooserUpdate(){
+  public void moduleChooserSetup(){
+    m_module.setDefaultOption("NONE", m_dummyModule);
     m_module.addOption("Front Left", Robot.drive.m_modules[0]);
     m_module.addOption("Front Right", Robot.drive.m_modules[1]);
     m_module.addOption("Back Left ", Robot.drive.m_modules[2]);
     m_module.addOption("Back Right", Robot.drive.m_modules[3]);
-    m_module.addOption("all", all_Module );
+    m_module.addOption("all", m_allModule );
 
-    m_module.setDefaultOption("NONE", dummy_module);
+    m_staticModulesSaver.put(m_dummyModule,0.0);
+    m_velModulesSaver.put(m_dummyModule,0.0);
+    m_staticModulesSaver.put(m_allModule,Constants.drive.kDriveAllKS);
+    m_velModulesSaver.put(m_allModule,Constants.drive.kDriveAllKV);
+    m_staticModulesSaver.put(Robot.drive.m_modules[0],Constants.drive.kDriveAllKS);
+    m_velModulesSaver.put(Robot.drive.m_modules[0],Constants.drive.kDriveAllKV);
+    m_staticModulesSaver.put(Robot.drive.m_modules[1],Constants.drive.kDriveAllKS);
+    m_velModulesSaver.put(Robot.drive.m_modules[1],Constants.drive.kDriveAllKV);
+    m_staticModulesSaver.put(Robot.drive.m_modules[2],Constants.drive.kDriveAllKS);
+    m_velModulesSaver.put(Robot.drive.m_modules[2],Constants.drive.kDriveAllKV);
+    m_staticModulesSaver.put(Robot.drive.m_modules[3],Constants.drive.kDriveAllKS);
+    m_velModulesSaver.put(Robot.drive.m_modules[3],Constants.drive.kDriveAllKV);
 
   }
+
   public void getModulefeedforward(){
     //revert to previous saved feed forward data
-    if (prev_module != m_module.getSelected()){
-      m_staticFeedforward.setDouble(staticModulesSaver.get(m_module.getSelected()));
-      m_velFeedforward.setDouble(velModulesSaver.get(m_module.getSelected()));
-      prev_module = m_module.getSelected();
+    if (m_prevModule != m_module.getSelected()){
+      m_staticFeedforward.setDouble(m_staticModulesSaver.get(m_module.getSelected()));
+      m_velFeedforward.setDouble(m_velModulesSaver.get(m_module.getSelected()));
+      m_prevModule = m_module.getSelected();
     }
     //to set all modules to same feedforward values
-    if (m_module.getSelected() == all_Module){
+    if (m_module.getSelected() == m_allModule){
       for(int i = 0; i < 4; i++){
-        Robot.drive.m_modules[i].getShuffleboardFeedForwardValues(staticModulesSaver.get(m_module.getSelected()), velModulesSaver.get(m_module.getSelected()));
+        Robot.drive.m_modules[i].getShuffleboardFeedForwardValues(m_staticModulesSaver.get(m_module.getSelected()), m_velModulesSaver.get(m_module.getSelected()));
       }
     }  
     // update saved feedforward data
-    staticModulesSaver.replace(m_module.getSelected(),m_staticFeedforward.getDouble(0) );
-    velModulesSaver.replace(m_module.getSelected(),m_velFeedforward.getDouble(0) );
+    m_staticModulesSaver.replace(m_module.getSelected(),m_staticFeedforward.getDouble(0) );
+    m_velModulesSaver.replace(m_module.getSelected(),m_velFeedforward.getDouble(0) );
     
-    m_module.getSelected().getShuffleboardFeedForwardValues(staticModulesSaver.get(m_module.getSelected()),velModulesSaver.get(m_module.getSelected()));
+    m_module.getSelected().getShuffleboardFeedForwardValues(m_staticModulesSaver.get(m_module.getSelected()),m_velModulesSaver.get(m_module.getSelected()));
   }
-  public TestType getPracticeModeType() {
-    return m_practiceMode.getSelected();
+  public TestType getTestModeType() {
+    return m_testMode.getSelected();
   }
 
   public void practiceChooserUpdate() {
-    m_practiceMode.addOption(TestType.TUNE_HEADING_PID.toString(), TestType.TUNE_HEADING_PID);
-    m_practiceMode.addOption(TestType.TUNE_MODULE_DRIVE.toString(), TestType.TUNE_MODULE_DRIVE);
-    m_practiceMode.addOption(TestType.TUNE_MODULE_TURN.toString(), TestType.TUNE_MODULE_TURN);
-    m_practiceMode.setDefaultOption(TestType.NONE.toString(), TestType.NONE);
+    m_testMode.addOption(TestType.TUNE_HEADING_PID.toString(), TestType.TUNE_HEADING_PID);
+    m_testMode.addOption(TestType.TUNE_MODULE_DRIVE.toString(), TestType.TUNE_MODULE_DRIVE);
+    m_testMode.addOption(TestType.TUNE_MODULE_TURN.toString(), TestType.TUNE_MODULE_TURN);
+    m_testMode.setDefaultOption(TestType.NONE.toString(), TestType.NONE);
   }
 
   public double getRequestedHeading() {
