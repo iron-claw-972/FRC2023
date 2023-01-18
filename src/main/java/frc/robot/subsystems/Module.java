@@ -6,20 +6,17 @@ import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.SensorTimeBase;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
 
-import lib.ctre_shims.TalonEncoder;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.util.Units;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.util.MotorFactory;
 import frc.robot.util.TestType;
-import frc.robot.util.ShuffleboardManager;
+import lib.ctre_shims.TalonEncoder;
 
 public class Module {
 
@@ -195,25 +192,6 @@ public class Module {
   public void stop() {
     m_driveMotor.set(0);
     m_steerMotor.set(0);
-  }
-
-  public void setDriveVoltage(double voltage) {
-    m_driveMotor.setVoltage(voltage);
-  }
-
-  public void setTurnVoltage(double voltage) {
-    m_steerMotor.setVoltage(voltage);
-  }
-
-  public void characterize(double volts) {
-    m_driveMotor.setVoltage(volts);
-
-    // TODO: Feedforward takes a velocity setpoint, but this is inputing an angular position. I'm not sure what the intent is either.
-    m_steerMotor.setVoltage(m_turnFeedforward.calculate(Units.degreesToRadians(getAngle()), 0.0));
-  }
-
-  public double getCharacterizationVelocity() {
-    return m_driveEncoder.getRate();
   }
 
   public void getShuffleboardFeedForwardValues(double staticFeedforward, double VelocityFeedforward){

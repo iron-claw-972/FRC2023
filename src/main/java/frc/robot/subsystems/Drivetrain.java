@@ -11,11 +11,9 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
-import frc.robot.util.TestType;
 
 /** Represents a swerve drive style drivetrain.
  * Module IDs are:
@@ -72,20 +70,16 @@ public class Drivetrain extends SubsystemBase {
   private final WPI_Pigeon2 m_pigeon = new WPI_Pigeon2(Constants.drive.kPigeon, Constants.kCanivoreCAN);
   private boolean m_hasResetYaw = false;
 
-  public double headingPIDOutput = 0;
+  public double m_headingPIDOutput = 0;
 
   // Odometry
   private final SwerveDriveOdometry m_odometry;
   private Pose2d m_robotPose = new Pose2d();
   
   // PID Controllers
-  private PIDController xController = new PIDController(0, 0, 0);
-  private PIDController yController = new PIDController(0, 0, 0);
-  private PIDController rotationController = new PIDController(0.1, 0, 0);
-
-  // Characterizing
-  private boolean m_isCharacterizing = false;
-  private double m_characterizationVolts = 0;
+  private PIDController m_xController = new PIDController(0, 0, 0);
+  private PIDController m_yController = new PIDController(0, 0, 0);
+  private PIDController m_rotationController = new PIDController(0.1, 0, 0);
 
   public Drivetrain() {
     m_odometry = new SwerveDriveOdometry(m_kinematics, m_pigeon.getRotation2d(), getModulePositions());
@@ -93,14 +87,7 @@ public class Drivetrain extends SubsystemBase {
 
   @Override
   public void periodic() {
-
-    if (m_isCharacterizing) {
-      for (Module module : m_modules) {
-        module.characterize(m_characterizationVolts);
-      }
-    } else {
-      updateOdometry();
-    }
+    updateOdometry();
   }
 
   public void setPigeonYaw(double degrees) {
@@ -127,19 +114,6 @@ public class Drivetrain extends SubsystemBase {
    */
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
 
-    // TODO: we should move this somewhere else. drive() should just drive
-    if (Robot.shuffleboard.getPracticeModeType() == TestType.TUNE_HEADING_PID) {
-      runHeadingPID();
-      return;
-    } else if (Robot.shuffleboard.getPracticeModeType() == TestType.TUNE_MODULE_DRIVE) {
-      testDriveVel();
-      Robot.shuffleboard.getModulefeedforward();
-      return;
-    } else if (Robot.shuffleboard.getPracticeModeType() == TestType.TUNE_MODULE_TURN){
-      testTurnAngle();
-      return;
-    }
-
     if (!Robot.isReal()) {
       m_pigeon.getSimCollection().addHeading(rot * 0.02);
       return;
@@ -153,46 +127,6 @@ public class Drivetrain extends SubsystemBase {
     SwerveDriveKinematics.desaturateWheelSpeeds(m_swerveModuleStates, Constants.drive.kMaxSpeed);
     setModuleStates(m_swerveModuleStates);
   }
-
-
-  private void runHeadingPID() {
-    headingPIDOutput = rotationController.calculate(getAngleHeading(), Robot.shuffleboard.getRequestedHeading()); // should be in rad/s
-    
-    // headingOutput is in rad/s. Need to convert to m/s by multiplying by radius
-    headingPIDOutput *= Math.sqrt(0.5) * Constants.drive.kTrackWidth;
-
-    m_swerveModuleStates = new SwerveModuleState[] {
-      new SwerveModuleState(-headingPIDOutput, new Rotation2d(Units.degreesToRadians(-45))),
-      new SwerveModuleState(headingPIDOutput, new Rotation2d(Units.degreesToRadians(45))),
-      new SwerveModuleState(-headingPIDOutput, new Rotation2d(Units.degreesToRadians(45))),
-      new SwerveModuleState(headingPIDOutput, new Rotation2d(Units.degreesToRadians(-45)))
-    };
-
-    setModuleStates(m_swerveModuleStates);
-  }
-
-  private void testDriveVel() {
-    double value = Robot.shuffleboard.getRequestedVelocity();
-    m_swerveModuleStates = new SwerveModuleState[] {
-      new SwerveModuleState(value, new Rotation2d(Units.degreesToRadians(135))),
-      new SwerveModuleState(value, new Rotation2d(Units.degreesToRadians(45))),
-      new SwerveModuleState(value, new Rotation2d(Units.degreesToRadians(225))),
-      new SwerveModuleState(value, new Rotation2d(Units.degreesToRadians(315)))
-    };
-    setModuleStates(m_swerveModuleStates);
-  }
-
-  private void testTurnAngle() {
-    double value = Robot.shuffleboard.getRequestedTurnAngle();
-    m_swerveModuleStates = new SwerveModuleState[] {
-      new SwerveModuleState(0.01, new Rotation2d(Units.degreesToRadians(value))),
-      new SwerveModuleState(0.01, new Rotation2d(Units.degreesToRadians(value))),
-      new SwerveModuleState(0.01, new Rotation2d(Units.degreesToRadians(value))),
-      new SwerveModuleState(0.01, new Rotation2d(Units.degreesToRadians(value)))
-    };
-    setModuleStates(m_swerveModuleStates);
-  }
-
 
   /** Updates the field relative position of the robot. */
   public void updateOdometry() {
@@ -275,28 +209,13 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public PIDController getXController() {
-      return xController;
+      return m_xController;
   }
   public PIDController getYController() {
-      return yController;
+      return m_yController;
   }
   public PIDController getRotationController() {
-    return rotationController;
-  }
-
-  /** Runs forwards at the commanded voltage. */
-  public void runCharacterizationVolts(double volts) {
-    m_isCharacterizing = true;
-    m_characterizationVolts = volts;
-  }
-
-  /** Returns the average drive velocity in radians/sec. */
-  public double getCharacterizationVelocity() {
-    double driveVelocityAverage = 0.0;
-    for (Module module : m_modules) {
-      driveVelocityAverage += module.getCharacterizationVelocity();
-    }
-    return driveVelocityAverage / 4.0;
+    return m_rotationController;
   }
 
 }
