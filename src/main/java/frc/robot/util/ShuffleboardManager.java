@@ -20,15 +20,15 @@ import frc.robot.commands.FeedForwardCharacterization.FeedForwardCharacterizatio
 import frc.robot.commands.auto.PathPlannerCommand;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.Module;
-import frc.robot.subsystems.ModuleReal;
+import frc.robot.subsystems.Module;
 
 public class ShuffleboardManager {
 
   SendableChooser<Command> m_autoCommand = new SendableChooser<>();
   Map<Module,Double> velModulesSaver = new HashMap<Module,Double>();
   Map<Module,Double> staticModulesSaver = new HashMap<Module,Double>();
-  Module dummy_module = new ModuleReal(0, 0, 0, 0);
-  Module all_Module = new ModuleReal(0, 0, 0, 0);
+  Module dummy_module = new Module(0, 0, 0, 0);
+  Module all_Module = new Module(0, 0, 0, 0);
   Module prev_module = dummy_module;
 
   ShuffleboardTab m_mainTab = Shuffleboard.getTab("Main");

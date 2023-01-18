@@ -18,7 +18,6 @@ public class Driver {
 
   public static void configureControls() {
     driver.get(Button.START).whenPressed(new InstantCommand(() -> Robot.drive.setPigeonYaw(Constants.drive.kStartingHeadingDegrees)));
-    driver.get(Button.A).whenPressed(new InstantCommand(() -> Robot.drive.toggleDriveMode()));
   }
 
   public static double getForwardTranslation() {
