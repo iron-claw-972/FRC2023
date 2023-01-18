@@ -21,7 +21,6 @@ import lib.ctre_shims.TalonEncoder;
 public class Module {
 
   /**
-   * 
    * Creates a swerve module, or a simulated one if running on the simulator.
    * 
    * @param driveMotorID the ID of the drive motor
@@ -61,6 +60,8 @@ public class Module {
       Constants.drive.kSteerKV);
       
   private double m_offset = 0.0;
+
+  private double m_lastDrivePosition = 0;
   
   public double driveOutput = 0;
   
@@ -150,6 +151,15 @@ public class Module {
 
     m_driveMotor.setVoltage(driveOutput + driveFeedforward);
     m_steerMotor.setVoltage(turnOutput + turnFeedforward); // * Constants.kMaxVoltage / RobotController.getBatteryVoltage()
+  }
+  
+  /**
+   * Gets the drive position of the module.
+   * 
+   * @return module drive position
+   */
+  public double getDrivePosition() {
+      return m_driveEncoder.getDistance();
   }
 
   /**
