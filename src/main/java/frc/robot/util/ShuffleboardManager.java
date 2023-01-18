@@ -6,7 +6,6 @@ import java.util.Map;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -15,11 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Robot;
-import frc.robot.commands.FeedForwardCharacterization;
-import frc.robot.commands.FeedForwardCharacterization.FeedForwardCharacterizationData;
-import frc.robot.commands.auto.PathPlannerCommand;
 import frc.robot.constants.Constants;
-import frc.robot.subsystems.Module;
 import frc.robot.subsystems.Module;
 
 public class ShuffleboardManager {
@@ -63,7 +58,7 @@ public class ShuffleboardManager {
     m_driveTab.add("yController", Robot.drive.getYController());
     m_driveTab.add("rotationController", Robot.drive.getRotationController());
     m_driveTab.addNumber("getAngle", () -> Robot.drive.getAngleHeading());
-    m_driveTab.addNumber("heading PID output", () -> Robot.drive.headingPIDOutput);
+    m_driveTab.addNumber("heading PID output", () -> Robot.drive.m_headingPIDOutput);
   }
 
   public Command getAutonomousCommand() {
@@ -73,7 +68,6 @@ public class ShuffleboardManager {
   public void autoChooserUpdate() {
     m_autoCommand.addOption("Do Nothing", new PrintCommand("This will do nothing!"));
     // m_autoCommand.setDefaultOption("TestAuto", new PathPlannerCommand("TestAuto", 0)); 
-    m_autoCommand.addOption("FeedForwardCharacterization", new FeedForwardCharacterization(Robot.drive, true, new FeedForwardCharacterizationData("drive"), Robot.drive::runCharacterizationVolts, Robot.drive::getCharacterizationVelocity));
   }
   public void moduleChooserSetup(){
     m_module.setDefaultOption("NONE", m_dummyModule);
