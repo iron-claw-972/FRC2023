@@ -56,7 +56,7 @@ public class MotorFactory {
     talon.configFactoryDefault();
     talon.configAllSettings(config);
     talon.enableCurrentLimit(true);
-    talon.enableVoltageCompensation(true);
+    talon.enableVoltageCompensation(false);
     talon.setNeutralMode(NeutralMode.Brake);
 
     return talon;
@@ -167,7 +167,7 @@ public class MotorFactory {
 
     talon.configFactoryDefault();
     talon.configAllSettings(config);
-    talon.enableVoltageCompensation(true);
+    talon.enableVoltageCompensation(false);
     talon.setNeutralMode(NeutralMode.Brake);
     talon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
 
