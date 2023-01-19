@@ -19,29 +19,29 @@ public class DriveConstants {
 
     public final double kStartingHeadingDegrees = 0;
 
-    public final int kDriveFrontLeft = 1;
-    public final int kSteerFrontLeft = 2;
+    public final int kDriveFrontLeft = 20;
+    public final int kSteerFrontLeft = 31;
     public final int kEncoderFrontLeft = 3;
     public final double kSteerOffsetFrontLeft = 1.561;
     public final double kDriveKSFrontLeft = 0.63107;
     public final double kDriveKVFrontLeft = 2.1592;
 
-    public final int kDriveFrontRight = 4; 
-    public final int kSteerFrontRight = 5;
+    public final int kDriveFrontRight = 30; 
+    public final int kSteerFrontRight = 33;
     public final int kEncoderFrontRight = 6; 
     public final double kSteerOffsetFrontRight = -2.764+Math.PI;
     public final double kDriveKSFrontRight = 0.63107;
     public final double kDriveKVFrontRight = 2.1592;
 
-    public final int kDriveBackLeft = 7; 
+    public final int kDriveBackLeft = 16; 
     public final int kSteerBackLeft = 8;
     public final int kEncoderBackLeft = 9; 
     public final double kSteerOffsetBackLeft = 0;
     public final double kDriveKSBackLeft = 0.63107;
     public final double kDriveKVBackLeft = 2.1592;
 
-    public final int kDriveBackRight = 10;
-    public final int kSteerBackRight = 11;
+    public final int kDriveBackRight = 32;
+    public final int kSteerBackRight = 35;
     public final int kEncoderBackRight = 12; 
     public final double kSteerOffsetBackRight = 2.73;
     public final double kDriveKSBackRight = 0.63107;

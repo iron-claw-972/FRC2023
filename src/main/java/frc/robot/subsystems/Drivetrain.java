@@ -75,7 +75,7 @@ public class Drivetrain extends SubsystemBase {
   );
 
   // Pigeon
-  private final WPI_Pigeon2 m_pigeon = new WPI_Pigeon2(Constants.drive.kPigeon, Constants.kCanivoreCAN);
+  //private final WPI_Pigeon2 m_pigeon = new WPI_Pigeon2(Constants.drive.kPigeon, Constants.kCanivoreCAN);
   private boolean m_hasResetYaw = false;
 
   public double m_headingPIDOutput = 0;
@@ -90,7 +90,7 @@ public class Drivetrain extends SubsystemBase {
   private PIDController m_rotationController = new PIDController(0.1, 0, 0);
 
   public Drivetrain() {
-    m_odometry = new SwerveDriveOdometry(m_kinematics, m_pigeon.getRotation2d(), getModulePositions());
+    m_odometry = new SwerveDriveOdometry(m_kinematics, new Rotation2d(0), getModulePositions());
   }
 
   @Override
@@ -99,7 +99,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void setPigeonYaw(double degrees) {
-    m_pigeon.setYaw(degrees);
+    //m_pigeon.setYaw(degrees);
   }
 
   /**
@@ -123,14 +123,14 @@ public class Drivetrain extends SubsystemBase {
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
 
     if (!Robot.isReal()) {
-      m_pigeon.getSimCollection().addHeading(rot * 0.02);
+      //m_pigeon.getSimCollection().addHeading(rot * 0.02);
       return;
     }
 
     m_swerveModuleStates =
         m_kinematics.toSwerveModuleStates(
             fieldRelative
-                ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_pigeon.getRotation2d())
+                ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, new Rotation2d(0))
                 : new ChassisSpeeds(xSpeed, ySpeed, rot));
     SwerveDriveKinematics.desaturateWheelSpeeds(m_swerveModuleStates, Constants.drive.kMaxSpeed);
     setModuleStates(m_swerveModuleStates);
@@ -139,7 +139,8 @@ public class Drivetrain extends SubsystemBase {
   /** Updates the field relative position of the robot. */
   public void updateOdometry() {
     m_robotPose = m_odometry.update(
-      m_pigeon.getRotation2d(),
+      //m_pigeon.getRotation2d(),
+      new Rotation2d(0),
       getModulePositions()
     );
   }
@@ -152,7 +153,7 @@ public class Drivetrain extends SubsystemBase {
    */
   public double getAngularRate(int id) {
     double[] rawGyros = new double[3];
-    m_pigeon.getRawGyro(rawGyros);
+    //m_pigeon.getRawGyro(rawGyros);
     return rawGyros[id] * Math.PI / 180;
   }
 
@@ -176,7 +177,9 @@ public class Drivetrain extends SubsystemBase {
    * @return the pidgeon's Rotation2d
    */
   public Rotation2d getRotation2d(){
-    return m_pigeon.getRotation2d(); 
+    return new Rotation2d(0);
+    //return m_pigeon.getRotation2d(); 
+    
   }
 
   /**
@@ -185,7 +188,8 @@ public class Drivetrain extends SubsystemBase {
    * @return the heading angle in radians, from -pi to pi
    */
   public double getAngleHeading() {
-    Rotation2d angle = m_pigeon.getRotation2d();
+    Rotation2d angle =  new Rotation2d(0);
+    //m_pigeon.getRotation2d();
     return Math.atan2(angle.getSin(), angle.getCos());
   }
 
