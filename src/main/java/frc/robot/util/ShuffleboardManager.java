@@ -46,7 +46,7 @@ public class ShuffleboardManager {
     LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
 
     autoChooserUpdate();
-    practiceChooserUpdate();
+    testTypeChooserUpdate();
     moduleChooserSetup();
     
     m_autoTab.add("Auto Chooser", m_autoCommand);
@@ -115,7 +115,7 @@ public class ShuffleboardManager {
     return m_testMode.getSelected();
   }
 
-  public void practiceChooserUpdate() {
+  public void testTypeChooserUpdate() {
     m_testMode.addOption(TestType.TUNE_HEADING_PID.toString(), TestType.TUNE_HEADING_PID);
     m_testMode.addOption(TestType.TUNE_MODULE_DRIVE.toString(), TestType.TUNE_MODULE_DRIVE);
     m_testMode.addOption(TestType.TUNE_MODULE_TURN.toString(), TestType.TUNE_MODULE_TURN);
