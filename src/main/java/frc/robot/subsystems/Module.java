@@ -21,7 +21,6 @@ import lib.ctre_shims.TalonEncoder;
 public class Module {
 
   /**
-   * 
    * Creates a swerve module, or a simulated one if running on the simulator.
    * 
    * @param driveMotorID the ID of the drive motor
@@ -38,7 +37,6 @@ public class Module {
     }
   }
 
-
   private final WPI_TalonFX m_driveMotor;
   private final WPI_TalonFX m_steerMotor;
 
@@ -46,25 +44,24 @@ public class Module {
   private final WPI_CANCoder m_encoder;
 
   private final PIDController m_drivePIDController = new PIDController(Constants.drive.kDriveP, Constants.drive.kDriveI,
-      Constants.drive.kDriveD);
+    Constants.drive.kDriveD);
 
-  private ProfiledPIDController m_turningPIDController = new ProfiledPIDController(
-      Constants.drive.kSteerP,
-      Constants.drive.kSteerI,
-      Constants.drive.kSteerD,
-      new TrapezoidProfile.Constraints(
-          Constants.drive.kMaxAngularSpeed, Constants.drive.kMaxAngularAccel));
+  private ProfiledPIDController m_steerPIDController = new ProfiledPIDController(
+    Constants.drive.kSteerP,
+    Constants.drive.kSteerI,
+    Constants.drive.kSteerD,
+    new TrapezoidProfile.Constraints(
+      Constants.drive.kMaxAngularSpeed, Constants.drive.kMaxAngularAccel));
 
   private SimpleMotorFeedforward m_driveFeedforward;
-  private final SimpleMotorFeedforward m_turnFeedforward = new SimpleMotorFeedforward(Constants.drive.kSteerKS,
-      Constants.drive.kSteerKV);
+  private final SimpleMotorFeedforward m_turnFeedforward = new SimpleMotorFeedforward(Constants.drive.kSteerKS, Constants.drive.kSteerKV);
       
   private double m_offset = 0.0;
   
-  public double driveOutput = 0;
+  public double m_driveOutput = 0;
   
-  public double turnFeedforward = 0.0;
-  public double turnOutput = 0.0;
+  public double m_steerFeedForwardOutput = 0.0;
+  public double m_steerOutput = 0.0;
 
   /**
    * Module constructor to suppress ModuleSim constructor error.
@@ -115,11 +112,11 @@ public class Module {
 
     // Limit the PID Controller's input range between -pi and pi and set the input
     // to be continuous. Factor in the offset amount.
-    m_turningPIDController.enableContinuousInput(-Math.PI + m_offset, Math.PI + m_offset);
+    m_steerPIDController.enableContinuousInput(-Math.PI + m_offset, Math.PI + m_offset);
 
     m_steerMotor.setInverted(true);
 
-    m_turningPIDController.reset(getAngle()); // reset the PID, and the Trapezoid motion profile needs to know the starting state
+    m_steerPIDController.reset(getAngle()); // reset the PID, and the Trapezoid motion profile needs to know the starting state
 
     m_driveFeedforward = new SimpleMotorFeedforward(feedforwardKS, doublefeedforwardKV);
   }
@@ -142,63 +139,108 @@ public class Module {
     }
 
     // Calculate the drive output from the drive PID controller.
-    driveOutput = m_drivePIDController.calculate(m_driveEncoder.getRate(), desiredState.speedMetersPerSecond);
+    m_driveOutput = m_drivePIDController.calculate(m_driveEncoder.getRate(), desiredState.speedMetersPerSecond);
 
     final double driveFeedforward = m_driveFeedforward.calculate(desiredState.speedMetersPerSecond);
 
-    // Calculate the turning motor output from the turning PID controller.
-    turnOutput = m_turningPIDController.calculate(getAngle(), desiredState.angle.getRadians());
+    // Calculate the steer motor output from the steer PID controller.
+    m_steerOutput = m_steerPIDController.calculate(getAngle(), desiredState.angle.getRadians());
 
-    turnFeedforward = m_turnFeedforward.calculate(m_turningPIDController.getSetpoint().velocity);
+    m_steerFeedForwardOutput = m_turnFeedforward.calculate(m_steerPIDController.getSetpoint().velocity);
 
-    m_driveMotor.setVoltage(driveOutput + driveFeedforward);
-    m_steerMotor.setVoltage(turnOutput + turnFeedforward); // * Constants.kMaxVoltage / RobotController.getBatteryVoltage()
+    m_driveMotor.setVoltage(m_driveOutput + driveFeedforward);
+    m_steerMotor.setVoltage(m_steerOutput + m_steerFeedForwardOutput); // * Constants.kMaxVoltage / RobotController.getBatteryVoltage()
+  }
+  
+  /**
+   * Gets the drive position of the module.
+   * 
+   * @return module drive position
+   */
+  public double getDrivePosition() {
+      return m_driveEncoder.getDistance();
   }
 
   /**
-   * Returns the current state of the module.
-   *
-   * @return The current state of the module.
+   * Stops the module by setting both steer and drive motors to 0.
    */
-  public SwerveModuleState getState() {
-    return new SwerveModuleState(m_driveMotor.getSelectedSensorVelocity(), new Rotation2d(getAngle()));
-  }
-
-  public ProfiledPIDController getSteerPID() {
-    return m_turningPIDController;
-  }
-
-  public void resetSteerPID(double angle) {
-    m_turningPIDController.reset(angle);
-  }
-
-  public double getAngle() {
-    return m_encoder.getAbsolutePosition() - m_offset;
-  }
-
-  public double getDriveVelocity() {
-    return m_driveEncoder.getRate();
-  }
-
-  public PIDController getDrivePID() {
-    return m_drivePIDController;
-  }
-
-  public double getTurnFeedForward() {
-    return turnFeedforward;
-  }
-
-  public double getTurnOutput() {
-    return turnOutput;
-  }
-
   public void stop() {
     m_driveMotor.set(0);
     m_steerMotor.set(0);
   }
 
-  public void getShuffleboardFeedForwardValues(double staticFeedforward, double VelocityFeedforward){
-    m_driveFeedforward = new SimpleMotorFeedforward(staticFeedforward, VelocityFeedforward);
+  /**
+   * Returns the current state of the module.
+   * @return the current state of the module
+   */
+  public SwerveModuleState getState() {
+    return new SwerveModuleState(m_driveMotor.getSelectedSensorVelocity(), new Rotation2d(getAngle()));
+  }
+
+  /**
+   * Resets the steer PID controller.
+   * @param angle current position of the PID controller.
+   */
+  public void resetSteerPID(double angle) {
+    m_steerPIDController.reset(angle);
+  }
+
+  
+  /**
+   * Gets the angle of the module.
+   * @return encoder's absolute position - offset
+   */
+  public double getAngle() {
+    return m_encoder.getAbsolutePosition() - m_offset;
+  }
+
+  /**
+   * Gets the drive velocity of the module.
+   * @return the drive velocity
+   */
+  public double getDriveVelocity() {
+    return m_driveEncoder.getRate();
+  }
+  
+  /**
+   * Gets the steering PID controller.
+   * @return the steering PID controller
+   */
+  public ProfiledPIDController getSteerPID() {
+    return m_steerPIDController;
+  }
+
+  /**
+   * Gets the drive PID controller.
+   * @return the drive PID controller
+   */
+  public PIDController getDrivePID() {
+    return m_drivePIDController;
+  }
+
+  /**
+   * Gets steer feedforward output.
+   * @return steer feedforward output
+   */
+  public double getSteerFeedForwardOutput() {
+    return m_steerFeedForwardOutput;
+  }
+
+  /**
+   * Gets the steer output.
+   * @return steer output
+   */
+  public double getSteerOutput() {
+    return m_steerOutput;
+  }
+
+  /**
+   * Update the driveFeedforward values from Shuffleboard.
+   * @param staticFeedforward static feedforward value from Shuffleboard
+   * @param velocityFeedForward velocity feedforward value from Shuffleboard
+   */
+  public void getShuffleboardFeedForwardValues(double staticFeedforward, double velocityFeedForward){
+    m_driveFeedforward = new SimpleMotorFeedforward(staticFeedforward, velocityFeedForward);
   }
 
 }

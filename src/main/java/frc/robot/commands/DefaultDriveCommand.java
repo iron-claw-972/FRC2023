@@ -22,7 +22,6 @@ public class DefaultDriveCommand extends CommandBase {
   @Override
   public void execute() {
 
-    // TODO: we should move this somewhere else. drive() should just drive
     if (Robot.shuffleboard.getTestModeType() == TestType.TUNE_HEADING_PID) {
       runHeadingPID();
       return;

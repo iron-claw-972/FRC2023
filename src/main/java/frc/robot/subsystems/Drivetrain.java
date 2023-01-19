@@ -195,12 +195,11 @@ public class Drivetrain extends SubsystemBase {
    * @return an array of all swerve module positions
    */
   public SwerveModulePosition[] getModulePositions() {
-    // TODO: Need to test if this works
     SwerveModulePosition[] positions = new SwerveModulePosition[]{
-      new SwerveModulePosition(m_modules[0].getDriveVelocity(), Rotation2d.fromDegrees(m_modules[0].getAngle())),
-      new SwerveModulePosition(m_modules[1].getDriveVelocity(), Rotation2d.fromDegrees(m_modules[1].getAngle())),
-      new SwerveModulePosition(m_modules[2].getDriveVelocity(), Rotation2d.fromDegrees(m_modules[2].getAngle())),
-      new SwerveModulePosition(m_modules[3].getDriveVelocity(), Rotation2d.fromDegrees(m_modules[3].getAngle()))
+      new SwerveModulePosition(m_modules[0].getDrivePosition(), Rotation2d.fromDegrees(m_modules[0].getAngle())),
+      new SwerveModulePosition(m_modules[1].getDrivePosition(), Rotation2d.fromDegrees(m_modules[1].getAngle())),
+      new SwerveModulePosition(m_modules[2].getDrivePosition(), Rotation2d.fromDegrees(m_modules[2].getAngle())),
+      new SwerveModulePosition(m_modules[3].getDrivePosition(), Rotation2d.fromDegrees(m_modules[3].getAngle()))
     };
     return positions;
   }
