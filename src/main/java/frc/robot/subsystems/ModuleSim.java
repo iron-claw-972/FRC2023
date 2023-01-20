@@ -1,13 +1,20 @@
 package frc.robot.subsystems;
 
-public class ModuleSim extends Module {
+import frc.robot.constants.ModuleConstants;
 
+public class ModuleSim extends Module {
+  
   public ModuleSim(
-    int driveMotorPort,
-    int steerMotorPort,
-    int encoderPort,
-    double encoderOffset
+    int driveMotorID, 
+    int steerMotorID, 
+    int encoderID, 
+    double steerOffset
   ) {
+
+  }
+
+  public ModuleSim(ModuleConstants moduleConstants) {
+
   }
 
 }

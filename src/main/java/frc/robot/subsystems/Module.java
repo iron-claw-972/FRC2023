@@ -14,6 +14,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
+import frc.robot.constants.ModuleConstants;
 import frc.robot.util.MotorFactory;
 import frc.robot.util.TestType;
 import lib.ctre_shims.TalonEncoder;
@@ -29,8 +30,15 @@ public class Module {
    * @param steerOffset the offset of the CANcoder's angle
    * @return
    */
-  public static Module create(int driveMotorID, int steerMotorID, int encoderID, double steerOffset, double feedforwardKS, double feedforwardKV) {
+  public static Module create(ModuleConstants moduleConstants) {
     if (Robot.isReal()) {
+      return new Module(moduleConstants);
+    } else {
+      return new ModuleSim(moduleConstants);
+    }
+  }
+  public static Module create(int driveMotorID, int steerMotorID, int encoderID, double steerOffset, double feedforwardKS, double feedforwardKV) {
+    if (Robot.isReal()) { 
       return new Module(driveMotorID, steerMotorID, encoderID, steerOffset, feedforwardKS, feedforwardKV);
     } else {
       return new ModuleSim(driveMotorID, steerMotorID, encoderID, steerOffset);
@@ -67,10 +75,18 @@ public class Module {
    * Module constructor to suppress ModuleSim constructor error.
    */
   public Module() {
-    m_driveMotor = null;
-    m_steerMotor = null;
-    m_driveEncoder = null;
-    m_encoder = null;
+    this(ModuleConstants.NONE);
+  }
+
+  public Module(ModuleConstants moduleConstants){
+    this(
+      moduleConstants.getDrivePort(),
+      moduleConstants.getDrivePort(),
+      moduleConstants.getEncoderPort(),
+      moduleConstants.getSteerOffset(),
+      moduleConstants.getDriveKS(),
+      moduleConstants.getDriveKV()
+    );
   }
 
   public Module(
