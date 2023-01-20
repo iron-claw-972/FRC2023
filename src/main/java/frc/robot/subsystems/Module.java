@@ -29,6 +29,8 @@ public class Module {
    * @param steerMotorID the ID of the steer motor
    * @param encoderID the id of the CANcoder for measuring the module's angle
    * @param steerOffset the offset of the CANcoder's angle
+   * @param feedforwardKS the static feedforward of the drive motor
+   * @param feedforwardKV the velocity feedforward of the drive motor
    * @return
    */
   public static Module create(ModuleConstants moduleConstants) {
@@ -42,7 +44,7 @@ public class Module {
     if (Robot.isReal()) { 
       return new Module(driveMotorID, steerMotorID, encoderID, steerOffset, feedforwardKS, feedforwardKV);
     } else {
-      return new ModuleSim(driveMotorID, steerMotorID, encoderID, steerOffset);
+      return new ModuleSim(driveMotorID, steerMotorID, encoderID, steerOffset, feedforwardKS, feedforwardKV);
     }
   }
 
@@ -63,7 +65,7 @@ public class Module {
       Constants.drive.kMaxAngularSpeed, Constants.drive.kMaxAngularAccel));
 
   private SimpleMotorFeedforward m_driveFeedforward;
-  private final SimpleMotorFeedforward m_turnFeedforward = new SimpleMotorFeedforward(Constants.drive.kSteerKS, Constants.drive.kSteerKV);
+  private final SimpleMotorFeedforward m_steerFeedForward = new SimpleMotorFeedforward(Constants.drive.kSteerKS, Constants.drive.kSteerKV);
       
   private double m_offset = 0.0;
   
@@ -72,13 +74,6 @@ public class Module {
   public double m_steerFeedForwardOutput = 0.0;
   public double m_steerOutput = 0.0;
   public MedianFilter m_medianFilter = new MedianFilter(10);
-
-  /**
-   * Module constructor to suppress ModuleSim constructor error.
-   */
-  public Module() {
-    this(ModuleConstants.NONE);
-  }
 
   public Module(ModuleConstants moduleConstants){
     this(
@@ -100,9 +95,14 @@ public class Module {
     double doublefeedforwardKV
   ) {
     
-    m_driveMotor = MotorFactory.createTalonFX(driveMotorPort, Constants.kRioCAN);
-    m_steerMotor = MotorFactory.createTalonFX(steerMotorPort, Constants.kCanivoreCAN);
-
+    if (Robot.isReal()) {
+      m_driveMotor = MotorFactory.createTalonFX(driveMotorPort, Constants.kRioCAN);
+      m_steerMotor = MotorFactory.createTalonFX(steerMotorPort, Constants.kCanivoreCAN);
+    } else {
+      m_driveMotor = new WPI_TalonFX(driveMotorPort);
+      m_steerMotor = new WPI_TalonFX(steerMotorPort);
+    }
+    
     m_driveMotor.setNeutralMode(NeutralMode.Brake);
     m_steerMotor.setNeutralMode(NeutralMode.Brake);
 
@@ -164,7 +164,7 @@ public class Module {
     // Calculate the steer motor output from the steer PID controller.
     m_steerOutput = m_steerPIDController.calculate(getAngle(), desiredState.angle.getRadians());
 
-    m_steerFeedForwardOutput = m_turnFeedforward.calculate(m_steerPIDController.getSetpoint().velocity);
+    m_steerFeedForwardOutput = m_steerFeedForward.calculate(m_steerPIDController.getSetpoint().velocity);
 
     m_driveMotor.setVoltage(m_driveOutput + driveFeedforward);
     m_steerMotor.setVoltage(m_steerOutput + m_steerFeedForwardOutput); // * Constants.kMaxVoltage / RobotController.getBatteryVoltage()
@@ -197,12 +197,11 @@ public class Module {
 
   /**
    * Resets the steer PID controller.
-   * @param angle current position of the PID controller.
+   * @param angle current position of the PID controller
    */
   public void resetSteerPID(double angle) {
     m_steerPIDController.reset(angle);
   }
-
   
   /**
    * Gets the angle of the module.
@@ -214,7 +213,7 @@ public class Module {
 
   /**
    * Gets the drive velocity of the module.
-   * @return the drive velocity
+   * @return the rate of the drive encoder
    */
   public double getDriveVelocity() {
     return m_driveEncoder.getRate();
@@ -222,38 +221,6 @@ public class Module {
 
   public double getDriveVelocityFilltered(){
     return m_medianFilter.calculate(getDriveVelocity());
-  }
-  
-  /**
-   * Gets the steering PID controller.
-   * @return the steering PID controller
-   */
-  public ProfiledPIDController getSteerPID() {
-    return m_steerPIDController;
-  }
-
-  /**
-   * Gets the drive PID controller.
-   * @return the drive PID controller
-   */
-  public PIDController getDrivePID() {
-    return m_drivePIDController;
-  }
-
-  /**
-   * Gets steer feedforward output.
-   * @return steer feedforward output
-   */
-  public double getSteerFeedForwardOutput() {
-    return m_steerFeedForwardOutput;
-  }
-
-  /**
-   * Gets the steer output.
-   * @return steer output
-   */
-  public double getSteerOutput() {
-    return m_steerOutput;
   }
 
   /**
@@ -263,6 +230,52 @@ public class Module {
    */
   public void getShuffleboardFeedForwardValues(double staticFeedforward, double velocityFeedForward){
     m_driveFeedforward = new SimpleMotorFeedforward(staticFeedforward, velocityFeedForward);
+  }
+
+  
+  // Getter Methods
+  public ProfiledPIDController getSteerPID() {
+    return m_steerPIDController;
+  }
+
+  public PIDController getDrivePID() {
+    return m_drivePIDController;
+  }
+
+  public SimpleMotorFeedforward getDriveFeedforward() {
+    return m_driveFeedforward;
+  }
+
+  public SimpleMotorFeedforward getSteerFeedforward() {
+    return m_steerFeedForward;
+  }
+
+  public double getDriveOutput() {
+    return m_driveOutput;
+  }
+
+  public WPI_TalonFX getDriveMotor() {
+    return m_driveMotor;
+  }
+
+  public WPI_TalonFX getSteerMotor() {
+    return m_steerMotor;
+  }
+
+  public TalonEncoder getDriveEncoder() {
+    return m_driveEncoder;
+  }
+
+  public WPI_CANCoder getEncoder() {
+    return m_encoder;
+  }
+
+  public double getSteerFeedForwardOutput() {
+    return m_steerFeedForwardOutput;
+  }
+
+  public double getSteerOutput() {
+    return m_steerOutput;
   }
 
 }
