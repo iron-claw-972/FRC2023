@@ -47,4 +47,7 @@ public class Functions {
     }
     return finVal;
   }
+  
+  public double calculateAngle(double x, double y)
+    { return Math.atan(y/x); }
 }
