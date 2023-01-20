@@ -5,8 +5,6 @@
 package frc.robot;
 
 
-import java.lang.reflect.Field;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
