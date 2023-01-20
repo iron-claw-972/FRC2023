@@ -17,7 +17,7 @@ public class Driver {
   private static final SlewRateLimiter m_rotLimiter = new SlewRateLimiter(0.1);
 
   public static void configureControls() {
-    driver.get(Button.START).whenPressed(new InstantCommand(() -> Robot.drive.setPigeonYaw(Constants.drive.kStartingHeadingDegrees)));
+    driver.get(Button.START).onTrue(new InstantCommand(() -> Robot.drive.setPigeonYaw(Constants.drive.kStartingHeadingDegrees)));
   }
 
   public static double getForwardTranslation() {
