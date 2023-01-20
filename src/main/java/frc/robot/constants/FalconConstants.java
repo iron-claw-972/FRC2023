@@ -2,8 +2,7 @@ package frc.robot.constants;
 
 public class FalconConstants {
 
-  // Stored in hex though not really a hex. 21.0 = 0x2100, ex. 1.2 = 0x0102, 22.1.1 = 0x2211
-  public final int kFirmwareVersion = 0x2211;
+  public final int kFirmwareVersion = 5633; // version 22.1.1.0
   public final boolean kBreakOnWrongFirmware = true;
 
   public final double kResolution = 2048;
