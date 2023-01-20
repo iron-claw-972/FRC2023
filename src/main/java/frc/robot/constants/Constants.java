@@ -13,6 +13,7 @@ public final class Constants {
 
   public static final FalconConstants falcon = new FalconConstants();
   public static final OIConstants oi = new OIConstants();
+  public static final FalconConstants falcon = new FalconConstants();
   public static final DriveConstants drive = new DriveConstants();
   public static final AutoConstants auto = new AutoConstants();
 }

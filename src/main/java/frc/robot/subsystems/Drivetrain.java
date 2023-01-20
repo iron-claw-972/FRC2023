@@ -14,6 +14,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
+import frc.robot.constants.ModuleConstants;
 
 /** Represents a swerve drive style drivetrain.
  * Module IDs are:
@@ -33,38 +34,10 @@ public class Drivetrain extends SubsystemBase {
   };
 
   public final Module[] m_modules = new Module[]{
-    Module.create(
-      Constants.drive.kDriveFrontLeft,
-      Constants.drive.kSteerFrontLeft,
-      Constants.drive.kEncoderFrontLeft,
-      Constants.drive.kSteerOffsetFrontLeft,
-      Constants.drive.kDriveKSFrontLeft,
-      Constants.drive.kDriveKVFrontLeft
-    ),
-    Module.create(
-      Constants.drive.kDriveFrontRight,
-      Constants.drive.kSteerFrontRight,
-      Constants.drive.kEncoderFrontRight,
-      Constants.drive.kSteerOffsetFrontRight,
-      Constants.drive.kDriveKSFrontRight,
-      Constants.drive.kDriveKVFrontRight
-    ),
-    Module.create(                                  
-      Constants.drive.kDriveBackLeft,
-      Constants.drive.kSteerBackLeft,
-      Constants.drive.kEncoderBackLeft,
-      Constants.drive.kSteerOffsetBackLeft,
-      Constants.drive.kDriveKSBackLeft,
-      Constants.drive.kDriveKVBackLeft
-    ),
-    Module.create(
-      Constants.drive.kDriveBackRight,
-      Constants.drive.kSteerBackRight,
-      Constants.drive.kEncoderBackRight,
-      Constants.drive.kSteerOffsetBackRight,
-      Constants.drive.kDriveKSBackRight,
-      Constants.drive.kDriveKVBackRight
-    )
+    Module.create(ModuleConstants.FRONTLEFT),
+    Module.create(ModuleConstants.FRONTRIGHT),
+    Module.create(ModuleConstants.BACKLEFT),
+    Module.create(ModuleConstants.BACKRIGHT)
   };
 
   public final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(

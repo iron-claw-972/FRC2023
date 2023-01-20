@@ -7,6 +7,7 @@ import java.util.Map;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -46,7 +47,7 @@ public class ShuffleboardManager {
     LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
 
     autoChooserUpdate();
-    practiceChooserUpdate();
+    testTypeChooserUpdate();
     moduleChooserSetup();
     
     m_autoTab.add("Auto Chooser", m_autoCommand);
@@ -115,7 +116,7 @@ public class ShuffleboardManager {
     return m_testMode.getSelected();
   }
 
-  public void practiceChooserUpdate() {
+  public void testTypeChooserUpdate() {
     m_testMode.addOption(TestType.TUNE_HEADING_PID.toString(), TestType.TUNE_HEADING_PID);
     m_testMode.addOption(TestType.TUNE_MODULE_DRIVE.toString(), TestType.TUNE_MODULE_DRIVE);
     m_testMode.addOption(TestType.TUNE_MODULE_TURN.toString(), TestType.TUNE_MODULE_TURN);
@@ -130,6 +131,16 @@ public class ShuffleboardManager {
     return m_velocity.getDouble(0);
   }
 
+  public void loadCommandSchedulerShuffleboard() {
+    // Set the scheduler to log Shuffleboard events for command initialize, interrupt, finish
+
+    CommandScheduler.getInstance().onCommandInitialize(command -> Shuffleboard.addEventMarker("Command initialized", command.getName(), EventImportance.kNormal));
+
+    CommandScheduler.getInstance().onCommandInterrupt(command -> Shuffleboard.addEventMarker("Command interrupted", command.getName(), EventImportance.kNormal));
+
+    CommandScheduler.getInstance().onCommandFinish(command -> Shuffleboard.addEventMarker("Command finished", command.getName(), EventImportance.kNormal));
+  }
+
   public double getRequestedTurnAngle() {
     return m_turn.getDouble(0);
   }
@@ -138,12 +149,6 @@ public class ShuffleboardManager {
   }
   public double getVelocityFeedforward() {
     return m_velFeedforward.getDouble(0);
-  }
-
-  public void loadCommandSchedulerShuffleboard(){
-    CommandScheduler.getInstance().onCommandInitialize(command -> m_commandScheduler.setString(command.getName() + " initialized."));
-    CommandScheduler.getInstance().onCommandInterrupt(command -> m_commandScheduler.setString(command.getName() + " interrupted."));
-    CommandScheduler.getInstance().onCommandFinish(command -> m_commandScheduler.setString(command.getName() + " finished."));
   }
 
   private void setupDrivetrain() {
@@ -177,10 +182,10 @@ public class ShuffleboardManager {
     m_swerveModulesTab.addNumber("BR PID Output", () -> Robot.drive.m_modules[3].getSteerOutput());
 
 
-    m_swerveModulesTab.addNumber("Vel Front Left", () -> Robot.drive.m_modules[0].getDriveVelocity());
-    m_swerveModulesTab.addNumber("Vel Front Right", () -> Robot.drive.m_modules[1].getDriveVelocity());
-    m_swerveModulesTab.addNumber("Vel Back Left", () -> Robot.drive.m_modules[2].getDriveVelocity());
-    m_swerveModulesTab.addNumber("Vel Back Right", () -> Robot.drive.m_modules[3].getDriveVelocity());
+    m_swerveModulesTab.addNumber("Vel Front Left", () -> Robot.drive.m_modules[0].getDriveVelocityFilltered());
+    m_swerveModulesTab.addNumber("Vel Front Right", () -> Robot.drive.m_modules[1].getDriveVelocityFilltered());
+    m_swerveModulesTab.addNumber("Vel Back Left", () -> Robot.drive.m_modules[2].getDriveVelocityFilltered());
+    m_swerveModulesTab.addNumber("Vel Back Right", () -> Robot.drive.m_modules[3].getDriveVelocityFilltered());
   }
 
 }

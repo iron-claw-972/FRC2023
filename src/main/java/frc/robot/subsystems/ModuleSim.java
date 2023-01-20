@@ -8,6 +8,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import frc.robot.constants.Constants;
+import frc.robot.constants.ModuleConstants;
 import lib.ctre_shims.TalonEncoderSim;
 
 /**
@@ -22,6 +23,19 @@ public class ModuleSim extends Module {
 
   private final TalonEncoderSim m_driveEncoderSim;
   private final CANCoderSimCollection m_encoderSim;
+
+  public ModuleSim(
+    ModuleConstants moduleConstants
+  ) {
+    this(
+      moduleConstants.getDrivePort(),
+      moduleConstants.getSteerPort(),
+      moduleConstants.getEncoderPort(),
+      moduleConstants.getSteerOffset(),
+      moduleConstants.getDriveKS(),
+      moduleConstants.getDriveKV()
+    );
+  }
 
   public ModuleSim(
     int driveMotorPort,

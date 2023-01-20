@@ -9,11 +9,13 @@ import com.ctre.phoenix.sensors.WPI_CANCoder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
+import frc.robot.constants.ModuleConstants;
 import frc.robot.util.MotorFactory;
 import frc.robot.util.TestType;
 import lib.ctre_shims.TalonEncoder;
@@ -31,8 +33,15 @@ public class Module {
    * @param feedforwardKV the velocity feedforward of the drive motor
    * @return
    */
-  public static Module create(int driveMotorID, int steerMotorID, int encoderID, double steerOffset, double feedforwardKS, double feedforwardKV) {
+  public static Module create(ModuleConstants moduleConstants) {
     if (Robot.isReal()) {
+      return new Module(moduleConstants);
+    } else {
+      return new ModuleSim(moduleConstants);
+    }
+  }
+  public static Module create(int driveMotorID, int steerMotorID, int encoderID, double steerOffset, double feedforwardKS, double feedforwardKV) {
+    if (Robot.isReal()) { 
       return new Module(driveMotorID, steerMotorID, encoderID, steerOffset, feedforwardKS, feedforwardKV);
     } else {
       return new ModuleSim(driveMotorID, steerMotorID, encoderID, steerOffset, feedforwardKS, feedforwardKV);
@@ -64,6 +73,18 @@ public class Module {
   
   public double m_steerFeedForwardOutput = 0.0;
   public double m_steerOutput = 0.0;
+  public MedianFilter m_medianFilter = new MedianFilter(10);
+
+  public Module(ModuleConstants moduleConstants){
+    this(
+      moduleConstants.getDrivePort(),
+      moduleConstants.getSteerPort(),
+      moduleConstants.getEncoderPort(),
+      moduleConstants.getSteerOffset(),
+      moduleConstants.getDriveKS(),
+      moduleConstants.getDriveKV()
+    );
+  }
 
   public Module(
     int driveMotorPort,
@@ -196,6 +217,10 @@ public class Module {
    */
   public double getDriveVelocity() {
     return m_driveEncoder.getRate();
+  }
+
+  public double getDriveVelocityFilltered(){
+    return m_medianFilter.calculate(getDriveVelocity());
   }
 
   /**
