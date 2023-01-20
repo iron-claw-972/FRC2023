@@ -56,7 +56,7 @@ public class MotorFactory {
     talon.configFactoryDefault();
     talon.configAllSettings(config);
     talon.enableCurrentLimit(true);
-    talon.enableVoltageCompensation(true);
+    talon.enableVoltageCompensation(false);
     talon.setNeutralMode(NeutralMode.Brake);
 
     LogManager.addDouble("TalonFX/Current/" + talon.getDeviceID(), () -> talon.getStatorCurrent());
@@ -171,7 +171,7 @@ public class MotorFactory {
 
     talon.configFactoryDefault();
     talon.configAllSettings(config);
-    talon.enableVoltageCompensation(true);
+    talon.enableVoltageCompensation(false);
     talon.setNeutralMode(NeutralMode.Brake);
     talon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
 
