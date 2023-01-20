@@ -9,6 +9,7 @@ import com.ctre.phoenix.sensors.WPI_CANCoder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -70,6 +71,7 @@ public class Module {
   
   public double m_steerFeedForwardOutput = 0.0;
   public double m_steerOutput = 0.0;
+  public MedianFilter m_medianFilter = new MedianFilter(10);
 
   /**
    * Module constructor to suppress ModuleSim constructor error.
@@ -216,6 +218,10 @@ public class Module {
    */
   public double getDriveVelocity() {
     return m_driveEncoder.getRate();
+  }
+
+  public double getDriveVelocityFilltered(){
+    return m_medianFilter.calculate(getDriveVelocity());
   }
   
   /**

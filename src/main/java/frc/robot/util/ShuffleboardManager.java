@@ -177,10 +177,10 @@ public class ShuffleboardManager {
     m_swerveModulesTab.addNumber("BR PID Output", () -> Robot.drive.m_modules[3].getSteerOutput());
 
 
-    m_swerveModulesTab.addNumber("Vel Front Left", () -> Robot.drive.m_modules[0].getDriveVelocity());
-    m_swerveModulesTab.addNumber("Vel Front Right", () -> Robot.drive.m_modules[1].getDriveVelocity());
-    m_swerveModulesTab.addNumber("Vel Back Left", () -> Robot.drive.m_modules[2].getDriveVelocity());
-    m_swerveModulesTab.addNumber("Vel Back Right", () -> Robot.drive.m_modules[3].getDriveVelocity());
+    m_swerveModulesTab.addNumber("Vel Front Left", () -> Robot.drive.m_modules[0].getDriveVelocityFilltered());
+    m_swerveModulesTab.addNumber("Vel Front Right", () -> Robot.drive.m_modules[1].getDriveVelocityFilltered());
+    m_swerveModulesTab.addNumber("Vel Back Left", () -> Robot.drive.m_modules[2].getDriveVelocityFilltered());
+    m_swerveModulesTab.addNumber("Vel Back Right", () -> Robot.drive.m_modules[3].getDriveVelocityFilltered());
   }
 
 }

@@ -19,20 +19,20 @@ public enum ModuleConstants {
             Constants.drive.kDriveKVFrontRight
         ),
     BACKLEFT(
-        Constants.drive.kDriveBackLeft,
-        Constants.drive.kSteerBackLeft,
-        Constants.drive.kEncoderBackLeft,
-        Constants.drive.kSteerOffsetBackLeft,
-        Constants.drive.kDriveKSBackLeft,
-        Constants.drive.kDriveKVBackLeft
+            Constants.drive.kDriveBackLeft,
+            Constants.drive.kSteerBackLeft,
+            Constants.drive.kEncoderBackLeft,
+            Constants.drive.kSteerOffsetBackLeft,
+            Constants.drive.kDriveKSBackLeft,
+            Constants.drive.kDriveKVBackLeft
     ),
     BACKRIGHT(
-        Constants.drive.kDriveBackRight,
-        Constants.drive.kSteerBackRight,
-        Constants.drive.kEncoderBackRight,
-        Constants.drive.kSteerOffsetBackRight,
-        Constants.drive.kDriveKSBackRight,
-        Constants.drive.kDriveKVBackRight
+            Constants.drive.kDriveBackRight,
+            Constants.drive.kSteerBackRight,
+            Constants.drive.kEncoderBackRight,
+            Constants.drive.kSteerOffsetBackRight,
+            Constants.drive.kDriveKSBackRight,
+            Constants.drive.kDriveKVBackRight
     ),
     NONE(0,0,0,0.0,0.0,0.0);
 
