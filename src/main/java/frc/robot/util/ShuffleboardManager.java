@@ -7,6 +7,7 @@ import java.util.Map;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -130,6 +131,16 @@ public class ShuffleboardManager {
     return m_velocity.getDouble(0);
   }
 
+  public void loadCommandSchedulerShuffleboard() {
+    // Set the scheduler to log Shuffleboard events for command initialize, interrupt, finish
+
+    CommandScheduler.getInstance().onCommandInitialize(command -> Shuffleboard.addEventMarker("Command initialized", command.getName(), EventImportance.kNormal));
+
+    CommandScheduler.getInstance().onCommandInterrupt(command -> Shuffleboard.addEventMarker("Command interrupted", command.getName(), EventImportance.kNormal));
+
+    CommandScheduler.getInstance().onCommandFinish(command -> Shuffleboard.addEventMarker("Command finished", command.getName(), EventImportance.kNormal));
+  }
+
   public double getRequestedTurnAngle() {
     return m_turn.getDouble(0);
   }
@@ -138,12 +149,6 @@ public class ShuffleboardManager {
   }
   public double getVelocityFeedforward() {
     return m_velFeedforward.getDouble(0);
-  }
-
-  public void loadCommandSchedulerShuffleboard(){
-    CommandScheduler.getInstance().onCommandInitialize(command -> m_commandScheduler.setString(command.getName() + " initialized."));
-    CommandScheduler.getInstance().onCommandInterrupt(command -> m_commandScheduler.setString(command.getName() + " interrupted."));
-    CommandScheduler.getInstance().onCommandFinish(command -> m_commandScheduler.setString(command.getName() + " finished."));
   }
 
   private void setupDrivetrain() {
