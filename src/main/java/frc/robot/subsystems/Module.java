@@ -83,7 +83,7 @@ public class Module {
   public Module(ModuleConstants moduleConstants){
     this(
       moduleConstants.getDrivePort(),
-      moduleConstants.getDrivePort(),
+      moduleConstants.getSteerPort(),
       moduleConstants.getEncoderPort(),
       moduleConstants.getSteerOffset(),
       moduleConstants.getDriveKS(),
