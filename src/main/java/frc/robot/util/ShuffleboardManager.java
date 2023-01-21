@@ -36,6 +36,7 @@ public class ShuffleboardManager {
   GenericEntry m_turn = m_swerveModulesTab.add("Set Drive Turn", 0).getEntry();
   GenericEntry m_staticFeedforward = m_swerveModulesTab.add("Set Static Feedforward", 0).getEntry();
   GenericEntry m_velFeedforward = m_swerveModulesTab.add("Set Vel Feedforward", 0).getEntry();
+  GenericEntry m_volts = m_swerveModulesTab.add("Set Volts", 0).getEntry();
 
   GenericEntry m_commandScheduler = m_mainTab.add("Command Scheduler", "NULL").getEntry();
 
@@ -120,6 +121,8 @@ public class ShuffleboardManager {
     m_testMode.addOption(TestType.TUNE_HEADING_PID.toString(), TestType.TUNE_HEADING_PID);
     m_testMode.addOption(TestType.TUNE_MODULE_DRIVE.toString(), TestType.TUNE_MODULE_DRIVE);
     m_testMode.addOption(TestType.TUNE_MODULE_TURN.toString(), TestType.TUNE_MODULE_TURN);
+    m_testMode.addOption(TestType.DRIVE_VOLTAGE.toString(), TestType.DRIVE_VOLTAGE);
+    m_testMode.addOption(TestType.STEER_VOLTAGE.toString(), TestType.STEER_VOLTAGE);
     m_testMode.setDefaultOption(TestType.NONE.toString(), TestType.NONE);
   }
 
@@ -129,6 +132,10 @@ public class ShuffleboardManager {
 
   public double getRequestedVelocity() {
     return m_velocity.getDouble(0);
+  }
+  
+  public double getRequestedVolts(){
+    return m_volts.getDouble(0);
   }
 
   public void loadCommandSchedulerShuffleboard() {
@@ -141,7 +148,7 @@ public class ShuffleboardManager {
     CommandScheduler.getInstance().onCommandFinish(command -> Shuffleboard.addEventMarker("Command finished", command.getName(), EventImportance.kNormal));
   }
 
-  public double getRequestedTurnAngle() {
+  public double getRequestedSteerAngle() {
     return m_turn.getDouble(0);
   }
   public double getStaticFeedforward() {
@@ -176,10 +183,10 @@ public class ShuffleboardManager {
     // m_swerveModulesTab.addNumber("BL FF", () -> Robot.drive.m_modules[2].getTurnFeedForward());
     // m_swerveModulesTab.addNumber("BR FF", () -> Robot.drive.m_modules[3].getTurnFeedForward());
 
-    m_swerveModulesTab.addNumber("FL PID Output", () -> Robot.drive.m_modules[0].getSteerOutput());
-    m_swerveModulesTab.addNumber("FR PID Output", () -> Robot.drive.m_modules[1].getSteerOutput());
-    m_swerveModulesTab.addNumber("BL PID Output", () -> Robot.drive.m_modules[2].getSteerOutput());
-    m_swerveModulesTab.addNumber("BR PID Output", () -> Robot.drive.m_modules[3].getSteerOutput());
+    m_swerveModulesTab.addNumber("FL PID Output", () -> Robot.drive.m_modules[0].getDriveOutput());
+    m_swerveModulesTab.addNumber("FR PID Output", () -> Robot.drive.m_modules[1].getDriveOutput());
+    m_swerveModulesTab.addNumber("BL PID Output", () -> Robot.drive.m_modules[2].getDriveOutput());
+    m_swerveModulesTab.addNumber("BR PID Output", () -> Robot.drive.m_modules[3].getDriveOutput());
 
 
     m_swerveModulesTab.addNumber("Vel Front Left", () -> Robot.drive.m_modules[0].getDriveVelocityFilltered());

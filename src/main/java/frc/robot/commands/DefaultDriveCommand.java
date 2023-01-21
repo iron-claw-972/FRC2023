@@ -30,8 +30,14 @@ public class DefaultDriveCommand extends CommandBase {
       Robot.shuffleboard.getModulefeedforward();
       return;
     } else if (Robot.shuffleboard.getTestModeType() == TestType.TUNE_MODULE_TURN){
-      testTurnAngle();
+      testSteerAngle();
       return;
+    } else if (Robot.shuffleboard.getTestModeType() == TestType.DRIVE_VOLTAGE){
+      testDriveVolts();
+    return;
+    } else if (Robot.shuffleboard.getTestModeType() == TestType.STEER_VOLTAGE){
+      testSteerVolts();
+    return;
     }
 
     double xSpeed = Driver.getForwardTranslation();
@@ -53,35 +59,53 @@ public class DefaultDriveCommand extends CommandBase {
     m_drive.m_headingPIDOutput *= Math.sqrt(0.5) * Constants.drive.kTrackWidth;
 
     m_drive.m_swerveModuleStates = new SwerveModuleState[] {
-      new SwerveModuleState(-m_drive.m_headingPIDOutput, new Rotation2d(Units.degreesToRadians(-45))),
+      new SwerveModuleState(m_drive.m_headingPIDOutput, new Rotation2d(Units.degreesToRadians(135))),
       new SwerveModuleState(m_drive.m_headingPIDOutput, new Rotation2d(Units.degreesToRadians(45))),
-      new SwerveModuleState(-m_drive.m_headingPIDOutput, new Rotation2d(Units.degreesToRadians(45))),
-      new SwerveModuleState(m_drive.m_headingPIDOutput, new Rotation2d(Units.degreesToRadians(-45)))
+      new SwerveModuleState(m_drive.m_headingPIDOutput, new Rotation2d(Units.degreesToRadians(225))),
+      new SwerveModuleState(m_drive.m_headingPIDOutput, new Rotation2d(Units.degreesToRadians(315)))
     };
 
     m_drive.setModuleStates(m_drive.m_swerveModuleStates);
   }
 
   private void testDriveVel() {
+
     double value = Robot.shuffleboard.getRequestedVelocity();
-    m_drive.m_swerveModuleStates = new SwerveModuleState[] {
-      new SwerveModuleState(value, new Rotation2d(Units.degreesToRadians(135))),
-      new SwerveModuleState(value, new Rotation2d(Units.degreesToRadians(45))),
-      new SwerveModuleState(value, new Rotation2d(Units.degreesToRadians(225))),
-      new SwerveModuleState(value, new Rotation2d(Units.degreesToRadians(315)))
-    };
-    m_drive.setModuleStates(m_drive.m_swerveModuleStates);
+    for (int i = 0; i < 4; i++) {
+      Robot.drive.m_modules[i].setDriveVelocity(value);
+    }
+    Robot.drive.m_modules[0].setSteerAngle(new Rotation2d(Units.degreesToRadians(135)));
+    Robot.drive.m_modules[1].setSteerAngle(new Rotation2d(Units.degreesToRadians(45)));
+    Robot.drive.m_modules[2].setSteerAngle(new Rotation2d(Units.degreesToRadians(225)));
+    Robot.drive.m_modules[3].setSteerAngle(new Rotation2d(Units.degreesToRadians(315)));
   }
 
-  private void testTurnAngle() {
-    double value = Robot.shuffleboard.getRequestedTurnAngle();
-    m_drive.m_swerveModuleStates = new SwerveModuleState[] {
-      new SwerveModuleState(0.01, new Rotation2d(Units.degreesToRadians(value))),
-      new SwerveModuleState(0.01, new Rotation2d(Units.degreesToRadians(value))),
-      new SwerveModuleState(0.01, new Rotation2d(Units.degreesToRadians(value))),
-      new SwerveModuleState(0.01, new Rotation2d(Units.degreesToRadians(value)))
-    };
-    m_drive.setModuleStates(m_drive.m_swerveModuleStates);
+  private void testDriveVolts() {
+
+    double value = Robot.shuffleboard.getRequestedVolts();
+    for (int i = 0; i < 4; i++) {
+      Robot.drive.m_modules[i].setDriveVoltage(value);
+    }
+    Robot.drive.m_modules[0].setSteerAngle(new Rotation2d(Units.degreesToRadians(135)));
+    Robot.drive.m_modules[1].setSteerAngle(new Rotation2d(Units.degreesToRadians(45)));
+    Robot.drive.m_modules[2].setSteerAngle(new Rotation2d(Units.degreesToRadians(225)));
+    Robot.drive.m_modules[3].setSteerAngle(new Rotation2d(Units.degreesToRadians(315)));
+  }
+
+  private void testSteerAngle() {
+    double value = Robot.shuffleboard.getRequestedSteerAngle();
+    for (int i = 0; i < 4; i++) {
+      Robot.drive.m_modules[i].setDriveVoltage(0);
+      Robot.drive.m_modules[i].setSteerAngle(new Rotation2d(Units.degreesToRadians(value)));
+    }
+  }
+
+  private void testSteerVolts() {
+    double value = Robot.shuffleboard.getRequestedVolts();
+    for (int i = 0; i < 4; i++) {
+      Robot.drive.m_modules[i].setDriveVoltage(0);
+      Robot.drive.m_modules[i].setSteerVoltage(value);
+    }
   }
 
 }

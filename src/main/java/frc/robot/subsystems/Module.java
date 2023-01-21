@@ -69,11 +69,11 @@ public class Module {
       
   private double m_offset = 0.0;
   
-  public double m_driveOutput = 0;
-  
+  public double m_drivePIDOutput = 0;
+  public double m_driveFeedforwardOutput = 0;
   public double m_steerFeedForwardOutput = 0.0;
-  public double m_steerOutput = 0.0;
-  public MedianFilter m_medianFilter = new MedianFilter(10);
+  public double m_steerPIDOutput = 0.0;
+  public MedianFilter m_medianFilter = new MedianFilter(80);
 
   public Module(ModuleConstants moduleConstants){
     this(
@@ -155,19 +155,28 @@ public class Module {
       // Optimize the reference state to avoid spinning further than 90 degrees
       desiredState = SwerveModuleState.optimize(desiredState, new Rotation2d(getAngle()));
     }
+    setDriveVelocity(desiredState.speedMetersPerSecond);
+    setSteerAngle(desiredState.angle);
+  }
 
-    // Calculate the drive output from the drive PID controller.
-    m_driveOutput = m_drivePIDController.calculate(m_driveEncoder.getRate(), desiredState.speedMetersPerSecond);
+  public void setDriveVelocity(double speedMetersPerSecond){
+    m_drivePIDOutput = m_drivePIDController.calculate(m_driveEncoder.getRate(), speedMetersPerSecond);
+    m_driveFeedforwardOutput = m_driveFeedforward.calculate(speedMetersPerSecond);
+    m_driveMotor.setVoltage(m_drivePIDOutput + m_driveFeedforwardOutput);
+  }
 
-    final double driveFeedforward = m_driveFeedforward.calculate(desiredState.speedMetersPerSecond);
-
+  public void setSteerAngle(Rotation2d angle){
     // Calculate the steer motor output from the steer PID controller.
-    m_steerOutput = m_steerPIDController.calculate(getAngle(), desiredState.angle.getRadians());
-
+    m_steerPIDOutput = m_steerPIDController.calculate(getAngle(), angle.getRadians());
     m_steerFeedForwardOutput = m_steerFeedForward.calculate(m_steerPIDController.getSetpoint().velocity);
+    m_steerMotor.setVoltage(m_steerPIDOutput + m_steerFeedForwardOutput);// * Constants.kMaxVoltage / RobotController.getBatteryVoltage()
+  }
 
-    m_driveMotor.setVoltage(m_driveOutput + driveFeedforward);
-    m_steerMotor.setVoltage(m_steerOutput + m_steerFeedForwardOutput); // * Constants.kMaxVoltage / RobotController.getBatteryVoltage()
+  public void setDriveVoltage(double voltage){
+    m_driveMotor.setVoltage(voltage);
+  }
+  public void setSteerVoltage(double voltage){
+    m_steerMotor.setVoltage(voltage);
   }
   
   /**
@@ -251,7 +260,7 @@ public class Module {
   }
 
   public double getDriveOutput() {
-    return m_driveOutput;
+    return m_drivePIDOutput;
   }
 
   public WPI_TalonFX getDriveMotor() {
@@ -275,7 +284,7 @@ public class Module {
   }
 
   public double getSteerOutput() {
-    return m_steerOutput;
+    return m_steerPIDOutput;
   }
 
 }
