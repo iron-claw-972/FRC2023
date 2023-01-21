@@ -80,16 +80,16 @@ public class ShuffleboardManager {
 
     m_staticModulesSaver.put(m_dummyModule,0.0);
     m_velModulesSaver.put(m_dummyModule,0.0);
-    m_staticModulesSaver.put(m_allModule,Constants.drive.kDriveAllKS);
-    m_velModulesSaver.put(m_allModule,Constants.drive.kDriveAllKV);
-    m_staticModulesSaver.put(Robot.drive.m_modules[0],Constants.drive.kDriveAllKS);
-    m_velModulesSaver.put(Robot.drive.m_modules[0],Constants.drive.kDriveAllKV);
-    m_staticModulesSaver.put(Robot.drive.m_modules[1],Constants.drive.kDriveAllKS);
-    m_velModulesSaver.put(Robot.drive.m_modules[1],Constants.drive.kDriveAllKV);
-    m_staticModulesSaver.put(Robot.drive.m_modules[2],Constants.drive.kDriveAllKS);
-    m_velModulesSaver.put(Robot.drive.m_modules[2],Constants.drive.kDriveAllKV);
-    m_staticModulesSaver.put(Robot.drive.m_modules[3],Constants.drive.kDriveAllKS);
-    m_velModulesSaver.put(Robot.drive.m_modules[3],Constants.drive.kDriveAllKV);
+    m_staticModulesSaver.put(m_allModule,Constants.drive.kDriveKSAll);
+    m_velModulesSaver.put(m_allModule,Constants.drive.kDriveKVAll);
+    m_staticModulesSaver.put(Robot.drive.m_modules[0],Constants.drive.kDriveKSFrontLeft);
+    m_velModulesSaver.put(Robot.drive.m_modules[0],Constants.drive.kDriveKVFrontLeft);
+    m_staticModulesSaver.put(Robot.drive.m_modules[1],Constants.drive.kDriveKSFrontRight);
+    m_velModulesSaver.put(Robot.drive.m_modules[1],Constants.drive.kDriveKVFrontRight);
+    m_staticModulesSaver.put(Robot.drive.m_modules[2],Constants.drive.kDriveKSBackLeft);
+    m_velModulesSaver.put(Robot.drive.m_modules[2],Constants.drive.kDriveKVBackLeft);
+    m_staticModulesSaver.put(Robot.drive.m_modules[3],Constants.drive.kDriveKSBackRight);
+    m_velModulesSaver.put(Robot.drive.m_modules[3],Constants.drive.kDriveKVBackRight);
 
   }
 

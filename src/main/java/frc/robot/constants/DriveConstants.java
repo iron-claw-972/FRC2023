@@ -23,22 +23,22 @@ public class DriveConstants {
     public final int kSteerFrontLeft = 2;
     public final int kEncoderFrontLeft = 3;
     public final double kSteerOffsetFrontLeft = 1.561;
-    public final double kDriveKSFrontLeft = 0.63107;
-    public final double kDriveKVFrontLeft = 2.1592;
+    public final double kDriveKSFrontLeft = 0.62396;
+    public final double kDriveKVFrontLeft = 4.43229;
 
     public final int kDriveFrontRight = 4; 
     public final int kSteerFrontRight = 5;
     public final int kEncoderFrontRight = 6; 
     public final double kSteerOffsetFrontRight = -2.764+Math.PI;
-    public final double kDriveKSFrontRight = 0.63107;
-    public final double kDriveKVFrontRight = 2.1592;
+    public final double kDriveKSFrontRight = 0.64985;
+    public final double kDriveKVFrontRight = 4.44376;
 
     public final int kDriveBackLeft = 7; 
     public final int kSteerBackLeft = 8;
     public final int kEncoderBackLeft = 9; 
     public final double kSteerOffsetBackLeft = 0;
-    public final double kDriveKSBackLeft = 0.63107;
-    public final double kDriveKVBackLeft = 2.1592;
+    public final double kDriveKSBackLeft = 0.52792;
+    public final double kDriveKVBackLeft = 4.75332;
 
     public final int kDriveBackRight = 10;
     public final int kSteerBackRight = 11;
@@ -59,8 +59,8 @@ public class DriveConstants {
 
     
 
-    public final double kDriveAllKS = 0.63107;
-    public final double kDriveAllKV = 2.1592;
+    public final double kDriveKSAll = 0.63107;
+    public final double kDriveKVAll = 2.1592;
 
     // Steer
     public final double kSteerKS = 1;

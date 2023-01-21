@@ -92,7 +92,7 @@ public class Module {
     int encoderPort,
     double encoderOffset,
     double feedforwardKS,
-    double doublefeedforwardKV
+    double feedforwardKV
   ) {
     
     if (Robot.isReal()) {
@@ -136,7 +136,7 @@ public class Module {
 
     m_steerPIDController.reset(getAngle()); // reset the PID, and the Trapezoid motion profile needs to know the starting state
 
-    m_driveFeedforward = new SimpleMotorFeedforward(feedforwardKS, doublefeedforwardKV);
+    m_driveFeedforward = new SimpleMotorFeedforward(feedforwardKS, feedforwardKV);
   }
 
 
