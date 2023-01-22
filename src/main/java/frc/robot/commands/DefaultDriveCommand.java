@@ -21,35 +21,35 @@ public class DefaultDriveCommand extends CommandBase {
 
   @Override
   public void execute() {
-
-    if (Robot.shuffleboard.getTestModeType() == TestType.TUNE_HEADING_PID) {
+    
+    if (Robot.shuffleboard.getTestModeType() == TestType.HEADING_PID) {
       runHeadingPID();
       return;
-    } else if (Robot.shuffleboard.getTestModeType() == TestType.TUNE_MODULE_DRIVE) {
+    } else if (Robot.shuffleboard.getTestModeType() == TestType.MODULE_DRIVE_VELOCITY) {
       testDriveVel();
-      Robot.shuffleboard.getModulefeedforward();
+      Robot.shuffleboard.setModulefeedforward();
       return;
-    } else if (Robot.shuffleboard.getTestModeType() == TestType.TUNE_MODULE_TURN){
+    } else if (Robot.shuffleboard.getTestModeType() == TestType.MODULE_STEER_ANGLE){
       testSteerAngle();
       return;
     } else if (Robot.shuffleboard.getTestModeType() == TestType.DRIVE_VOLTAGE){
       testDriveVolts();
-    return;
+      return;
     } else if (Robot.shuffleboard.getTestModeType() == TestType.STEER_VOLTAGE){
       testSteerVolts();
-    return;
+      return;
     }
 
     double xSpeed = Driver.getForwardTranslation();
     double ySpeed = Driver.getSideTranslation();
     double rot = Driver.getRotation();
 
-    m_drive.drive(xSpeed, ySpeed, rot, true);
+    m_drive.driveRot(xSpeed, ySpeed, rot, true);
   }
 
   @Override
   public void end(boolean interrupted) {
-    m_drive.drive(0.0, 0.0, 0.0, false);
+    m_drive.driveRot(0.0, 0.0, 0.0, false);
   }
 
   private void runHeadingPID() {

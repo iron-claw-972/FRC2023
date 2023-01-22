@@ -93,7 +93,7 @@ public class Drivetrain extends SubsystemBase {
    * @param rot angular rate of the robot
    * @param fieldRelative whether the provided x and y speeds are relative to the field
    */
-  public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
+  public void driveRot(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
 
     // TODO: Fix Swerve drive sim
     if (!Robot.isReal()) {

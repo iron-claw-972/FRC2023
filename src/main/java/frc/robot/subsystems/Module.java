@@ -73,7 +73,7 @@ public class Module {
   public double m_driveFeedforwardOutput = 0;
   public double m_steerFeedForwardOutput = 0.0;
   public double m_steerPIDOutput = 0.0;
-  public MedianFilter m_medianFilter = new MedianFilter(80);
+  public MedianFilter m_driveVelocityMedianFilter = new MedianFilter(80);
 
   public Module(ModuleConstants moduleConstants){
     this(
@@ -146,12 +146,12 @@ public class Module {
    * @param desiredState Desired state with speed and angle.
    */
   public void setDesiredState(SwerveModuleState desiredState) {
-    if (Math.abs(desiredState.speedMetersPerSecond) < 0.001 && Robot.shuffleboard.getTestModeType() != TestType.TUNE_HEADING_PID) {
+    if (Math.abs(desiredState.speedMetersPerSecond) < 0.001 && Robot.shuffleboard.getTestModeType() != TestType.HEADING_PID) {
       stop();
       return;
     }
 
-    if (Robot.shuffleboard.getTestModeType() != TestType.TUNE_HEADING_PID) {
+    if (Robot.shuffleboard.getTestModeType() != TestType.HEADING_PID) {
       // Optimize the reference state to avoid spinning further than 90 degrees
       desiredState = SwerveModuleState.optimize(desiredState, new Rotation2d(getAngle()));
     }
@@ -229,7 +229,7 @@ public class Module {
   }
 
   public double getDriveVelocityFilltered(){
-    return m_medianFilter.calculate(getDriveVelocity());
+    return m_driveVelocityMedianFilter.calculate(getDriveVelocity());
   }
 
   /**
@@ -259,7 +259,7 @@ public class Module {
     return m_steerFeedForward;
   }
 
-  public double getDriveOutput() {
+  public double getDrivePIDOutput() {
     return m_drivePIDOutput;
   }
 
