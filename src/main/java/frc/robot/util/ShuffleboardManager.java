@@ -26,14 +26,11 @@ public class ShuffleboardManager {
   // modules needed to distigue in chooser
   Module m_dummyModule = Module.create(0, 0, 0, 0.0, 0.0, 0.0);
   Module m_allModule = Module.create(0, 0, 0, 0.0, 0.0, 0.0);
-  // previous module for 
+  // previous module for switching
   Module m_prevModule = m_dummyModule;
   
   // tabs
-  ShuffleboardTab m_mainTab;
-  ShuffleboardTab m_drivetrainTab;
-  ShuffleboardTab m_swerveModulesTab;
-  ShuffleboardTab m_autoTab;
+  ShuffleboardTab m_mainTab, m_drivetrainTab, m_swerveModulesTab, m_autoTab;
 
   // drive inputs
   GenericEntry m_heading;
@@ -52,6 +49,7 @@ public class ShuffleboardManager {
   public void setup() {
     LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
     
+    //shuffleboard tabs
     m_mainTab = Shuffleboard.getTab("Main");
     m_drivetrainTab = Shuffleboard.getTab("Drive");
     m_swerveModulesTab = Shuffleboard.getTab("Swerve Modules");

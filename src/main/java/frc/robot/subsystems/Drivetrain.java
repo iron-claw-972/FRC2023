@@ -49,7 +49,7 @@ public class Drivetrain extends SubsystemBase {
 
   // Pigeon
   private final WPI_Pigeon2 m_pigeon = new WPI_Pigeon2(Constants.drive.kPigeon, Constants.kCanivoreCAN);
-  private boolean m_hasResetYaw = false;
+  private boolean m_hasResetYaw = false; // the initial yaw has been set 
 
   public double m_headingPIDOutput = 0;
 
@@ -109,6 +109,9 @@ public class Drivetrain extends SubsystemBase {
     setModuleStates(m_swerveModuleStates);
   }
 
+  public void setChassisSpeeds(ChassisSpeeds chassisSpeeds, boolean fieldRelative){
+    driveRot(m_headingPIDOutput, m_headingPIDOutput, m_headingPIDOutput, fieldRelative);
+  }
   /** Updates the field relative position of the robot. */
   public void updateOdometry() {
     m_robotPose = m_odometry.update(
