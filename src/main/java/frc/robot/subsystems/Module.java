@@ -54,7 +54,7 @@ public class Module {
   private final TalonEncoder m_driveEncoder;
   private final WPI_CANCoder m_encoder;
 
-  private final PIDController m_drivePIDController = new PIDController(Constants.drive.kDriveP, Constants.drive.kDriveI,
+  private PIDController m_drivePIDController = new PIDController(Constants.drive.kDriveP, Constants.drive.kDriveI,
     Constants.drive.kDriveD);
 
   private ProfiledPIDController m_steerPIDController = new ProfiledPIDController(
