@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Robot;
+import frc.robot.commands.SelfFeedForwardCharacterzation;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.Module;
 
@@ -132,7 +133,7 @@ public class ShuffleboardManager {
     m_swerveModulesTab.addNumber("Vel Back Right Raw", () -> Robot.drive.m_modules[3].getDriveVelocity());
 
     //Median Filltered Velocity Values
-    // m_swerveModulesTab.addNumber("Vel Front Left Filtered", () -> Robot.drive.m_modules[0].getDriveVelocityFilltered());
+    //m_swerveModulesTab.addNumber("Vel Front Left Filtered", () -> Robot.drive.m_modules[0].getDriveVelocityFilltered());
     // m_swerveModulesTab.addNumber("Vel Front Right Filtered", () -> Robot.drive.m_modules[1].getDriveVelocityFilltered());
     // m_swerveModulesTab.addNumber("Vel Back Left Filtered", () -> Robot.drive.m_modules[2].getDriveVelocityFilltered());
     // m_swerveModulesTab.addNumber("Vel Back Right Filtered", () -> Robot.drive.m_modules[3].getDriveVelocityFilltered());
@@ -156,6 +157,7 @@ public class ShuffleboardManager {
   //add options to choosers
   public void autoChooserOptions() {
     m_autoCommand.addOption("Do Nothing", new PrintCommand("This will do nothing!"));
+    m_autoCommand.addOption("Self FF charecterzation", new SelfFeedForwardCharacterzation());
     // m_autoCommand.setDefaultOption("TestAuto", new PathPlannerCommand("TestAuto", 0)); 
   }
   public void testTypeChooserOptions() {
