@@ -112,28 +112,34 @@ public class ShuffleboardManager {
     // m_swerveModulesTab.addNumber("BR desired angle", () -> Robot.drive.swerveModuleStates[3].angle.getDegrees());
 
     // Steer angles
-    m_swerveModulesTab.addNumber("Angle Front Left",  () -> Units.radiansToDegrees(Robot.drive.m_modules[0].getAngle()));
-    m_swerveModulesTab.addNumber("Angle Front Right", () -> Units.radiansToDegrees(Robot.drive.m_modules[1].getAngle()));
-    m_swerveModulesTab.addNumber("Angle Back Left",   () -> Units.radiansToDegrees(Robot.drive.m_modules[2].getAngle()));
-    m_swerveModulesTab.addNumber("Angle Back Right",  () -> Units.radiansToDegrees(Robot.drive.m_modules[3].getAngle()));
+    // m_swerveModulesTab.addNumber("Angle FL",  () -> Units.radiansToDegrees(Robot.drive.m_modules[0].getAngle()));
+    // m_swerveModulesTab.addNumber("Angle FR", () -> Units.radiansToDegrees(Robot.drive.m_modules[1].getAngle()));
+    // m_swerveModulesTab.addNumber("Angle BL",   () -> Units.radiansToDegrees(Robot.drive.m_modules[2].getAngle()));
+    // m_swerveModulesTab.addNumber("Angle BR",  () -> Units.radiansToDegrees(Robot.drive.m_modules[3].getAngle()));
 
     // Drive PID output
-    m_swerveModulesTab.addNumber("FL PID Output", () -> Robot.drive.m_modules[0].getDrivePIDOutput());
-    m_swerveModulesTab.addNumber("FR PID Output", () -> Robot.drive.m_modules[1].getDrivePIDOutput());
-    m_swerveModulesTab.addNumber("BL PID Output", () -> Robot.drive.m_modules[2].getDrivePIDOutput());
-    m_swerveModulesTab.addNumber("BR PID Output", () -> Robot.drive.m_modules[3].getDrivePIDOutput());
+    // m_swerveModulesTab.addNumber("FL PID Output", () -> Robot.drive.m_modules[0].getDrivePIDOutput());
+    // m_swerveModulesTab.addNumber("FR PID Output", () -> Robot.drive.m_modules[1].getDrivePIDOutput());
+    // m_swerveModulesTab.addNumber("BL PID Output", () -> Robot.drive.m_modules[2].getDrivePIDOutput());
+    // m_swerveModulesTab.addNumber("BR PID Output", () -> Robot.drive.m_modules[3].getDrivePIDOutput());
 
     // get drive velocity
-    m_swerveModulesTab.addNumber("Vel Front Left Raw", () -> Robot.drive.m_modules[0].getDriveVelocity());
-    m_swerveModulesTab.addNumber("Vel Front Right Raw", () -> Robot.drive.m_modules[1].getDriveVelocity());
-    m_swerveModulesTab.addNumber("Vel Back Left Raw", () -> Robot.drive.m_modules[2].getDriveVelocity());
-    m_swerveModulesTab.addNumber("Vel Back Right Raw", () -> Robot.drive.m_modules[3].getDriveVelocity());
+    m_swerveModulesTab.addNumber("Vel FL Raw", () -> Robot.drive.m_modules[0].getDriveVelocity());
+    m_swerveModulesTab.addNumber("Vel FR Raw", () -> Robot.drive.m_modules[1].getDriveVelocity());
+    m_swerveModulesTab.addNumber("Vel BL Raw", () -> Robot.drive.m_modules[2].getDriveVelocity());
+    m_swerveModulesTab.addNumber("Vel BR Raw", () -> Robot.drive.m_modules[3].getDriveVelocity());
+
+    // drivePIDS
+    m_swerveModulesTab.add("Drive PID FL", Robot.drive.m_modules[0].getDrivePID());
+    m_swerveModulesTab.add("Drive PID FR", Robot.drive.m_modules[1].getDrivePID());
+    m_swerveModulesTab.add("Drive PID BL", Robot.drive.m_modules[2].getDrivePID());
+    m_swerveModulesTab.add("Drive PID BR", Robot.drive.m_modules[3].getDrivePID());
 
     //Median Filltered Velocity Values
-    // m_swerveModulesTab.addNumber("Vel Front Left Filtered", () -> Robot.drive.m_modules[0].getDriveVelocityFilltered());
-    // m_swerveModulesTab.addNumber("Vel Front Right Filtered", () -> Robot.drive.m_modules[1].getDriveVelocityFilltered());
-    // m_swerveModulesTab.addNumber("Vel Back Left Filtered", () -> Robot.drive.m_modules[2].getDriveVelocityFilltered());
-    // m_swerveModulesTab.addNumber("Vel Back Right Filtered", () -> Robot.drive.m_modules[3].getDriveVelocityFilltered());
+    // m_swerveModulesTab.addNumber("Vel FL Filtered", () -> Robot.drive.m_modules[0].getDriveVelocityFilltered());
+    // m_swerveModulesTab.addNumber("Vel FR Filtered", () -> Robot.drive.m_modules[1].getDriveVelocityFilltered());
+    // m_swerveModulesTab.addNumber("Vel BL Filtered", () -> Robot.drive.m_modules[2].getDriveVelocityFilltered());
+    // m_swerveModulesTab.addNumber("Vel BR Filtered", () -> Robot.drive.m_modules[3].getDriveVelocityFilltered());
   }
   //puting defult value in hashmaps
   private void setUpFeedforwardHashmap(){
