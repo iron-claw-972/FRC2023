@@ -17,6 +17,7 @@ import frc.robot.util.Node;
 import frc.robot.util.PathGroupLoader;
 import frc.robot.util.ShuffleboardManager;
 import frc.robot.util.Vision;
+import lib.controllers.GameController.DPad;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
