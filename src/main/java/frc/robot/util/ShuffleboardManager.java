@@ -23,8 +23,8 @@ import frc.robot.subsystems.Module;
 public class ShuffleboardManager {
   
   // hashmaps for storeing values corilateing to module
-  Map<Module,Double> m_velModulesSaver=new HashMap<Module,Double>();
-  Map<Module,Double> m_staticModulesSaver=new HashMap<Module,Double>();
+  public Map<Module,Double> m_velModulesSaver=new HashMap<Module,Double>();
+  public Map<Module,Double> m_staticModulesSaver=new HashMap<Module,Double>();
   // modules needed to distigue in chooser
   Module m_dummyModule = Module.create(0, 0, 0, 0.0, 0.0, 0.0);
   Module m_allModule = Module.create(0, 0, 0, 0.0, 0.0, 0.0);
