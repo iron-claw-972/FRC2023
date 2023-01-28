@@ -227,6 +227,10 @@ public class Module {
   public double getDriveVelocity() {
     return m_driveEncoder.getRate();
   }
+  public double selfFeedforwardCharacterazation() {
+    
+    return m_driveEncoder.getRate();
+  }
 
   public double getDriveVelocityFilltered(){
     return m_driveVelocityMedianFilter.calculate(getDriveVelocity());

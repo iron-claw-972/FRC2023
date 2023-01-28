@@ -111,6 +111,7 @@ public class Robot extends TimedRobot {
     if (m_autoCommand != null) {
       m_autoCommand.schedule();
     }
+
   }
 
   /**

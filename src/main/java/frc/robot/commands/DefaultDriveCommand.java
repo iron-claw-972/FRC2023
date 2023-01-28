@@ -45,7 +45,7 @@ public class DefaultDriveCommand extends CommandBase {
     double rot = Driver.getRotation();
 
     m_drive.driveRot(xSpeed, ySpeed, rot, true);
-  }
+}
 
   @Override
   public void end(boolean interrupted) {
@@ -107,5 +107,6 @@ public class DefaultDriveCommand extends CommandBase {
       Robot.drive.m_modules[i].setSteerVoltage(value);
     }
   }
+  
 
 }
