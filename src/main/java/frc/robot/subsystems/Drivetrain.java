@@ -109,9 +109,22 @@ public class Drivetrain extends SubsystemBase {
     setModuleStates(m_swerveModuleStates);
   }
 
-  public void setChassisSpeeds(ChassisSpeeds chassisSpeeds, boolean fieldRelative){
-    driveRot(m_headingPIDOutput, m_headingPIDOutput, m_headingPIDOutput, fieldRelative);
+  public void driveHeading(double xSpeed, double ySpeed, double heading) {
+    m_headingPIDOutput = m_rotationController.calculate(getAngleHeading(),heading);
+    double rot = m_headingPIDOutput;
+
+    // TODO: Fix Swerve drive sim
+    if (!Robot.isReal()) {
+      m_pigeon.getSimCollection().addHeading(rot * 0.02);
+    }
+
+    m_swerveModuleStates =
+        m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_pigeon.getRotation2d()));
+    SwerveDriveKinematics.desaturateWheelSpeeds(m_swerveModuleStates, Constants.drive.kMaxSpeed);
+    setModuleStates(m_swerveModuleStates);
   }
+
+  
   /** Updates the field relative position of the robot. */
   public void updateOdometry() {
     m_robotPose = m_odometry.update(
