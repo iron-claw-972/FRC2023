@@ -19,9 +19,9 @@ public class DynamicSlewRateLimiter {
   private double m_prevVal;
   private double m_prevTime;
 
-  private boolean m_cycle = false;
-  private double m_lowerCycleLimit;
-  private double m_upperCycleLimit;
+  private boolean m_continuous = false;
+  private double m_lowerContinuousLimit = -1;
+  private double m_upperContinuousLimit = 1;
 
   /**
    * Creates a new SlewRateLimiter with the given positive and negative rate limits and initial
@@ -80,24 +80,24 @@ public class DynamicSlewRateLimiter {
       m_negativeRateLimit * elapsedTime,
       m_positiveRateLimit * elapsedTime);
 
-    if (m_cycle){
+    if (m_continuous){
       // convert value to be inbetween limits
-      // input %= m_upperCycleLimit - m_lowerCycleLimit;
-      while (input < m_lowerCycleLimit || input > m_upperCycleLimit){
-        if (input < m_lowerCycleLimit) input += m_upperCycleLimit - m_lowerCycleLimit;
-        if (input > m_upperCycleLimit) input -= m_upperCycleLimit - m_lowerCycleLimit;
+      //input %= m_upperCycleLimit - m_lowerCycleLimit;
+      while (input < m_lowerContinuousLimit || input > m_upperContinuousLimit){
+        if (input < m_lowerContinuousLimit) input += m_upperContinuousLimit - m_lowerContinuousLimit;
+        if (input > m_upperContinuousLimit) input -= m_upperContinuousLimit - m_lowerContinuousLimit;
       }
       
       // if change is larger than hald the total distance than it is closer on the other side so it can be fliped on other direciton
-      if (Math.abs(input-m_prevVal) > (m_upperCycleLimit - m_lowerCycleLimit) / 2 ){
-        change = m_upperCycleLimit - m_lowerCycleLimit - change;
+      if (Math.abs(input-m_prevVal) > (m_upperContinuousLimit - m_lowerContinuousLimit) / 2 ){
+        change = m_upperContinuousLimit - m_lowerContinuousLimit - change;
       }
       m_prevVal += change;
 
       //converting vlaue to be in limits
-      while (input < m_lowerCycleLimit || input > m_upperCycleLimit){
-        if (input < m_lowerCycleLimit) input += m_upperCycleLimit - m_lowerCycleLimit;
-        if (input > m_upperCycleLimit) input -= m_upperCycleLimit - m_lowerCycleLimit;
+      while (input < m_lowerContinuousLimit || input > m_upperContinuousLimit){
+        if (input < m_lowerContinuousLimit) input += m_upperContinuousLimit - m_lowerContinuousLimit;
+        if (input > m_upperContinuousLimit) input -= m_upperContinuousLimit - m_lowerContinuousLimit;
       }
     } else {
       m_prevVal += change;
@@ -128,12 +128,12 @@ public class DynamicSlewRateLimiter {
     m_negativeRateLimit = rateLimit;
   }
 
-  public void setCycleLimits(double lowerCycleLimit, double upperCycleLimit){
-    m_lowerCycleLimit = lowerCycleLimit;
-    m_upperCycleLimit = upperCycleLimit;
+  public void setContinuousLimits(double lowerContinuousLimit, double upperContinuousLimit){
+    m_lowerContinuousLimit = lowerContinuousLimit;
+    m_upperContinuousLimit = upperContinuousLimit;
   }
 
-  public void enableCycle(boolean cycle){
-    m_cycle = cycle;
+  public void enableContinuous(boolean continuous){
+    m_continuous = continuous;
   }
 }

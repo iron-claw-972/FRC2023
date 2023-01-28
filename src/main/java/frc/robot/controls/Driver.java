@@ -49,8 +49,8 @@ public class Driver {
 
   public static double getHeading(){
     if (Functions.calculateHypotenuse(getRawLeftX(), getRawLeftY()) <= m_headingDeadband) return m_previousHeading;
-    m_headingLimiter.enableCycle(true);
-    m_headingLimiter.setCycleLimits(-Math.PI,Math.PI);
+    m_headingLimiter.enableContinuous(true);
+    m_headingLimiter.setContinuousLimits(-Math.PI,Math.PI);
     m_headingLimiter.setRateLimit(m_headingSenseitiviy *Functions.calculateHypotenuse(getRawLeftX(), getRawLeftY()));
     m_previousHeading = m_headingLimiter.calculate(Functions.calculateAngle(getRawLeftX(), getRawLeftY()));
     return m_previousHeading;
