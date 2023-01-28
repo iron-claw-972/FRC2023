@@ -291,4 +291,8 @@ public class Module {
     return m_steerPIDOutput;
   }
 
+  public void periodic() {
+    // This method will be called once per scheduler run, mainly only used for simulation
+  }
+
 }

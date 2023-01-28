@@ -7,6 +7,7 @@
       "/Shuffleboard/Drive/xController": "PIDController",
       "/Shuffleboard/Drive/yController": "PIDController",
       "/Shuffleboard/Main/Practice Mode Type Chooser": "String Chooser",
+      "/Shuffleboard/Swerve Modules/Module Chooser": "String Chooser",
       "/Shuffleboard/Swerve Modules/Module Feedforward": "String Chooser",
       "/SmartDashboard/Field": "Field2d"
     },
