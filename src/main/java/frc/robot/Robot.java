@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -12,8 +13,10 @@ import frc.robot.controls.Driver;
 import frc.robot.controls.Operator;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.util.LogManager;
+import frc.robot.util.Node;
 import frc.robot.util.PathGroupLoader;
 import frc.robot.util.ShuffleboardManager;
+import frc.robot.util.Vision;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -27,6 +30,28 @@ public class Robot extends TimedRobot {
   public static Drivetrain drive;
 
   private static boolean isTestMode = false;
+  // Array of april tags. The index of the april tag in the array is equal to its id, and aprilTags[0] is null.
+  public final static Pose3d[] aprilTags = new Pose3d[9];
+
+  // 2D arrays of nodes. blueNodes[3][1] will return the top row cone node on the far left side (from the perspective of the driver)
+  public final static Node[][] blueNodes = new Node[4][];
+  public final static Node[][] redNodes = new Node[4][];
+
+  // Where the robot will score.
+  public static Node selectedNode = null;
+
+  /// Selection values (grid, row, spot)
+  public static int[] selectValues = {0,0,0};
+
+  // Timer for clearing array
+  public static double selectTime;
+
+  // How much time it should take (in frames)
+  public final static double selectTimeAmount=100;
+
+  // Possible teams
+  public static enum Teams {BLUE, RED};
+  public static Teams team;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -46,6 +71,25 @@ public class Robot extends TimedRobot {
     drive = new Drivetrain();
 
     shuffleboard.setup();
+    Vision.setup();
+
+    // Puts April tags in array
+    for(int i = 1; i <= 8; i++){
+      aprilTags[i]=Vision.getTagPose(i);
+    }
+
+    // Puts nodes in arrays
+    for(int i = 1; i <= 3; i++){
+      blueNodes[i] = new Node[10];
+      redNodes[i] = new Node[10];
+      for(int j = 1; j <= 9; j++){
+        blueNodes[i][j] = new Node(Teams.BLUE, i, j);
+        redNodes[i][j] = new Node(Teams.RED, i, j);
+      }
+    }
+
+    // Sets robot pose to 1 meter in front of april tag 2
+    drive.resetPose(aprilTags[2].getX()-1, aprilTags[2].getY(), 0);
 
     Driver.configureControls();
     Operator.configureControls();
@@ -60,6 +104,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    selectTime--;
+    if(selectTime==0){
+      selectValues[0]=0;
+      selectValues[1]=0;
+      selectValues[2]=0;
+    }
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
