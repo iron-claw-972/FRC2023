@@ -13,25 +13,27 @@ import lib.controllers.GameController.Button;
 public class Driver {
   private static GameController driver = new GameController(Constants.oi.kDriverJoy);
   
-  private static double m_translationalSenseitivity = 0.1;
-  private static double m_translationalExpo = 2;
-  private static double m_translationalDeadband = 0.05;
+  private double m_translationalSenseitivity = Constants.oi.kTranslationalSenseitivity;
+  private double m_translationalExpo = Constants.oi.kTranslationalExpo;
+  private double m_translationalDeadband = Constants.oi.kTranslationalDeadband;
+  private double m_translationalSlewrate = Constants.oi.kTranslationalSlewrate;
 
-  private static double m_rotationSenseitiviy = 0.1;
-  private static double m_rotationExpo = 0.1;
-  private static double m_rotationDeadband = 0.05;
+  private double m_rotationSenseitiviy = Constants.oi.kRotationSenseitiviy;
+  private double m_rotationExpo = Constants.oi.kRotationExpo;
+  private double m_rotationDeadband = Constants.oi.kRotationDeadband;
+  private double m_rotationSlewrate = Constants.oi.kRotationSlewrate;
 
-  private static double m_headingSenseitiviy = Math.PI*4;
-  private static double m_headingExpo = 0.1;
-  private static double m_headingDeadband = 0.05;
-  private static double m_previousHeading = 0;
-  
-  private static DynamicSlewRateLimiter m_xspeedLimiter = new DynamicSlewRateLimiter(0.1);
-  private static DynamicSlewRateLimiter m_yspeedLimiter = new DynamicSlewRateLimiter(0.1);
-  private static DynamicSlewRateLimiter m_rotLimiter = new DynamicSlewRateLimiter(0.1);
-  private static DynamicSlewRateLimiter m_headingLimiter = new DynamicSlewRateLimiter(m_headingSenseitiviy);
+  private double m_headingSenseitiviy = Constants.oi.kHeadingSenseitiviy;
+  private double m_headingExpo = Constants.oi.kHeadingExpo;
+  private double m_headingDeadband = Constants.oi.kHeadingDeadband;
+  private double m_previousHeading = 0;
 
-  public static void configureControls() {
+  private DynamicSlewRateLimiter m_xspeedLimiter = new DynamicSlewRateLimiter(m_translationalSlewrate);
+  private DynamicSlewRateLimiter m_yspeedLimiter = new DynamicSlewRateLimiter(m_translationalSlewrate);
+  private DynamicSlewRateLimiter m_rotLimiter = new DynamicSlewRateLimiter(m_rotationSlewrate);
+  private DynamicSlewRateLimiter m_headingLimiter = new DynamicSlewRateLimiter(m_headingSenseitiviy);
+
+  public void configureControls() {
     driver.get(Button.START).onTrue(new InstantCommand(() -> Robot.drive.setPigeonYaw(Constants.drive.kStartingHeadingDegrees)));
   }
 
