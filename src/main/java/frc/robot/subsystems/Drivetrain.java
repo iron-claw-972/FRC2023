@@ -9,19 +9,14 @@ package frc.robot.subsystems;
 
 import java.util.Optional;
 
-import org.apache.commons.lang3.tuple.Pair;
+// import org.apache.commons.lang3.tuple.Pair;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.constants.Constants;
-import frc.robot.util.MotorFactory;
-import frc.robot.util.Vision;
-import lib.ctre_shims.TalonEncoder;
-import edu.wpi.first.apriltag.AprilTag;
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
+import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -30,8 +25,11 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
-
-import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constants.Constants;
+import frc.robot.util.MotorFactory;
+import frc.robot.util.Vision;
+import lib.ctre_shims.TalonEncoder;
 
 public class Drivetrain extends SubsystemBase {
 
@@ -110,7 +108,7 @@ public class Drivetrain extends SubsystemBase {
       m_leftEncoder.getDistance(),
       m_rightEncoder.getDistance()
     );
-    Optional<Pair<Pose3d,Double>> result = Vision.getEstimatedGlobalPose(m_poseEstimator.getEstimatedPosition());
+    Optional<Pair<Pose3d, Double>> result = Vision.getEstimatedGlobalPose(m_poseEstimator.getEstimatedPosition());
 
     if (result.isPresent() && result.get().getFirst() != null && result.get().getSecond() != null) {
       Pair<Pose3d,Double> camPose = result.get();
