@@ -24,6 +24,8 @@ public class ModuleSim extends Module {
   private final TalonEncoderSim m_driveEncoderSim;
   private final CANCoderSimCollection m_encoderSim;
 
+  private double m_currentSteerPositionRad = 0;
+
   public ModuleSim(
     ModuleConstants moduleConstants
   ) {
@@ -58,7 +60,21 @@ public class ModuleSim extends Module {
    */
   @Override
   public SwerveModuleState getState() {
-    return new SwerveModuleState(m_driveMotorSim.getAngularVelocityRPM() * Constants.drive.kWheelRadius * 2 * Math.PI / 60, Rotation2d.fromDegrees(getAngle()));
+    return new SwerveModuleState(m_driveMotorSim.getAngularVelocityRPM() * Constants.drive.kWheelRadius * 2 * Math.PI / 60, new Rotation2d(m_currentSteerPositionRad));
+  }
+
+  /**
+   * Updates the simulation.
+   */
+  @Override
+  public void periodic() {
+    m_driveMotorSim.update(0.02);
+    m_steerMotorSim.update(0.02);
+
+    double angleDiffRad = m_steerMotorSim.getAngularVelocityRPM() * 0.02;
+    m_currentSteerPositionRad += angleDiffRad;
+
+    // System.out.println(m_currentSteerPositionRad);
   }
 
   /**
@@ -69,11 +85,11 @@ public class ModuleSim extends Module {
   @Override
   public void setDesiredState(SwerveModuleState desiredState) {
     if (Math.abs(desiredState.speedMetersPerSecond) < 0.001) {
-        stop();
-        return;
+      stop();
+      return;
     }
     // Optimize the reference state to avoid spinning further than 90 degrees
-    desiredState = SwerveModuleState.optimize(desiredState, Rotation2d.fromDegrees(getAngle()));
+    desiredState = SwerveModuleState.optimize(desiredState, new Rotation2d(m_currentSteerPositionRad));
 
     // Calculate the drive output from the drive PID controller.
     final double driveOutput = getDrivePID().calculate(getDriveEncoder().getRate(),
@@ -81,13 +97,21 @@ public class ModuleSim extends Module {
 
     final double driveFeedforward = getDriveFeedforward().calculate(desiredState.speedMetersPerSecond);
 
-    final double turnOutput = getSteerPID().calculate(getAngle(),
+    final double turnOutput = getSteerPID().calculate(m_currentSteerPositionRad,
             desiredState.angle.getRadians());
 
     final double turnFeedforward = getSteerFeedforward().calculate(getSteerPID().getSetpoint().velocity);
 
-    m_driveMotorSim.setInputVoltage(driveOutput + driveFeedforward);
+    m_driveMotorSim.setInputVoltage(driveOutput * 5 + driveFeedforward);
     m_steerMotorSim.setInputVoltage(turnOutput + turnFeedforward);
+  }
+
+  /**
+   * Gets the simulated angle of the module.
+   */
+  @Override
+  public double getAngle() {
+    return m_currentSteerPositionRad;
   }
 
 }
