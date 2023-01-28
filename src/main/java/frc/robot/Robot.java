@@ -119,6 +119,35 @@ public class Robot extends TimedRobot {
     LogManager.log();
   }
 
+    /**
+   * Method to store DPad values and use them to set selectedNode
+   * Down clears the array
+   * Left is 1, up is 2, and right is 3 for selection
+   * For example, up right left will select the center grid, top row, and left spot.
+   * @param direction = Which DPad button is pressed
+   */
+  public static void DPadPress(DPad direction){
+    if(direction==DPad.DOWN){
+      selectTime=1;
+    }else{
+      selectTime=selectTimeAmount;
+      int pressValue = direction==DPad.LEFT?1:direction==DPad.UP?2:3;
+      if(selectValues[0]==0){
+        selectValues[0]=pressValue;
+      }else if(selectValues[1]==0){
+        selectValues[1]=pressValue;
+      }else{
+        selectValues[2]=pressValue;
+        selectTime=1;
+        if(team==Teams.BLUE){
+          selectedNode=blueNodes[selectValues[1]][selectValues[0]*3-3+selectValues[2]];
+        }else{
+          selectedNode=redNodes[selectValues[1]][selectValues[0]*3-3+selectValues[2]];
+        }
+      }
+    }
+  }
+
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
@@ -129,6 +158,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
     m_autoCommand = getAutonomousCommand();
+    team = getTeam();
   }
 
   /** This autonomous runs the autonomous command selected by your {@link Robot} class. */
@@ -183,6 +213,9 @@ public class Robot extends TimedRobot {
    */
   public Command getAutonomousCommand() {
     return shuffleboard.getAutonomousCommand();
+  }
+  public Teams getTeam() {
+    return shuffleboard.getTeam();
   }
 
   public static boolean isTestMode() {
