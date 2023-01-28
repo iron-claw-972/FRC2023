@@ -15,6 +15,8 @@ public class Driver {
   private static final SlewRateLimiter m_xspeedLimiter = new SlewRateLimiter(0.1);
   private static final SlewRateLimiter m_yspeedLimiter = new SlewRateLimiter(0.1);
   private static final SlewRateLimiter m_rotLimiter = new SlewRateLimiter(0.1);
+  
+  private static double translationSenseitivity = 0.1;
 
   public static void configureControls() {
     driver.get(Button.START).onTrue(new InstantCommand(() -> Robot.drive.setPigeonYaw(Constants.drive.kStartingHeadingDegrees)));
@@ -32,6 +34,10 @@ public class Driver {
     return -Functions.expoMS(2, Functions.deadband(getRawRightX(), Constants.oi.kDeadband)) * Constants.drive.kMaxAngularSpeed * 0.1;
   }
 
+  public static double getHeading(){
+    
+  }
+
   public static double getForwardTranslationSlew() {
     return -m_xspeedLimiter.calculate(Functions.deadband(getRawLeftY(), Constants.oi.kDeadband)) * Constants.drive.kMaxSpeed * 0.1;
   }
@@ -44,16 +50,19 @@ public class Driver {
     return -m_rotLimiter.calculate(Functions.deadband(getRawRightX(), Constants.oi.kDeadband)) * Constants.drive.kMaxAngularSpeed * 0.1;
   }
 
-  public static double getRawRightX() {
-    return driver.get(Axis.RIGHT_X);
-  }
 
+  
   public static double getRawLeftX() {
     return driver.get(Axis.LEFT_X);
   }
-
   public static double getRawLeftY() {
     return driver.get(Axis.LEFT_Y);
   }
-
+  public static double getRawRightX() {
+    return driver.get(Axis.RIGHT_X);
+  }
+  public static double getRawRightY() {
+    return driver.get(Axis.RIGHT_Y);
+  }
+  
 }

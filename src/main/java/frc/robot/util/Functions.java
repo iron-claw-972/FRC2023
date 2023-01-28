@@ -48,6 +48,15 @@ public class Functions {
     return finVal;
   }
   
-  public double calculateAngle(double x, double y)
-    { return Math.atan(y/x); }
+  public double calculateAngle(double x, double y){
+    if (x == 0) return Math.signum(x)* Math.PI/2;
+    if (x > 0) return Math.atan(y/x);
+    if (x < 0) return Math.atan(y/x) + Math.PI;
+    return 0;
+  }
+
+  public double calculateHypotenuse(double x, double y){
+    return Math.pow(Math.pow(x,2)+Math.pow(y,2), 0.5);
+  }
+  
 }
