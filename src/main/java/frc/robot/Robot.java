@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -68,7 +70,7 @@ public class Robot extends TimedRobot {
 
     // make subsystems
     shuffleboard = new ShuffleboardManager();
-    drive = new Drivetrain();
+    drive = new Drivetrain(new AHRS());
 
     shuffleboard.setup();
     Vision.setup();
