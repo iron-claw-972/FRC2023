@@ -16,4 +16,5 @@ public final class Constants {
   public static final AutoConstants auto = new AutoConstants();
   public static final FalconConstants falcon = new FalconConstants();
   public static final VisionConstants vision = new VisionConstants();
+  public static final FieldConstants field = new FieldConstants();
 }

@@ -73,7 +73,9 @@ public class Vision {
 
   public static AprilTagFieldLayout getTagFieldLayout() {
     try {
-      aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
+      // TODO: fix this
+      // aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
+      aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource("Delete this line after fixing ^");
     } catch (IOException ex) {
       aprilTagFieldLayout = new AprilTagFieldLayout(Constants.vision.kTagPoses, Constants.field.kFieldLength, Constants.field.kFieldWidth);
       System.out.println("Vision setup IOException: "+ex.getMessage());
