@@ -80,6 +80,7 @@ public class DynamicSlewRateLimiter {
       m_negativeRateLimit * elapsedTime,
       m_positiveRateLimit * elapsedTime);
 
+    // TODO: make continuse work proporly with + and - slewrates
     if (m_continuous){
       // convert value to be inbetween limits
       //input %= m_upperCycleLimit - m_lowerCycleLimit;
@@ -107,6 +108,34 @@ public class DynamicSlewRateLimiter {
   }
 
   /**
+   * Sets a new slewrate and filters the input to limit its slew rate.
+   *
+   * @param input The input value whose slew rate is to be limited.
+   * @param rateLimit The new rate-of-change limit, in units per second.
+   * @return The filtered value, which will not change faster than the slew rate.
+   */
+  public double calculate(double input, double rateLimit) {
+    setRateLimit(rateLimit);
+    return calculate(input);
+  }
+
+  /**
+   * Sets new slewrates and filters the input to limit its slew rate.
+   *
+   * @param input The input value whose slew rate is to be limited.
+   * @param positiveRateLimit The rate-of-change limit in the positive direction, in units per
+   *     second. This is expected to be positive.
+   * @param negativeRateLimit The rate-of-change limit in the negative direction, in units per
+   *     second. This is expected to be negative.
+   * @return The filtered value, which will not change faster than the slew rate.
+   */
+  public double calculate(double input, double positiveRateLimit, double negativeRateLimit) {
+    setRateLimit(positiveRateLimit, negativeRateLimit);
+    return calculate(input);
+  }
+
+
+  /**
    * Resets the slew rate limiter to the specified value; ignores the rate limit when doing so.
    *
    * @param value The value to reset to.
@@ -126,6 +155,11 @@ public class DynamicSlewRateLimiter {
   public void setRateLimit(double rateLimit) {
     m_positiveRateLimit = rateLimit;
     m_negativeRateLimit = rateLimit;
+  }
+
+  public void setRateLimit(double positiveRateLimit, double negativeRateLimit) {
+    m_positiveRateLimit = positiveRateLimit;
+    m_negativeRateLimit = negativeRateLimit;
   }
 
   public void setContinuousLimits(double lowerContinuousLimit, double upperContinuousLimit){
