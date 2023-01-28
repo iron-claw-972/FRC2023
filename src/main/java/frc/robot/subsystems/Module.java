@@ -295,4 +295,8 @@ public class Module {
     return setOptimize;
   }
 
+  public void periodic() {
+    // This method will be called once per scheduler run, mainly only used for simulation
+  }
+
 }

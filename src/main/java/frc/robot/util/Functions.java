@@ -39,7 +39,7 @@ public class Functions {
    * @param base the base which will be raised to the power
    * @return base to the power of exponent, maintaining sign of base
    */
-  public static double expoMS(double exponent, double base) {
+  public static double expoMS(double base, double exponent) {
     // weird stuff will happen if you don't put a number > 0
     double finVal = Math.pow(Math.abs(base), exponent);
     if (base < 0) {
@@ -48,6 +48,14 @@ public class Functions {
     return finVal;
   }
   
-  public double calculateAngle(double x, double y)
-    { return Math.atan(y/x); }
+  public static double calculateAngle(double x, double y){
+    if (x > 0) return Math.atan(y/x);
+    if (x < 0) return Math.atan(y/x) + Math.PI;
+    return Math.signum(x)* Math.PI/2;
+  }
+
+  public static double calculateHypotenuse(double x, double y){
+    return Math.pow(Math.pow(x,2)+Math.pow(y,2), 0.5);
+  }
+  
 }
