@@ -53,6 +53,7 @@ public class DefaultDriveCommand extends CommandBase {
   }
 
   private void runHeadingPID() {
+    m_drive.setAllOptimize(false);
     m_drive.m_headingPIDOutput = m_drive.getRotationController().calculate(m_drive.getAngleHeading(), Robot.shuffleboard.getRequestedHeading()); // should be in rad/s
     
     // headingOutput is in rad/s. Need to convert to m/s by multiplying by radius
@@ -69,7 +70,7 @@ public class DefaultDriveCommand extends CommandBase {
   }
 
   private void testDriveVel() {
-
+    m_drive.setAllOptimize(true);
     double value = Robot.shuffleboard.getRequestedVelocity();
     for (int i = 0; i < 4; i++) {
       Robot.drive.m_modules[i].setDriveVelocity(value);
@@ -81,7 +82,7 @@ public class DefaultDriveCommand extends CommandBase {
   }
 
   private void testDriveVolts() {
-
+    m_drive.setAllOptimize(true);
     double value = Robot.shuffleboard.getRequestedVolts();
     for (int i = 0; i < 4; i++) {
       Robot.drive.m_modules[i].setDriveVoltage(value);
@@ -93,6 +94,7 @@ public class DefaultDriveCommand extends CommandBase {
   }
 
   private void testSteerAngle() {
+    m_drive.setAllOptimize(true);
     double value = Robot.shuffleboard.getRequestedSteerAngle();
     for (int i = 0; i < 4; i++) {
       Robot.drive.m_modules[i].setDriveVoltage(0);
@@ -101,6 +103,7 @@ public class DefaultDriveCommand extends CommandBase {
   }
 
   private void testSteerVolts() {
+    m_drive.setAllOptimize(true);
     double value = Robot.shuffleboard.getRequestedVolts();
     for (int i = 0; i < 4; i++) {
       Robot.drive.m_modules[i].setDriveVoltage(0);

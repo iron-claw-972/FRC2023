@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Robot;
 import frc.robot.commands.SelfFeedForwardCharacterzation;
 import frc.robot.constants.Constants;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Module;
 
 public class ShuffleboardManager {
@@ -29,7 +30,7 @@ public class ShuffleboardManager {
   Module m_allModule = Module.create(0, 0, 0, 0.0, 0.0, 0.0);
   // previous module for switching
   Module m_prevModule = m_dummyModule;
-  
+  Drivetrain m_drive;
   // tabs
   ShuffleboardTab m_mainTab, m_drivetrainTab, m_swerveModulesTab, m_autoTab;
 
@@ -46,7 +47,6 @@ public class ShuffleboardManager {
   SendableChooser<TestType> m_testMode = new SendableChooser<>();
   SendableChooser<Module> m_module = new SendableChooser<>();
 
-  
   public void setup() {
     LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
     
@@ -161,7 +161,7 @@ public class ShuffleboardManager {
   //add options to choosers
   public void autoChooserOptions() {
     m_autoCommand.addOption("Do Nothing", new PrintCommand("This will do nothing!"));
-    m_autoCommand.addOption("Self FF charecterzation", new SelfFeedForwardCharacterzation());
+    m_autoCommand.addOption("Self FF charecterzation", new SelfFeedForwardCharacterzation(m_drive));
     // m_autoCommand.setDefaultOption("TestAuto", new PathPlannerCommand("TestAuto", 0)); 
   }
   public void testTypeChooserOptions() {

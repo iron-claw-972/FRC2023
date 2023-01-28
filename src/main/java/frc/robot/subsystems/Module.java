@@ -74,7 +74,7 @@ public class Module {
   public double m_steerFeedForwardOutput = 0.0;
   public double m_steerPIDOutput = 0.0;
   public MedianFilter m_driveVelocityMedianFilter = new MedianFilter(80);
-
+  public Boolean setOptimize=false;
   public Module(ModuleConstants moduleConstants){
     this(
       moduleConstants.getDrivePort(),
@@ -151,7 +151,7 @@ public class Module {
       return;
     }
 
-    if (Robot.shuffleboard.getTestModeType() != TestType.HEADING_PID) {
+    if (setOptimize==true) {
       // Optimize the reference state to avoid spinning further than 90 degrees
       desiredState = SwerveModuleState.optimize(desiredState, new Rotation2d(getAngle()));
     }
@@ -289,6 +289,10 @@ public class Module {
 
   public double getSteerOutput() {
     return m_steerPIDOutput;
+  }
+  public Boolean setOptimize(Boolean setOptimize){
+    this.setOptimize=setOptimize;
+    return setOptimize;
   }
 
 }

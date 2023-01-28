@@ -8,21 +8,25 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.util.LogManager;
 
 /** Add your docs here. */
 public class SelfFeedForwardCharacterzation extends CommandBase{
     double value =0;
     Timer m_timer=new Timer();
+    Drivetrain m_drive;
+    public SelfFeedForwardCharacterzation(Drivetrain drive) {
+      this.m_drive = drive;
+  
+      addRequirements(drive);
+    }
     public void initialize(){
       m_timer.start();
       updatelogs();
-
+      m_drive.setAllOptimize(false);
     }
     public void execute(){
-      
-        
-            
           runcharacterazationVolts();
             if (m_timer.get()>=2.0){
             }
