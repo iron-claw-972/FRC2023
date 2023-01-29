@@ -21,7 +21,6 @@ public class DefaultDriveCommand extends CommandBase {
 
   @Override
   public void execute() {
-    
     if (Robot.shuffleboard.getTestModeType() == TestType.HEADING_PID) {
       runHeadingPID();
       return;
@@ -44,6 +43,11 @@ public class DefaultDriveCommand extends CommandBase {
     double ySpeed = Robot.driver.getSideTranslation();
     double rot = Robot.driver.getRotation();
 
+    if (Robot.shuffleboard.getTestModeType() == TestType.HEADING_DRIVE){
+      rot = Robot.driver.getHeading();
+      m_drive.driveHeading(xSpeed, ySpeed, rot);
+      return;
+    }
     m_drive.driveRot(xSpeed, ySpeed, rot, true);
     // System.out.println("driving: " + xSpeed + "," + ySpeed + "," + rot +
     // "," + Robot.driver.getRawForwardTranslation() + "," + Robot.driver.getRawSideTranslation() +","+ Robot.driver.getRawRightX());
