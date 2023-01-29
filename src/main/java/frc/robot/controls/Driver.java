@@ -3,6 +3,7 @@ package frc.robot.controls;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Robot;
+import frc.robot.commands.SetFormationX;
 import frc.robot.constants.Constants;
 import frc.robot.util.DynamicSlewRateLimiter;
 import frc.robot.util.Functions;
@@ -11,9 +12,11 @@ import lib.controllers.Ex3DProController;
 import lib.controllers.GameController;
 import lib.controllers.MadCatzController;
 import lib.controllers.Ex3DProController.Ex3DProAxis;
+import lib.controllers.Ex3DProController.Ex3DProButton;
 import lib.controllers.GameController.GCAxis;
 import lib.controllers.GameController.GCButton;
 import lib.controllers.MadCatzController.MadCatzAxis;
+import lib.controllers.MadCatzController.MadCatzButton;
 
 public class Driver {
   private static GameController driverGC = new GameController(Constants.oi.kDriverJoy);
@@ -48,6 +51,9 @@ public class Driver {
 
   public void configureControls() {
     driverGC.get(GCButton.START).onTrue(new InstantCommand(() -> Robot.drive.setPigeonYaw(Constants.drive.kStartingHeadingDegrees)));
+    driverGC.get(GCButton.A).whileTrue(new SetFormationX(Robot.drive));
+    driverEPC.get(Ex3DProButton.B1).whileTrue(new SetFormationX(Robot.drive));
+    driverMCC.get(MadCatzButton.B1).whileTrue(new SetFormationX(Robot.drive));
   }
 
   public double getForwardTranslation() {
