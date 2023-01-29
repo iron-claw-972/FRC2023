@@ -65,6 +65,8 @@ dependencies {
     nativeRelease wpi.java.deps.wpilibJniRelease(wpi.platforms.desktop)
     nativeRelease wpi.java.vendor.jniRelease(wpi.platforms.desktop)
     simulationRelease wpi.sim.enableRelease()
+
+    testImplementation 'junit:junit:4.12'
 }
 
 // Simulation configuration (e.g. environment variables).
