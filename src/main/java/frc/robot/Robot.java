@@ -32,6 +32,8 @@ public class Robot extends TimedRobot {
   
   public static ShuffleboardManager shuffleboard;
   public static Drivetrain drive;
+  public static Driver driver= new Driver();
+  public static Operator operator = new Operator();
  
   private static boolean isTestMode = false;
 
@@ -56,8 +58,8 @@ public class Robot extends TimedRobot {
 
     shuffleboard.setup();
 
-    Driver.configureControls();
-    Operator.configureControls();
+    driver.configureControls();
+    operator.configureControls();
 
     drive.setDefaultCommand(new DefaultDriveCommand(drive));
 
@@ -65,6 +67,7 @@ public class Robot extends TimedRobot {
       m_simField.setRobotPose(drive.getPose());
       SmartDashboard.putData("Field", m_simField);
     }
+    
   }
 
   /**
@@ -83,6 +86,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
 
     LogManager.log();
+    driver.updateSettings();
   }
 
   /**

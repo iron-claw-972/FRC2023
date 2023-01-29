@@ -15,10 +15,16 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Robot;
+import frc.robot.commands.DoNothing;
 import frc.robot.commands.SelfFeedForwardCharacterzation;
 import frc.robot.constants.Constants;
+import frc.robot.constants.ModuleConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Module;
+import lib.controllers.Controller;
+import lib.controllers.Ex3DProController;
+import lib.controllers.GameController;
+import lib.controllers.MadCatzController;
 
 public class ShuffleboardManager {
   
@@ -26,13 +32,12 @@ public class ShuffleboardManager {
   public Map<Module,Double> m_velModulesSaver=new HashMap<Module,Double>();
   public Map<Module,Double> m_staticModulesSaver=new HashMap<Module,Double>();
   // modules needed to distigue in chooser
-  Module m_dummyModule = Module.create(0, 0, 0, 0.0, 0.0, 0.0);
-  Module m_allModule = Module.create(0, 0, 0, 0.0, 0.0, 0.0);
+  Module m_dummyModule = Module.create(ModuleConstants.NONE);
+  Module m_allModule = Module.create(ModuleConstants.NONE);
   // previous module for switching
   Module m_prevModule = m_dummyModule;
-  Drivetrain m_drive;
   // tabs
-  ShuffleboardTab m_mainTab, m_drivetrainTab, m_swerveModulesTab, m_autoTab;
+  ShuffleboardTab m_mainTab, m_drivetrainTab, m_swerveModulesTab, m_autoTab, m_controllerTab;
 
   // drive inputs
   GenericEntry m_heading;
@@ -40,12 +45,18 @@ public class ShuffleboardManager {
   // swerve inputs
   GenericEntry m_driveVelocity, m_steerAngle, m_driveStaticFeedforward, m_driveVelocityFeedforward, m_drivetrainvolts;
   
+  //controller inputs
+  GenericEntry m_translationalSenseitivity, m_translationalExpo, m_translationalDeadband, m_translationalSlewrate;
+  GenericEntry m_rotationSenseitiviy, m_rotationExpo, m_rotationDeadband, m_rotationSlewrate;
+  GenericEntry m_headingSenseitiviy, m_headingExpo, m_headingDeadband;
+
   GenericEntry m_commandScheduler;
   
   // initilize choosers
   SendableChooser<Command> m_autoCommand = new SendableChooser<>();
   SendableChooser<TestType> m_testMode = new SendableChooser<>();
   SendableChooser<Module> m_module = new SendableChooser<>();
+  SendableChooser<Controller> m_controllerType = new SendableChooser<>();
 
   public void setup() {
     LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
@@ -55,6 +66,7 @@ public class ShuffleboardManager {
     m_drivetrainTab = Shuffleboard.getTab("Drive");
     m_swerveModulesTab = Shuffleboard.getTab("Swerve Modules");
     m_autoTab = Shuffleboard.getTab("Auto");
+    m_controllerTab = Shuffleboard.getTab("Controller");
     
     // stores adds Commands sqeduler to shuffleboard
     m_commandScheduler = m_mainTab.add("Command Scheduler", "NULL").getEntry();
@@ -74,6 +86,7 @@ public class ShuffleboardManager {
     // tab setup
     setupDrivetrain();
     setupModules();
+    setupController();
   }
 
   private void setupDrivetrain() {
@@ -160,8 +173,8 @@ public class ShuffleboardManager {
 
   //add options to choosers
   public void autoChooserOptions() {
-    m_autoCommand.addOption("Do Nothing", new PrintCommand("This will do nothing!"));
-    m_autoCommand.addOption("Self FF charecterzation", new SelfFeedForwardCharacterzation(m_drive));
+    m_autoCommand.setDefaultOption("Do Nothing", new PrintCommand("This will do nothing!"));
+    m_autoCommand.addOption("Self FF charecterzation", new SelfFeedForwardCharacterzation(Robot.drive));
     // m_autoCommand.setDefaultOption("TestAuto", new PathPlannerCommand("TestAuto", 0)); 
   }
   public void testTypeChooserOptions() {
@@ -180,6 +193,12 @@ public class ShuffleboardManager {
     m_module.addOption("Back Right", Robot.drive.m_modules[3]);
     m_module.addOption("all", m_allModule);
   }
+  private void controllerChooserOptions(){
+    m_controllerType.setDefaultOption("GameController", new GameController(-1));
+    m_controllerType.addOption("Ex3DPro", new Ex3DProController(-1));
+    m_controllerType.addOption("MadCatz", new MadCatzController(-1));
+    
+  }
 
   public void loadCommandSchedulerShuffleboard() {
     // Set the scheduler to log Shuffleboard events for command initialize, interrupt, finish
@@ -189,6 +208,24 @@ public class ShuffleboardManager {
     CommandScheduler.getInstance().onCommandInterrupt(command -> Shuffleboard.addEventMarker("Command interrupted", command.getName(), EventImportance.kNormal));
 
     CommandScheduler.getInstance().onCommandFinish(command -> Shuffleboard.addEventMarker("Command finished", command.getName(), EventImportance.kNormal));
+  }
+  private void setupController(){
+
+    m_translationalSenseitivity = m_controllerTab.add("translationalSenseitivity", Constants.oi.kTranslationalSenseitivity).getEntry();
+    m_translationalExpo = m_controllerTab.add("translationalExpo", Constants.oi.kTranslationalExpo).getEntry();
+    m_translationalDeadband = m_controllerTab.add("translationalDeadband", Constants.oi.kTranslationalDeadband).getEntry();
+    m_translationalSlewrate = m_controllerTab.add("translationalSlewrate", Constants.oi.kTranslationalSlewrate).getEntry();
+
+    m_rotationSenseitiviy = m_controllerTab.add("rotationSenseitiviy", Constants.oi.kRotationSenseitiviy).getEntry();
+    m_rotationExpo = m_controllerTab.add("rotationExpo", Constants.oi.kRotationExpo).getEntry();
+    m_rotationDeadband = m_controllerTab.add("rotationDeadband", Constants.oi.kRotationDeadband).getEntry();
+    m_rotationSlewrate = m_controllerTab.add("rotationSlewrate", Constants.oi.kRotationSlewrate).getEntry();
+
+    m_headingSenseitiviy = m_controllerTab.add("headingSenseitiviy", Constants.oi.kHeadingSenseitiviy).getEntry();
+    m_headingExpo = m_controllerTab.add("headingExpo", Constants.oi.kHeadingExpo).getEntry();
+    m_headingDeadband = m_controllerTab.add("headingDeadband", Constants.oi.kHeadingDeadband).getEntry();
+
+
   }
 
 
@@ -216,6 +253,44 @@ public class ShuffleboardManager {
   }
   public double getDriveVelocityFeedforward() {
     return m_driveVelocityFeedforward.getDouble(0);
+  }
+  
+  // controller settings
+  public double getTranslationalSenseitivity(){
+    return m_translationalSenseitivity.getDouble(Constants.oi.kTranslationalSenseitivity);
+  }
+  public double getTranslationalExpo(){
+    return m_translationalExpo.getDouble(Constants.oi.kTranslationalExpo);
+  }
+  public double getTranslationalDeadband(){
+    return m_translationalDeadband.getDouble(Constants.oi.kTranslationalDeadband);
+  }
+  public double getTranslationalSlewrate(){
+    return m_translationalSlewrate.getDouble(Constants.oi.kTranslationalSlewrate);
+  }
+  public double getRotationSenseitiviy(){
+    return m_rotationSenseitiviy.getDouble(Constants.oi.kRotationSenseitiviy);
+  }
+  public double getRotationExpo(){
+    return m_rotationExpo.getDouble(Constants.oi.kRotationExpo);
+  }
+  public double getRotationDeadband(){
+    return m_rotationDeadband.getDouble(Constants.oi.kRotationDeadband);
+  }
+  public double getRotationSlewrate(){
+    return m_rotationSlewrate.getDouble(Constants.oi.kRotationSlewrate);
+  }
+  public double getHeadingSenseitiviy(){
+    return m_headingSenseitiviy.getDouble(Constants.oi.kHeadingSenseitiviy);
+  }
+  public double getHeadingExpo(){
+    return m_headingExpo.getDouble(Constants.oi.kHeadingExpo);
+  }
+  public double getHeadingDeadband(){
+  return m_headingDeadband.getDouble(Constants.oi.kHeadingDeadband);
+}
+  public Controller getControllerType(){
+    return m_controllerType.getSelected();
   }
 
   public void setModulefeedforward(){

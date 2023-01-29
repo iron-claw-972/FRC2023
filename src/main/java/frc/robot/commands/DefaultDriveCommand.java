@@ -21,7 +21,6 @@ public class DefaultDriveCommand extends CommandBase {
 
   @Override
   public void execute() {
-    
     if (Robot.shuffleboard.getTestModeType() == TestType.HEADING_PID) {
       runHeadingPID();
       return;
@@ -40,11 +39,18 @@ public class DefaultDriveCommand extends CommandBase {
       return;
     }
 
-    double xSpeed = Driver.getForwardTranslation();
-    double ySpeed = Driver.getSideTranslation();
-    double rot = Driver.getRotation();
+    double xSpeed = Robot.driver.getForwardTranslation();
+    double ySpeed = Robot.driver.getSideTranslation();
+    double rot = Robot.driver.getRotation();
 
+    if (Robot.shuffleboard.getTestModeType() == TestType.HEADING_DRIVE){
+      rot = Robot.driver.getHeading();
+      m_drive.driveHeading(xSpeed, ySpeed, rot);
+      return;
+    }
     m_drive.driveRot(xSpeed, ySpeed, rot, true);
+    // System.out.println("driving: " + xSpeed + "," + ySpeed + "," + rot +
+    // "," + Robot.driver.getRawForwardTranslation() + "," + Robot.driver.getRawSideTranslation() +","+ Robot.driver.getRawRightX());
 }
 
   @Override
@@ -82,7 +88,7 @@ public class DefaultDriveCommand extends CommandBase {
   }
 
   private void testDriveVolts() {
-    m_drive.setAllOptimize(true);
+    m_drive.setAllOptimize(false);
     double value = Robot.shuffleboard.getRequestedVolts();
     for (int i = 0; i < 4; i++) {
       Robot.drive.m_modules[i].setDriveVoltage(value);
