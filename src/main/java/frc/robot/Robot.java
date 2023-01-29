@@ -92,7 +92,7 @@ public class Robot extends TimedRobot {
     }
 
     // Sets robot pose to 1 meter in front of april tag 2
-    drive.resetPose(aprilTags[2].getX()-1, aprilTags[2].getY(), 0);
+    drive.resetPose(aprilTags[2].getX()-1, aprilTags[2].getY(), Math.PI);
 
     Driver.configureControls();
     Operator.configureControls();

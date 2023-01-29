@@ -24,7 +24,7 @@ public class VisionConstants {
   public final boolean k2Cameras=true;
   public final String kCameraName1 = "Global_Shutter_Camera";
   public final String kCameraName2 = "Global_Shutter_Camera_2";
-  public final Transform3d kCameraToRobot1 = new Transform3d(new Translation3d(Units.inchesToMeters(12.5), 0, Units.inchesToMeters(5)), new Rotation3d(0, 0, 0)); 
+  public final Transform3d kCameraToRobot1 = new Transform3d(new Translation3d(Units.inchesToMeters(12.5), 0, Units.inchesToMeters(5)), new Rotation3d(0, 0, Math.PI)); 
   public final Transform3d kCameraToRobot2 = new Transform3d(new Translation3d(Units.inchesToMeters(12.5), 0, Units.inchesToMeters(5)), new Rotation3d(0, 0, 0)); 
   public final ArrayList<AprilTag> kTagPoses = new ArrayList<AprilTag>(List.of(
     new AprilTag(2, new Pose3d())
