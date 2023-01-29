@@ -6,6 +6,7 @@ import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.util.DynamicSlewRateLimiter;
 import frc.robot.util.Functions;
+import lib.controllers.Controller;
 import lib.controllers.Ex3DProController;
 import lib.controllers.GameController;
 import lib.controllers.MadCatzController;
@@ -16,9 +17,10 @@ import lib.controllers.MadCatzController.MadCatzAxis;
 
 public class Driver {
   private static GameController driverGC = new GameController(Constants.oi.kDriverJoy);
-  private static Ex3DProController driverEPC = new Ex3DProController(Constants.oi.kDriverJoy);
-  private static MadCatzController driverMCC = new MadCatzController(Constants.oi.kDriverJoy);
-  
+  private static Ex3DProController driverEPC = new Ex3DProController(2);
+  private static MadCatzController driverMCC = new MadCatzController(3);
+  private static Controller m_controllerType = new GameController(-1);
+
   private double m_translationalSenseitivity = Constants.oi.kTranslationalSenseitivity;
   private double m_translationalExpo = Constants.oi.kTranslationalExpo;
   private double m_translationalDeadband = Constants.oi.kTranslationalDeadband;
@@ -40,8 +42,8 @@ public class Driver {
   private DynamicSlewRateLimiter m_headingLimiter = new DynamicSlewRateLimiter(m_headingSenseitiviy);
 
   public Driver(){
-    m_headingLimiter.enableContinuous(true);
     m_headingLimiter.setContinuousLimits(-Math.PI,Math.PI);
+    m_headingLimiter.enableContinuous(true);
   }
 
   public void configureControls() {
@@ -58,10 +60,14 @@ public class Driver {
     return m_rotLimiter.calculate(-Functions.expoMS(Functions.deadband(getRawRotation(), m_rotationDeadband), m_rotationExpo) * Constants.drive.kMaxAngularSpeed * m_rotationSenseitiviy, m_rotationSlewrate);
   }
   public double getHeading(){
-    if (Functions.calculateHypotenuse(getRawSideTranslation(), getRawForwardTranslation()) <= m_headingDeadband) return m_previousHeading;
-    m_headingLimiter.setRateLimit(m_headingSenseitiviy *getRawHeadingMagnitude());
-    m_previousHeading = m_headingLimiter.calculate(getRawHeadingAngle(),Functions.expoMS(getRawHeadingMagnitude(), m_headingExpo));
+    if (getRawHeadingMagnitude() <= m_headingDeadband) return m_headingLimiter.calculate(m_previousHeading,1e-6);
+    m_previousHeading = m_headingLimiter.calculate(getRawHeadingAngle(), Functions.expoMS(getRawHeadingMagnitude(), m_headingExpo) * m_headingSenseitiviy);
+    // if (getRawHeadingMagnitude() <= m_headingDeadband) return m_previousHeading;
+    // m_previousHeading = getRawHeadingAngle();
+    
+    // System.out.println("heading: " + m_previousHeading);
     return m_previousHeading;
+    // return 0;
   }
   
 /*
@@ -79,34 +85,40 @@ public class Driver {
 */
 
   public double getRawSideTranslation() {
-    if (Robot.shuffleboard.getControllerType() instanceof GameController) return driverGC.get(GCAxis.LEFT_X);
-    if (Robot.shuffleboard.getControllerType() instanceof Ex3DProController) return driverEPC.get(Ex3DProAxis.X);
-    if (Robot.shuffleboard.getControllerType() instanceof MadCatzController) return driverMCC.get(MadCatzAxis.X);
+    if (m_controllerType instanceof GameController) return driverGC.get(GCAxis.LEFT_X);
+    if (m_controllerType instanceof Ex3DProController) return -driverEPC.get(Ex3DProAxis.X);
+    if (m_controllerType instanceof MadCatzController) return driverMCC.get(MadCatzAxis.X);
     return 0;
   }
   public double getRawForwardTranslation() {
-    if (Robot.shuffleboard.getControllerType() instanceof GameController) return driverGC.get(GCAxis.LEFT_Y);
-    if (Robot.shuffleboard.getControllerType() instanceof Ex3DProController) return driverEPC.get(Ex3DProAxis.Y);
-    if (Robot.shuffleboard.getControllerType() instanceof MadCatzController) return driverMCC.get(MadCatzAxis.Y);
+    if (m_controllerType instanceof GameController) return driverGC.get(GCAxis.LEFT_Y);
+    if (m_controllerType instanceof Ex3DProController) return -driverEPC.get(Ex3DProAxis.Y);
+    if (m_controllerType instanceof MadCatzController) return -driverMCC.get(MadCatzAxis.Y);
     return 0;
-
   }
+
   public double getRawRotation(){
-    if (Robot.shuffleboard.getControllerType() instanceof GameController) return driverGC.get(GCAxis.RIGHT_X);
-    if (Robot.shuffleboard.getControllerType() instanceof Ex3DProController) return driverEPC.get(Ex3DProAxis.Z);
-    if (Robot.shuffleboard.getControllerType() instanceof MadCatzController) return driverMCC.get(MadCatzAxis.ZROTATE);
+    if (m_controllerType instanceof GameController) return driverGC.get(GCAxis.RIGHT_X);
+    if (m_controllerType instanceof Ex3DProController) return driverEPC.get(Ex3DProAxis.Z);
+    if (m_controllerType instanceof MadCatzController) return driverMCC.get(MadCatzAxis.ZROTATE);
     return 0;
   }
   public double getRawHeadingAngle() {
-    if (Robot.shuffleboard.getControllerType() instanceof GameController) return Functions.calculateAngle(driverGC.get(GCAxis.RIGHT_X),driverGC.get(GCAxis.RIGHT_Y));
+    if (m_controllerType instanceof GameController) return Functions.calculateAngle(driverGC.get(GCAxis.RIGHT_X),-driverGC.get(GCAxis.RIGHT_Y))-Math.PI/2;
+    if (m_controllerType instanceof Ex3DProController) return driverEPC.get(Ex3DProAxis.Z) * Math.PI;
+    if (m_controllerType instanceof MadCatzController) return driverMCC.get(MadCatzAxis.ZROTATE) * Math.PI;
     return 0;
   }
   public double getRawHeadingMagnitude() {
-    if (Robot.shuffleboard.getControllerType() instanceof GameController) return Functions.calculateHypotenuse(driverGC.get(GCAxis.RIGHT_X),driverGC.get(GCAxis.RIGHT_Y));
+    if (m_controllerType instanceof GameController) return Functions.calculateHypotenuse(driverGC.get(GCAxis.RIGHT_X),driverGC.get(GCAxis.RIGHT_Y));
+    if (m_controllerType instanceof Ex3DProController) return driverEPC.get(Ex3DProAxis.SLIDER);
+    if (m_controllerType instanceof MadCatzController) return driverMCC.get(MadCatzAxis.SLIDER);
     return 0;
   }
   
   public void updateSettings(){
+    m_controllerType = Robot.shuffleboard.getControllerType();
+
     m_translationalSenseitivity = Robot.shuffleboard.getTranslationalSenseitivity();
     m_translationalExpo = Robot.shuffleboard.getTranslationalExpo();
     m_translationalDeadband = Robot.shuffleboard.getTranslationalDeadband();

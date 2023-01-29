@@ -75,6 +75,7 @@ public class ShuffleboardManager {
     autoChooserOptions();
     testTypeChooserOptions();
     moduleChooserOptions();
+    controllerChooserOptions();
     // puting defult value in hashmaps so no null pointer errors oucur
     setUpFeedforwardHashmap();
     
@@ -178,6 +179,7 @@ public class ShuffleboardManager {
     // m_autoCommand.setDefaultOption("TestAuto", new PathPlannerCommand("TestAuto", 0)); 
   }
   public void testTypeChooserOptions() {
+    m_testMode.addOption(TestType.HEADING_DRIVE.toString(), TestType.HEADING_DRIVE);
     m_testMode.addOption(TestType.HEADING_PID.toString(), TestType.HEADING_PID);
     m_testMode.addOption(TestType.MODULE_DRIVE_VELOCITY.toString(), TestType.MODULE_DRIVE_VELOCITY);
     m_testMode.addOption(TestType.MODULE_STEER_ANGLE.toString(), TestType.MODULE_STEER_ANGLE);
@@ -210,6 +212,8 @@ public class ShuffleboardManager {
     CommandScheduler.getInstance().onCommandFinish(command -> Shuffleboard.addEventMarker("Command finished", command.getName(), EventImportance.kNormal));
   }
   private void setupController(){
+
+    m_controllerTab.add("Controller Type", m_controllerType);
 
     m_translationalSenseitivity = m_controllerTab.add("translationalSenseitivity", Constants.oi.kTranslationalSenseitivity).getEntry();
     m_translationalExpo = m_controllerTab.add("translationalExpo", Constants.oi.kTranslationalExpo).getEntry();
