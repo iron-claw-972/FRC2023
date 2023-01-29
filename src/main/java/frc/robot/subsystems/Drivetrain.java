@@ -224,5 +224,10 @@ public class Drivetrain extends SubsystemBase {
   public PIDController getRotationController() {
     return m_rotationController;
   }
+  public void setAllOptimize(Boolean optimizeSate){
+    for (int i = 0; i < 4; i++) {
+      Robot.drive.m_modules[i].setOptimize(optimizeSate);
+    }
+  }
 
 }
