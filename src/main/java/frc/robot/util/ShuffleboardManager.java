@@ -18,8 +18,13 @@ import frc.robot.Robot;
 import frc.robot.commands.DoNothing;
 import frc.robot.commands.SelfFeedForwardCharacterzation;
 import frc.robot.constants.Constants;
+import frc.robot.constants.ModuleConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Module;
+import lib.controllers.Controller;
+import lib.controllers.Ex3DProController;
+import lib.controllers.GameController;
+import lib.controllers.MadCatzController;
 
 public class ShuffleboardManager {
   
@@ -27,8 +32,8 @@ public class ShuffleboardManager {
   public Map<Module,Double> m_velModulesSaver=new HashMap<Module,Double>();
   public Map<Module,Double> m_staticModulesSaver=new HashMap<Module,Double>();
   // modules needed to distigue in chooser
-  Module m_dummyModule = Module.create(0, 0, 0, 0.0, 0.0, 0.0);
-  Module m_allModule = Module.create(0, 0, 0, 0.0, 0.0, 0.0);
+  Module m_dummyModule = Module.create(ModuleConstants.NONE);
+  Module m_allModule = Module.create(ModuleConstants.NONE);
   // previous module for switching
   Module m_prevModule = m_dummyModule;
   // tabs
@@ -51,6 +56,7 @@ public class ShuffleboardManager {
   SendableChooser<Command> m_autoCommand = new SendableChooser<>();
   SendableChooser<TestType> m_testMode = new SendableChooser<>();
   SendableChooser<Module> m_module = new SendableChooser<>();
+  SendableChooser<Controller> m_controllerType = new SendableChooser<>();
 
   public void setup() {
     LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
@@ -187,6 +193,12 @@ public class ShuffleboardManager {
     m_module.addOption("Back Right", Robot.drive.m_modules[3]);
     m_module.addOption("all", m_allModule);
   }
+  private void controllerChooserOptions(){
+    m_controllerType.setDefaultOption("GameController", new GameController(-1));
+    m_controllerType.addOption("Ex3DPro", new Ex3DProController(-1));
+    m_controllerType.addOption("MadCatz", new MadCatzController(-1));
+    
+  }
 
   public void loadCommandSchedulerShuffleboard() {
     // Set the scheduler to log Shuffleboard events for command initialize, interrupt, finish
@@ -277,6 +289,9 @@ public class ShuffleboardManager {
   public double getHeadingDeadband(){
   return m_headingDeadband.getDouble(Constants.oi.kHeadingDeadband);
 }
+  public Controller getControllerType(){
+    return m_controllerType.getSelected();
+  }
 
   public void setModulefeedforward(){
     //revert to previous saved feed forward data if changed

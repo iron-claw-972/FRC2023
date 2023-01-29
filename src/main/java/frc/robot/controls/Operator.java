@@ -3,13 +3,13 @@ package frc.robot.controls;
 import frc.robot.commands.DoNothing;
 import frc.robot.constants.Constants;
 import lib.controllers.GameController;
-import lib.controllers.GameController.Button;
+import lib.controllers.GameController.GCButton;
 
 public class Operator {
   private static GameController operator = new GameController(Constants.oi.kOperatorJoy);
 
   public void configureControls() {
-    operator.get(Button.A).whenPressed(new DoNothing());
+    operator.get(GCButton.A).whenPressed(new DoNothing());
   }
 
 }
