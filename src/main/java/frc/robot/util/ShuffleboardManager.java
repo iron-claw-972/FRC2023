@@ -75,6 +75,7 @@ public class ShuffleboardManager {
     autoChooserOptions();
     testTypeChooserOptions();
     moduleChooserOptions();
+    controllerChooserOptions();
     // puting defult value in hashmaps so no null pointer errors oucur
     setUpFeedforwardHashmap();
     
@@ -82,6 +83,7 @@ public class ShuffleboardManager {
     m_autoTab.add("Auto Chooser", m_autoCommand);
     m_mainTab.add("Practice Mode Type Chooser", m_testMode);
     m_swerveModulesTab.add("Module Chooser", m_module);
+    m_controllerTab.add("Controller Chooser", m_controllerType);
 
     // tab setup
     setupDrivetrain();

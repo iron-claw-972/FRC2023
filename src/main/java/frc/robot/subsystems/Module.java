@@ -96,7 +96,8 @@ public class Module {
   ) {
     
     if (Robot.isReal()) {
-      m_driveMotor = MotorFactory.createTalonFX(driveMotorPort, Constants.kRioCAN);
+      // TODO: The CANBus needs to be a constant because on the new 2023 bot, drive motors use Canivore, not rio
+      m_driveMotor = MotorFactory.createTalonFX(driveMotorPort, Constants.kCanivoreCAN);
       m_steerMotor = MotorFactory.createTalonFX(steerMotorPort, Constants.kCanivoreCAN);
     } else {
       m_driveMotor = new WPI_TalonFX(driveMotorPort);
