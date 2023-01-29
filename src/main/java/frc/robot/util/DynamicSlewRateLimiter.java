@@ -154,7 +154,7 @@ public class DynamicSlewRateLimiter {
   }
   public void setRateLimit(double rateLimit) {
     m_positiveRateLimit = rateLimit;
-    m_negativeRateLimit = rateLimit;
+    m_negativeRateLimit = -rateLimit;
   }
 
   public void setRateLimit(double positiveRateLimit, double negativeRateLimit) {
