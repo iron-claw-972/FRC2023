@@ -96,9 +96,9 @@ public class DynamicSlewRateLimiter {
       m_prevVal += change;
 
       //converting vlaue to be in limits
-      while (input < m_lowerContinuousLimit || input > m_upperContinuousLimit){
-        if (input < m_lowerContinuousLimit) input += m_upperContinuousLimit - m_lowerContinuousLimit;
-        if (input > m_upperContinuousLimit) input -= m_upperContinuousLimit - m_lowerContinuousLimit;
+      while (m_prevVal < m_lowerContinuousLimit || m_prevVal > m_upperContinuousLimit){
+        if (m_prevVal < m_lowerContinuousLimit) m_prevVal += m_upperContinuousLimit - m_lowerContinuousLimit;
+        if (m_prevVal > m_upperContinuousLimit) m_prevVal -= m_upperContinuousLimit - m_lowerContinuousLimit;
       }
     } else {
       m_prevVal += change;

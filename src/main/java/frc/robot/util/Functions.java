@@ -33,6 +33,14 @@ public class Functions {
     return deadband(input, Constants.oi.kDeadband);
   }
 
+  public static double simpleDeadband(double input, double deadband){
+    if (Math.abs(input) <= deadband) {
+      return 0;
+    } else {
+      return input;
+    }
+  }
+
   /**
    * An exponential function that maintains positive or negative.
    * @param exponent the power to raise the base to
@@ -51,7 +59,7 @@ public class Functions {
   public static double calculateAngle(double x, double y){
     if (x > 0) return Math.atan(y/x);
     if (x < 0) return Math.atan(y/x) + Math.PI;
-    return Math.signum(x)* Math.PI/2;
+    return Math.signum(y)* Math.PI/2;
   }
 
   public static double calculateHypotenuse(double x, double y){
