@@ -32,7 +32,7 @@ public class MadCatzController extends Controller {
   public enum MadCatzAxis {
     X(0),
     Y(1),
-    ZAXIS(2),
+    SLIDER(2),
     ZROTATE(3);
 
     public final int id;
