@@ -19,6 +19,8 @@ import frc.robot.commands.DoNothing;
 import frc.robot.commands.SelfFeedForwardCharacterzation;
 import frc.robot.constants.Constants;
 import frc.robot.constants.ModuleConstants;
+import frc.robot.constants.DriveConstants.CompDriveConstants;
+import frc.robot.constants.DriveConstants.TestDriveConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Module;
 import lib.controllers.Controller;
@@ -57,6 +59,7 @@ public class ShuffleboardManager {
   SendableChooser<TestType> m_testMode = new SendableChooser<>();
   SendableChooser<Module> m_module = new SendableChooser<>();
   SendableChooser<Controller> m_controllerType = new SendableChooser<>();
+  SendableChooser<RobotType> m_robotType = new SendableChooser<>();
 
   public void setup() {
     LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
@@ -76,12 +79,14 @@ public class ShuffleboardManager {
     testTypeChooserOptions();
     moduleChooserOptions();
     controllerChooserOptions();
+    testTypeChooserOptions();
     // puting defult value in hashmaps so no null pointer errors oucur
     setUpFeedforwardHashmap();
     
     // add choosers
     m_autoTab.add("Auto Chooser", m_autoCommand);
     m_mainTab.add("Practice Mode Type Chooser", m_testMode);
+    m_mainTab.add("Robot Type Chooser", m_robotType);
     m_swerveModulesTab.add("Module Chooser", m_module);
     m_controllerTab.add("Controller Chooser", m_controllerType);
 
@@ -163,14 +168,26 @@ public class ShuffleboardManager {
     m_velModulesSaver.put(m_dummyModule,0.0);
     m_staticModulesSaver.put(m_allModule,Constants.drive.kDriveKSAll);
     m_velModulesSaver.put(m_allModule,Constants.drive.kDriveKVAll);
-    m_staticModulesSaver.put(Robot.drive.m_modules[0],Constants.drive.kDriveKSFrontLeft);
-    m_velModulesSaver.put(Robot.drive.m_modules[0],Constants.drive.kDriveKVFrontLeft);
-    m_staticModulesSaver.put(Robot.drive.m_modules[1],Constants.drive.kDriveKSFrontRight);
-    m_velModulesSaver.put(Robot.drive.m_modules[1],Constants.drive.kDriveKVFrontRight);
-    m_staticModulesSaver.put(Robot.drive.m_modules[2],Constants.drive.kDriveKSBackLeft);
-    m_velModulesSaver.put(Robot.drive.m_modules[2],Constants.drive.kDriveKVBackLeft);
-    m_staticModulesSaver.put(Robot.drive.m_modules[3],Constants.drive.kDriveKSBackRight);
-    m_velModulesSaver.put(Robot.drive.m_modules[3],Constants.drive.kDriveKVBackRight);
+    
+    if (m_robotType.getSelected() == RobotType.TEST) {
+      m_staticModulesSaver.put(Robot.drive.m_modules[0],TestDriveConstants.kDriveKSFrontLeft);
+      m_velModulesSaver.put(Robot.drive.m_modules[0],TestDriveConstants.kDriveKVFrontLeft);
+      m_staticModulesSaver.put(Robot.drive.m_modules[1],TestDriveConstants.kDriveKSFrontRight);
+      m_velModulesSaver.put(Robot.drive.m_modules[1],TestDriveConstants.kDriveKVFrontRight);
+      m_staticModulesSaver.put(Robot.drive.m_modules[2],TestDriveConstants.kDriveKSBackLeft);
+      m_velModulesSaver.put(Robot.drive.m_modules[2],TestDriveConstants.kDriveKVBackLeft);
+      m_staticModulesSaver.put(Robot.drive.m_modules[3],TestDriveConstants.kDriveKSBackRight);
+      m_velModulesSaver.put(Robot.drive.m_modules[3],TestDriveConstants.kDriveKVBackRight);
+    } else if (m_robotType.getSelected() == RobotType.COMP) {
+      m_staticModulesSaver.put(Robot.drive.m_modules[0],CompDriveConstants.kDriveKSFrontLeft);
+      m_velModulesSaver.put(Robot.drive.m_modules[0],CompDriveConstants.kDriveKVFrontLeft);
+      m_staticModulesSaver.put(Robot.drive.m_modules[1],CompDriveConstants.kDriveKSFrontRight);
+      m_velModulesSaver.put(Robot.drive.m_modules[1],CompDriveConstants.kDriveKVFrontRight);
+      m_staticModulesSaver.put(Robot.drive.m_modules[2],CompDriveConstants.kDriveKSBackLeft);
+      m_velModulesSaver.put(Robot.drive.m_modules[2],CompDriveConstants.kDriveKVBackLeft);
+      m_staticModulesSaver.put(Robot.drive.m_modules[3],CompDriveConstants.kDriveKSBackRight);
+      m_velModulesSaver.put(Robot.drive.m_modules[3],CompDriveConstants.kDriveKVBackRight);
+    }
   }
 
   //add options to choosers
@@ -179,6 +196,12 @@ public class ShuffleboardManager {
     m_autoCommand.addOption("Self FF charecterzation", new SelfFeedForwardCharacterzation(Robot.drive));
     // m_autoCommand.setDefaultOption("TestAuto", new PathPlannerCommand("TestAuto", 0)); 
   }
+
+public void robotTypeOptions() {
+  m_robotType.setDefaultOption("Competition Robot", RobotType.COMP);
+  m_robotType.addOption("Test Robot", RobotType.TEST);
+}
+
   public void testTypeChooserOptions() {
     m_testMode.addOption(TestType.HEADING_PID.toString(), TestType.HEADING_PID);
     m_testMode.addOption(TestType.MODULE_DRIVE_VELOCITY.toString(), TestType.MODULE_DRIVE_VELOCITY);
@@ -294,6 +317,10 @@ public class ShuffleboardManager {
   public Controller getControllerType(){
     return m_controllerType.getSelected();
   }
+
+public RobotType getRobotType() {
+  return m_robotType.getSelected();
+}
 
   public void setModulefeedforward(){
     //revert to previous saved feed forward data if changed
