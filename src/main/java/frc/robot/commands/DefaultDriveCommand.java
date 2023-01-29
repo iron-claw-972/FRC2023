@@ -84,7 +84,7 @@ public class DefaultDriveCommand extends CommandBase {
   }
 
   private void testDriveVolts() {
-    m_drive.setAllOptimize(true);
+    m_drive.setAllOptimize(false);
     double value = Robot.shuffleboard.getRequestedVolts();
     for (int i = 0; i < 4; i++) {
       Robot.drive.m_modules[i].setDriveVoltage(value);

@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Robot;
+import frc.robot.commands.DoNothing;
 import frc.robot.commands.SelfFeedForwardCharacterzation;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.Drivetrain;
@@ -30,7 +31,6 @@ public class ShuffleboardManager {
   Module m_allModule = Module.create(0, 0, 0, 0.0, 0.0, 0.0);
   // previous module for switching
   Module m_prevModule = m_dummyModule;
-  Drivetrain m_drive;
   // tabs
   ShuffleboardTab m_mainTab, m_drivetrainTab, m_swerveModulesTab, m_autoTab, m_controllerTab;
 
@@ -167,8 +167,8 @@ public class ShuffleboardManager {
 
   //add options to choosers
   public void autoChooserOptions() {
-    m_autoCommand.addOption("Do Nothing", new PrintCommand("This will do nothing!"));
-    m_autoCommand.addOption("Self FF charecterzation", new SelfFeedForwardCharacterzation(m_drive));
+    m_autoCommand.setDefaultOption("Do Nothing", new PrintCommand("This will do nothing!"));
+    m_autoCommand.addOption("Self FF charecterzation", new SelfFeedForwardCharacterzation(Robot.drive));
     // m_autoCommand.setDefaultOption("TestAuto", new PathPlannerCommand("TestAuto", 0)); 
   }
   public void testTypeChooserOptions() {

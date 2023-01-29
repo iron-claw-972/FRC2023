@@ -7,6 +7,8 @@ package frc.robot.commands;
 import java.util.LinkedList;
 import java.util.List;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
@@ -55,14 +57,18 @@ public class SelfFeedForwardCharacterzation extends CommandBase {
       m_timer.reset();
       m_timer.start();
     }
+    System.out.println(value);
 
   }
 
   private void runcharacterazationVolts() {
     for (int i = 0; i < 4; i++) {
-      Robot.drive.m_modules[i].setDriveVoltage(0);
-      Robot.drive.m_modules[i].setSteerVoltage(value);
+      Robot.drive.m_modules[i].setDriveVoltage(value);
     }
+    Robot.drive.m_modules[0].setSteerAngle(new Rotation2d(Units.degreesToRadians(135)));
+    Robot.drive.m_modules[1].setSteerAngle(new Rotation2d(Units.degreesToRadians(45)));
+    Robot.drive.m_modules[2].setSteerAngle(new Rotation2d(Units.degreesToRadians(225)));
+    Robot.drive.m_modules[3].setSteerAngle(new Rotation2d(Units.degreesToRadians(315)));
   }
 
   private double getValue() {
@@ -82,10 +88,17 @@ public class SelfFeedForwardCharacterzation extends CommandBase {
     m_feedForwardCharacterizationData1.print();
     m_feedForwardCharacterizationData2.print();
     m_feedForwardCharacterizationData3.print();
-
+    for (int i = 0; i < 4; i++) {
+      Robot.drive.m_modules[i].setDriveVoltage(0);
+    }
+    Robot.drive.m_modules[0].setSteerAngle(new Rotation2d(Units.degreesToRadians(135)));
+    Robot.drive.m_modules[1].setSteerAngle(new Rotation2d(Units.degreesToRadians(45)));
+    Robot.drive.m_modules[2].setSteerAngle(new Rotation2d(Units.degreesToRadians(225)));
+    Robot.drive.m_modules[3].setSteerAngle(new Rotation2d(Units.degreesToRadians(315)));
   }
 
-  public Boolean isFinsihed() {
+  public boolean isFinished() {
+    System.out.println(value > 11);
     return value > 11;
   }
 
@@ -111,11 +124,11 @@ public class SelfFeedForwardCharacterzation extends CommandBase {
           voltageData.stream().mapToDouble(Double::doubleValue).toArray(),
           1);
 
-      // System.out.println("FF Characterization Results (" + name + "):");
-      // System.out.println("\tCount=" + Integer.toString(velocityData.size()) + "");
-      // System.out.println(String.format("\tR2=%.5f", regression.R2()));
-      // System.out.println(String.format("\tkS=%.5f", regression.beta(0)));
-      // System.out.println(String.format("\tkV=%.5f", regression.beta(1)));
+      System.out.println("FF Characterization Results (" + name + "):");
+      System.out.println("\tCount=" + Integer.toString(velocityData.size()) + "");
+      System.out.println(String.format("\tR2=%.5f", regression.R2()));
+      System.out.println(String.format("\tkS=%.5f", regression.beta(0)));
+      System.out.println(String.format("\tkV=%.5f", regression.beta(1)));
       Robot.shuffleboard.m_staticModulesSaver.replace(name, regression.beta(0));
       Robot.shuffleboard.m_staticModulesSaver.replace(name, regression.beta(1));
     }
