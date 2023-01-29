@@ -14,9 +14,9 @@ public class OIConstants {
   public final double kRotationSenseitiviy = 0.05;
   public final double kRotationExpo = 4;
   public final double kRotationDeadband = 0.01;
-  public final double kRotationSlewrate = 4;
+  public final double kRotationSlewrate = 10;
 
-  public final double kHeadingSenseitiviy = Math.PI*4;
-  public final double kHeadingExpo = 0.1;
+  public final double kHeadingSenseitiviy = 4;
+  public final double kHeadingExpo = 2;
   public final double kHeadingDeadband = 0.05;
 }

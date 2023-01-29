@@ -39,6 +39,7 @@ public class DefaultDriveCommand extends CommandBase {
       return;
     }
 
+    m_drive.setAllOptimize(true);
     double xSpeed = Robot.driver.getForwardTranslation();
     double ySpeed = Robot.driver.getSideTranslation();
     double rot = Robot.driver.getRotation();
