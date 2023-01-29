@@ -37,54 +37,70 @@ public class Driver {
     driver.get(Button.START).onTrue(new InstantCommand(() -> Robot.drive.setPigeonYaw(Constants.drive.kStartingHeadingDegrees)));
   }
 
-  public static double getForwardTranslation() {
-    return -Functions.expoMS(Functions.deadband(getRawLeftY(), m_translationalDeadband), m_translationalExpo) * Constants.drive.kMaxSpeed * m_translationalSenseitivity;
+  public double getForwardTranslation() {
+    return m_yspeedLimiter.calculate(-Functions.expoMS(Functions.deadband(getRawForwardTranslation(), m_translationalDeadband), m_translationalExpo) * Constants.drive.kMaxSpeed * m_translationalSenseitivity, m_translationalSlewrate);
   }
 
-  public static double getSideTranslation() {
-    return -Functions.expoMS(Functions.deadband(getRawLeftX(), m_translationalDeadband), m_translationalExpo) * Constants.drive.kMaxSpeed * m_translationalSenseitivity;
+  public double getSideTranslation() {
+    return m_xspeedLimiter.calculate(-Functions.expoMS(Functions.deadband(getRawSideTranslation(), m_translationalDeadband), m_translationalExpo) * Constants.drive.kMaxSpeed * m_translationalSenseitivity, m_translationalSlewrate);
   }
 
-  public static double getRotation() {
-    return -Functions.expoMS(Functions.deadband(getRawRightX(), m_rotationDeadband), m_rotationExpo) * Constants.drive.kMaxAngularSpeed * m_rotationSenseitiviy;
+  public double getRotation() {
+    return m_rotLimiter.calculate(-Functions.expoMS(Functions.deadband(getRawRightX(), m_rotationDeadband), m_rotationExpo) * Constants.drive.kMaxAngularSpeed * m_rotationSenseitiviy, m_rotationSlewrate);
   }
 
-  public static double getHeading(){
-    if (Functions.calculateHypotenuse(getRawLeftX(), getRawLeftY()) <= m_headingDeadband) return m_previousHeading;
+  public double getHeading(){
+    if (Functions.calculateHypotenuse(getRawSideTranslation(), getRawForwardTranslation()) <= m_headingDeadband) return m_previousHeading;
     m_headingLimiter.enableContinuous(true);
     m_headingLimiter.setContinuousLimits(-Math.PI,Math.PI);
-    m_headingLimiter.setRateLimit(m_headingSenseitiviy *Functions.calculateHypotenuse(getRawLeftX(), getRawLeftY()));
-    m_previousHeading = m_headingLimiter.calculate(Functions.calculateAngle(getRawLeftX(), getRawLeftY()));
+    m_headingLimiter.setRateLimit(m_headingSenseitiviy *Functions.calculateHypotenuse(getRawSideTranslation(), getRawForwardTranslation()));
+    m_previousHeading = m_headingLimiter.calculate(Functions.calculateAngle(getRawSideTranslation(), getRawForwardTranslation()),Functions.expoMS(Functions.calculateHypotenuse(getRawSideTranslation(), getRawForwardTranslation()), m_headingExpo));
     return m_previousHeading;
   }
   
 /*
-  public static double getForwardTranslationSlew() {
+  public double getForwardTranslationSlew() {
     return -m_xspeedLimiter.calculate(Functions.deadband(getRawLeftY(), Constants.oi.kDeadband)) * Constants.drive.kMaxSpeed * 0.1;
   }
 
-  public static double getSideTranslationSlew() {
+  public double getSideTranslationSlew() {
     return -m_yspeedLimiter.calculate(Functions.deadband(getRawLeftX(), Constants.oi.kDeadband)) * Constants.drive.kMaxSpeed * 0.1;
   }
 
-  public static double getRotationSlew() {
+  public double getRotationSlew() {
     return -m_rotLimiter.calculate(Functions.deadband(getRawRightX(), Constants.oi.kDeadband)) * Constants.drive.kMaxAngularSpeed * 0.1;
   }
 */
 
 
-  
-  public static double getRawLeftX() {
+  public double getRawSideTranslation() {
     return driver.get(Axis.LEFT_X);
   }
-  public static double getRawLeftY() {
+  public double getRawForwardTranslation() {
     return driver.get(Axis.LEFT_Y);
   }
-  public static double getRawRightX() {
+  
+  public double getRawRightX() {
     return driver.get(Axis.RIGHT_X);
   }
-  public static double getRawRightY() {
+  public double getRawRightY() {
     return driver.get(Axis.RIGHT_Y);
   }
   
+  public void updateSettings(){
+    m_translationalSenseitivity = Robot.shuffleboard.getTranslationalSenseitivity();
+    m_translationalExpo = Robot.shuffleboard.getTranslationalExpo();
+    m_translationalDeadband = Robot.shuffleboard.getTranslationalDeadband();
+    m_translationalSlewrate = Robot.shuffleboard.getTranslationalSlewrate();
+
+    m_rotationSenseitiviy = Robot.shuffleboard.getRotationSenseitiviy();
+    m_rotationExpo = Robot.shuffleboard.getRotationExpo();
+    m_rotationDeadband = Robot.shuffleboard.getRotationDeadband();
+    m_rotationSlewrate = Robot.shuffleboard.getRotationSlewrate();
+
+    m_headingSenseitiviy = Robot.shuffleboard.getHeadingSenseitiviy();
+    m_headingExpo = Robot.shuffleboard.getHeadingExpo();
+    m_headingDeadband = Robot.shuffleboard.getHeadingDeadband();
+  }
+
 }

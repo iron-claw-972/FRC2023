@@ -40,9 +40,9 @@ public class DefaultDriveCommand extends CommandBase {
       return;
     }
 
-    double xSpeed = Driver.getForwardTranslation();
-    double ySpeed = Driver.getSideTranslation();
-    double rot = Driver.getRotation();
+    double xSpeed = Robot.driver.getForwardTranslation();
+    double ySpeed = Robot.driver.getSideTranslation();
+    double rot = Robot.driver.getRotation();
 
     m_drive.driveRot(xSpeed, ySpeed, rot, true);
 }

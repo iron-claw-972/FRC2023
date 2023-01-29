@@ -31,7 +31,7 @@ public class ShuffleboardManager {
   Module m_prevModule = m_dummyModule;
   
   // tabs
-  ShuffleboardTab m_mainTab, m_drivetrainTab, m_swerveModulesTab, m_autoTab;
+  ShuffleboardTab m_mainTab, m_drivetrainTab, m_swerveModulesTab, m_autoTab, m_controllerTab;
 
   // drive inputs
   GenericEntry m_heading;
@@ -39,6 +39,11 @@ public class ShuffleboardManager {
   // swerve inputs
   GenericEntry m_driveVelocity, m_steerAngle, m_driveStaticFeedforward, m_driveVelocityFeedforward, m_drivetrainvolts;
   
+  //controller inputs
+  GenericEntry m_translationalSenseitivity, m_translationalExpo, m_translationalDeadband, m_translationalSlewrate;
+  GenericEntry m_rotationSenseitiviy, m_rotationExpo, m_rotationDeadband, m_rotationSlewrate;
+  GenericEntry m_headingSenseitiviy, m_headingExpo, m_headingDeadband;
+
   GenericEntry m_commandScheduler;
   
   // initilize choosers
@@ -55,6 +60,7 @@ public class ShuffleboardManager {
     m_drivetrainTab = Shuffleboard.getTab("Drive");
     m_swerveModulesTab = Shuffleboard.getTab("Swerve Modules");
     m_autoTab = Shuffleboard.getTab("Auto");
+    m_controllerTab = Shuffleboard.getTab("Controller");
     
     // stores adds Commands sqeduler to shuffleboard
     m_commandScheduler = m_mainTab.add("Command Scheduler", "NULL").getEntry();
@@ -74,6 +80,7 @@ public class ShuffleboardManager {
     // tab setup
     setupDrivetrain();
     setupModules();
+    setupController();
   }
 
   private void setupDrivetrain() {
@@ -190,6 +197,24 @@ public class ShuffleboardManager {
 
     CommandScheduler.getInstance().onCommandFinish(command -> Shuffleboard.addEventMarker("Command finished", command.getName(), EventImportance.kNormal));
   }
+  private void setupController(){
+
+    m_translationalSenseitivity = m_controllerTab.add("translationalSenseitivity", Constants.oi.kTranslationalSenseitivity).getEntry();
+    m_translationalExpo = m_controllerTab.add("translationalExpo", Constants.oi.kTranslationalExpo).getEntry();
+    m_translationalDeadband = m_controllerTab.add("translationalDeadband", Constants.oi.kTranslationalDeadband).getEntry();
+    m_translationalSlewrate = m_controllerTab.add("translationalSlewrate", Constants.oi.kTranslationalSlewrate).getEntry();
+
+    m_rotationSenseitiviy = m_controllerTab.add("rotationSenseitiviy", Constants.oi.kRotationSenseitiviy).getEntry();
+    m_rotationExpo = m_controllerTab.add("rotationExpo", Constants.oi.kRotationExpo).getEntry();
+    m_rotationDeadband = m_controllerTab.add("rotationDeadband", Constants.oi.kRotationDeadband).getEntry();
+    m_rotationSlewrate = m_controllerTab.add("rotationSlewrate", Constants.oi.kRotationSlewrate).getEntry();
+
+    m_headingSenseitiviy = m_controllerTab.add("headingSenseitiviy", Constants.oi.kHeadingSenseitiviy).getEntry();
+    m_headingExpo = m_controllerTab.add("headingExpo", Constants.oi.kHeadingExpo).getEntry();
+    m_headingDeadband = m_controllerTab.add("headingDeadband", Constants.oi.kHeadingDeadband).getEntry();
+
+
+  }
 
 
   //getters
@@ -217,6 +242,41 @@ public class ShuffleboardManager {
   public double getDriveVelocityFeedforward() {
     return m_driveVelocityFeedforward.getDouble(0);
   }
+  
+  // controller settings
+  public double getTranslationalSenseitivity(){
+    return m_translationalSenseitivity.getDouble(Constants.oi.kTranslationalSenseitivity);
+  }
+  public double getTranslationalExpo(){
+    return m_translationalExpo.getDouble(Constants.oi.kTranslationalExpo);
+  }
+  public double getTranslationalDeadband(){
+    return m_translationalDeadband.getDouble(Constants.oi.kTranslationalDeadband);
+  }
+  public double getTranslationalSlewrate(){
+    return m_translationalSlewrate.getDouble(Constants.oi.kTranslationalSlewrate);
+  }
+  public double getRotationSenseitiviy(){
+    return m_rotationSenseitiviy.getDouble(Constants.oi.kRotationSenseitiviy);
+  }
+  public double getRotationExpo(){
+    return m_rotationExpo.getDouble(Constants.oi.kRotationExpo);
+  }
+  public double getRotationDeadband(){
+    return m_rotationDeadband.getDouble(Constants.oi.kRotationDeadband);
+  }
+  public double getRotationSlewrate(){
+    return m_rotationSlewrate.getDouble(Constants.oi.kRotationSlewrate);
+  }
+  public double getHeadingSenseitiviy(){
+    return m_headingSenseitiviy.getDouble(Constants.oi.kHeadingSenseitiviy);
+  }
+  public double getHeadingExpo(){
+    return m_headingExpo.getDouble(Constants.oi.kHeadingExpo);
+  }
+  public double getHeadingDeadband(){
+  return m_headingDeadband.getDouble(Constants.oi.kHeadingDeadband);
+}
 
   public void setModulefeedforward(){
     //revert to previous saved feed forward data if changed
