@@ -60,10 +60,12 @@ public class Drivetrain extends SubsystemBase {
   // PID Controllers
   private PIDController m_xController = new PIDController(0, 0, 0);
   private PIDController m_yController = new PIDController(0, 0, 0);
-  private PIDController m_rotationController = new PIDController(0.1, 0, 0);
+  private PIDController m_rotationController = new PIDController(Constants.drive.KheadingP, Constants.drive.KheadingI, Constants.drive.KheadingD);
 
   public Drivetrain() {
     m_odometry = new SwerveDriveOdometry(m_kinematics, m_pigeon.getRotation2d(), getModulePositions(), m_robotPose);
+    // TODO: enable continues input on m_rotationCotroller if needed
+    m_rotationController.enableContinuousInput(-Math.PI,Math.PI);
   }
 
   @Override
@@ -112,7 +114,7 @@ public class Drivetrain extends SubsystemBase {
                 ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_pigeon.getRotation2d())
                 : new ChassisSpeeds(xSpeed, ySpeed, rot));
     SwerveDriveKinematics.desaturateWheelSpeeds(m_swerveModuleStates, Constants.drive.kMaxSpeed);
-    // setModuleStates(m_swerveModuleStates);
+    setModuleStates(m_swerveModuleStates);
   }
 
   public void driveHeading(double xSpeed, double ySpeed, double heading) {
