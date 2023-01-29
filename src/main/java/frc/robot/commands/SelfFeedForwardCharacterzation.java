@@ -44,13 +44,13 @@ public class SelfFeedForwardCharacterzation extends CommandBase {
 
   public void execute() {
     runcharacterazationVolts();
-    if (m_timer.get() > 2.0) {
+    if (m_timer.get() > 0.5) {
       m_feedForwardCharacterizationData0.add(Robot.drive.m_modules[0].getDriveVelocity(), value);
       m_feedForwardCharacterizationData1.add(Robot.drive.m_modules[1].getDriveVelocity(), value);
       m_feedForwardCharacterizationData2.add(Robot.drive.m_modules[2].getDriveVelocity(), value);
       m_feedForwardCharacterizationData3.add(Robot.drive.m_modules[3].getDriveVelocity(), value);
     }
-    if (m_timer.get() >= 4.0) {
+    if (m_timer.get() >= 2.0) {
       value += 0.2;
       m_timer.reset();
       m_timer.start();
@@ -117,7 +117,7 @@ public class SelfFeedForwardCharacterzation extends CommandBase {
       // System.out.println(String.format("\tkS=%.5f", regression.beta(0)));
       // System.out.println(String.format("\tkV=%.5f", regression.beta(1)));
       Robot.shuffleboard.m_staticModulesSaver.replace(name, regression.beta(0));
-      Robot.shuffleboard.m_staticModulesSaver.replace(name, regression.beta(1));
+      Robot.shuffleboard.m_velModulesSaver.replace(name, regression.beta(1));
     }
   }
 }
