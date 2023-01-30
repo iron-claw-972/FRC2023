@@ -3,7 +3,8 @@ package frc.robot.constants;
 public class FalconConstants {
 
   public final int kFirmwareVersion = 5633; // version 22.1.1.0
-  public final boolean kBreakOnWrongFirmware = true;
+  // TODO: SimGUI says firmware is -1, so disable for now
+  public final boolean kBreakOnWrongFirmware = false;
 
   public final double kResolution = 2048;
   public final double kMaxRpm = 6380.0; // Rotations per minute
