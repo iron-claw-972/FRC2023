@@ -10,33 +10,27 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
+import frc.robot.controls.Driver;
 import frc.robot.util.MotorFactory;
+import lib.controllers.GameController.Axis;
 
 public class Drivetrain extends SubsystemBase {
 
   private final WPI_TalonFX m_leftMotor1;
-  private final WPI_TalonFX m_leftMotor2;
   private final WPI_TalonFX m_rightMotor1;
-  private final WPI_TalonFX m_rightMotor2;
 
   public Drivetrain() {
 
-    m_leftMotor1 = MotorFactory.createTalonFX(Constants.drive.kLeftMotor1, Constants.kRioCAN);
-    m_leftMotor2 = MotorFactory.createTalonFX(Constants.drive.kLeftMotor2, Constants.kRioCAN);
-    m_rightMotor1 = MotorFactory.createTalonFX(Constants.drive.kRightMotor1, Constants.kRioCAN);
-    m_rightMotor2 = MotorFactory.createTalonFX(Constants.drive.kRightMotor2, Constants.kRioCAN);
+    m_leftMotor1 = MotorFactory.createTalonFX(3, Constants.kRioCAN);
+    m_rightMotor1 = MotorFactory.createTalonFX(4, Constants.kRioCAN);
 
     SupplyCurrentLimitConfiguration supplyCurrentLimit = new SupplyCurrentLimitConfiguration(true, 40, 45, 1);
 
     m_leftMotor1.configSupplyCurrentLimit(supplyCurrentLimit);
-    m_leftMotor2.configSupplyCurrentLimit(supplyCurrentLimit);
     m_rightMotor1.configSupplyCurrentLimit(supplyCurrentLimit);
-    m_rightMotor2.configSupplyCurrentLimit(supplyCurrentLimit);
-
-    m_leftMotor2.follow(m_leftMotor1);
-    m_rightMotor2.follow(m_rightMotor1);
   }
 
   /**
@@ -60,5 +54,9 @@ public class Drivetrain extends SubsystemBase {
   public void arcadeDrive(double throttle, double turn) {
     m_leftMotor1.set(ControlMode.PercentOutput, throttle + turn);
     m_rightMotor1.set(ControlMode.PercentOutput, throttle - turn);
+  }
+
+  public void drive() {
+    arcadeDrive(Driver.controller.get(Axis.LEFT_Y), Driver.controller.get(Axis.RIGHT_X));
   }
 }

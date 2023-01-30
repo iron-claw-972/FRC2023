@@ -6,9 +6,4 @@ import lib.controllers.GameController;
 import lib.controllers.GameController.Button;
 
 public class Operator {
-  private static GameController operator = new GameController(Constants.oi.kOperatorJoy);
-
-  public static void configureControls() {
-    operator.get(Button.A).whenPressed(new DoNothing());
-  }
 }
