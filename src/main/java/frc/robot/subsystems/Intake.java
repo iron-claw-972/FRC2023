@@ -30,16 +30,17 @@ public class Intake extends SubsystemBase {
     rightMotor = new CANSparkMax(1, MotorType.kBrushless);
     leftMotor.restoreFactoryDefaults();
     rightMotor.restoreFactoryDefaults();
+
   }
 
-  public void intake() {
-    leftMotor.set(-0.3);
-    rightMotor.set(0.3);
+  public void intake(double speed) {
+    leftMotor.set(-speed);
+    rightMotor.set(speed);
   }
 
-  public void outtake() {
-    leftMotor.set(0.3);
-    rightMotor.set(-0.3);
+  public void outtake(double speed) {
+    leftMotor.set(speed);
+    rightMotor.set(-speed);
   }
 
   public void stop() {

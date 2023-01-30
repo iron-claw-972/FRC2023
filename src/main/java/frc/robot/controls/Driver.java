@@ -11,19 +11,28 @@ import lib.controllers.GameController;
 import lib.controllers.GameController.Button;
 
 public class Driver {
+
+  private static double speed = 0.1;
+
   public static GameController controller = new GameController(Constants.oi.kDriverJoy);
 
   public static void configureControls() {
     
     // example button binding implementation
-    controller.get(Button.A).onTrue(new DoNothing());
+    controller.get(Button.A).onTrue(new InstantCommand(() -> {
+      if (speed == 0.1) {
+        speed = 0.2;
+      } else {
+        speed = 0.1;
+      }
+    }, Robot.intake));
 
     controller.get(Button.X).onTrue(new InstantCommand(() -> {
-      Robot.intake.intake();
+      Robot.intake.intake(speed);
     }, Robot.intake));
 
     controller.get(Button.B).onTrue(new InstantCommand(() -> {
-      Robot.intake.outtake();
+      Robot.intake.outtake(speed);
     }, Robot.intake));
 
     controller.get(Button.Y).onTrue(new InstantCommand(() -> {
