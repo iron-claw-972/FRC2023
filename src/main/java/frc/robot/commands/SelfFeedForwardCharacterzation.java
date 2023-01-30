@@ -79,9 +79,6 @@ public class SelfFeedForwardCharacterzation extends CommandBase {
       Robot.shuffleboard.m_velModulesSaver.replace(Robot.drive.m_modules[i], m_feedForwardCharacterizationData[i].getVelocity());
       System.out.println("Static " + i + ": " + m_feedForwardCharacterizationData[i].getSatic());
       System.out.println("Velocity " + i + ": " + m_feedForwardCharacterizationData[i].getVelocity());
-      
-
-
     }
     
     for (int i = 0; i < 4; i++) {
