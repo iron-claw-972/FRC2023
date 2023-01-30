@@ -26,7 +26,8 @@ public class Robot extends TimedRobot {
   public static ShuffleboardManager shuffleboard;
   public static Drivetrain drive;
 
-  private static boolean isTestMode = false;
+  // this should be a RobotContainer
+  Robot m_robot = this;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -42,9 +43,10 @@ public class Robot extends TimedRobot {
     PathGroupLoader.loadPathGroups();
 
     // make subsystems
-    shuffleboard = new ShuffleboardManager();
+    shuffleboard = new ShuffleboardManager(this);
     drive = new Drivetrain();
 
+    // TODO: why isn't this done when creating the instance?
     shuffleboard.setup();
 
     Driver.configureControls();
@@ -73,7 +75,6 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     CommandScheduler.getInstance().cancelAll();
-    isTestMode = false;
   }
 
   @Override
@@ -84,7 +85,6 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link Robot} class. */
   @Override
   public void autonomousInit() {
-    isTestMode = false;
     if (m_autoCommand != null) {
       m_autoCommand.schedule();
     }
@@ -103,7 +103,6 @@ public class Robot extends TimedRobot {
     if (m_autoCommand != null) {
       m_autoCommand.cancel();
     }
-    isTestMode = false;
   }
 
   /** This function is called periodically during operator control. */
@@ -117,9 +116,6 @@ public class Robot extends TimedRobot {
 
     // it may be needed to disable LiveWindow (we don't use it anyway)
     //LiveWindow.setEnabled(false)
-
-    isTestMode = true;
-
   }
 
   /** This function is called periodically during test mode. */
@@ -135,7 +131,15 @@ public class Robot extends TimedRobot {
     return shuffleboard.getAutonomousCommand();
   }
 
-  public static boolean isTestMode() {
-    return isTestMode;
+  /**
+   * Whether we are currently in Test Mode.
+   * @deprecated use RobotBase.isTest()
+   * Also confused about the Robot being STATIC.
+   * Main builds a single INSTANCE of the robot.
+   * At a later time, it will call the robotInit() method.
+   * @return true when in Test Mode
+   */
+  public boolean isTestMode() {
+    return isTest();
   }
 }

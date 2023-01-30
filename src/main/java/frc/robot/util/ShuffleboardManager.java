@@ -23,6 +23,21 @@ public class ShuffleboardManager {
 
   GenericEntry m_commandScheduler = m_mainTab.add("Command Scheduler", "NULL").getEntry();
 
+  /** 
+   * the robot (should be robotContainer)
+   * used for accessing testMode()
+   */
+  Robot m_robot;
+
+  /**
+   * 
+   * @param robot
+   */
+  public ShuffleboardManager(Robot robot) {
+    // remember the robot
+    m_robot = robot;
+  }
+
   public void setup() {
     LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
 
@@ -42,7 +57,7 @@ public class ShuffleboardManager {
 
 
   public TestType getTestType() {
-    if (Robot.isTestMode()) {
+    if (m_robot.isTest()) {
       return m_testType.getSelected();
     }
     return TestType.NONE;
