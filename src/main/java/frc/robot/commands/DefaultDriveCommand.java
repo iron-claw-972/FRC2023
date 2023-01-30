@@ -49,8 +49,8 @@ public class DefaultDriveCommand extends CommandBase {
       m_drive.driveHeading(xSpeed, ySpeed, rot);
       return;
     }
-    System.out.println("driving: " + xSpeed + "," + ySpeed + "," + rot +
-    "," + Robot.driver.getRawForwardTranslation() + "," + Robot.driver.getRawSideTranslation() +","+ Robot.driver.getRawRotation());
+    // System.out.println("driving: " + xSpeed + "," + ySpeed + "," + rot +
+    // "," + Robot.driver.getRawForwardTranslation() + "," + Robot.driver.getRawSideTranslation() +","+ Robot.driver.getRawRotation());
     m_drive.driveRot(xSpeed, ySpeed, rot, true);
 }
 
