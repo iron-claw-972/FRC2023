@@ -132,10 +132,10 @@ public class ShuffleboardManager {
     // m_swerveModulesTab.addNumber("BR desired angle", () -> Robot.drive.swerveModuleStates[3].angle.getDegrees());
 
     // Steer angles
-    // m_swerveModulesTab.addNumber("Angle FL",  () -> Units.radiansToDegrees(Robot.drive.m_modules[0].getAngle()));
-    // m_swerveModulesTab.addNumber("Angle FR", () -> Units.radiansToDegrees(Robot.drive.m_modules[1].getAngle()));
-    // m_swerveModulesTab.addNumber("Angle BL",   () -> Units.radiansToDegrees(Robot.drive.m_modules[2].getAngle()));
-    // m_swerveModulesTab.addNumber("Angle BR",  () -> Units.radiansToDegrees(Robot.drive.m_modules[3].getAngle()));
+    // m_swerveModulesTab.addNumber("Angle FL",  () -> Robot.drive.m_modules[0].getAngle());
+    // m_swerveModulesTab.addNumber("Angle FR", () -> Robot.drive.m_modules[1].getAngle());
+    // m_swerveModulesTab.addNumber("Angle BL",   () -> Robot.drive.m_modules[2].getAngle());
+    // m_swerveModulesTab.addNumber("Angle BR",  () -> Robot.drive.m_modules[3].getAngle());
 
     // Drive PID output
     // m_swerveModulesTab.addNumber("FL PID Output", () -> Robot.drive.m_modules[0].getDrivePIDOutput());
@@ -168,16 +168,16 @@ public class ShuffleboardManager {
     m_staticModulesSaver.put(m_allModule,Constants.drive.kDriveKSAll);
     m_velModulesSaver.put(m_allModule,Constants.drive.kDriveKVAll);
     
-    if (m_robotType.getSelected() == RobotType.TEST) {
-      m_staticModulesSaver.put(Robot.drive.m_modules[0],TestDriveConstants.kDriveKSFrontLeft);
-      m_velModulesSaver.put(Robot.drive.m_modules[0],TestDriveConstants.kDriveKVFrontLeft);
-      m_staticModulesSaver.put(Robot.drive.m_modules[1],TestDriveConstants.kDriveKSFrontRight);
-      m_velModulesSaver.put(Robot.drive.m_modules[1],TestDriveConstants.kDriveKVFrontRight);
-      m_staticModulesSaver.put(Robot.drive.m_modules[2],TestDriveConstants.kDriveKSBackLeft);
-      m_velModulesSaver.put(Robot.drive.m_modules[2],TestDriveConstants.kDriveKVBackLeft);
-      m_staticModulesSaver.put(Robot.drive.m_modules[3],TestDriveConstants.kDriveKSBackRight);
-      m_velModulesSaver.put(Robot.drive.m_modules[3],TestDriveConstants.kDriveKVBackRight);
-    } else if (m_robotType.getSelected() == RobotType.COMP) {
+    // if (m_robotType.getSelected() == RobotType.TEST) {
+    //   m_staticModulesSaver.put(Robot.drive.m_modules[0],TestDriveConstants.kDriveKSFrontLeft);
+    //   m_velModulesSaver.put(Robot.drive.m_modules[0],TestDriveConstants.kDriveKVFrontLeft);
+    //   m_staticModulesSaver.put(Robot.drive.m_modules[1],TestDriveConstants.kDriveKSFrontRight);
+    //   m_velModulesSaver.put(Robot.drive.m_modules[1],TestDriveConstants.kDriveKVFrontRight);
+    //   m_staticModulesSaver.put(Robot.drive.m_modules[2],TestDriveConstants.kDriveKSBackLeft);
+    //   m_velModulesSaver.put(Robot.drive.m_modules[2],TestDriveConstants.kDriveKVBackLeft);
+    //   m_staticModulesSaver.put(Robot.drive.m_modules[3],TestDriveConstants.kDriveKSBackRight);
+    //   m_velModulesSaver.put(Robot.drive.m_modules[3],TestDriveConstants.kDriveKVBackRight);
+    // } else if (m_robotType.getSelected() == RobotType.COMP) {
       m_staticModulesSaver.put(Robot.drive.m_modules[0],CompDriveConstants.kDriveKSFrontLeft);
       m_velModulesSaver.put(Robot.drive.m_modules[0],CompDriveConstants.kDriveKVFrontLeft);
       m_staticModulesSaver.put(Robot.drive.m_modules[1],CompDriveConstants.kDriveKSFrontRight);
@@ -186,7 +186,7 @@ public class ShuffleboardManager {
       m_velModulesSaver.put(Robot.drive.m_modules[2],CompDriveConstants.kDriveKVBackLeft);
       m_staticModulesSaver.put(Robot.drive.m_modules[3],CompDriveConstants.kDriveKSBackRight);
       m_velModulesSaver.put(Robot.drive.m_modules[3],CompDriveConstants.kDriveKVBackRight);
-    }
+    // }
   }
 
   //add options to choosers
@@ -326,6 +326,10 @@ public RobotType getRobotType() {
 
   public void setModulefeedforward(){
     //revert to previous saved feed forward data if changed
+    
+    // System.out.println(m_module.getSelected().hashCode());
+    // System.out.println(m_staticModulesSaver.get(Robot.drive.m_modules[0]));
+    // if (true) return;
     if (m_prevModule != m_module.getSelected()){
       m_driveStaticFeedforward.setDouble(m_staticModulesSaver.get(m_module.getSelected()));
       m_driveVelocityFeedforward.setDouble(m_velModulesSaver.get(m_module.getSelected()));

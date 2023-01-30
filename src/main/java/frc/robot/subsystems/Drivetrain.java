@@ -61,30 +61,13 @@ public class Drivetrain extends SubsystemBase {
   private PIDController m_rotationController = new PIDController(Constants.drive.KheadingP, Constants.drive.KheadingI, Constants.drive.KheadingD);
 
   public Drivetrain() {
-
-    if (Robot.shuffleboard.getRobotType() == RobotType.TEST) {
-      m_modules = new Module[]{
-        Module.create(ModuleConstants.TEST_FL),
-        Module.create(ModuleConstants.TEST_FR),
-        Module.create(ModuleConstants.TEST_BL),
-        Module.create(ModuleConstants.TEST_BR)
-      };
-    } else if (Robot.shuffleboard.getRobotType() == RobotType.COMP) {
       m_modules = new Module[]{
         Module.create(ModuleConstants.COMP_FL),
         Module.create(ModuleConstants.COMP_FR),
         Module.create(ModuleConstants.COMP_BL),
         Module.create(ModuleConstants.COMP_BR)
       };
-    } else {
-      m_modules = new Module[]{
-        Module.create(ModuleConstants.NONE),
-        Module.create(ModuleConstants.NONE),
-        Module.create(ModuleConstants.NONE),
-        Module.create(ModuleConstants.NONE)
-      };
-      DriverStation.reportError("Invalid robot type found in shuffleboard. Swerve drive modules set to none.", null);
-    }
+
 
     m_odometry = new SwerveDriveOdometry(m_kinematics, m_pigeon.getRotation2d(), getModulePositions(), m_robotPose);
     // TODO: enable continues input on m_rotationCotroller if needed
