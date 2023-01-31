@@ -21,7 +21,7 @@ public class Driver {
     // example button binding implementation
     controller.get(Button.A).onTrue(new InstantCommand(() -> {
       if (speed == 0.1) {
-        speed = 0.2;
+        speed = 0.3;
       } else {
         speed = 0.1;
       }
