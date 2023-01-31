@@ -70,7 +70,6 @@ public class Drivetrain extends SubsystemBase {
 
 
     m_odometry = new SwerveDriveOdometry(m_kinematics, m_pigeon.getRotation2d(), getModulePositions(), m_robotPose);
-    // TODO: enable continues input on m_rotationCotroller if needed
     m_rotationController.enableContinuousInput(-Math.PI,Math.PI);
   }
 
