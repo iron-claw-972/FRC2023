@@ -47,7 +47,22 @@ public class Functions {
     }
     return finVal;
   }
-  
+
+  /**
+   * Returns the value of the angle in between the controller axes. 
+   * @param x The value in between -1 and 1 of the controller x axis.
+   * @param y The value in between -1 and 1 of the controller y axis.
+   * @return The value of the angle between the two values. 
+   */
   public double calculateAngle(double x, double y)
-    { return Math.atan(y/x); }
+    { 
+      if(x != 0 && Math.atan(y/x) != 0)//to remove possibility of the expression not being defined. 
+      {
+        return Math.atan(y/x); 
+      }
+      else
+      {
+        return -1;
+      }
+    }
 }
