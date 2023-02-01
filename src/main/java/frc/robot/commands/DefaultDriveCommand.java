@@ -26,10 +26,11 @@ public class DefaultDriveCommand extends CommandBase {
       return;
     } else if (Robot.shuffleboard.getTestModeType() == TestType.MODULE_DRIVE_VELOCITY) {
       testDriveVel();
-      Robot.shuffleboard.setModulefeedforward();
+      Robot.shuffleboard.setDriveModuleFeedforward();
       return;
     } else if (Robot.shuffleboard.getTestModeType() == TestType.MODULE_STEER_ANGLE){
       testSteerAngle();
+      Robot.shuffleboard.setSteerModuleFeedforward();
       return;
     } else if (Robot.shuffleboard.getTestModeType() == TestType.DRIVE_VOLTAGE){
       testDriveVolts();

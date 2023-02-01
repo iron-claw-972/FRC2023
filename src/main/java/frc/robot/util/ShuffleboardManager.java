@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Robot;
 import frc.robot.commands.DoNothing;
-import frc.robot.commands.SelfFeedForwardCharacterzation;
+import frc.robot.commands.DriveFeedForwardCharacterzation;
 import frc.robot.constants.Constants;
 import frc.robot.constants.ModuleConstants;
 import frc.robot.constants.DriveConstants.CompDriveConstants;
@@ -31,8 +31,11 @@ import lib.controllers.MadCatzController;
 public class ShuffleboardManager {
   
   // hashmaps for storeing values corilateing to module
-  public Map<Module,Double> m_velModulesSaver=new HashMap<Module,Double>();
-  public Map<Module,Double> m_staticModulesSaver=new HashMap<Module,Double>();
+  public Map<Module,Double> m_driveVelFeedForwardSaver=new HashMap<Module,Double>();
+  public Map<Module,Double> m_driveStaticFeedForwardSaver=new HashMap<Module,Double>();
+  public Map<Module,Double> m_steerVelFeedForwardSaver=new HashMap<Module,Double>();
+  public Map<Module,Double> m_steerStaticFeedForwardSaver=new HashMap<Module,Double>();
+
   // modules needed to distigue in chooser
   Module m_dummyModule = Module.create(ModuleConstants.NONE);
   Module m_allModule = Module.create(ModuleConstants.NONE);
@@ -45,7 +48,14 @@ public class ShuffleboardManager {
   GenericEntry m_heading;
 
   // swerve inputs
-  GenericEntry m_driveVelocity, m_steerAngle, m_driveStaticFeedforward, m_driveVelocityFeedforward, m_drivetrainvolts;
+  GenericEntry 
+    m_driveVelocity, 
+    m_steerAngle, 
+    m_drivetrainvolts, 
+    m_driveStaticFeedforward, 
+    m_driveVelocityFeedforward, 
+    m_steerStaticFeedforward,
+    m_steerVelocityFeedforward;
   
   //controller inputs
   GenericEntry m_translationalSenseitivity, m_translationalExpo, m_translationalDeadband, m_translationalSlewrate;
@@ -115,27 +125,17 @@ public class ShuffleboardManager {
     // inputs
     m_driveVelocity = m_swerveModulesTab.add("Set Drive Velocity", 0).getEntry();
     m_steerAngle = m_swerveModulesTab.add("Set Steer Angle", 0).getEntry();
-    m_driveStaticFeedforward = m_swerveModulesTab.add("Set Drive Static Feedforward", 0).getEntry();
-    m_driveVelocityFeedforward = m_swerveModulesTab.add("Set Drive Velocity Feedforward", 0).getEntry();
     m_drivetrainvolts = m_swerveModulesTab.add("Set Volts", 0).getEntry();
+    m_driveStaticFeedforward = m_swerveModulesTab.add("Drive kS FF", 0).getEntry();
+    m_driveVelocityFeedforward = m_swerveModulesTab.add("Drive kV FF", 0).getEntry();
+    m_steerStaticFeedforward = m_swerveModulesTab.add("Steer kS FF", 0).getEntry();
+    m_steerVelocityFeedforward = m_swerveModulesTab.add("Steer kV k FF", 0).getEntry();
     
     // Desired Drive Velocitys
     // m_swerveModulesTab.addNumber("FL desired speed", () -> Robot.drive.swerveModuleStates[0].speedMetersPerSecond);
     // m_swerveModulesTab.addNumber("FR desired speed", () -> Robot.drive.swerveModuleStates[1].speedMetersPerSecond);
     // m_swerveModulesTab.addNumber("BL desired speed", () -> Robot.drive.swerveModuleStates[2].speedMetersPerSecond);
     // m_swerveModulesTab.addNumber("BR desired speed", () -> Robot.drive.swerveModuleStates[3].speedMetersPerSecond);
-
-    // Desired Steer angles
-    // m_swerveModulesTab.addNumber("FL desired angle", () -> Robot.drive.swerveModuleStates[0].angle.getDegrees());
-    // m_swerveModulesTab.addNumber("FR desired angle", () -> Robot.drive.swerveModuleStates[1].angle.getDegrees());
-    // m_swerveModulesTab.addNumber("BL desired angle", () -> Robot.drive.swerveModuleStates[2].angle.getDegrees());
-    // m_swerveModulesTab.addNumber("BR desired angle", () -> Robot.drive.swerveModuleStates[3].angle.getDegrees());
-
-    // Steer angles
-    // m_swerveModulesTab.addNumber("Angle FL",  () -> Robot.drive.m_modules[0].getAngle());
-    // m_swerveModulesTab.addNumber("Angle FR", () -> Robot.drive.m_modules[1].getAngle());
-    // m_swerveModulesTab.addNumber("Angle BL",   () -> Robot.drive.m_modules[2].getAngle());
-    // m_swerveModulesTab.addNumber("Angle BR",  () -> Robot.drive.m_modules[3].getAngle());
 
     // Drive PID output
     // m_swerveModulesTab.addNumber("FL PID Output", () -> Robot.drive.m_modules[0].getDrivePIDOutput());
@@ -160,39 +160,61 @@ public class ShuffleboardManager {
     // m_swerveModulesTab.addNumber("Vel FR Filtered", () -> Robot.drive.m_modules[1].getDriveVelocityFilltered());
     // m_swerveModulesTab.addNumber("Vel BL Filtered", () -> Robot.drive.m_modules[2].getDriveVelocityFilltered());
     // m_swerveModulesTab.addNumber("Vel BR Filtered", () -> Robot.drive.m_modules[3].getDriveVelocityFilltered());
+
+    // Desired Steer angles
+    // m_swerveModulesTab.addNumber("FL desired angle", () -> Robot.drive.swerveModuleStates[0].angle.getDegrees());
+    // m_swerveModulesTab.addNumber("FR desired angle", () -> Robot.drive.swerveModuleStates[1].angle.getDegrees());
+    // m_swerveModulesTab.addNumber("BL desired angle", () -> Robot.drive.swerveModuleStates[2].angle.getDegrees());
+    // m_swerveModulesTab.addNumber("BR desired angle", () -> Robot.drive.swerveModuleStates[3].angle.getDegrees());
+
+    // Steer angles
+    // m_swerveModulesTab.addNumber("Angle FL", () -> Robot.drive.m_modules[0].getAngle());
+    // m_swerveModulesTab.addNumber("Angle FR", () -> Robot.drive.m_modules[1].getAngle());
+    // m_swerveModulesTab.addNumber("Angle BL", () -> Robot.drive.m_modules[2].getAngle());
+    // m_swerveModulesTab.addNumber("Angle BR", () -> Robot.drive.m_modules[3].getAngle());
+
+    //Steer PID
+    // m_swerveModulesTab.add("Steer PID FL", Robot.drive.m_modules[0].getSteerPID());
+    // m_swerveModulesTab.add("Steer PID FR", Robot.drive.m_modules[1].getSteerPID());
+    // m_swerveModulesTab.add("Steer PID BL", Robot.drive.m_modules[2].getSteerPID());
+    // m_swerveModulesTab.add("Steer PID BR", Robot.drive.m_modules[3].getSteerPID());
   }
   //puting defult value in hashmaps
   private void setUpFeedforwardHashmap(){
-    m_staticModulesSaver.put(m_dummyModule,0.0);
-    m_velModulesSaver.put(m_dummyModule,0.0);
-    m_staticModulesSaver.put(m_allModule,Constants.drive.kDriveKSAll);
-    m_velModulesSaver.put(m_allModule,Constants.drive.kDriveKVAll);
+    m_driveStaticFeedForwardSaver.put(m_dummyModule,0.0);
+    m_driveVelFeedForwardSaver.put(m_allModule,Constants.drive.kDriveKVAll);
+    m_driveStaticFeedForwardSaver.put(Robot.drive.m_modules[0],CompDriveConstants.kDriveKSFrontLeft);
+    m_driveStaticFeedForwardSaver.put(Robot.drive.m_modules[1],CompDriveConstants.kDriveKSFrontRight);
+    m_driveStaticFeedForwardSaver.put(Robot.drive.m_modules[2],CompDriveConstants.kDriveKSBackLeft);
+    m_driveStaticFeedForwardSaver.put(Robot.drive.m_modules[3],CompDriveConstants.kDriveKSBackRight);
     
-    // if (m_robotType.getSelected() == RobotType.TEST) {
-    //   m_staticModulesSaver.put(Robot.drive.m_modules[0],TestDriveConstants.kDriveKSFrontLeft);
-    //   m_velModulesSaver.put(Robot.drive.m_modules[0],TestDriveConstants.kDriveKVFrontLeft);
-    //   m_staticModulesSaver.put(Robot.drive.m_modules[1],TestDriveConstants.kDriveKSFrontRight);
-    //   m_velModulesSaver.put(Robot.drive.m_modules[1],TestDriveConstants.kDriveKVFrontRight);
-    //   m_staticModulesSaver.put(Robot.drive.m_modules[2],TestDriveConstants.kDriveKSBackLeft);
-    //   m_velModulesSaver.put(Robot.drive.m_modules[2],TestDriveConstants.kDriveKVBackLeft);
-    //   m_staticModulesSaver.put(Robot.drive.m_modules[3],TestDriveConstants.kDriveKSBackRight);
-    //   m_velModulesSaver.put(Robot.drive.m_modules[3],TestDriveConstants.kDriveKVBackRight);
-    // } else if (m_robotType.getSelected() == RobotType.COMP) {
-      m_staticModulesSaver.put(Robot.drive.m_modules[0],CompDriveConstants.kDriveKSFrontLeft);
-      m_velModulesSaver.put(Robot.drive.m_modules[0],CompDriveConstants.kDriveKVFrontLeft);
-      m_staticModulesSaver.put(Robot.drive.m_modules[1],CompDriveConstants.kDriveKSFrontRight);
-      m_velModulesSaver.put(Robot.drive.m_modules[1],CompDriveConstants.kDriveKVFrontRight);
-      m_staticModulesSaver.put(Robot.drive.m_modules[2],CompDriveConstants.kDriveKSBackLeft);
-      m_velModulesSaver.put(Robot.drive.m_modules[2],CompDriveConstants.kDriveKVBackLeft);
-      m_staticModulesSaver.put(Robot.drive.m_modules[3],CompDriveConstants.kDriveKSBackRight);
-      m_velModulesSaver.put(Robot.drive.m_modules[3],CompDriveConstants.kDriveKVBackRight);
-    // }
+    m_driveVelFeedForwardSaver.put(m_dummyModule,0.0);
+    m_driveStaticFeedForwardSaver.put(m_allModule,Constants.drive.kDriveKSAll);
+    m_driveVelFeedForwardSaver.put(Robot.drive.m_modules[0],CompDriveConstants.kDriveKVFrontLeft);
+    m_driveVelFeedForwardSaver.put(Robot.drive.m_modules[1],CompDriveConstants.kDriveKVFrontRight);
+    m_driveVelFeedForwardSaver.put(Robot.drive.m_modules[2],CompDriveConstants.kDriveKVBackLeft);
+    m_driveVelFeedForwardSaver.put(Robot.drive.m_modules[3],CompDriveConstants.kDriveKVBackRight);
+    
+
+    m_steerStaticFeedForwardSaver.put(m_dummyModule,0.0);
+    m_steerVelFeedForwardSaver.put(m_allModule,Constants.drive.kDriveKVAll);
+    m_steerStaticFeedForwardSaver.put(Robot.drive.m_modules[0],CompDriveConstants.kDriveKSFrontLeft);
+    m_steerStaticFeedForwardSaver.put(Robot.drive.m_modules[1],CompDriveConstants.kDriveKSFrontRight);
+    m_steerStaticFeedForwardSaver.put(Robot.drive.m_modules[2],CompDriveConstants.kDriveKSBackLeft);
+    m_steerStaticFeedForwardSaver.put(Robot.drive.m_modules[3],CompDriveConstants.kDriveKSBackRight);
+    
+    m_steerVelFeedForwardSaver.put(m_dummyModule,0.0);
+    m_steerStaticFeedForwardSaver.put(m_allModule,Constants.drive.kDriveKSAll);
+    m_steerVelFeedForwardSaver.put(Robot.drive.m_modules[0],CompDriveConstants.kDriveKVFrontLeft);
+    m_steerVelFeedForwardSaver.put(Robot.drive.m_modules[1],CompDriveConstants.kDriveKVFrontRight);
+    m_steerVelFeedForwardSaver.put(Robot.drive.m_modules[2],CompDriveConstants.kDriveKVBackLeft);
+    m_steerVelFeedForwardSaver.put(Robot.drive.m_modules[3],CompDriveConstants.kDriveKVBackRight);
   }
 
   //add options to choosers
   public void autoChooserOptions() {
     m_autoCommand.setDefaultOption("Do Nothing", new PrintCommand("This will do nothing!"));
-    m_autoCommand.addOption("Self FF charecterzation", new SelfFeedForwardCharacterzation(Robot.drive));
+    m_autoCommand.addOption("Self FF charecterzation", new DriveFeedForwardCharacterzation(Robot.drive));
     // m_autoCommand.setDefaultOption("TestAuto", new PathPlannerCommand("TestAuto", 0)); 
   }
 
@@ -315,7 +337,7 @@ public void robotTypeOptions() {
   }
   public double getHeadingDeadband(){
   return m_headingDeadband.getDouble(Constants.oi.kHeadingDeadband);
-}
+  }
   public Controller getControllerType(){
     return m_controllerType.getSelected();
   }
@@ -324,30 +346,49 @@ public RobotType getRobotType() {
   return m_robotType.getSelected();
 }
 
-  public void setModulefeedforward(){
+  public void setDriveModuleFeedforward(){
     //revert to previous saved feed forward data if changed
     
-    // System.out.println(m_module.getSelected().hashCode());
-    // System.out.println(m_staticModulesSaver.get(Robot.drive.m_modules[0]));
-    // if (true) return;
     if (m_prevModule != m_module.getSelected()){
-      m_driveStaticFeedforward.setDouble(m_staticModulesSaver.get(m_module.getSelected()));
-      m_driveVelocityFeedforward.setDouble(m_velModulesSaver.get(m_module.getSelected()));
+      m_driveStaticFeedforward.setDouble(m_driveStaticFeedForwardSaver.get(m_module.getSelected()));
+      m_driveVelocityFeedforward.setDouble(m_driveVelFeedForwardSaver.get(m_module.getSelected()));
       m_prevModule = m_module.getSelected();
     }
-
     
     // update saved feedforward data
-    m_staticModulesSaver.replace(m_module.getSelected(),m_driveStaticFeedforward.getDouble(0) );
-    m_velModulesSaver.replace(m_module.getSelected(),m_driveVelocityFeedforward.getDouble(0) );
+    m_driveStaticFeedForwardSaver.replace(m_module.getSelected(),m_driveStaticFeedforward.getDouble(0) );
+    m_driveVelFeedForwardSaver.replace(m_module.getSelected(),m_driveVelocityFeedforward.getDouble(0) );
     
     //to set all modules to same feedforward values if all
     if (m_module.getSelected() == m_allModule){
       for(int i = 0; i < 4; i++){
-        Robot.drive.m_modules[i].getShuffleboardFeedForwardValues(m_staticModulesSaver.get(m_module.getSelected()), m_velModulesSaver.get(m_module.getSelected()));
+        Robot.drive.m_modules[i].setDriveFeedForwardValues(m_driveStaticFeedForwardSaver.get(m_module.getSelected()), m_driveVelFeedForwardSaver.get(m_module.getSelected()));
       }
     }
     //set selected module
-    m_module.getSelected().getShuffleboardFeedForwardValues(m_staticModulesSaver.get(m_module.getSelected()),m_velModulesSaver.get(m_module.getSelected()));
+    m_module.getSelected().setDriveFeedForwardValues(m_driveStaticFeedForwardSaver.get(m_module.getSelected()),m_driveVelFeedForwardSaver.get(m_module.getSelected()));
+  }
+
+  public void setSteerModuleFeedforward(){
+    //revert to previous saved feed forward data if changed
+    
+    if (m_prevModule != m_module.getSelected()){
+      m_steerStaticFeedforward.setDouble(m_steerStaticFeedForwardSaver.get(m_module.getSelected()));
+      m_steerVelocityFeedforward.setDouble(m_steerVelFeedForwardSaver.get(m_module.getSelected()));
+      m_prevModule = m_module.getSelected();
+    }
+    
+    // update saved feedforward data
+    m_steerStaticFeedForwardSaver.replace(m_module.getSelected(),m_steerStaticFeedforward.getDouble(0) );
+    m_steerVelFeedForwardSaver.replace(m_module.getSelected(),m_steerVelocityFeedforward.getDouble(0) );
+    
+    //to set all modules to same feedforward values if all
+    if (m_module.getSelected() == m_allModule){
+      for(int i = 0; i < 4; i++){
+        Robot.drive.m_modules[i].setDriveFeedForwardValues(m_steerStaticFeedForwardSaver.get(m_module.getSelected()), m_steerVelFeedForwardSaver.get(m_module.getSelected()));
+      }
+    }
+    //set selected module
+    m_module.getSelected().setDriveFeedForwardValues(m_steerStaticFeedForwardSaver.get(m_module.getSelected()),m_steerVelFeedForwardSaver.get(m_module.getSelected()));
   }
 }
