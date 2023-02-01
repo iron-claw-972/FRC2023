@@ -54,7 +54,7 @@ public class Module {
   private final TalonEncoder m_driveEncoder;
   private final WPI_CANCoder m_encoder;
 
-  private final PIDController m_drivePIDController = new PIDController(Constants.drive.kDriveP, Constants.drive.kDriveI,
+  private PIDController m_drivePIDController = new PIDController(Constants.drive.kDriveP, Constants.drive.kDriveI,
     Constants.drive.kDriveD);
 
   private ProfiledPIDController m_steerPIDController = new ProfiledPIDController(
@@ -65,16 +65,16 @@ public class Module {
       Constants.drive.kMaxAngularSpeed, Constants.drive.kMaxAngularAccel));
 
   private SimpleMotorFeedforward m_driveFeedforward;
-  private final SimpleMotorFeedforward m_steerFeedForward = new SimpleMotorFeedforward(Constants.drive.kSteerKS, Constants.drive.kSteerKV);
+  private SimpleMotorFeedforward m_steerFeedForward = new SimpleMotorFeedforward(Constants.drive.kSteerKS, Constants.drive.kSteerKV);
       
   private double m_offset = 0.0;
   
-  public double m_driveOutput = 0;
-  
+  public double m_drivePIDOutput = 0;
+  public double m_driveFeedforwardOutput = 0;
   public double m_steerFeedForwardOutput = 0.0;
-  public double m_steerOutput = 0.0;
-  public MedianFilter m_medianFilter = new MedianFilter(10);
-
+  public double m_steerPIDOutput = 0.0;
+  public MedianFilter m_driveVelocityMedianFilter = new MedianFilter(80);
+  public Boolean setOptimize=false;
   public Module(ModuleConstants moduleConstants){
     this(
       moduleConstants.getDrivePort(),
@@ -92,11 +92,12 @@ public class Module {
     int encoderPort,
     double encoderOffset,
     double feedforwardKS,
-    double doublefeedforwardKV
+    double feedforwardKV
   ) {
     
     if (Robot.isReal()) {
-      m_driveMotor = MotorFactory.createTalonFX(driveMotorPort, Constants.kRioCAN);
+      // TODO: The CANBus needs to be a constant because on the new 2023 bot, drive motors use Canivore, not rio
+      m_driveMotor = MotorFactory.createTalonFX(driveMotorPort, Constants.kCanivoreCAN);
       m_steerMotor = MotorFactory.createTalonFX(steerMotorPort, Constants.kCanivoreCAN);
     } else {
       m_driveMotor = new WPI_TalonFX(driveMotorPort);
@@ -136,7 +137,7 @@ public class Module {
 
     m_steerPIDController.reset(getAngle()); // reset the PID, and the Trapezoid motion profile needs to know the starting state
 
-    m_driveFeedforward = new SimpleMotorFeedforward(feedforwardKS, doublefeedforwardKV);
+    m_driveFeedforward = new SimpleMotorFeedforward(feedforwardKS, feedforwardKV);
   }
 
 
@@ -146,28 +147,37 @@ public class Module {
    * @param desiredState Desired state with speed and angle.
    */
   public void setDesiredState(SwerveModuleState desiredState) {
-    if (Math.abs(desiredState.speedMetersPerSecond) < 0.001 && Robot.shuffleboard.getTestModeType() != TestType.TUNE_HEADING_PID) {
+    if (Math.abs(desiredState.speedMetersPerSecond) < 0.001 && Robot.shuffleboard.getTestModeType() != TestType.HEADING_PID) {
       stop();
       return;
     }
 
-    if (Robot.shuffleboard.getTestModeType() != TestType.TUNE_HEADING_PID) {
+    if (setOptimize==true) {
       // Optimize the reference state to avoid spinning further than 90 degrees
       desiredState = SwerveModuleState.optimize(desiredState, new Rotation2d(getAngle()));
     }
+    setDriveVelocity(desiredState.speedMetersPerSecond);
+    setSteerAngle(desiredState.angle);
+  }
 
-    // Calculate the drive output from the drive PID controller.
-    m_driveOutput = m_drivePIDController.calculate(m_driveEncoder.getRate(), desiredState.speedMetersPerSecond);
+  public void setDriveVelocity(double speedMetersPerSecond){
+    m_drivePIDOutput = m_drivePIDController.calculate(m_driveEncoder.getRate(), speedMetersPerSecond);
+    m_driveFeedforwardOutput = m_driveFeedforward.calculate(speedMetersPerSecond);
+    m_driveMotor.setVoltage(m_drivePIDOutput + m_driveFeedforwardOutput);
+  }
 
-    final double driveFeedforward = m_driveFeedforward.calculate(desiredState.speedMetersPerSecond);
-
+  public void setSteerAngle(Rotation2d angle){
     // Calculate the steer motor output from the steer PID controller.
-    m_steerOutput = m_steerPIDController.calculate(getAngle(), desiredState.angle.getRadians());
-
+    m_steerPIDOutput = m_steerPIDController.calculate(getAngle(), angle.getRadians());
     m_steerFeedForwardOutput = m_steerFeedForward.calculate(m_steerPIDController.getSetpoint().velocity);
+    m_steerMotor.setVoltage(m_steerPIDOutput + m_steerFeedForwardOutput);// * Constants.kMaxVoltage / RobotController.getBatteryVoltage()
+  }
 
-    m_driveMotor.setVoltage(m_driveOutput + driveFeedforward);
-    m_steerMotor.setVoltage(m_steerOutput + m_steerFeedForwardOutput); // * Constants.kMaxVoltage / RobotController.getBatteryVoltage()
+  public void setDriveVoltage(double voltage){
+    m_driveMotor.setVoltage(voltage);
+  }
+  public void setSteerVoltage(double voltage){
+    m_steerMotor.setVoltage(voltage);
   }
   
   /**
@@ -218,9 +228,17 @@ public class Module {
   public double getDriveVelocity() {
     return m_driveEncoder.getRate();
   }
+  public double selfFeedforwardCharacterazation() {
+    
+    return m_driveEncoder.getRate();
+  }
 
   public double getDriveVelocityFilltered(){
-    return m_medianFilter.calculate(getDriveVelocity());
+    return m_driveVelocityMedianFilter.calculate(getDriveVelocity());
+  }
+
+  public double getSteerVelocity(){
+    return m_encoder.getVelocity();
   }
 
   /**
@@ -228,8 +246,11 @@ public class Module {
    * @param staticFeedforward static feedforward value from Shuffleboard
    * @param velocityFeedForward velocity feedforward value from Shuffleboard
    */
-  public void getShuffleboardFeedForwardValues(double staticFeedforward, double velocityFeedForward){
+  public void setDriveFeedForwardValues(double staticFeedforward, double velocityFeedForward){
     m_driveFeedforward = new SimpleMotorFeedforward(staticFeedforward, velocityFeedForward);
+  }
+  public void setSteerFeedForwardValues(double staticFeedforward, double velocityFeedForward){
+    m_steerFeedForward= new SimpleMotorFeedforward(staticFeedforward, velocityFeedForward);
   }
 
   
@@ -250,8 +271,8 @@ public class Module {
     return m_steerFeedForward;
   }
 
-  public double getDriveOutput() {
-    return m_driveOutput;
+  public double getDrivePIDOutput() {
+    return m_drivePIDOutput;
   }
 
   public WPI_TalonFX getDriveMotor() {
@@ -275,7 +296,14 @@ public class Module {
   }
 
   public double getSteerOutput() {
-    return m_steerOutput;
+    return m_steerPIDOutput;
+  }
+  public void setOptimize(Boolean setOptimize){
+    this.setOptimize=setOptimize;
+  }
+
+  public void periodic() {
+    // This method will be called once per scheduler run, mainly only used for simulation
   }
 
 }

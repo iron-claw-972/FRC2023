@@ -33,13 +33,21 @@ public class Functions {
     return deadband(input, Constants.oi.kDeadband);
   }
 
+  public static double simpleDeadband(double input, double deadband){
+    if (Math.abs(input) <= deadband) {
+      return 0;
+    } else {
+      return input;
+    }
+  }
+
   /**
    * An exponential function that maintains positive or negative.
    * @param exponent the power to raise the base to
    * @param base the base which will be raised to the power
    * @return base to the power of exponent, maintaining sign of base
    */
-  public static double expoMS(double exponent, double base) {
+  public static double expoMS(double base, double exponent) {
     // weird stuff will happen if you don't put a number > 0
     double finVal = Math.pow(Math.abs(base), exponent);
     if (base < 0) {
@@ -47,22 +55,15 @@ public class Functions {
     }
     return finVal;
   }
+  
+  public static double calculateAngle(double x, double y){
+    if (x > 0) return Math.atan(y/x);
+    if (x < 0) return Math.atan(y/x) + Math.PI;
+    return Math.signum(y)* Math.PI/2;
+  }
 
-  /**
-   * Returns the value of the angle in between the controller axes. 
-   * @param x The value in between -1 and 1 of the controller x axis.
-   * @param y The value in between -1 and 1 of the controller y axis.
-   * @return The value of the angle between the two values. 
-   */
-  public double calculateAngle(double x, double y)
-    { 
-      if(x != 0 && Math.atan(y/x) != 0)//to remove possibility of the expression not being defined. 
-      {
-        return Math.atan(y/x); 
-      }
-      else
-      {
-        return -1;
-      }
-    }
+  public static double calculateHypotenuse(double x, double y){
+    return Math.pow(Math.pow(x,2)+Math.pow(y,2), 0.5);
+  }
+  
 }

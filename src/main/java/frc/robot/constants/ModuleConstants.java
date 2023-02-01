@@ -1,40 +1,100 @@
 package frc.robot.constants;
 
+import frc.robot.constants.DriveConstants.CompDriveConstants;
+import frc.robot.constants.DriveConstants.TestDriveConstants;
+
 public enum ModuleConstants {
     
-    FRONTLEFT(
-            Constants.drive.kDriveFrontLeft,
-            Constants.drive.kSteerFrontLeft,
-            Constants.drive.kEncoderFrontLeft,
-            Constants.drive.kSteerOffsetFrontLeft,
-            Constants.drive.kDriveKSFrontLeft,
-            Constants.drive.kDriveKVFrontLeft
+    TEST_FL(
+            TestDriveConstants.kDriveFrontLeft,
+            TestDriveConstants.kSteerFrontLeft,
+            TestDriveConstants.kEncoderFrontLeft,
+            TestDriveConstants.kSteerOffsetFrontLeft,
+            TestDriveConstants.kDriveKSFrontLeft,
+            TestDriveConstants.kDriveKVFrontLeft,
+            TestDriveConstants.kDrivePFrontLeft,
+            TestDriveConstants.kDriveIFrontLeft,
+            TestDriveConstants.kDriveDFrontLeft
         ),
-    FRONTRIGHT(
-            Constants.drive.kDriveFrontRight,
-            Constants.drive.kSteerFrontRight,
-            Constants.drive.kEncoderFrontRight,
-            Constants.drive.kSteerOffsetFrontRight,
-            Constants.drive.kDriveKSFrontRight,
-            Constants.drive.kDriveKVFrontRight
+    TEST_FR(
+            TestDriveConstants.kDriveFrontRight,
+            TestDriveConstants.kSteerFrontRight,
+            TestDriveConstants.kEncoderFrontRight,
+            TestDriveConstants.kSteerOffsetFrontRight,
+            TestDriveConstants.kDriveKSFrontRight,
+            TestDriveConstants.kDriveKVFrontRight,
+            TestDriveConstants.kDrivePFrontRight,
+            TestDriveConstants.kDriveIFrontRight,
+            TestDriveConstants.kDriveDFrontRight
         ),
-    BACKLEFT(
-            Constants.drive.kDriveBackLeft,
-            Constants.drive.kSteerBackLeft,
-            Constants.drive.kEncoderBackLeft,
-            Constants.drive.kSteerOffsetBackLeft,
-            Constants.drive.kDriveKSBackLeft,
-            Constants.drive.kDriveKVBackLeft
+    TEST_BL(
+            TestDriveConstants.kDriveBackLeft,
+            TestDriveConstants.kSteerBackLeft,
+            TestDriveConstants.kEncoderBackLeft,
+            TestDriveConstants.kSteerOffsetBackLeft,
+            TestDriveConstants.kDriveKSBackLeft,
+            TestDriveConstants.kDriveKVBackLeft,
+            TestDriveConstants.kDrivePBackLeft,
+            TestDriveConstants.kDriveIBackLeft,
+            TestDriveConstants.kDriveDBackLeft
     ),
-    BACKRIGHT(
-            Constants.drive.kDriveBackRight,
-            Constants.drive.kSteerBackRight,
-            Constants.drive.kEncoderBackRight,
-            Constants.drive.kSteerOffsetBackRight,
-            Constants.drive.kDriveKSBackRight,
-            Constants.drive.kDriveKVBackRight
+    TEST_BR(
+            TestDriveConstants.kDriveBackRight,
+            TestDriveConstants.kSteerBackRight,
+            TestDriveConstants.kEncoderBackRight,
+            TestDriveConstants.kSteerOffsetBackRight,
+            TestDriveConstants.kDriveKSBackRight,
+            TestDriveConstants.kDriveKVBackRight,
+            TestDriveConstants.kDrivePBackRight,
+            TestDriveConstants.kDriveIBackRight,
+            TestDriveConstants.kDriveDBackRight
     ),
-    NONE(0,0,0,0.0,0.0,0.0);
+
+    COMP_FL(
+            CompDriveConstants.kDriveFrontLeft,
+            CompDriveConstants.kSteerFrontLeft,
+            CompDriveConstants.kEncoderFrontLeft,
+            CompDriveConstants.kSteerOffsetFrontLeft,
+            CompDriveConstants.kDriveKSFrontLeft,
+            CompDriveConstants.kDriveKVFrontLeft,
+            CompDriveConstants.kDrivePFrontLeft,
+            CompDriveConstants.kDriveIFrontLeft,
+            CompDriveConstants.kDriveDFrontLeft
+        ),
+    COMP_FR(
+            CompDriveConstants.kDriveFrontRight,
+            CompDriveConstants.kSteerFrontRight,
+            CompDriveConstants.kEncoderFrontRight,
+            CompDriveConstants.kSteerOffsetFrontRight,
+            CompDriveConstants.kDriveKSFrontRight,
+            CompDriveConstants.kDriveKVFrontRight,
+            CompDriveConstants.kDrivePFrontRight,
+            CompDriveConstants.kDriveIFrontRight,
+            CompDriveConstants.kDriveDFrontRight
+        ),
+    COMP_BL(
+            CompDriveConstants.kDriveBackLeft,
+            CompDriveConstants.kSteerBackLeft,
+            CompDriveConstants.kEncoderBackLeft,
+            CompDriveConstants.kSteerOffsetBackLeft,
+            CompDriveConstants.kDriveKSBackLeft,
+            CompDriveConstants.kDriveKVBackLeft,
+            CompDriveConstants.kDrivePBackLeft,
+            CompDriveConstants.kDriveIBackLeft,
+            CompDriveConstants.kDriveDBackLeft
+    ),
+    COMP_BR(
+            CompDriveConstants.kDriveBackRight,
+            CompDriveConstants.kSteerBackRight,
+            CompDriveConstants.kEncoderBackRight,
+            CompDriveConstants.kSteerOffsetBackRight,
+            CompDriveConstants.kDriveKSBackRight,
+            CompDriveConstants.kDriveKVBackRight,
+            CompDriveConstants.kDrivePBackRight,
+            CompDriveConstants.kDriveIBackRight,
+            CompDriveConstants.kDriveDBackRight
+    ),
+    NONE(0,0,0,0.0,0.0,0.0,0.0,0.0,0.0);
 
     private int m_drivePort;
     private int m_steerPort;
@@ -42,6 +102,9 @@ public enum ModuleConstants {
     private double m_steerOffset;
     private double m_driveKS;
     private double m_driveKV;
+    public final double m_driveP;
+    public final double m_driveI;
+    public final double m_driveD;
     
     ModuleConstants(
         int drivePort,
@@ -49,7 +112,10 @@ public enum ModuleConstants {
         int encoderPort,
         double steerOffset,
         double driveKS,
-        double driveKV
+        double driveKV,
+        double driveP,
+        double driveI,
+        double driveD
     ){
         m_drivePort = drivePort;
         m_steerPort = steerPort;
@@ -57,6 +123,10 @@ public enum ModuleConstants {
         m_steerOffset = steerOffset;
         m_driveKS = driveKS;
         m_driveKV = driveKV;
+        m_driveP = driveP;
+        m_driveI = driveI;
+        m_driveD = driveD;
+
     }
     public int getDrivePort() {
         return m_drivePort;
@@ -75,5 +145,14 @@ public enum ModuleConstants {
     }
     public double getDriveKV() {
         return m_driveKV;
+    }
+    public double getDriveP(){
+        return m_driveP;
+    }
+    public double getDriveI(){
+        return m_driveI;
+    }
+    public double getDriveD(){
+        return m_driveD;
     }
 }
