@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.controls.Driver;
 import frc.robot.controls.Operator;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.FourBarArm;
 import frc.robot.util.LogManager;
 import frc.robot.util.PathGroupLoader;
 import frc.robot.util.ShuffleboardManager;
@@ -25,6 +26,7 @@ public class Robot extends TimedRobot {
   private Command m_autoCommand;
   public static ShuffleboardManager shuffleboard;
   public static Drivetrain drive;
+  public static FourBarArm arm;
 
   private static boolean isTestMode = false;
 
@@ -44,6 +46,7 @@ public class Robot extends TimedRobot {
     // make subsystems
     shuffleboard = new ShuffleboardManager();
     drive = new Drivetrain();
+    arm = new FourBarArm();
 
     shuffleboard.setup();
 
@@ -108,7 +111,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    arm.setMotor(arm.getPID().calculate(arm.getEncoderPosition(), arm.getSetpoint()));
+  }
 
   @Override
   public void testInit() {
