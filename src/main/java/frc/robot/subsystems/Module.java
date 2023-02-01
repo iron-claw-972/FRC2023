@@ -65,7 +65,7 @@ public class Module {
       Constants.drive.kMaxAngularSpeed, Constants.drive.kMaxAngularAccel));
 
   private SimpleMotorFeedforward m_driveFeedforward;
-  private final SimpleMotorFeedforward m_steerFeedForward = new SimpleMotorFeedforward(Constants.drive.kSteerKS, Constants.drive.kSteerKV);
+  private SimpleMotorFeedforward m_steerFeedForward = new SimpleMotorFeedforward(Constants.drive.kSteerKS, Constants.drive.kSteerKV);
       
   private double m_offset = 0.0;
   
@@ -237,13 +237,20 @@ public class Module {
     return m_driveVelocityMedianFilter.calculate(getDriveVelocity());
   }
 
+  public double getSteerVelocity(){
+    return m_encoder.getVelocity();
+  }
+
   /**
    * Update the driveFeedforward values from Shuffleboard.
    * @param staticFeedforward static feedforward value from Shuffleboard
    * @param velocityFeedForward velocity feedforward value from Shuffleboard
    */
-  public void getShuffleboardFeedForwardValues(double staticFeedforward, double velocityFeedForward){
+  public void setDriveFeedForwardValues(double staticFeedforward, double velocityFeedForward){
     m_driveFeedforward = new SimpleMotorFeedforward(staticFeedforward, velocityFeedForward);
+  }
+  public void setSteerFeedForwardValues(double staticFeedforward, double velocityFeedForward){
+    m_steerFeedForward= new SimpleMotorFeedforward(staticFeedforward, velocityFeedForward);
   }
 
   
@@ -291,9 +298,8 @@ public class Module {
   public double getSteerOutput() {
     return m_steerPIDOutput;
   }
-  public Boolean setOptimize(Boolean setOptimize){
+  public void setOptimize(Boolean setOptimize){
     this.setOptimize=setOptimize;
-    return setOptimize;
   }
 
   public void periodic() {

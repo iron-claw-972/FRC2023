@@ -16,20 +16,15 @@ import frc.robot.util.FeedForwardCharacterizationData;
 
 
 /** Add your docs here. */
-public class SelfFeedForwardCharacterzation extends CommandBase {
+public class DriveFeedForwardCharacterzation extends CommandBase {
   double value = 0;
-  FeedForwardCharacterizationData[] m_feedForwardCharacterizationData =new FeedForwardCharacterizationData[] {
-    new FeedForwardCharacterizationData(),
-    new FeedForwardCharacterizationData(),
-    new FeedForwardCharacterizationData(),
-    new FeedForwardCharacterizationData()
-  };
+  FeedForwardCharacterizationData[] m_feedForwardCharacterizationData;
   
 
   Timer m_timer = new Timer();
   Drivetrain m_drive;
 
-  public SelfFeedForwardCharacterzation(Drivetrain drive) {
+  public DriveFeedForwardCharacterzation(Drivetrain drive) {
     
     this.m_drive = drive;
     addRequirements(drive);
@@ -38,6 +33,12 @@ public class SelfFeedForwardCharacterzation extends CommandBase {
   public void initialize() {
     m_timer.start();
     m_drive.setAllOptimize(false);
+    m_feedForwardCharacterizationData = new FeedForwardCharacterizationData[] {
+      new FeedForwardCharacterizationData(),
+      new FeedForwardCharacterizationData(),
+      new FeedForwardCharacterizationData(),
+      new FeedForwardCharacterizationData()
+    };
   }
 
   public void execute() {
@@ -52,7 +53,7 @@ public class SelfFeedForwardCharacterzation extends CommandBase {
       value += 0.2;
       m_timer.reset();
       m_timer.start();
-    System.out.println(value);
+      System.out.println(value);
     }
 
   }
@@ -75,8 +76,8 @@ public class SelfFeedForwardCharacterzation extends CommandBase {
     }
     
     for (int i=0; i<4;i++){
-      Robot.shuffleboard.m_staticModulesSaver.replace(Robot.drive.m_modules[i], m_feedForwardCharacterizationData[i].getSatic());
-      Robot.shuffleboard.m_velModulesSaver.replace(Robot.drive.m_modules[i], m_feedForwardCharacterizationData[i].getVelocity());
+      Robot.shuffleboard.m_driveStaticFeedForwardSaver.replace(Robot.drive.m_modules[i], m_feedForwardCharacterizationData[i].getSatic());
+      Robot.shuffleboard.m_driveVelFeedForwardSaver.replace(Robot.drive.m_modules[i], m_feedForwardCharacterizationData[i].getVelocity());
       System.out.println("Static " + i + ": " + m_feedForwardCharacterizationData[i].getSatic());
       System.out.println("Velocity " + i + ": " + m_feedForwardCharacterizationData[i].getVelocity());
     }
