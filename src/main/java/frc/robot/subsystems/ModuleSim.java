@@ -1,8 +1,10 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.sensors.CANCoderSimCollection;
+import com.ctre.phoenix.unmanaged.Unmanaged;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
@@ -18,6 +20,11 @@ import lib.ctre_shims.TalonEncoderSim;
  */
 public class ModuleSim extends Module {
 
+  public static final double kDriveDistancePerPulse =
+          (Constants.drive.kWheelRadius * 2 * Math.PI) / (2048 * Constants.drive.kDriveGearRatio);
+  public static final double kTurnDistancePerPulse =
+          360.0 / (2048 * Constants.drive.kSteerGearRatio);
+
   private final FlywheelSim m_driveMotorSim = new FlywheelSim(DCMotor.getFalcon500(1), Constants.drive.kDriveGearRatio, 0.025);
   private final FlywheelSim m_steerMotorSim = new FlywheelSim(DCMotor.getFalcon500(1), Constants.drive.kSteerGearRatio, 0.004096955);
 
@@ -25,6 +32,9 @@ public class ModuleSim extends Module {
   private final CANCoderSimCollection m_encoderSim;
 
   private double m_currentSteerPositionRad = 0;
+
+  private double m_steerMotorSimDistance;
+  private double m_driveMotorSimDistance;
 
   public ModuleSim(
     ModuleConstants moduleConstants
@@ -71,8 +81,12 @@ public class ModuleSim extends Module {
     m_driveMotorSim.update(0.02);
     m_steerMotorSim.update(0.02);
 
-    double angleDiffRad = m_steerMotorSim.getAngularVelocityRPM() * 0.02;
+    Unmanaged.feedEnable(20);
+
+    double angleDiffRad = m_steerMotorSim.getAngularVelocityRadPerSec() * 0.02;
     m_currentSteerPositionRad += angleDiffRad;
+
+    // System.out.println(m_currentSteerPositionRad + " | " + m_steerMotorSim.getAngularVelocityRadPerSec() + " | " + angleDiffRad);
 
     // System.out.println(m_currentSteerPositionRad);
   }
@@ -102,7 +116,7 @@ public class ModuleSim extends Module {
 
     final double turnFeedforward = getSteerFeedforward().calculate(getSteerPID().getSetpoint().velocity);
 
-    m_driveMotorSim.setInputVoltage(driveOutput * 5 + driveFeedforward);
+    m_driveMotorSim.setInputVoltage(driveOutput + driveFeedforward);
     m_steerMotorSim.setInputVoltage(turnOutput + turnFeedforward);
   }
 
@@ -111,7 +125,16 @@ public class ModuleSim extends Module {
    */
   @Override
   public double getAngle() {
-    return m_currentSteerPositionRad;
+    // return m_currentSteerPositionRad;
+    return m_steerMotorSimDistance;
+  }
+
+  @Override
+  public SwerveModulePosition getPosition() {
+    return new SwerveModulePosition(
+      m_driveMotorSim.getAngularVelocityRadPerSec(),
+      new Rotation2d(m_currentSteerPositionRad)
+    );
   }
 
 }

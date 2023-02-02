@@ -109,8 +109,8 @@ public class Drivetrain extends SubsystemBase {
 
     // TODO: Fix Swerve drive sim
     if (!Robot.isReal()) {
-      System.out.println(xSpeed + " " + ySpeed + " " + rot);
-      m_pigeon.getSimCollection().addHeading(rot / (2 * Math.PI));
+      // System.out.println(xSpeed + " " + ySpeed + " " + rot);
+      m_pigeon.getSimCollection().addHeading(rot);
     }
 
     m_swerveModuleStates =
@@ -143,6 +143,7 @@ public class Drivetrain extends SubsystemBase {
       m_pigeon.getRotation2d(),
       getModulePositions()
     );
+    System.out.println(m_robotPose);
   }
 
   /**
@@ -196,15 +197,21 @@ public class Drivetrain extends SubsystemBase {
    * @return an array of all swerve module positions
    */
   public SwerveModulePosition[] getModulePositions() {
+    // SwerveModulePosition[] positions = new SwerveModulePosition[]{
+    //   new SwerveModulePosition(m_modules[0].getState().speedMetersPerSecond, m_modules[0].getState().angle),
+    //   new SwerveModulePosition(m_modules[1].getState().speedMetersPerSecond, m_modules[1].getState().angle),
+    //   new SwerveModulePosition(m_modules[2].getState().speedMetersPerSecond, m_modules[2].getState().angle),
+    //   new SwerveModulePosition(m_modules[3].getState().speedMetersPerSecond, m_modules[3].getState().angle)
+    //   // new SwerveModulePosition(m_modules[0].getDrivePosition(), Rotation2d.fromDegrees(m_modules[0].getAngle())),
+    //   // new SwerveModulePosition(m_modules[1].getDrivePosition(), Rotation2d.fromDegrees(m_modules[1].getAngle())),
+    //   // new SwerveModulePosition(m_modules[2].getDrivePosition(), Rotation2d.fromDegrees(m_modules[2].getAngle())),
+    //   // new SwerveModulePosition(m_modules[3].getDrivePosition(), Rotation2d.fromDegrees(m_modules[3].getAngle()))
+    // };
     SwerveModulePosition[] positions = new SwerveModulePosition[]{
-      new SwerveModulePosition(m_modules[0].getState().speedMetersPerSecond, m_modules[0].getState().angle),
-      new SwerveModulePosition(m_modules[1].getState().speedMetersPerSecond, m_modules[1].getState().angle),
-      new SwerveModulePosition(m_modules[2].getState().speedMetersPerSecond, m_modules[2].getState().angle),
-      new SwerveModulePosition(m_modules[3].getState().speedMetersPerSecond, m_modules[3].getState().angle)
-      // new SwerveModulePosition(m_modules[0].getDrivePosition(), Rotation2d.fromDegrees(m_modules[0].getAngle())),
-      // new SwerveModulePosition(m_modules[1].getDrivePosition(), Rotation2d.fromDegrees(m_modules[1].getAngle())),
-      // new SwerveModulePosition(m_modules[2].getDrivePosition(), Rotation2d.fromDegrees(m_modules[2].getAngle())),
-      // new SwerveModulePosition(m_modules[3].getDrivePosition(), Rotation2d.fromDegrees(m_modules[3].getAngle()))
+      m_modules[0].getPosition(),
+      m_modules[1].getPosition(),
+      m_modules[2].getPosition(),
+      m_modules[3].getPosition()
     };
     return positions;
   }

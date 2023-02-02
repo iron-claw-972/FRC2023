@@ -11,6 +11,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.Robot;
@@ -74,7 +75,9 @@ public class Module {
   public double m_steerFeedForwardOutput = 0.0;
   public double m_steerPIDOutput = 0.0;
   public MedianFilter m_driveVelocityMedianFilter = new MedianFilter(80);
-  public Boolean setOptimize=false;
+
+  public boolean setOptimize = false;
+  
   public Module(ModuleConstants moduleConstants){
     this(
       moduleConstants.getDrivePort(),
@@ -152,10 +155,11 @@ public class Module {
       return;
     }
 
-    if (setOptimize==true) {
+    if (setOptimize == true) {
       // Optimize the reference state to avoid spinning further than 90 degrees
       desiredState = SwerveModuleState.optimize(desiredState, new Rotation2d(getAngle()));
     }
+
     setDriveVelocity(desiredState.speedMetersPerSecond);
     setSteerAngle(desiredState.angle);
   }
@@ -221,6 +225,10 @@ public class Module {
     return m_encoder.getAbsolutePosition() - m_offset;
   }
 
+  public SwerveModulePosition getPosition(){
+    return new SwerveModulePosition(getDrivePosition(), new Rotation2d(getAngle()));
+  }
+
   /**
    * Gets the drive velocity of the module.
    * @return the rate of the drive encoder
@@ -228,6 +236,7 @@ public class Module {
   public double getDriveVelocity() {
     return m_driveEncoder.getRate();
   }
+
   public double selfFeedforwardCharacterazation() {
     
     return m_driveEncoder.getRate();
