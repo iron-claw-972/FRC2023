@@ -179,7 +179,7 @@ public class Module {
 
     // Limit the PID Controller's input range between -pi and pi and set the input
     // to be continuous. Factor in the offset amount.
-    m_steerPIDController.enableContinuousInput(-Math.PI, Math.PI);
+    // m_steerPIDController.enableContinuousInput(-Math.PI, Math.PI);
 
     m_steerMotor.setInverted(true);
 
@@ -267,7 +267,10 @@ public class Module {
    * @return encoder's absolute position - offset
    */
   public double getAngle() {
-    return m_encoder.getAbsolutePosition() - m_offset;
+    double angle =m_encoder.getAbsolutePosition() - m_offset;
+    while (angle < -Math.PI) angle += 2*Math.PI;
+    while (angle >  Math.PI) angle -= 2*Math.PI;
+    return angle;
   }
 
   /**

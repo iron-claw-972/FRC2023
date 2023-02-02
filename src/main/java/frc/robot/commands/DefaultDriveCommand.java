@@ -106,7 +106,7 @@ public class DefaultDriveCommand extends CommandBase {
     double value = Robot.shuffleboard.getRequestedSteerAngle();
     for (int i = 0; i < 4; i++) {
       Robot.drive.m_modules[i].setDriveVoltage(0);
-      Robot.drive.m_modules[i].setSteerAngle(new Rotation2d(Units.degreesToRadians(value)));
+      Robot.drive.m_modules[i].setSteerAngle(new Rotation2d(value));
     }
   }
 
