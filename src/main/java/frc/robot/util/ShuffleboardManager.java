@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Robot;
 import frc.robot.commands.DoNothing;
 import frc.robot.commands.DriveFeedForwardCharacterzation;
+import frc.robot.commands.SteerFeedForwardCharacterzation;
 import frc.robot.constants.Constants;
 import frc.robot.constants.ModuleConstants;
 import frc.robot.constants.DriveConstants.CompDriveConstants;
@@ -144,16 +145,16 @@ public class ShuffleboardManager {
     // m_swerveModulesTab.addNumber("BR PID Output", () -> Robot.drive.m_modules[3].getDrivePIDOutput());
 
     // get drive velocity
-    m_swerveModulesTab.addNumber("Vel FL Raw", () -> Robot.drive.m_modules[0].getDriveVelocity());
-    m_swerveModulesTab.addNumber("Vel FR Raw", () -> Robot.drive.m_modules[1].getDriveVelocity());
-    m_swerveModulesTab.addNumber("Vel BL Raw", () -> Robot.drive.m_modules[2].getDriveVelocity());
-    m_swerveModulesTab.addNumber("Vel BR Raw", () -> Robot.drive.m_modules[3].getDriveVelocity());
+    // m_swerveModulesTab.addNumber("Vel FL Raw", () -> Robot.drive.m_modules[0].getDriveVelocity());
+    // m_swerveModulesTab.addNumber("Vel FR Raw", () -> Robot.drive.m_modules[1].getDriveVelocity());
+    // m_swerveModulesTab.addNumber("Vel BL Raw", () -> Robot.drive.m_modules[2].getDriveVelocity());
+    // m_swerveModulesTab.addNumber("Vel BR Raw", () -> Robot.drive.m_modules[3].getDriveVelocity());
 
     // drivePIDS
-    m_swerveModulesTab.add("Drive PID FL", Robot.drive.m_modules[0].getDrivePID());
-    m_swerveModulesTab.add("Drive PID FR", Robot.drive.m_modules[1].getDrivePID());
-    m_swerveModulesTab.add("Drive PID BL", Robot.drive.m_modules[2].getDrivePID());
-    m_swerveModulesTab.add("Drive PID BR", Robot.drive.m_modules[3].getDrivePID());
+    // m_swerveModulesTab.add("Drive PID FL", Robot.drive.m_modules[0].getDrivePID());
+    // m_swerveModulesTab.add("Drive PID FR", Robot.drive.m_modules[1].getDrivePID());
+    // m_swerveModulesTab.add("Drive PID BL", Robot.drive.m_modules[2].getDrivePID());
+    // m_swerveModulesTab.add("Drive PID BR", Robot.drive.m_modules[3].getDrivePID());
 
     //Median Filltered Velocity Values
     // m_swerveModulesTab.addNumber("Vel FL Filtered", () -> Robot.drive.m_modules[0].getDriveVelocityFilltered());
@@ -162,22 +163,28 @@ public class ShuffleboardManager {
     // m_swerveModulesTab.addNumber("Vel BR Filtered", () -> Robot.drive.m_modules[3].getDriveVelocityFilltered());
 
     // Desired Steer angles
-    // m_swerveModulesTab.addNumber("FL desired angle", () -> Robot.drive.swerveModuleStates[0].angle.getDegrees());
-    // m_swerveModulesTab.addNumber("FR desired angle", () -> Robot.drive.swerveModuleStates[1].angle.getDegrees());
-    // m_swerveModulesTab.addNumber("BL desired angle", () -> Robot.drive.swerveModuleStates[2].angle.getDegrees());
-    // m_swerveModulesTab.addNumber("BR desired angle", () -> Robot.drive.swerveModuleStates[3].angle.getDegrees());
+    // m_swerveModulesTab.addNumber("FL desired angle", () -> Robot.drive.m_swerveModuleStates[0].angle.getDegrees());
+    // m_swerveModulesTab.addNumber("FR desired angle", () -> Robot.drive.m_swerveModuleStates[1].angle.getDegrees());
+    // m_swerveModulesTab.addNumber("BL desired angle", () -> Robot.drive.m_swerveModuleStates[2].angle.getDegrees());
+    // m_swerveModulesTab.addNumber("BR desired angle", () -> Robot.drive.m_swerveModuleStates[3].angle.getDegrees());
 
     // Steer angles
-    // m_swerveModulesTab.addNumber("Angle FL", () -> Robot.drive.m_modules[0].getAngle());
-    // m_swerveModulesTab.addNumber("Angle FR", () -> Robot.drive.m_modules[1].getAngle());
-    // m_swerveModulesTab.addNumber("Angle BL", () -> Robot.drive.m_modules[2].getAngle());
-    // m_swerveModulesTab.addNumber("Angle BR", () -> Robot.drive.m_modules[3].getAngle());
+    m_swerveModulesTab.addNumber("Angle FL", () -> Robot.drive.m_modules[0].getAngle());
+    m_swerveModulesTab.addNumber("Angle FR", () -> Robot.drive.m_modules[1].getAngle());
+    m_swerveModulesTab.addNumber("Angle BL", () -> Robot.drive.m_modules[2].getAngle());
+    m_swerveModulesTab.addNumber("Angle BR", () -> Robot.drive.m_modules[3].getAngle());
+
+    // Steer Velocity
+    // m_swerveModulesTab.addNumber("Steer Vel FL", () -> Robot.drive.m_modules[0].getSteerVelocity());
+    // m_swerveModulesTab.addNumber("Steer Vel FR", () -> Robot.drive.m_modules[1].getSteerVelocity());
+    // m_swerveModulesTab.addNumber("Steer Vel BL", () -> Robot.drive.m_modules[2].getSteerVelocity());
+    // m_swerveModulesTab.addNumber("Steer Vel BR", () -> Robot.drive.m_modules[3].getSteerVelocity());
 
     //Steer PID
-    // m_swerveModulesTab.add("Steer PID FL", Robot.drive.m_modules[0].getSteerPID());
-    // m_swerveModulesTab.add("Steer PID FR", Robot.drive.m_modules[1].getSteerPID());
-    // m_swerveModulesTab.add("Steer PID BL", Robot.drive.m_modules[2].getSteerPID());
-    // m_swerveModulesTab.add("Steer PID BR", Robot.drive.m_modules[3].getSteerPID());
+    m_swerveModulesTab.add("Steer PID FL", Robot.drive.m_modules[0].getSteerPID());
+    m_swerveModulesTab.add("Steer PID FR", Robot.drive.m_modules[1].getSteerPID());
+    m_swerveModulesTab.add("Steer PID BL", Robot.drive.m_modules[2].getSteerPID());
+    m_swerveModulesTab.add("Steer PID BR", Robot.drive.m_modules[3].getSteerPID());
   }
   //puting defult value in hashmaps
   private void setUpFeedforwardHashmap(){
@@ -214,7 +221,8 @@ public class ShuffleboardManager {
   //add options to choosers
   public void autoChooserOptions() {
     m_autoCommand.setDefaultOption("Do Nothing", new PrintCommand("This will do nothing!"));
-    m_autoCommand.addOption("Self FF charecterzation", new DriveFeedForwardCharacterzation(Robot.drive));
+    m_autoCommand.addOption("Drive FF charecterzation", new DriveFeedForwardCharacterzation(Robot.drive));
+    m_autoCommand.addOption("Steer FF charecterzation", new SteerFeedForwardCharacterzation(Robot.drive));
     // m_autoCommand.setDefaultOption("TestAuto", new PathPlannerCommand("TestAuto", 0)); 
   }
 
