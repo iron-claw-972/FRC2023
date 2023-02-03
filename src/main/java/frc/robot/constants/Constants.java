@@ -1,5 +1,7 @@
 package frc.robot.constants;
 
+import frc.robot.constants.swerve.SwerveDriveConstants;
+
 public final class Constants {
   public static final double kGravitationalAccel = 9.8;
   public static final double kMaxVoltage = 12.0;
@@ -13,6 +15,6 @@ public final class Constants {
 
   public static final FalconConstants falcon = new FalconConstants();
   public static final OIConstants oi = new OIConstants();
-  public static final SwerveDriveConstants drive = new CompDriveConstants();
+  public static final SwerveDriveConstants drive = SwerveDriveConstants.COMP;
   public static final AutoConstants auto = new AutoConstants();
 }

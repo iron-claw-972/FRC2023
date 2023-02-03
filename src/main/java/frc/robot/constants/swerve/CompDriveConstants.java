@@ -1,8 +1,9 @@
-package frc.robot.constants;
+package frc.robot.constants.swerve;
 
 import edu.wpi.first.math.util.Units;
+import frc.robot.constants.Constants;
 
-public class CompDriveConstants extends SwerveDriveConstants{
+public class CompDriveConstants {
     public static final double kWheelRadius = Units.inchesToMeters(2);
 
     public static final double kTrackWidth = Units.inchesToMeters(20.75);//22.75 swerve bot, 20.75 comp bot

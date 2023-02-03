@@ -1,6 +1,7 @@
 package frc.robot.constants;
 
 import frc.robot.constants.Constants;
+import frc.robot.constants.swerve.CompDriveConstants;
 
 public enum ModuleConstants {
 
