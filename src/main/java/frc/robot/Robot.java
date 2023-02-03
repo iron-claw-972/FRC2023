@@ -22,6 +22,7 @@ import frc.robot.util.ShuffleboardManager;
  * project.
  */
 public class Robot extends TimedRobot {
+  //TODO: Figure out how to execute commands
   private Command m_autoCommand;
   public static ShuffleboardManager shuffleboard;
   public static Drivetrain drive;

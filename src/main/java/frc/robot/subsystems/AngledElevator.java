@@ -17,8 +17,8 @@ import frc.robot.util.MotorFactory;
 
 public class AngledElevator extends SubsystemBase {
 
-private final WPI_TalonFX m_elevatorMotor;
-private final Encoder m_encoder; 
+  WPI_TalonFX m_elevatorMotor; //do I define these are private final? 
+  Encoder m_encoder; 
 
   public AngledElevator() {
 
@@ -29,7 +29,7 @@ private final Encoder m_encoder;
   public AngledElevator(WPI_TalonFX elevatorMotor, Encoder encoder){
 
     m_elevatorMotor = elevatorMotor; 
-    m_encoder = encoder; 
+    m_encoder = encoder;
 
   }
 

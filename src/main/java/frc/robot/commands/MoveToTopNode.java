@@ -1,13 +1,16 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.AngledElevator;
 
 public class MoveToTopNode extends CommandBase {
+  AngledElevator m_elevator; 
 
 
-  public MoveToTopNode() {
+  public MoveToTopNode(AngledElevator elevator) {
+    m_elevator = elevator; 
 
-    addRequirements();
+    addRequirements(m_elevator);
   
   }
 

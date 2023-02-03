@@ -1,13 +1,16 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.AngledElevator;
 
 public class MoveToMaxHeight extends CommandBase {
+  AngledElevator m_elevator; 
 
 
-  public MoveToMaxHeight () {
+  public MoveToMaxHeight(AngledElevator elevator) {
+    m_elevator = elevator; 
 
-    addRequirements();
+    addRequirements(m_elevator);
   
   }
 
