@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.constants.ModuleConstants;
-import frc.robot.util.RobotType;
 import frc.robot.util.ShuffleboardManager;
 
 /** Represents a swerve drive style drivetrain.

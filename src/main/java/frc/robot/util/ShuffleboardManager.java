@@ -68,7 +68,6 @@ public class ShuffleboardManager {
   SendableChooser<TestType> m_testMode = new SendableChooser<>();
   SendableChooser<Module> m_module = new SendableChooser<>();
   SendableChooser<Controller> m_controllerType = new SendableChooser<>();
-  SendableChooser<RobotType> m_robotType = new SendableChooser<>();
 
   public void setup() {
     LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
@@ -94,7 +93,6 @@ public class ShuffleboardManager {
     // add choosers
     m_autoTab.add("Auto Chooser", m_autoCommand);
     m_mainTab.add("Practice Mode Type Chooser", m_testMode);
-    m_mainTab.add("Robot Type Chooser", m_robotType);
     m_swerveModulesTab.add("Module Chooser", m_module);
     m_controllerTab.add("Controller Chooser", m_controllerType);
 
@@ -224,11 +222,6 @@ public class ShuffleboardManager {
     // m_autoCommand.setDefaultOption("TestAuto", new PathPlannerCommand("TestAuto", 0)); 
   }
 
-public void robotTypeOptions() {
-  m_robotType.setDefaultOption("Competition Robot", RobotType.COMP);
-  m_robotType.addOption("Test Robot", RobotType.TEST);
-}
-
   public void testTypeChooserOptions() {
     m_testMode.addOption(TestType.HEADING_DRIVE.toString(), TestType.HEADING_DRIVE);
     m_testMode.addOption(TestType.HEADING_PID.toString(), TestType.HEADING_PID);
@@ -347,10 +340,6 @@ public void robotTypeOptions() {
   public Controller getControllerType(){
     return m_controllerType.getSelected();
   }
-
-public RobotType getRobotType() {
-  return m_robotType.getSelected();
-}
 
   public void setDriveModuleFeedforward(){
     //revert to previous saved feed forward data if changed
