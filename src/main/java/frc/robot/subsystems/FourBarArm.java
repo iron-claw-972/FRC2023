@@ -11,11 +11,11 @@ public class FourBarArm extends SubsystemBase {
   private final CANSparkMax m_motor = new CANSparkMax(Constants.arm.motorID, MotorType.kBrushless);
   private final Encoder encoder = new Encoder(0, 1, false, Encoder.EncodingType.k4X);
   private final PIDController pid = new PIDController(Constants.arm.kP, Constants.arm.kI, Constants.arm.kD);
-  private int armSetpoint = Constants.arm.initialPosition;
-  public void setSetpoint(int target) {
+  private double armSetpoint = Constants.arm.initialPosition;
+  public void setSetpoint(double target) {
     armSetpoint = target;
   }
-  public int getSetpoint() {
+  public double getSetpoint() {
     return armSetpoint;
   }
   public int getEncoderPosition() {
