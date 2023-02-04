@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.controls.Driver;
 import frc.robot.controls.Operator;
+import frc.robot.subsystems.DeployingBar;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.util.LogManager;
 import frc.robot.util.PathGroupLoader;
@@ -25,6 +26,7 @@ public class Robot extends TimedRobot {
   private Command m_autoCommand;
   public static ShuffleboardManager shuffleboard;
   public static Drivetrain drive;
+  public static DeployingBar deploybar;
 
   private static boolean isTestMode = false;
 
@@ -44,6 +46,7 @@ public class Robot extends TimedRobot {
     // make subsystems
     shuffleboard = new ShuffleboardManager();
     drive = new Drivetrain();
+    deploybar = new DeployingBar();
 
     shuffleboard.setup();
 
