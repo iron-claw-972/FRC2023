@@ -62,12 +62,11 @@ public class Drivetrain extends SubsystemBase {
 
   public Drivetrain() {
       m_modules = new Module[]{
-        Module.create(ModuleConstants.FRONT_LEFT),
-        Module.create(ModuleConstants.FORNT_RIGHT),
-        Module.create(ModuleConstants.BACK_LEFT),
-        Module.create(ModuleConstants.BACK_RIGHT)
+        Module.create(ModuleConstants.COMP_FL),
+        Module.create(ModuleConstants.COMP_FR),
+        Module.create(ModuleConstants.COMP_BL),
+        Module.create(ModuleConstants.COMP_BR)
       };
-      // System.out.println("Drive Port " + ModuleConstants.FORNT_RIGHT.getDrivePort());
 
 
     m_odometry = new SwerveDriveOdometry(m_kinematics, m_pigeon.getRotation2d(), getModulePositions(), m_robotPose);

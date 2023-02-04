@@ -21,6 +21,8 @@ import frc.robot.commands.SteerFeedForwardCharacterzation;
 import frc.robot.commands.SteerFeedForwardCharacterzationAll;
 import frc.robot.constants.Constants;
 import frc.robot.constants.ModuleConstants;
+import frc.robot.constants.DriveConstants.CompDriveConstants;
+import frc.robot.constants.DriveConstants.TestDriveConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Module;
 import lib.controllers.Controller;
@@ -189,32 +191,32 @@ public class ShuffleboardManager {
   private void setUpFeedforwardHashmap(){
     m_driveStaticFeedForwardSaver.put(m_dummyModule,0.0);
     m_driveVelFeedForwardSaver.put(m_allModule,Constants.drive.kDriveKVAll);
-    m_driveStaticFeedForwardSaver.put(Robot.drive.m_modules[0],Constants.drive.kDriveKSFrontLeft);
-    m_driveStaticFeedForwardSaver.put(Robot.drive.m_modules[1],Constants.drive.kDriveKSFrontRight);
-    m_driveStaticFeedForwardSaver.put(Robot.drive.m_modules[2],Constants.drive.kDriveKSBackLeft);
-    m_driveStaticFeedForwardSaver.put(Robot.drive.m_modules[3],Constants.drive.kDriveKSBackRight);
+    m_driveStaticFeedForwardSaver.put(Robot.drive.m_modules[0],CompDriveConstants.kDriveKSFrontLeft);
+    m_driveStaticFeedForwardSaver.put(Robot.drive.m_modules[1],CompDriveConstants.kDriveKSFrontRight);
+    m_driveStaticFeedForwardSaver.put(Robot.drive.m_modules[2],CompDriveConstants.kDriveKSBackLeft);
+    m_driveStaticFeedForwardSaver.put(Robot.drive.m_modules[3],CompDriveConstants.kDriveKSBackRight);
     
     m_driveVelFeedForwardSaver.put(m_dummyModule,0.0);
     m_driveStaticFeedForwardSaver.put(m_allModule,Constants.drive.kDriveKSAll);
-    m_driveVelFeedForwardSaver.put(Robot.drive.m_modules[0],Constants.drive.kDriveKVFrontLeft);
-    m_driveVelFeedForwardSaver.put(Robot.drive.m_modules[1],Constants.drive.kDriveKVFrontRight);
-    m_driveVelFeedForwardSaver.put(Robot.drive.m_modules[2],Constants.drive.kDriveKVBackLeft);
-    m_driveVelFeedForwardSaver.put(Robot.drive.m_modules[3],Constants.drive.kDriveKVBackRight);
+    m_driveVelFeedForwardSaver.put(Robot.drive.m_modules[0],CompDriveConstants.kDriveKVFrontLeft);
+    m_driveVelFeedForwardSaver.put(Robot.drive.m_modules[1],CompDriveConstants.kDriveKVFrontRight);
+    m_driveVelFeedForwardSaver.put(Robot.drive.m_modules[2],CompDriveConstants.kDriveKVBackLeft);
+    m_driveVelFeedForwardSaver.put(Robot.drive.m_modules[3],CompDriveConstants.kDriveKVBackRight);
     
 
     m_steerStaticFeedForwardSaver.put(m_dummyModule,0.0);
     m_steerVelFeedForwardSaver.put(m_allModule,Constants.drive.kDriveKVAll);
-    m_steerStaticFeedForwardSaver.put(Robot.drive.m_modules[0],Constants.drive.kSteerKSFrontLeft);
-    m_steerStaticFeedForwardSaver.put(Robot.drive.m_modules[1],Constants.drive.kSteerKSFrontRight);
-    m_steerStaticFeedForwardSaver.put(Robot.drive.m_modules[2],Constants.drive.kSteerKSBackLeft);
-    m_steerStaticFeedForwardSaver.put(Robot.drive.m_modules[3],Constants.drive.kSteerKSBackRight);
+    m_steerStaticFeedForwardSaver.put(Robot.drive.m_modules[0],CompDriveConstants.kDriveKSFrontLeft);
+    m_steerStaticFeedForwardSaver.put(Robot.drive.m_modules[1],CompDriveConstants.kDriveKSFrontRight);
+    m_steerStaticFeedForwardSaver.put(Robot.drive.m_modules[2],CompDriveConstants.kDriveKSBackLeft);
+    m_steerStaticFeedForwardSaver.put(Robot.drive.m_modules[3],CompDriveConstants.kDriveKSBackRight);
     
     m_steerVelFeedForwardSaver.put(m_dummyModule,0.0);
     m_steerStaticFeedForwardSaver.put(m_allModule,Constants.drive.kDriveKSAll);
-    m_steerVelFeedForwardSaver.put(Robot.drive.m_modules[0],Constants.drive.kSteerKVFrontLeft);
-    m_steerVelFeedForwardSaver.put(Robot.drive.m_modules[1],Constants.drive.kSteerKVFrontRight);
-    m_steerVelFeedForwardSaver.put(Robot.drive.m_modules[2],Constants.drive.kSteerKVBackLeft);
-    m_steerVelFeedForwardSaver.put(Robot.drive.m_modules[3],Constants.drive.kSteerKVBackRight);
+    m_steerVelFeedForwardSaver.put(Robot.drive.m_modules[0],CompDriveConstants.kDriveKVFrontLeft);
+    m_steerVelFeedForwardSaver.put(Robot.drive.m_modules[1],CompDriveConstants.kDriveKVFrontRight);
+    m_steerVelFeedForwardSaver.put(Robot.drive.m_modules[2],CompDriveConstants.kDriveKVBackLeft);
+    m_steerVelFeedForwardSaver.put(Robot.drive.m_modules[3],CompDriveConstants.kDriveKVBackRight);
   }
 
   //add options to choosers

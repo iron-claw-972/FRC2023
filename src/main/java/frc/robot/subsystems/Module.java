@@ -144,7 +144,6 @@ public class Module {
       m_driveMotor = new WPI_TalonFX(driveMotorPort);
       m_steerMotor = new WPI_TalonFX(steerMotorPort);
     }
-    System.out.println("drive Port" + driveMotorPort);
     
     m_driveMotor.setNeutralMode(NeutralMode.Brake);
     m_steerMotor.setNeutralMode(NeutralMode.Brake);

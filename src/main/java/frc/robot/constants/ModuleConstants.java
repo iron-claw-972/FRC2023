@@ -1,10 +1,56 @@
 package frc.robot.constants;
 
-import frc.robot.constants.Constants;
+import frc.robot.constants.DriveConstants.CompDriveConstants;
+import frc.robot.constants.DriveConstants.TestDriveConstants;
 
 public enum ModuleConstants {
+    
+    // TEST_FL(
+    //         TestDriveConstants.kDriveFrontLeft,
+    //         TestDriveConstants.kSteerFrontLeft,
+    //         TestDriveConstants.kEncoderFrontLeft,
+    //         TestDriveConstants.kSteerOffsetFrontLeft,
+    //         TestDriveConstants.kDriveKSFrontLeft,
+    //         TestDriveConstants.kDriveKVFrontLeft,
+    //         TestDriveConstants.kDrivePFrontLeft,
+    //         TestDriveConstants.kDriveIFrontLeft,
+    //         TestDriveConstants.kDriveDFrontLeft
+    //     ),
+    // TEST_FR(
+    //         TestDriveConstants.kDriveFrontRight,
+    //         TestDriveConstants.kSteerFrontRight,
+    //         TestDriveConstants.kEncoderFrontRight,
+    //         TestDriveConstants.kSteerOffsetFrontRight,
+    //         TestDriveConstants.kDriveKSFrontRight,
+    //         TestDriveConstants.kDriveKVFrontRight,
+    //         TestDriveConstants.kDrivePFrontRight,
+    //         TestDriveConstants.kDriveIFrontRight,
+    //         TestDriveConstants.kDriveDFrontRight
+    //     ),
+    // TEST_BL(
+    //         TestDriveConstants.kDriveBackLeft,
+    //         TestDriveConstants.kSteerBackLeft,
+    //         TestDriveConstants.kEncoderBackLeft,
+    //         TestDriveConstants.kSteerOffsetBackLeft,
+    //         TestDriveConstants.kDriveKSBackLeft,
+    //         TestDriveConstants.kDriveKVBackLeft,
+    //         TestDriveConstants.kDrivePBackLeft,
+    //         TestDriveConstants.kDriveIBackLeft,
+    //         TestDriveConstants.kDriveDBackLeft
+    // ),
+    // TEST_BR(
+    //         TestDriveConstants.kDriveBackRight,
+    //         TestDriveConstants.kSteerBackRight,
+    //         TestDriveConstants.kEncoderBackRight,
+    //         TestDriveConstants.kSteerOffsetBackRight,
+    //         TestDriveConstants.kDriveKSBackRight,
+    //         TestDriveConstants.kDriveKVBackRight,
+    //         TestDriveConstants.kDrivePBackRight,
+    //         TestDriveConstants.kDriveIBackRight,
+    //         TestDriveConstants.kDriveDBackRight
+    // ),
 
-    FRONT_LEFT(
+    COMP_FL(
             CompDriveConstants.kDriveFrontLeft,
             CompDriveConstants.kSteerFrontLeft,
             CompDriveConstants.kEncoderFrontLeft,
@@ -20,7 +66,7 @@ public enum ModuleConstants {
             CompDriveConstants.kSteerIFrontLeft,
             CompDriveConstants.kSteerDFrontLeft
         ),
-    FORNT_RIGHT(
+    COMP_FR(
             CompDriveConstants.kDriveFrontRight,
             CompDriveConstants.kSteerFrontRight,
             CompDriveConstants.kEncoderFrontRight,
@@ -36,7 +82,7 @@ public enum ModuleConstants {
             CompDriveConstants.kSteerIFrontRight,
             CompDriveConstants.kSteerDFrontRight
         ),
-    BACK_LEFT(
+    COMP_BL(
             CompDriveConstants.kDriveBackLeft,
             CompDriveConstants.kSteerBackLeft,
             CompDriveConstants.kEncoderBackLeft,
@@ -52,7 +98,7 @@ public enum ModuleConstants {
             CompDriveConstants.kSteerIBackLeft,
             CompDriveConstants.kSteerDBackLeft
     ),
-    BACK_RIGHT(
+    COMP_BR(
             CompDriveConstants.kDriveBackRight,
             CompDriveConstants.kSteerBackRight,
             CompDriveConstants.kEncoderBackRight,
