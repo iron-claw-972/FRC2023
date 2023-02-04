@@ -95,7 +95,7 @@ public class DriveConstants {
         public static final double kDriveDFrontLeft = 0;
         public static final double kSteerKSFrontLeft = 1;
         public static final double kSteerKVFrontLeft = 0.5;
-        public static final double kSteerPFrontLeft = 2;
+        public static final double kSteerPFrontLeft = 12;
         public static final double kSteerIFrontLeft = 0;
         public static final double kSteerDFrontLeft = 0;
 
@@ -110,7 +110,7 @@ public class DriveConstants {
         public static final double kDriveDFrontRight = 0;
         public static final double kSteerKSFrontRight = 1;
         public static final double kSteerKVFrontRight = 0.5;
-        public static final double kSteerPFrontRight = 2;
+        public static final double kSteerPFrontRight = 12;
         public static final double kSteerIFrontRight = 0;
         public static final double kSteerDFrontRight = 0;
 
@@ -125,7 +125,7 @@ public class DriveConstants {
         public static final double kDriveDBackLeft = 0;
         public static final double kSteerKSBackLeft = 1;
         public static final double kSteerKVBackLeft = 0.5;
-        public static final double kSteerPBackLeft = 2;
+        public static final double kSteerPBackLeft = 12;
         public static final double kSteerIBackLeft = 0;
         public static final double kSteerDBackLeft = 0;
 
@@ -140,7 +140,7 @@ public class DriveConstants {
         public static final double kDriveDBackRight = 0;
         public static final double kSteerKSBackRight = 1;
         public static final double kSteerKVBackRight = 0.5;
-        public static final double kSteerPBackRight = 2;
+        public static final double kSteerPBackRight = 12;
         public static final double kSteerIBackRight = 0;
         public static final double kSteerDBackRight = 0;
     
