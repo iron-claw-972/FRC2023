@@ -36,7 +36,7 @@ public class ShuffleboardManager {
   public Map<Module,Double> m_driveStaticFeedForwardSaver=new HashMap<Module,Double>();
   public Map<Module,Double> m_steerVelFeedForwardSaver=new HashMap<Module,Double>();
   public Map<Module,Double> m_steerStaticFeedForwardSaver=new HashMap<Module,Double>();
-
+  Boolean invert = false;
   // modules needed to distigue in chooser
   Module m_dummyModule = Module.create(ModuleConstants.NONE);
   Module m_allModule = Module.create(ModuleConstants.NONE);
@@ -99,6 +99,7 @@ public class ShuffleboardManager {
     m_mainTab.add("Robot Type Chooser", m_robotType);
     m_swerveModulesTab.add("Module Chooser", m_module);
     m_controllerTab.add("Controller Chooser", m_controllerType);
+    m_controllerTab.add("Set Invert", invert);
 
     // tab setup
     setupDrivetrain();
@@ -352,6 +353,9 @@ public void robotTypeOptions() {
 
 public RobotType getRobotType() {
   return m_robotType.getSelected();
+}
+public Boolean getInverted(){
+  return invert;
 }
 
   public void setDriveModuleFeedforward(){
