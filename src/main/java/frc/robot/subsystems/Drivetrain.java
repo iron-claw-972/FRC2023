@@ -62,10 +62,10 @@ public class Drivetrain extends SubsystemBase {
 
   public Drivetrain() {
       m_modules = new Module[]{
-        Module.create(ModuleConstants.COMP_FL),
-        Module.create(ModuleConstants.COMP_FR),
-        Module.create(ModuleConstants.COMP_BL),
-        Module.create(ModuleConstants.COMP_BR)
+        Module.create(ModuleConstants.TEST_FL),
+        Module.create(ModuleConstants.TEST_FR),
+        Module.create(ModuleConstants.TEST_BL),
+        Module.create(ModuleConstants.TEST_BR)
       };
 
 
@@ -127,17 +127,21 @@ double rotRadians = m_rotationController.calculate(m_pigeon.getRotation2d().getR
     setModuleStates(m_swerveModuleStates);
   }
 
-  public void driveHeading(double xSpeed, double ySpeed, double heading) {
+  public void driveHeading(double xSpeed, double ySpeed, double heading, boolean fieldRelative) {
     m_headingPIDOutput = m_rotationController.calculate(getAngleHeading(),heading);
     double rot = m_headingPIDOutput;
 
     // TODO: Fix Swerve drive sim
     if (!Robot.isReal()) {
-      m_pigeon.getSimCollection().addHeading(rot * 0.02);
+      System.out.println(xSpeed + " " + ySpeed + " " + rot);
+      m_pigeon.getSimCollection().addHeading(rot / (2 * Math.PI));
     }
 
     m_swerveModuleStates =
-        m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_pigeon.getRotation2d()));
+        m_kinematics.toSwerveModuleStates(
+            fieldRelative
+                ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_pigeon.getRotation2d())
+                : new ChassisSpeeds(xSpeed, ySpeed, rot));
     SwerveDriveKinematics.desaturateWheelSpeeds(m_swerveModuleStates, Constants.drive.kMaxSpeed);
     setModuleStates(m_swerveModuleStates);
   }

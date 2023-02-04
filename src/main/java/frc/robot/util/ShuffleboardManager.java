@@ -17,6 +17,8 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Robot;
 import frc.robot.commands.DoNothing;
 import frc.robot.commands.DriveFeedForwardCharacterzation;
+import frc.robot.commands.SteerFeedForwardCharacterzation;
+import frc.robot.commands.SteerFeedForwardCharacterzationAll;
 import frc.robot.constants.Constants;
 import frc.robot.constants.ModuleConstants;
 import frc.robot.constants.DriveConstants.CompDriveConstants;
@@ -35,7 +37,7 @@ public class ShuffleboardManager {
   public Map<Module,Double> m_driveStaticFeedForwardSaver=new HashMap<Module,Double>();
   public Map<Module,Double> m_steerVelFeedForwardSaver=new HashMap<Module,Double>();
   public Map<Module,Double> m_steerStaticFeedForwardSaver=new HashMap<Module,Double>();
-
+  Boolean invert = false;
   // modules needed to distigue in chooser
   Module m_dummyModule = Module.create(ModuleConstants.NONE);
   Module m_allModule = Module.create(ModuleConstants.NONE);
@@ -58,7 +60,7 @@ public class ShuffleboardManager {
     m_steerVelocityFeedforward;
   
   //controller inputs
-  GenericEntry m_translationalSenseitivity, m_translationalExpo, m_translationalDeadband, m_translationalSlewrate;
+  GenericEntry m_translationalSenseitivity, m_translationalExpo, m_translationalDeadband, m_translationalSlewrate, m_fieldRelative;
   GenericEntry m_rotationSenseitiviy, m_rotationExpo, m_rotationDeadband, m_rotationSlewrate;
   GenericEntry m_headingSenseitiviy, m_headingExpo, m_headingDeadband;
 
@@ -98,6 +100,7 @@ public class ShuffleboardManager {
     m_mainTab.add("Robot Type Chooser", m_robotType);
     m_swerveModulesTab.add("Module Chooser", m_module);
     m_controllerTab.add("Controller Chooser", m_controllerType);
+    m_controllerTab.add("Set Invert", invert);
 
     // tab setup
     setupDrivetrain();
@@ -144,16 +147,16 @@ public class ShuffleboardManager {
     // m_swerveModulesTab.addNumber("BR PID Output", () -> Robot.drive.m_modules[3].getDrivePIDOutput());
 
     // get drive velocity
-    m_swerveModulesTab.addNumber("Vel FL Raw", () -> Robot.drive.m_modules[0].getDriveVelocity());
-    m_swerveModulesTab.addNumber("Vel FR Raw", () -> Robot.drive.m_modules[1].getDriveVelocity());
-    m_swerveModulesTab.addNumber("Vel BL Raw", () -> Robot.drive.m_modules[2].getDriveVelocity());
-    m_swerveModulesTab.addNumber("Vel BR Raw", () -> Robot.drive.m_modules[3].getDriveVelocity());
+    // m_swerveModulesTab.addNumber("Vel FL Raw", () -> Robot.drive.m_modules[0].getDriveVelocity());
+    // m_swerveModulesTab.addNumber("Vel FR Raw", () -> Robot.drive.m_modules[1].getDriveVelocity());
+    // m_swerveModulesTab.addNumber("Vel BL Raw", () -> Robot.drive.m_modules[2].getDriveVelocity());
+    // m_swerveModulesTab.addNumber("Vel BR Raw", () -> Robot.drive.m_modules[3].getDriveVelocity());
 
     // drivePIDS
-    m_swerveModulesTab.add("Drive PID FL", Robot.drive.m_modules[0].getDrivePID());
-    m_swerveModulesTab.add("Drive PID FR", Robot.drive.m_modules[1].getDrivePID());
-    m_swerveModulesTab.add("Drive PID BL", Robot.drive.m_modules[2].getDrivePID());
-    m_swerveModulesTab.add("Drive PID BR", Robot.drive.m_modules[3].getDrivePID());
+    // m_swerveModulesTab.add("Drive PID FL", Robot.drive.m_modules[0].getDrivePID());
+    // m_swerveModulesTab.add("Drive PID FR", Robot.drive.m_modules[1].getDrivePID());
+    // m_swerveModulesTab.add("Drive PID BL", Robot.drive.m_modules[2].getDrivePID());
+    // m_swerveModulesTab.add("Drive PID BR", Robot.drive.m_modules[3].getDrivePID());
 
     //Median Filltered Velocity Values
     // m_swerveModulesTab.addNumber("Vel FL Filtered", () -> Robot.drive.m_modules[0].getDriveVelocityFilltered());
@@ -162,59 +165,68 @@ public class ShuffleboardManager {
     // m_swerveModulesTab.addNumber("Vel BR Filtered", () -> Robot.drive.m_modules[3].getDriveVelocityFilltered());
 
     // Desired Steer angles
-    // m_swerveModulesTab.addNumber("FL desired angle", () -> Robot.drive.swerveModuleStates[0].angle.getDegrees());
-    // m_swerveModulesTab.addNumber("FR desired angle", () -> Robot.drive.swerveModuleStates[1].angle.getDegrees());
-    // m_swerveModulesTab.addNumber("BL desired angle", () -> Robot.drive.swerveModuleStates[2].angle.getDegrees());
-    // m_swerveModulesTab.addNumber("BR desired angle", () -> Robot.drive.swerveModuleStates[3].angle.getDegrees());
+    // m_swerveModulesTab.addNumber("FL desired angle", () -> Robot.drive.m_swerveModuleStates[0].angle.getDegrees());
+    // m_swerveModulesTab.addNumber("FR desired angle", () -> Robot.drive.m_swerveModuleStates[1].angle.getDegrees());
+    // m_swerveModulesTab.addNumber("BL desired angle", () -> Robot.drive.m_swerveModuleStates[2].angle.getDegrees());
+    // m_swerveModulesTab.addNumber("BR desired angle", () -> Robot.drive.m_swerveModuleStates[3].angle.getDegrees());
 
     // Steer angles
-    // m_swerveModulesTab.addNumber("Angle FL", () -> Robot.drive.m_modules[0].getAngle());
-    // m_swerveModulesTab.addNumber("Angle FR", () -> Robot.drive.m_modules[1].getAngle());
-    // m_swerveModulesTab.addNumber("Angle BL", () -> Robot.drive.m_modules[2].getAngle());
-    // m_swerveModulesTab.addNumber("Angle BR", () -> Robot.drive.m_modules[3].getAngle());
+    m_swerveModulesTab.addNumber("Angle FL", () -> Robot.drive.m_modules[0].getAngle());
+    m_swerveModulesTab.addNumber("Angle FR", () -> Robot.drive.m_modules[1].getAngle());
+    m_swerveModulesTab.addNumber("Angle BL", () -> Robot.drive.m_modules[2].getAngle());
+    m_swerveModulesTab.addNumber("Angle BR", () -> Robot.drive.m_modules[3].getAngle());
+
+    // Steer Velocity
+    // m_swerveModulesTab.addNumber("Steer Vel FL", () -> Robot.drive.m_modules[0].getSteerVelocity());
+    // m_swerveModulesTab.addNumber("Steer Vel FR", () -> Robot.drive.m_modules[1].getSteerVelocity());
+    // m_swerveModulesTab.addNumber("Steer Vel BL", () -> Robot.drive.m_modules[2].getSteerVelocity());
+    // m_swerveModulesTab.addNumber("Steer Vel BR", () -> Robot.drive.m_modules[3].getSteerVelocity());
 
     //Steer PID
-    // m_swerveModulesTab.add("Steer PID FL", Robot.drive.m_modules[0].getSteerPID());
-    // m_swerveModulesTab.add("Steer PID FR", Robot.drive.m_modules[1].getSteerPID());
-    // m_swerveModulesTab.add("Steer PID BL", Robot.drive.m_modules[2].getSteerPID());
-    // m_swerveModulesTab.add("Steer PID BR", Robot.drive.m_modules[3].getSteerPID());
+    m_swerveModulesTab.add("Steer PID FL", Robot.drive.m_modules[0].getSteerPID());
+    m_swerveModulesTab.add("Steer PID FR", Robot.drive.m_modules[1].getSteerPID());
+    m_swerveModulesTab.add("Steer PID BL", Robot.drive.m_modules[2].getSteerPID());
+    m_swerveModulesTab.add("Steer PID BR", Robot.drive.m_modules[3].getSteerPID());
   }
   //puting defult value in hashmaps
   private void setUpFeedforwardHashmap(){
     m_driveStaticFeedForwardSaver.put(m_dummyModule,0.0);
     m_driveVelFeedForwardSaver.put(m_allModule,Constants.drive.kDriveKVAll);
-    m_driveStaticFeedForwardSaver.put(Robot.drive.m_modules[0],CompDriveConstants.kDriveKSFrontLeft);
-    m_driveStaticFeedForwardSaver.put(Robot.drive.m_modules[1],CompDriveConstants.kDriveKSFrontRight);
-    m_driveStaticFeedForwardSaver.put(Robot.drive.m_modules[2],CompDriveConstants.kDriveKSBackLeft);
-    m_driveStaticFeedForwardSaver.put(Robot.drive.m_modules[3],CompDriveConstants.kDriveKSBackRight);
+    m_driveStaticFeedForwardSaver.put(Robot.drive.m_modules[0],TestDriveConstants.kDriveKSFrontLeft);
+    m_driveStaticFeedForwardSaver.put(Robot.drive.m_modules[1],TestDriveConstants.kDriveKSFrontRight);
+    m_driveStaticFeedForwardSaver.put(Robot.drive.m_modules[2],TestDriveConstants.kDriveKSBackLeft);
+    m_driveStaticFeedForwardSaver.put(Robot.drive.m_modules[3],TestDriveConstants.kDriveKSBackRight);
     
     m_driveVelFeedForwardSaver.put(m_dummyModule,0.0);
     m_driveStaticFeedForwardSaver.put(m_allModule,Constants.drive.kDriveKSAll);
-    m_driveVelFeedForwardSaver.put(Robot.drive.m_modules[0],CompDriveConstants.kDriveKVFrontLeft);
-    m_driveVelFeedForwardSaver.put(Robot.drive.m_modules[1],CompDriveConstants.kDriveKVFrontRight);
-    m_driveVelFeedForwardSaver.put(Robot.drive.m_modules[2],CompDriveConstants.kDriveKVBackLeft);
-    m_driveVelFeedForwardSaver.put(Robot.drive.m_modules[3],CompDriveConstants.kDriveKVBackRight);
+    m_driveVelFeedForwardSaver.put(Robot.drive.m_modules[0],TestDriveConstants.kDriveKVFrontLeft);
+    m_driveVelFeedForwardSaver.put(Robot.drive.m_modules[1],TestDriveConstants.kDriveKVFrontRight);
+    m_driveVelFeedForwardSaver.put(Robot.drive.m_modules[2],TestDriveConstants.kDriveKVBackLeft);
+    m_driveVelFeedForwardSaver.put(Robot.drive.m_modules[3],TestDriveConstants.kDriveKVBackRight);
     
 
     m_steerStaticFeedForwardSaver.put(m_dummyModule,0.0);
     m_steerVelFeedForwardSaver.put(m_allModule,Constants.drive.kDriveKVAll);
-    m_steerStaticFeedForwardSaver.put(Robot.drive.m_modules[0],CompDriveConstants.kDriveKSFrontLeft);
-    m_steerStaticFeedForwardSaver.put(Robot.drive.m_modules[1],CompDriveConstants.kDriveKSFrontRight);
-    m_steerStaticFeedForwardSaver.put(Robot.drive.m_modules[2],CompDriveConstants.kDriveKSBackLeft);
-    m_steerStaticFeedForwardSaver.put(Robot.drive.m_modules[3],CompDriveConstants.kDriveKSBackRight);
+    m_steerStaticFeedForwardSaver.put(Robot.drive.m_modules[0],TestDriveConstants.kDriveKSFrontLeft);
+    m_steerStaticFeedForwardSaver.put(Robot.drive.m_modules[1],TestDriveConstants.kDriveKSFrontRight);
+    m_steerStaticFeedForwardSaver.put(Robot.drive.m_modules[2],TestDriveConstants.kDriveKSBackLeft);
+    m_steerStaticFeedForwardSaver.put(Robot.drive.m_modules[3],TestDriveConstants.kDriveKSBackRight);
     
     m_steerVelFeedForwardSaver.put(m_dummyModule,0.0);
     m_steerStaticFeedForwardSaver.put(m_allModule,Constants.drive.kDriveKSAll);
-    m_steerVelFeedForwardSaver.put(Robot.drive.m_modules[0],CompDriveConstants.kDriveKVFrontLeft);
-    m_steerVelFeedForwardSaver.put(Robot.drive.m_modules[1],CompDriveConstants.kDriveKVFrontRight);
-    m_steerVelFeedForwardSaver.put(Robot.drive.m_modules[2],CompDriveConstants.kDriveKVBackLeft);
-    m_steerVelFeedForwardSaver.put(Robot.drive.m_modules[3],CompDriveConstants.kDriveKVBackRight);
+    m_steerVelFeedForwardSaver.put(Robot.drive.m_modules[0],TestDriveConstants.kDriveKVFrontLeft);
+    m_steerVelFeedForwardSaver.put(Robot.drive.m_modules[1],TestDriveConstants.kDriveKVFrontRight);
+    m_steerVelFeedForwardSaver.put(Robot.drive.m_modules[2],TestDriveConstants.kDriveKVBackLeft);
+    m_steerVelFeedForwardSaver.put(Robot.drive.m_modules[3],TestDriveConstants.kDriveKVBackRight);
   }
 
   //add options to choosers
   public void autoChooserOptions() {
     m_autoCommand.setDefaultOption("Do Nothing", new PrintCommand("This will do nothing!"));
-    m_autoCommand.addOption("Self FF charecterzation", new DriveFeedForwardCharacterzation(Robot.drive));
+    m_autoCommand.addOption("Drive FF charecterzation", new DriveFeedForwardCharacterzation(Robot.drive));
+    m_autoCommand.addOption("Steer All FF charecterzationa", new SteerFeedForwardCharacterzationAll(Robot.drive));
+    m_autoCommand.addOption("Steer FF charecterzation", new SteerFeedForwardCharacterzation(Robot.drive));
+
     // m_autoCommand.setDefaultOption("TestAuto", new PathPlannerCommand("TestAuto", 0)); 
   }
 
@@ -265,6 +277,7 @@ public void robotTypeOptions() {
     m_translationalExpo = m_controllerTab.add("translationalExpo", Constants.oi.kTranslationalExpo).getEntry();
     m_translationalDeadband = m_controllerTab.add("translationalDeadband", Constants.oi.kTranslationalDeadband).getEntry();
     m_translationalSlewrate = m_controllerTab.add("translationalSlewrate", Constants.oi.kTranslationalSlewrate).getEntry();
+    m_fieldRelative = m_controllerTab.add("Field Relitive", Constants.oi.kFieldRelative).getEntry();
 
     m_rotationSenseitiviy = m_controllerTab.add("rotationSenseitiviy", Constants.oi.kRotationSenseitiviy).getEntry();
     m_rotationExpo = m_controllerTab.add("rotationExpo", Constants.oi.kRotationExpo).getEntry();
@@ -345,6 +358,12 @@ public void robotTypeOptions() {
 
 public RobotType getRobotType() {
   return m_robotType.getSelected();
+}
+public Boolean getInverted(){
+  return invert;
+}
+public Module getModule(){
+  return m_module.getSelected();
 }
 
   public void setDriveModuleFeedforward(){

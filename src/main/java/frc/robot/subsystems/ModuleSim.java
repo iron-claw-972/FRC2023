@@ -48,7 +48,7 @@ public class ModuleSim extends Module {
     double feedforwardKV
   ) {
 
-    super(driveMotorPort, steerMotorPort, encoderPort, encoderOffset, feedforwardKS, feedforwardKV);
+    super(driveMotorPort, steerMotorPort, encoderPort, encoderOffset, feedforwardKS, feedforwardKV,0,0,0,0,0,0,0,0);
     m_driveEncoderSim = new TalonEncoderSim(getDriveEncoder());
     m_encoderSim = new CANCoderSimCollection(getEncoder());
 

@@ -6,6 +6,7 @@ import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.SensorTimeBase;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -40,11 +41,41 @@ public class Module {
       return new ModuleSim(moduleConstants);
     }
   }
-  public static Module create(int driveMotorID, int steerMotorID, int encoderID, double steerOffset, double feedforwardKS, double feedforwardKV) {
+  public static Module create(
+      int driveMotorPort,
+      int steerMotorPort,
+      int encoderPort,
+      double encoderOffset,
+      double driveFeedForwardKS,
+      double driveFeedForwardKV,
+      double driveP,
+      double driveI,
+      double driveD,
+      double steerFeedForwardKS,
+      double steerFeedForwardKV,
+      double steerP,
+      double steerI,
+      double steerD
+    ) {
     if (Robot.isReal()) { 
-      return new Module(driveMotorID, steerMotorID, encoderID, steerOffset, feedforwardKS, feedforwardKV);
+      return new Module(
+          driveMotorPort,
+          steerMotorPort,
+          encoderPort,
+          encoderOffset,
+          driveFeedForwardKS,
+          driveFeedForwardKV,
+          driveP,
+          driveI,
+          driveD,
+          steerFeedForwardKS,
+          steerFeedForwardKV,
+          steerP,
+          steerI,
+          steerD
+        );
     } else {
-      return new ModuleSim(driveMotorID, steerMotorID, encoderID, steerOffset, feedforwardKS, feedforwardKV);
+      return new ModuleSim(driveMotorPort, steerMotorPort, encoderPort, encoderOffset, driveFeedForwardKS, driveFeedForwardKV);
     }
   }
 
@@ -54,18 +85,12 @@ public class Module {
   private final TalonEncoder m_driveEncoder;
   private final WPI_CANCoder m_encoder;
 
-  private PIDController m_drivePIDController = new PIDController(Constants.drive.kDriveP, Constants.drive.kDriveI,
-    Constants.drive.kDriveD);
+  private PIDController m_drivePIDController;
 
-  private ProfiledPIDController m_steerPIDController = new ProfiledPIDController(
-    Constants.drive.kSteerP,
-    Constants.drive.kSteerI,
-    Constants.drive.kSteerD,
-    new TrapezoidProfile.Constraints(
-      Constants.drive.kMaxAngularSpeed, Constants.drive.kMaxAngularAccel));
+  private ProfiledPIDController m_steerPIDController;
 
   private SimpleMotorFeedforward m_driveFeedforward;
-  private SimpleMotorFeedforward m_steerFeedForward = new SimpleMotorFeedforward(Constants.drive.kSteerKS, Constants.drive.kSteerKV);
+  private SimpleMotorFeedforward m_steerFeedForward;
       
   private double m_offset = 0.0;
   
@@ -82,7 +107,15 @@ public class Module {
       moduleConstants.getEncoderPort(),
       moduleConstants.getSteerOffset(),
       moduleConstants.getDriveKS(),
-      moduleConstants.getDriveKV()
+      moduleConstants.getDriveKV(),
+      moduleConstants.getDriveP(),
+      moduleConstants.getDriveI(),
+      moduleConstants.getDriveD(),
+      moduleConstants.getSteerKS(),
+      moduleConstants.getSteerKV(),
+      moduleConstants.getSteerP(),
+      moduleConstants.getSteerI(),
+      moduleConstants.getSteerD()
     );
   }
 
@@ -91,13 +124,21 @@ public class Module {
     int steerMotorPort,
     int encoderPort,
     double encoderOffset,
-    double feedforwardKS,
-    double feedforwardKV
+    double driveFeedForwardKS,
+    double driveFeedForwardKV,
+    double driveP,
+    double driveI,
+    double driveD,
+    double steerFeedForwardKS,
+    double steerFeedForwardKV,
+    double steerP,
+    double steerI,
+    double steerD
   ) {
     
     if (Robot.isReal()) {
       // TODO: The CANBus needs to be a constant because on the new 2023 bot, drive motors use Canivore, not rio
-      m_driveMotor = MotorFactory.createTalonFX(driveMotorPort, Constants.kCanivoreCAN);
+      m_driveMotor = MotorFactory.createTalonFX(driveMotorPort, Constants.kRioCAN);
       m_steerMotor = MotorFactory.createTalonFX(steerMotorPort, Constants.kCanivoreCAN);
     } else {
       m_driveMotor = new WPI_TalonFX(driveMotorPort);
@@ -109,6 +150,14 @@ public class Module {
 
     m_driveEncoder = new TalonEncoder(m_driveMotor);
     m_encoder = new WPI_CANCoder(encoderPort, Constants.kCanivoreCAN);
+
+    m_drivePIDController = new PIDController(driveP, driveI,driveD);
+    m_steerPIDController = new ProfiledPIDController(
+      steerP,
+      steerI,
+      steerD,
+      new TrapezoidProfile.Constraints(
+        Constants.drive.kMaxAngularSpeed, Constants.drive.kMaxAngularAccel));
 
     // reset encoder to factory defaults, reset position to the measurement of the
     // absolute encoder
@@ -131,13 +180,14 @@ public class Module {
 
     // Limit the PID Controller's input range between -pi and pi and set the input
     // to be continuous. Factor in the offset amount.
-    m_steerPIDController.enableContinuousInput(-Math.PI + m_offset, Math.PI + m_offset);
+    m_steerPIDController.enableContinuousInput(-Math.PI, Math.PI);
 
     m_steerMotor.setInverted(true);
 
     m_steerPIDController.reset(getAngle()); // reset the PID, and the Trapezoid motion profile needs to know the starting state
 
-    m_driveFeedforward = new SimpleMotorFeedforward(feedforwardKS, feedforwardKV);
+    m_driveFeedforward = new SimpleMotorFeedforward(driveFeedForwardKS, driveFeedForwardKV);
+    m_steerFeedForward = new SimpleMotorFeedforward(steerFeedForwardKS, steerFeedForwardKV);
   }
 
 
@@ -218,7 +268,7 @@ public class Module {
    * @return encoder's absolute position - offset
    */
   public double getAngle() {
-    return m_encoder.getAbsolutePosition() - m_offset;
+    return MathUtil.inputModulus(m_encoder.getAbsolutePosition() - m_offset, -Math.PI, Math.PI);
   }
 
   /**

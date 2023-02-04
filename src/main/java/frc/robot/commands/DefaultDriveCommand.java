@@ -44,10 +44,11 @@ public class DefaultDriveCommand extends CommandBase {
     double xSpeed = Robot.driver.getForwardTranslation();
     double ySpeed = Robot.driver.getSideTranslation();
     double rot = Robot.driver.getRotation();
+    boolean fieldRelative = Robot.driver.getFieldRelative();
 
     if (Robot.shuffleboard.getTestModeType() == TestType.HEADING_DRIVE){
       rot = Robot.driver.getHeading();
-      m_drive.driveHeading(xSpeed, ySpeed, rot);
+      m_drive.driveHeading(xSpeed, ySpeed, rot, fieldRelative);
       return;
     }
     // System.out.println("driving: " + xSpeed + "," + ySpeed + "," + rot +
@@ -106,7 +107,7 @@ public class DefaultDriveCommand extends CommandBase {
     double value = Robot.shuffleboard.getRequestedSteerAngle();
     for (int i = 0; i < 4; i++) {
       Robot.drive.m_modules[i].setDriveVoltage(0);
-      Robot.drive.m_modules[i].setSteerAngle(new Rotation2d(Units.degreesToRadians(value)));
+      Robot.drive.m_modules[i].setSteerAngle(new Rotation2d(value));
     }
   }
 
