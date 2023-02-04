@@ -103,7 +103,8 @@ public class ModuleSim extends Module {
   @Override
   public void setDesiredState(SwerveModuleState desiredState) {
     if (Math.abs(desiredState.speedMetersPerSecond) < 0.001) {
-      stop();
+      m_driveMotorSim.setInputVoltage(0);
+      m_steerMotorSim.setInputVoltage(0);
       return;
     }
     // Optimize the reference state to avoid spinning further than 90 degrees
