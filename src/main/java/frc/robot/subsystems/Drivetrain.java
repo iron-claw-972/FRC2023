@@ -56,7 +56,7 @@ public class Drivetrain extends SubsystemBase {
   private Pose2d m_robotPose = new Pose2d();
   
   // PID Controllers
-  private PIDController m_xController = new PIDController(0, 0, 0);
+  private PIDController m_xController = new PIDController(0,0,0);
   private PIDController m_yController = new PIDController(0, 0, 0);
   private PIDController m_rotationController = new PIDController(Constants.drive.KheadingP, Constants.drive.KheadingI, Constants.drive.KheadingD);
 
@@ -81,8 +81,13 @@ public class Drivetrain extends SubsystemBase {
       }
     }
     updateOdometry();
+    
   }
-
+public void runChassisPID(double x, double y, double rot) {
+ double xSpeed = m_xController.calculate(m_odometry.getPoseMeters().getX(), x);
+double ySpeed = m_yController.calculate(m_odometry.getPoseMeters().getY(), y);
+double rotRadians = m_rotationController.calculate(m_pigeon.getRotation2d().getRadians(), rot);
+}
   public void setPigeonYaw(double degrees) {
     m_pigeon.setYaw(degrees);
   }

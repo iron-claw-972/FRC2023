@@ -230,6 +230,7 @@ public void robotTypeOptions() {
     m_testMode.addOption(TestType.MODULE_STEER_ANGLE.toString(), TestType.MODULE_STEER_ANGLE);
     m_testMode.addOption(TestType.DRIVE_VOLTAGE.toString(), TestType.DRIVE_VOLTAGE);
     m_testMode.addOption(TestType.STEER_VOLTAGE.toString(), TestType.STEER_VOLTAGE);
+    m_testMode.addOption(TestType.ODOMETRY_TEST.toString(), TestType.ODOMETRY_TEST);
     m_testMode.setDefaultOption(TestType.NONE.toString(), TestType.NONE);
   }
   private void moduleChooserOptions(){
