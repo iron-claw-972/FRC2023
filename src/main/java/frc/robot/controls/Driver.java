@@ -53,10 +53,14 @@ public class Driver {
   }
 
   public void configureControls() {
-    driverGC.get(GCButton.START).onTrue(new InstantCommand(() -> Robot.drive.setPigeonYaw(Constants.drive.kStartingHeadingDegrees)));
     driverGC.get(GCButton.A).whileTrue(new SetFormationX(Robot.drive));
     driverEPC.get(Ex3DProButton.B1).whileTrue(new SetFormationX(Robot.drive));
     driverMCC.get(MadCatzButton.B1).whileTrue(new SetFormationX(Robot.drive));
+
+    
+    driverGC.get(GCButton.START).onTrue(new InstantCommand(() -> Robot.drive.setPigeonYaw(Constants.drive.kStartingHeadingDegrees)));
+    driverEPC.get(Ex3DProButton.B2).whileTrue(new InstantCommand(() -> Robot.drive.setPigeonYaw(Constants.drive.kStartingHeadingDegrees)));
+    driverMCC.get(MadCatzButton.B2).whileTrue(new InstantCommand(() -> Robot.drive.setPigeonYaw(Constants.drive.kStartingHeadingDegrees)));
   }
 
   public double getForwardTranslation() {
@@ -141,6 +145,7 @@ public class Driver {
     m_translationalExpo = Robot.shuffleboard.getTranslationalExpo();
     m_translationalDeadband = Robot.shuffleboard.getTranslationalDeadband();
     m_translationalSlewrate = Robot.shuffleboard.getTranslationalSlewrate();
+    m_fieldRelative = Robot.shuffleboard.getFieldRelative();
 
     m_rotationSenseitiviy = Robot.shuffleboard.getRotationSenseitiviy();
     m_rotationExpo = Robot.shuffleboard.getRotationExpo();

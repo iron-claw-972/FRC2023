@@ -330,6 +330,9 @@ public void robotTypeOptions() {
   public double getTranslationalSlewrate(){
     return m_translationalSlewrate.getDouble(Constants.oi.kTranslationalSlewrate);
   }
+  public boolean getFieldRelative(){
+    return m_fieldRelative.getBoolean(Constants.oi.kFieldRelative);
+  }
   public double getRotationSenseitiviy(){
     return m_rotationSenseitiviy.getDouble(Constants.oi.kRotationSenseitiviy);
   }
