@@ -18,6 +18,7 @@ import frc.robot.Robot;
 import frc.robot.commands.DoNothing;
 import frc.robot.commands.DriveFeedForwardCharacterzation;
 import frc.robot.commands.SteerFeedForwardCharacterzation;
+import frc.robot.commands.SteerFeedForwardCharacterzationAll;
 import frc.robot.constants.Constants;
 import frc.robot.constants.ModuleConstants;
 import frc.robot.subsystems.Drivetrain;
@@ -220,6 +221,7 @@ public class ShuffleboardManager {
   public void autoChooserOptions() {
     m_autoCommand.setDefaultOption("Do Nothing", new PrintCommand("This will do nothing!"));
     m_autoCommand.addOption("Drive FF charecterzation", new DriveFeedForwardCharacterzation(Robot.drive));
+    m_autoCommand.addOption("Steer All FF charecterzationa", new SteerFeedForwardCharacterzationAll(Robot.drive));
     m_autoCommand.addOption("Steer FF charecterzation", new SteerFeedForwardCharacterzation(Robot.drive));
     // m_autoCommand.setDefaultOption("TestAuto", new PathPlannerCommand("TestAuto", 0)); 
   }
