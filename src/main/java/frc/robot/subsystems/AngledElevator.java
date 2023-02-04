@@ -18,7 +18,6 @@ import frc.robot.util.MotorFactory;
 public class AngledElevator extends SubsystemBase {
 
   WPI_TalonFX m_elevatorMotor; //do I define these are private final? 
-  Encoder m_encoder; 
 
   public AngledElevator() {
 
@@ -26,24 +25,23 @@ public class AngledElevator extends SubsystemBase {
 
   }
 
-  public AngledElevator(WPI_TalonFX elevatorMotor, Encoder encoder){
+  public AngledElevator(WPI_TalonFX elevatorMotor){
 
     m_elevatorMotor = elevatorMotor; 
-    m_encoder = encoder;
 
   }
 
 
   public void resetEncoders(){
-
-    //TODO: Write code to reset encoders
+    m_elevatorMotor.setSelectedSensorPosition(0); 
 
   }
 
 
-  public double getElevatorHeight() {
-  
-    //TODO: Write code to get elevator height
+  public double getElevatorHeightInches() {
+    
+    double elevatorHeight = m_elevatorMotor.getSelectedSensorPosition()*Constants.elevator.kElevatorDistPerMotorEncoderTick;
+    return elevatorHeight;  
       
   }
 

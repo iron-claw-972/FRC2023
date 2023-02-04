@@ -8,14 +8,14 @@ import frc.robot.subsystems.AngledElevator;
 
 public class MoveElevatorWithJoystick extends CommandBase {
   AngledElevator m_elevator; 
-  DigitalInput m_topSwitch; //TODO: Determine if this is the thing we are using to determine top and bottom elevator height
-  DigitalInput m_bottomSwitch;
+  DigitalInput m_topLimitSwitch; //TODO: Determine if this is the thing we are using to determine top and bottom elevator height
+  DigitalInput m_bottomLimitSwitch;
   WPI_TalonFX m_elevatorMotor; 
 
 
   public MoveElevatorWithJoystick(DigitalInput topLimitSwitch, DigitalInput bottomLimitSwitch, AngledElevator elevator, WPI_TalonFX elevatorMotor) {
-    m_topSwitch = topLimitSwitch; 
-    m_bottomSwitch = bottomLimitSwitch;
+    m_topLimitSwitch = topLimitSwitch; 
+    m_bottomLimitSwitch = bottomLimitSwitch;
     m_elevator = elevator; 
     m_elevatorMotor = elevatorMotor; 
     addRequirements(m_elevator);
@@ -29,7 +29,7 @@ public class MoveElevatorWithJoystick extends CommandBase {
   public void execute() {
     m_elevatorMotor.set(Operator.getRawThrottleValue());
   
-    if (m_topSwitch.get() || m_bottomSwitch.get()){ //Is the right way of writing or? 
+    if (m_topLimitSwitch.get() || m_bottomLimitSwitch.get()){ //Is the right way of writing or? 
       m_elevatorMotor.set(0);
     }
   }
@@ -40,6 +40,8 @@ public class MoveElevatorWithJoystick extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+        //TODO: configure isFinished to get command to end
+
     return false;
   }
 
