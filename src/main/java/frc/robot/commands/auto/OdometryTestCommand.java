@@ -24,7 +24,8 @@ public class OdometryTestCommand extends CommandBase{
     
     public OdometryTestCommand(Drivetrain drive, Transform2d distanceToMove) {
         m_drive = drive; 
-       m_finalPose = startPose.transformBy(m_distanceToMove);
+      
+       // finalPose is position after robot moves from current position-- startPose-- by the values that are inputted-- distanceToMove
        m_distanceToMove = distanceToMove;
         
         addRequirements(drive);
@@ -46,14 +47,18 @@ public class OdometryTestCommand extends CommandBase{
     }
     @Override
     public boolean isFinished() {
-        double errorMargin < 0.1;
+        double errorMargin = 0.1;
         Pose2d error = m_drive.getPose().relativeTo(m_finalPose);
         return error.getX() < errorMargin && error.getY() < errorMargin && error.getRotation().getRadians() < errorMargin;
-
+    // if robot thinks its precision is < 0.1 to the target we inputted, it will stop, so then we can see how off it is
     }
     @Override
   public void end(boolean interrupted) {
     m_drive.driveRot(0.0,0.0,0.0,false);
+    System.out.println(Timer.getFPGATimestamp() - startTime);
+    System.out.println(m_finalPose.getX());
+    System.out.println(m_finalPose.getY());
+    System.out.println(m_finalPose.getRotation().getRadians());
   
   }
 

@@ -166,8 +166,8 @@ public class DriveConstants {
     public final double kSteerKS = 1;
     public final double kSteerKV = 0.5;
     // heading PID
-    public final double KheadingP= 4.6;
-    public final double KheadingI= 0;
-    public final double KheadingD= 0.4;
+    public final double KheadingP = 4.6;
+    public final double KheadingI = 0;
+    public final double KheadingD = 0.4;
 
 }

@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -83,11 +84,15 @@ public class Drivetrain extends SubsystemBase {
     updateOdometry();
     
   }
-public void runChassisPID(double x, double y, double rot) {
- double xSpeed = m_xController.calculate(m_odometry.getPoseMeters().getX(), x);
-double ySpeed = m_yController.calculate(m_odometry.getPoseMeters().getY(), y);
-double rotRadians = m_rotationController.calculate(m_pigeon.getRotation2d().getRadians(), rot);
-}
+
+  public void runChassisPID(double x, double y, double rot) {
+    double xSpeed = m_xController.calculate(m_odometry.getPoseMeters().getX(), x);
+    double ySpeed = m_yController.calculate(m_odometry.getPoseMeters().getY(), y);
+    double rotRadians = m_rotationController.calculate(getAngleHeading(), rot);
+    System.out.println(rotRadians);
+    driveRot(xSpeed, ySpeed, rotRadians, true);
+  }
+
   public void setPigeonYaw(double degrees) {
     m_pigeon.setYaw(degrees);
   }
@@ -195,8 +200,8 @@ double rotRadians = m_rotationController.calculate(m_pigeon.getRotation2d().getR
    * @return the heading angle in radians, from -pi to pi
    */
   public double getAngleHeading() {
-    Rotation2d angle = m_pigeon.getRotation2d();
-    return Math.atan2(angle.getSin(), angle.getCos());
+    double angle = m_pigeon.getRotation2d().getRadians();
+    return MathUtil.angleModulus(angle);
   }
 
   /**
