@@ -25,4 +25,10 @@ public class FourBarArm extends SubsystemBase {
     armSetpoint = target;
     m_pid.setReference(armSetpoint, CANSparkMax.ControlType.kPosition);
   }
+  @Override
+  public void periodic() {
+    if (m_motor.get() == 0) {
+      m_motor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    }
+  }
 }
