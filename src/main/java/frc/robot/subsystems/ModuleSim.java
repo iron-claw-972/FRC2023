@@ -32,6 +32,8 @@ public class ModuleSim extends Module {
   private final CANCoderSimCollection m_encoderSim;
 
   private double m_currentSteerPositionRad = 0;
+  private double m_currentDrivePositionMeters = 0;
+
 
   private double m_steerMotorSimDistance;
   private double m_driveMotorSimDistance;
@@ -86,6 +88,8 @@ public class ModuleSim extends Module {
     double angleDiffRad = m_steerMotorSim.getAngularVelocityRadPerSec() * 0.02;
     m_currentSteerPositionRad += angleDiffRad;
 
+    m_currentDrivePositionMeters += m_driveMotorSim.getAngularVelocityRPM() * Constants.drive.kWheelRadius * 2 * Math.PI * 0.02 / 60; 
+
     // System.out.println(m_currentSteerPositionRad + " | " + m_steerMotorSim.getAngularVelocityRadPerSec() + " | " + angleDiffRad);
 
     // System.out.println(m_currentSteerPositionRad);
@@ -132,7 +136,7 @@ public class ModuleSim extends Module {
   @Override
   public SwerveModulePosition getPosition() {
     return new SwerveModulePosition(
-      m_driveMotorSim.getAngularVelocityRadPerSec(),
+      m_currentDrivePositionMeters,
       new Rotation2d(m_currentSteerPositionRad)
     );
   }
