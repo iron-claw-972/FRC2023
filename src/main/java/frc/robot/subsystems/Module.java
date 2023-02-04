@@ -6,6 +6,7 @@ import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.SensorTimeBase;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -180,7 +181,7 @@ public class Module {
 
     // Limit the PID Controller's input range between -pi and pi and set the input
     // to be continuous. Factor in the offset amount.
-    // m_steerPIDController.enableContinuousInput(-Math.PI, Math.PI);
+    m_steerPIDController.enableContinuousInput(-Math.PI, Math.PI);
 
     m_steerMotor.setInverted(true);
 
@@ -268,10 +269,7 @@ public class Module {
    * @return encoder's absolute position - offset
    */
   public double getAngle() {
-    double angle =m_encoder.getAbsolutePosition() - m_offset;
-    while (angle < -Math.PI) angle += 2*Math.PI;
-    while (angle >  Math.PI) angle -= 2*Math.PI;
-    return angle;
+    return MathUtil.inputModulus(m_encoder.getAbsolutePosition() - m_offset, -Math.PI, Math.PI);
   }
 
   /**
