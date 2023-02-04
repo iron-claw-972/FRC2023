@@ -223,6 +223,7 @@ public class ShuffleboardManager {
     m_autoCommand.addOption("Drive FF charecterzation", new DriveFeedForwardCharacterzation(Robot.drive));
     m_autoCommand.addOption("Steer All FF charecterzationa", new SteerFeedForwardCharacterzationAll(Robot.drive));
     m_autoCommand.addOption("Steer FF charecterzation", new SteerFeedForwardCharacterzation(Robot.drive));
+
     // m_autoCommand.setDefaultOption("TestAuto", new PathPlannerCommand("TestAuto", 0)); 
   }
 
@@ -352,6 +353,9 @@ public void robotTypeOptions() {
 
 public RobotType getRobotType() {
   return m_robotType.getSelected();
+}
+public Module getModule(){
+  return m_module.getSelected();
 }
 
   public void setDriveModuleFeedforward(){
