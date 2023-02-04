@@ -10,6 +10,7 @@ public class OIConstants {
   public final double kTranslationalExpo = 2;
   public final double kTranslationalDeadband = 0.05;
   public final double kTranslationalSlewrate = 4;
+  public final boolean kFieldRelative = true;
   
   public final double kRotationSenseitiviy = 0.05;
   public final double kRotationExpo = 4;

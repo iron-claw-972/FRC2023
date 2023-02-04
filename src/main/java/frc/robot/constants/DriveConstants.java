@@ -15,7 +15,7 @@ public class DriveConstants {
     public final double kMaxAngularSpeed = Constants.falcon.kMaxRpm / 60.0 / kSteerGearRatio * 2 * Math.PI; // 8.3 rot/s
     public final double kMaxAngularAccel = 8 * 2 * Math.PI; // 8 rotations per second per second
 
-    public final int kPigeon = 0;
+    public final int kPigeon = 13;// TestSwerveBot=13 , CompBot=0?
 
     public final double kStartingHeadingDegrees = 0;
 
@@ -93,6 +93,11 @@ public class DriveConstants {
         public static final double kDrivePFrontLeft = 2;
         public static final double kDriveIFrontLeft = 0;
         public static final double kDriveDFrontLeft = 0;
+        public static final double kSteerKSFrontLeft = 1;
+        public static final double kSteerKVFrontLeft = 0.5;
+        public static final double kSteerPFrontLeft = 2;
+        public static final double kSteerIFrontLeft = 0;
+        public static final double kSteerDFrontLeft = 0;
 
         public static final int kDriveFrontRight = 4; 
         public static final int kSteerFrontRight = 5;
@@ -103,6 +108,11 @@ public class DriveConstants {
         public static final double kDrivePFrontRight = 2;
         public static final double kDriveIFrontRight = 0;
         public static final double kDriveDFrontRight = 0;
+        public static final double kSteerKSFrontRight = 1;
+        public static final double kSteerKVFrontRight = 0.5;
+        public static final double kSteerPFrontRight = 2;
+        public static final double kSteerIFrontRight = 0;
+        public static final double kSteerDFrontRight = 0;
 
         public static final int kDriveBackLeft = 7;
         public static final int kSteerBackLeft = 8;
@@ -113,6 +123,11 @@ public class DriveConstants {
         public static final double kDrivePBackLeft = 2;
         public static final double kDriveIBackLeft = 0;
         public static final double kDriveDBackLeft = 0;
+        public static final double kSteerKSBackLeft = 1;
+        public static final double kSteerKVBackLeft = 0.5;
+        public static final double kSteerPBackLeft = 2;
+        public static final double kSteerIBackLeft = 0;
+        public static final double kSteerDBackLeft = 0;
 
         public static final int kDriveBackRight = 10;
         public static final int kSteerBackRight = 11;
@@ -123,6 +138,12 @@ public class DriveConstants {
         public static final double kDrivePBackRight = 2.2;
         public static final double kDriveIBackRight = 0;
         public static final double kDriveDBackRight = 0;
+        public static final double kSteerKSBackRight = 1;
+        public static final double kSteerKVBackRight = 0.5;
+        public static final double kSteerPBackRight = 2;
+        public static final double kSteerIBackRight = 0;
+        public static final double kSteerDBackRight = 0;
+    
     }
 
     // PID

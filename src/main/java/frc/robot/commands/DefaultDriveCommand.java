@@ -44,10 +44,11 @@ public class DefaultDriveCommand extends CommandBase {
     double xSpeed = Robot.driver.getForwardTranslation();
     double ySpeed = Robot.driver.getSideTranslation();
     double rot = Robot.driver.getRotation();
+    boolean fieldRelative = Robot.driver.getFieldRelative();
 
     if (Robot.shuffleboard.getTestModeType() == TestType.HEADING_DRIVE){
       rot = Robot.driver.getHeading();
-      m_drive.driveHeading(xSpeed, ySpeed, rot);
+      m_drive.driveHeading(xSpeed, ySpeed, rot, fieldRelative);
       return;
     }
     // System.out.println("driving: " + xSpeed + "," + ySpeed + "," + rot +

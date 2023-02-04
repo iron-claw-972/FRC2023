@@ -28,6 +28,7 @@ public class Driver {
   private double m_translationalExpo = Constants.oi.kTranslationalExpo;
   private double m_translationalDeadband = Constants.oi.kTranslationalDeadband;
   private double m_translationalSlewrate = Constants.oi.kTranslationalSlewrate;
+  private boolean m_fieldRelative = Constants.oi.kFieldRelative;
 
   private double m_rotationSenseitiviy = Constants.oi.kRotationSenseitiviy;
   private double m_rotationExpo = Constants.oi.kRotationExpo;
@@ -76,6 +77,10 @@ public class Driver {
     // System.out.println("heading: " + m_previousHeading);
     return m_previousHeading;
     // return 0;
+  }
+
+  public boolean getFieldRelative(){
+    return m_fieldRelative;
   }
   
 /*

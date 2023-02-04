@@ -60,7 +60,7 @@ public class ShuffleboardManager {
     m_steerVelocityFeedforward;
   
   //controller inputs
-  GenericEntry m_translationalSenseitivity, m_translationalExpo, m_translationalDeadband, m_translationalSlewrate;
+  GenericEntry m_translationalSenseitivity, m_translationalExpo, m_translationalDeadband, m_translationalSlewrate, m_fieldRelative;
   GenericEntry m_rotationSenseitiviy, m_rotationExpo, m_rotationDeadband, m_rotationSlewrate;
   GenericEntry m_headingSenseitiviy, m_headingExpo, m_headingDeadband;
 
@@ -192,32 +192,32 @@ public class ShuffleboardManager {
   private void setUpFeedforwardHashmap(){
     m_driveStaticFeedForwardSaver.put(m_dummyModule,0.0);
     m_driveVelFeedForwardSaver.put(m_allModule,Constants.drive.kDriveKVAll);
-    m_driveStaticFeedForwardSaver.put(Robot.drive.m_modules[0],CompDriveConstants.kDriveKSFrontLeft);
-    m_driveStaticFeedForwardSaver.put(Robot.drive.m_modules[1],CompDriveConstants.kDriveKSFrontRight);
-    m_driveStaticFeedForwardSaver.put(Robot.drive.m_modules[2],CompDriveConstants.kDriveKSBackLeft);
-    m_driveStaticFeedForwardSaver.put(Robot.drive.m_modules[3],CompDriveConstants.kDriveKSBackRight);
+    m_driveStaticFeedForwardSaver.put(Robot.drive.m_modules[0],TestDriveConstants.kDriveKSFrontLeft);
+    m_driveStaticFeedForwardSaver.put(Robot.drive.m_modules[1],TestDriveConstants.kDriveKSFrontRight);
+    m_driveStaticFeedForwardSaver.put(Robot.drive.m_modules[2],TestDriveConstants.kDriveKSBackLeft);
+    m_driveStaticFeedForwardSaver.put(Robot.drive.m_modules[3],TestDriveConstants.kDriveKSBackRight);
     
     m_driveVelFeedForwardSaver.put(m_dummyModule,0.0);
     m_driveStaticFeedForwardSaver.put(m_allModule,Constants.drive.kDriveKSAll);
-    m_driveVelFeedForwardSaver.put(Robot.drive.m_modules[0],CompDriveConstants.kDriveKVFrontLeft);
-    m_driveVelFeedForwardSaver.put(Robot.drive.m_modules[1],CompDriveConstants.kDriveKVFrontRight);
-    m_driveVelFeedForwardSaver.put(Robot.drive.m_modules[2],CompDriveConstants.kDriveKVBackLeft);
-    m_driveVelFeedForwardSaver.put(Robot.drive.m_modules[3],CompDriveConstants.kDriveKVBackRight);
+    m_driveVelFeedForwardSaver.put(Robot.drive.m_modules[0],TestDriveConstants.kDriveKVFrontLeft);
+    m_driveVelFeedForwardSaver.put(Robot.drive.m_modules[1],TestDriveConstants.kDriveKVFrontRight);
+    m_driveVelFeedForwardSaver.put(Robot.drive.m_modules[2],TestDriveConstants.kDriveKVBackLeft);
+    m_driveVelFeedForwardSaver.put(Robot.drive.m_modules[3],TestDriveConstants.kDriveKVBackRight);
     
 
     m_steerStaticFeedForwardSaver.put(m_dummyModule,0.0);
     m_steerVelFeedForwardSaver.put(m_allModule,Constants.drive.kDriveKVAll);
-    m_steerStaticFeedForwardSaver.put(Robot.drive.m_modules[0],CompDriveConstants.kDriveKSFrontLeft);
-    m_steerStaticFeedForwardSaver.put(Robot.drive.m_modules[1],CompDriveConstants.kDriveKSFrontRight);
-    m_steerStaticFeedForwardSaver.put(Robot.drive.m_modules[2],CompDriveConstants.kDriveKSBackLeft);
-    m_steerStaticFeedForwardSaver.put(Robot.drive.m_modules[3],CompDriveConstants.kDriveKSBackRight);
+    m_steerStaticFeedForwardSaver.put(Robot.drive.m_modules[0],TestDriveConstants.kDriveKSFrontLeft);
+    m_steerStaticFeedForwardSaver.put(Robot.drive.m_modules[1],TestDriveConstants.kDriveKSFrontRight);
+    m_steerStaticFeedForwardSaver.put(Robot.drive.m_modules[2],TestDriveConstants.kDriveKSBackLeft);
+    m_steerStaticFeedForwardSaver.put(Robot.drive.m_modules[3],TestDriveConstants.kDriveKSBackRight);
     
     m_steerVelFeedForwardSaver.put(m_dummyModule,0.0);
     m_steerStaticFeedForwardSaver.put(m_allModule,Constants.drive.kDriveKSAll);
-    m_steerVelFeedForwardSaver.put(Robot.drive.m_modules[0],CompDriveConstants.kDriveKVFrontLeft);
-    m_steerVelFeedForwardSaver.put(Robot.drive.m_modules[1],CompDriveConstants.kDriveKVFrontRight);
-    m_steerVelFeedForwardSaver.put(Robot.drive.m_modules[2],CompDriveConstants.kDriveKVBackLeft);
-    m_steerVelFeedForwardSaver.put(Robot.drive.m_modules[3],CompDriveConstants.kDriveKVBackRight);
+    m_steerVelFeedForwardSaver.put(Robot.drive.m_modules[0],TestDriveConstants.kDriveKVFrontLeft);
+    m_steerVelFeedForwardSaver.put(Robot.drive.m_modules[1],TestDriveConstants.kDriveKVFrontRight);
+    m_steerVelFeedForwardSaver.put(Robot.drive.m_modules[2],TestDriveConstants.kDriveKVBackLeft);
+    m_steerVelFeedForwardSaver.put(Robot.drive.m_modules[3],TestDriveConstants.kDriveKVBackRight);
   }
 
   //add options to choosers
@@ -276,6 +276,7 @@ public void robotTypeOptions() {
     m_translationalExpo = m_controllerTab.add("translationalExpo", Constants.oi.kTranslationalExpo).getEntry();
     m_translationalDeadband = m_controllerTab.add("translationalDeadband", Constants.oi.kTranslationalDeadband).getEntry();
     m_translationalSlewrate = m_controllerTab.add("translationalSlewrate", Constants.oi.kTranslationalSlewrate).getEntry();
+    m_fieldRelative = m_controllerTab.add("Field Relitive", Constants.oi.kFieldRelative).getEntry();
 
     m_rotationSenseitiviy = m_controllerTab.add("rotationSenseitiviy", Constants.oi.kRotationSenseitiviy).getEntry();
     m_rotationExpo = m_controllerTab.add("rotationExpo", Constants.oi.kRotationExpo).getEntry();
