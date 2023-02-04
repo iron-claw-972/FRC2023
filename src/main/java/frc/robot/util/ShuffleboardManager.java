@@ -4,6 +4,9 @@ package frc.robot.util;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -19,6 +22,7 @@ import frc.robot.commands.DoNothing;
 import frc.robot.commands.DriveFeedForwardCharacterzation;
 import frc.robot.commands.SteerFeedForwardCharacterzation;
 import frc.robot.commands.SteerFeedForwardCharacterzationAll;
+import frc.robot.commands.auto.OdometryTestCommand;
 import frc.robot.constants.Constants;
 import frc.robot.constants.ModuleConstants;
 import frc.robot.constants.DriveConstants.CompDriveConstants;
@@ -123,6 +127,10 @@ public class ShuffleboardManager {
     m_drivetrainTab.addNumber("Gyro X", () -> Robot.drive.getAngularRate(0));
     m_drivetrainTab.addNumber("Gyro Y", () -> Robot.drive.getAngularRate(1));
     m_drivetrainTab.addNumber("Gyro Z", () -> Robot.drive.getAngularRate(2));
+
+    m_drivetrainTab.add(Robot.drive.getXController());
+    m_drivetrainTab.add(Robot.drive.getYController());
+    m_drivetrainTab.add(Robot.drive.getRotationController());
   }
   private void setupModules(){
     // inputs
@@ -223,9 +231,10 @@ public class ShuffleboardManager {
   //add options to choosers
   public void autoChooserOptions() {
     m_autoCommand.setDefaultOption("Do Nothing", new PrintCommand("This will do nothing!"));
-    m_autoCommand.addOption("Drive FF charecterzation", new DriveFeedForwardCharacterzation(Robot.drive));
-    m_autoCommand.addOption("Steer All FF charecterzationa", new SteerFeedForwardCharacterzationAll(Robot.drive));
+    m_autoCommand.addOption("Steer All FF charecterzation", new SteerFeedForwardCharacterzationAll(Robot.drive));
     m_autoCommand.addOption("Steer FF charecterzation", new SteerFeedForwardCharacterzation(Robot.drive));
+    m_autoCommand.addOption("Self FF charecterzation", new DriveFeedForwardCharacterzation(Robot.drive));
+    m_autoCommand.addOption("Odometry PID Test", new OdometryTestCommand(Robot.drive, new Transform2d(new Translation2d(1,1), new Rotation2d(Math.PI / 2))));
 
     // m_autoCommand.setDefaultOption("TestAuto", new PathPlannerCommand("TestAuto", 0)); 
   }
@@ -242,6 +251,7 @@ public void robotTypeOptions() {
     m_testMode.addOption(TestType.MODULE_STEER_ANGLE.toString(), TestType.MODULE_STEER_ANGLE);
     m_testMode.addOption(TestType.DRIVE_VOLTAGE.toString(), TestType.DRIVE_VOLTAGE);
     m_testMode.addOption(TestType.STEER_VOLTAGE.toString(), TestType.STEER_VOLTAGE);
+    m_testMode.addOption(TestType.ODOMETRY_TEST.toString(), TestType.ODOMETRY_TEST);
     m_testMode.setDefaultOption(TestType.NONE.toString(), TestType.NONE);
   }
   private void moduleChooserOptions(){
