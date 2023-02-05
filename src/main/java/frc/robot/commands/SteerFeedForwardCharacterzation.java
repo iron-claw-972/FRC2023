@@ -48,8 +48,8 @@ public class SteerFeedForwardCharacterzation extends CommandBase {
         
       
     }
-    if (m_timer.get() > 1.5) {
-      value += 0.1;
+    if (m_timer.get() > 2.5) {
+      value += 0.2;
       m_timer.reset();
       m_timer.start();
       System.out.println(value);
@@ -76,9 +76,9 @@ public class SteerFeedForwardCharacterzation extends CommandBase {
     
     
     
-      Robot.shuffleboard.m_steerStaticFeedForwardSaver.replace(m_module, m_feedForwardCharacterizationData.getSatic());
+      Robot.shuffleboard.m_steerStaticFeedForwardSaver.replace(m_module, m_feedForwardCharacterizationData.getStatic());
       Robot.shuffleboard.m_steerVelFeedForwardSaver.replace(m_module, m_feedForwardCharacterizationData.getVelocity());
-      System.out.println("Static " + ": " + m_feedForwardCharacterizationData.getSatic());
+      System.out.println("Static " + ": " + m_feedForwardCharacterizationData.getStatic());
       System.out.println("Velocity " + ": " + m_feedForwardCharacterizationData.getVelocity());
       
 

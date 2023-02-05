@@ -32,6 +32,7 @@ public class SteerFeedForwardCharacterzationAll extends CommandBase {
   }
 
   public void initialize() {
+    m_timer.reset();
     m_timer.start();
     m_drive.setAllOptimize(false);
     m_feedForwardCharacterizationData = new FeedForwardCharacterizationData[] {
@@ -51,8 +52,8 @@ public class SteerFeedForwardCharacterzationAll extends CommandBase {
         m_feedForwardCharacterizationData[m_module].add(Robot.drive.m_modules[m_module].getSteerVelocity(), value);
       
     }
-    if (m_timer.get() > 1.5) {
-      value += 0.1;
+    if (m_timer.get() > 2.5) {
+      value += 0.2;
       m_timer.reset();
       m_timer.start();
       System.out.println(value);
@@ -80,22 +81,18 @@ public class SteerFeedForwardCharacterzationAll extends CommandBase {
     System.out.println("FINISHED");
     for (int i=0; i<4; i++){
       m_feedForwardCharacterizationData[i].print();
-    
     }
     
     for (int i=0; i<4;i++){
-      Robot.shuffleboard.m_steerStaticFeedForwardSaver.replace(Robot.drive.m_modules[i], m_feedForwardCharacterizationData[i].getSatic());
+      Robot.shuffleboard.m_steerStaticFeedForwardSaver.replace(Robot.drive.m_modules[i], m_feedForwardCharacterizationData[i].getStatic());
       Robot.shuffleboard.m_steerVelFeedForwardSaver.replace(Robot.drive.m_modules[i], m_feedForwardCharacterizationData[i].getVelocity());
-      System.out.println("Static " + i + ": " + m_feedForwardCharacterizationData[i].getSatic());
+      System.out.println("Static " + i + ": " + m_feedForwardCharacterizationData[i].getStatic());
       System.out.println("Velocity " + i + ": " + m_feedForwardCharacterizationData[i].getVelocity());
-      
-
-
     }
     
     for (int i = 0; i < 4; i++) {
       Robot.drive.m_modules[i].setDriveVoltage(0);
-      Robot.drive.m_modules[0].setSteerVoltage(0);
+      Robot.drive.m_modules[i].setSteerVoltage(0);
     }
     
   }

@@ -80,7 +80,7 @@ public class DefaultDriveCommand extends CommandBase {
 
   private void testDriveVel() {
     m_drive.setAllOptimize(true);
-    double value = Robot.shuffleboard.getRequestedVelocity();
+    double value = Robot.shuffleboard.getRequestedDriveVelocity();
     for (int i = 0; i < 4; i++) {
       Robot.drive.m_modules[i].setDriveVelocity(value);
     }

@@ -55,7 +55,8 @@ public class ShuffleboardManager {
 
   // swerve inputs
   GenericEntry 
-    m_driveVelocity, 
+    m_driveVelocity,
+    m_steerVelocity, 
     m_steerAngle, 
     m_drivetrainvolts, 
     m_driveStaticFeedforward, 
@@ -104,7 +105,6 @@ public class ShuffleboardManager {
     m_mainTab.add("Robot Type Chooser", m_robotType);
     m_swerveModulesTab.add("Module Chooser", m_module);
     m_controllerTab.add("Controller Chooser", m_controllerType);
-    m_controllerTab.add("Set Invert", invert);
 
     // tab setup
     setupDrivetrain();
@@ -135,6 +135,7 @@ public class ShuffleboardManager {
   private void setupModules(){
     // inputs
     m_driveVelocity = m_swerveModulesTab.add("Set Drive Velocity", 0).getEntry();
+    m_steerVelocity = m_swerveModulesTab.add("Set Steer Velocity", 0).getEntry();
     m_steerAngle = m_swerveModulesTab.add("Set Steer Angle", 0).getEntry();
     m_drivetrainvolts = m_swerveModulesTab.add("Set Volts", 0).getEntry();
     m_driveStaticFeedforward = m_swerveModulesTab.add("Drive kS FF", 0).getEntry();
@@ -185,16 +186,37 @@ public class ShuffleboardManager {
     m_swerveModulesTab.addNumber("Angle BR", () -> Robot.drive.m_modules[3].getAngle());
 
     // Steer Velocity
-    // m_swerveModulesTab.addNumber("Steer Vel FL", () -> Robot.drive.m_modules[0].getSteerVelocity());
-    // m_swerveModulesTab.addNumber("Steer Vel FR", () -> Robot.drive.m_modules[1].getSteerVelocity());
-    // m_swerveModulesTab.addNumber("Steer Vel BL", () -> Robot.drive.m_modules[2].getSteerVelocity());
-    // m_swerveModulesTab.addNumber("Steer Vel BR", () -> Robot.drive.m_modules[3].getSteerVelocity());
+    m_swerveModulesTab.addNumber("Steer Vel FL", () -> Robot.drive.m_modules[0].getSteerVelocity());
+    m_swerveModulesTab.addNumber("Steer Vel FR", () -> Robot.drive.m_modules[1].getSteerVelocity());
+    m_swerveModulesTab.addNumber("Steer Vel BL", () -> Robot.drive.m_modules[2].getSteerVelocity());
+    m_swerveModulesTab.addNumber("Steer Vel BR", () -> Robot.drive.m_modules[3].getSteerVelocity());
 
     //Steer PID
     m_swerveModulesTab.add("Steer PID FL", Robot.drive.m_modules[0].getSteerPID());
     m_swerveModulesTab.add("Steer PID FR", Robot.drive.m_modules[1].getSteerPID());
     m_swerveModulesTab.add("Steer PID BL", Robot.drive.m_modules[2].getSteerPID());
     m_swerveModulesTab.add("Steer PID BR", Robot.drive.m_modules[3].getSteerPID());
+  }
+  private void setupController(){
+
+    m_controllerTab.add("Controller Type", m_controllerType);
+
+    m_translationalSenseitivity = m_controllerTab.add("translationalSenseitivity", Constants.oi.kTranslationalSenseitivity).getEntry();
+    m_translationalExpo = m_controllerTab.add("translationalExpo", Constants.oi.kTranslationalExpo).getEntry();
+    m_translationalDeadband = m_controllerTab.add("translationalDeadband", Constants.oi.kTranslationalDeadband).getEntry();
+    m_translationalSlewrate = m_controllerTab.add("translationalSlewrate", Constants.oi.kTranslationalSlewrate).getEntry();
+    m_fieldRelative = m_controllerTab.add("Field Relitive", Constants.oi.kFieldRelative).getEntry();
+
+    m_rotationSenseitiviy = m_controllerTab.add("rotationSenseitiviy", Constants.oi.kRotationSenseitiviy).getEntry();
+    m_rotationExpo = m_controllerTab.add("rotationExpo", Constants.oi.kRotationExpo).getEntry();
+    m_rotationDeadband = m_controllerTab.add("rotationDeadband", Constants.oi.kRotationDeadband).getEntry();
+    m_rotationSlewrate = m_controllerTab.add("rotationSlewrate", Constants.oi.kRotationSlewrate).getEntry();
+
+    m_headingSenseitiviy = m_controllerTab.add("headingSenseitiviy", Constants.oi.kHeadingSenseitiviy).getEntry();
+    m_headingExpo = m_controllerTab.add("headingExpo", Constants.oi.kHeadingExpo).getEntry();
+    m_headingDeadband = m_controllerTab.add("headingDeadband", Constants.oi.kHeadingDeadband).getEntry();
+
+
   }
   //puting defult value in hashmaps
   private void setUpFeedforwardHashmap(){
@@ -239,10 +261,10 @@ public class ShuffleboardManager {
     // m_autoCommand.setDefaultOption("TestAuto", new PathPlannerCommand("TestAuto", 0)); 
   }
 
-public void robotTypeOptions() {
-  m_robotType.setDefaultOption("Competition Robot", RobotType.COMP);
-  m_robotType.addOption("Test Robot", RobotType.TEST);
-}
+  public void robotTypeOptions() {
+    m_robotType.setDefaultOption("Competition Robot", RobotType.COMP);
+    m_robotType.addOption("Test Robot", RobotType.TEST);
+  }
 
   public void testTypeChooserOptions() {
     m_testMode.addOption(TestType.HEADING_DRIVE.toString(), TestType.HEADING_DRIVE);
@@ -278,28 +300,6 @@ public void robotTypeOptions() {
 
     CommandScheduler.getInstance().onCommandFinish(command -> Shuffleboard.addEventMarker("Command finished", command.getName(), EventImportance.kNormal));
   }
-  private void setupController(){
-
-    m_controllerTab.add("Controller Type", m_controllerType);
-
-    m_translationalSenseitivity = m_controllerTab.add("translationalSenseitivity", Constants.oi.kTranslationalSenseitivity).getEntry();
-    m_translationalExpo = m_controllerTab.add("translationalExpo", Constants.oi.kTranslationalExpo).getEntry();
-    m_translationalDeadband = m_controllerTab.add("translationalDeadband", Constants.oi.kTranslationalDeadband).getEntry();
-    m_translationalSlewrate = m_controllerTab.add("translationalSlewrate", Constants.oi.kTranslationalSlewrate).getEntry();
-    m_fieldRelative = m_controllerTab.add("Field Relitive", Constants.oi.kFieldRelative).getEntry();
-
-    m_rotationSenseitiviy = m_controllerTab.add("rotationSenseitiviy", Constants.oi.kRotationSenseitiviy).getEntry();
-    m_rotationExpo = m_controllerTab.add("rotationExpo", Constants.oi.kRotationExpo).getEntry();
-    m_rotationDeadband = m_controllerTab.add("rotationDeadband", Constants.oi.kRotationDeadband).getEntry();
-    m_rotationSlewrate = m_controllerTab.add("rotationSlewrate", Constants.oi.kRotationSlewrate).getEntry();
-
-    m_headingSenseitiviy = m_controllerTab.add("headingSenseitiviy", Constants.oi.kHeadingSenseitiviy).getEntry();
-    m_headingExpo = m_controllerTab.add("headingExpo", Constants.oi.kHeadingExpo).getEntry();
-    m_headingDeadband = m_controllerTab.add("headingDeadband", Constants.oi.kHeadingDeadband).getEntry();
-
-
-  }
-
 
   //getters
   public TestType getTestModeType() {
@@ -311,8 +311,11 @@ public void robotTypeOptions() {
   public double getRequestedHeading() {
     return m_heading.getDouble(0);
   }
-  public double getRequestedVelocity() {
+  public double getRequestedDriveVelocity() {
     return m_driveVelocity.getDouble(0);
+  }
+  public double getRequestedSteerVelocity() {
+    return m_steerVelocity.getDouble(0);
   }
   public double getRequestedVolts(){
     return m_drivetrainvolts.getDouble(0);
