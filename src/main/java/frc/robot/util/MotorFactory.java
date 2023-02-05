@@ -17,6 +17,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.constants.Constants;
 
 public class MotorFactory {
@@ -148,7 +149,7 @@ public class MotorFactory {
 
     WPI_TalonFX talon = new WPI_TalonFX(id, CANBus);
 
-    if (talon.getFirmwareVersion() != Constants.falcon.kFirmwareVersion) {
+    if (RobotBase.isReal() && talon.getFirmwareVersion() != Constants.falcon.kFirmwareVersion) {
       String errorMessage = "TalonFX " + id + " firmware incorrect. Has " + talon.getFirmwareVersion()
           + ", currently FalconConstants.java requires: " + Constants.falcon.kFirmwareVersion;
       if (Constants.falcon.kBreakOnWrongFirmware) {
