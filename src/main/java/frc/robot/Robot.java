@@ -26,20 +26,7 @@ public class Robot extends TimedRobot {
   public static ShuffleboardManager shuffleboard;
   public static Drivetrain drive;
 
-  private static Robot instance = null;
-
-  // Singleton instance, can't make more instances.
-  private Robot() {}
-
-  /*
-   * Gets the instance of the singleton class Robot.
-   */
-  public static Robot getInstance() {
-    if (instance == null) {
-      instance = new Robot();
-    }
-    return instance;
-  }
+  private static boolean isTestMode = false;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -86,6 +73,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     CommandScheduler.getInstance().cancelAll();
+    isTestMode = false;
   }
 
   @Override
@@ -96,6 +84,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link Robot} class. */
   @Override
   public void autonomousInit() {
+    isTestMode = false;
     if (m_autoCommand != null) {
       m_autoCommand.schedule();
     }
@@ -114,6 +103,7 @@ public class Robot extends TimedRobot {
     if (m_autoCommand != null) {
       m_autoCommand.cancel();
     }
+    isTestMode = false;
   }
 
   /** This function is called periodically during operator control. */
@@ -127,6 +117,8 @@ public class Robot extends TimedRobot {
 
     // it may be needed to disable LiveWindow (we don't use it anyway)
     //LiveWindow.setEnabled(false)
+
+    isTestMode = true;
 
   }
 
@@ -144,6 +136,6 @@ public class Robot extends TimedRobot {
   }
 
   public static boolean isTestMode() {
-    return getInstance().isTest();
+    return isTestMode;
   }
 }
