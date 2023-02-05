@@ -7,7 +7,8 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
-
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -50,19 +51,20 @@ public class PathPlannerCommand extends SequentialCommandGroup{
         if (pathIndex < 0 || pathIndex > pathGroup.size() - 1){
             throw new IndexOutOfBoundsException("Path index out of range"); 
         } 
-        PathPlannerTrajectory path = pathGroup.get(pathIndex);  
+        PathPlannerTrajectory path = PathPlannerTrajectory.transformTrajectoryForAlliance(pathGroup.get(pathIndex),
+            DriverStation.getAlliance());
+
         addCommands(
             (pathIndex == 0 && resetPose ? new InstantCommand(() -> m_drive.resetOdometry(path.getInitialHolonomicPose(), m_drive.getRotation2d())) : new DoNothing()),
             new PrintCommand("Number of paths: " + pathGroup.size()),
             new PPSwerveControllerCommand(
                 path, 
                 m_drive::getPose, // Pose supplier
-                m_drive.m_kinematics, // SwerveDriveKinematics
                 Robot.drive.getXController(), // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
                 Robot.drive.getYController(), // Y controller (usually the same values as X controller)
                 Robot.drive.getRotationController(), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
-                m_drive::setModuleStates, // Module states consumer
-                //eventMap, // This argument is optional if you don't use event markers
+                m_drive::setChassisSpeeds, // chassis speed consumer
+                false,  // Do not transform path
                 m_drive // Requires this drive subsystem
             )
         );

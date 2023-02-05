@@ -11,7 +11,9 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
@@ -56,8 +58,8 @@ public class Drivetrain extends SubsystemBase {
   private Pose2d m_robotPose = new Pose2d();
   
   // PID Controllers
-  private PIDController m_xController = new PIDController(0, 0, 0);
-  private PIDController m_yController = new PIDController(0, 0, 0);
+  private PIDController m_xController = new PIDController(0, 0, 0.0);
+  private PIDController m_yController = new PIDController(0, 0, 0.0);
   private PIDController m_rotationController = new PIDController(Constants.drive.KheadingP, Constants.drive.KheadingI, Constants.drive.KheadingD);
 
   public Drivetrain() {
@@ -109,8 +111,8 @@ public class Drivetrain extends SubsystemBase {
 
     // TODO: Fix Swerve drive sim
     if (!Robot.isReal()) {
-      // System.out.println(xSpeed + " " + ySpeed + " " + rot);
-      m_pigeon.getSimCollection().addHeading(rot);
+      m_pigeon.getSimCollection().addHeading(
+        Units.radiansToDegrees(rot * Constants.kLoopTime));
     }
 
     m_swerveModuleStates =
@@ -128,7 +130,7 @@ public class Drivetrain extends SubsystemBase {
 
     // TODO: Fix Swerve drive sim
     if (!Robot.isReal()) {
-      m_pigeon.getSimCollection().addHeading(rot * 0.02);
+      m_pigeon.getSimCollection().addHeading(Units.radiansToDegrees(rot * Constants.kLoopTime));
     }
 
     m_swerveModuleStates =
@@ -143,7 +145,6 @@ public class Drivetrain extends SubsystemBase {
       m_pigeon.getRotation2d(),
       getModulePositions()
     );
-    System.out.println(m_robotPose);
   }
 
   /**
@@ -224,6 +225,17 @@ public class Drivetrain extends SubsystemBase {
   public void setModuleStates(SwerveModuleState[] swerveModuleStates) {
     for (int i = 0; i < 4; i++) {
       m_modules[i].setDesiredState(swerveModuleStates[i]);
+    }
+  }
+
+  public void setChassisSpeeds(ChassisSpeeds chassisSpeeds) {
+    m_swerveModuleStates = m_kinematics.toSwerveModuleStates(chassisSpeeds);
+    SwerveDriveKinematics.desaturateWheelSpeeds(m_swerveModuleStates, Constants.drive.kMaxSpeed);
+    setModuleStates(m_swerveModuleStates);
+    
+    if (!Robot.isReal()) {
+      m_pigeon.getSimCollection().addHeading(
+        Units.radiansToDegrees(chassisSpeeds.omegaRadiansPerSecond * Constants.kLoopTime));
     }
   }
 

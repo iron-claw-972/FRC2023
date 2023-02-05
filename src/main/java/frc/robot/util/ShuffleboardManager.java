@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Robot;
 import frc.robot.commands.DoNothing;
 import frc.robot.commands.DriveFeedForwardCharacterzation;
+import frc.robot.commands.auto.PathPlannerCommand;
 import frc.robot.constants.Constants;
 import frc.robot.constants.ModuleConstants;
 import frc.robot.constants.DriveConstants.CompDriveConstants;
@@ -215,7 +216,7 @@ public class ShuffleboardManager {
   public void autoChooserOptions() {
     m_autoCommand.setDefaultOption("Do Nothing", new PrintCommand("This will do nothing!"));
     m_autoCommand.addOption("Self FF charecterzation", new DriveFeedForwardCharacterzation(Robot.drive));
-    // m_autoCommand.setDefaultOption("TestAuto", new PathPlannerCommand("TestAuto", 0)); 
+    m_autoCommand.addOption("TestAuto", new PathPlannerCommand("MyTestPath", 0)); 
   }
 
 public void robotTypeOptions() {
