@@ -41,7 +41,6 @@ public class ShuffleboardManager {
   public Map<Module,Double> m_driveStaticFeedForwardSaver=new HashMap<Module,Double>();
   public Map<Module,Double> m_steerVelFeedForwardSaver=new HashMap<Module,Double>();
   public Map<Module,Double> m_steerStaticFeedForwardSaver=new HashMap<Module,Double>();
-  Boolean invert = false;
   // modules needed to distigue in chooser
   Module m_dummyModule = Module.create(ModuleConstants.NONE);
   Module m_allModule = Module.create(ModuleConstants.NONE);
@@ -66,7 +65,9 @@ public class ShuffleboardManager {
   //controller inputs
   GenericEntry m_translationalSenseitivity, m_translationalExpo, m_translationalDeadband, m_translationalSlewrate, m_fieldRelative;
   GenericEntry m_rotationSenseitiviy, m_rotationExpo, m_rotationDeadband, m_rotationSlewrate;
-  GenericEntry m_headingSenseitiviy, m_headingExpo, m_headingDeadband;
+  GenericEntry m_headingSenseitiviy, m_headingExpo, m_headingDeadband, m_consantHeadingMagnatuide;
+  GenericEntry m_invert;
+
 
   GenericEntry m_commandScheduler;
   
@@ -103,8 +104,6 @@ public class ShuffleboardManager {
     m_mainTab.add("Practice Mode Type Chooser", m_testMode);
     m_mainTab.add("Robot Type Chooser", m_robotType);
     m_swerveModulesTab.add("Module Chooser", m_module);
-    m_controllerTab.add("Controller Chooser", m_controllerType);
-    m_controllerTab.add("Set Invert", invert);
 
     // tab setup
     setupDrivetrain();
@@ -296,7 +295,9 @@ public void robotTypeOptions() {
     m_headingSenseitiviy = m_controllerTab.add("headingSenseitiviy", Constants.oi.kHeadingSenseitiviy).getEntry();
     m_headingExpo = m_controllerTab.add("headingExpo", Constants.oi.kHeadingExpo).getEntry();
     m_headingDeadband = m_controllerTab.add("headingDeadband", Constants.oi.kHeadingDeadband).getEntry();
+    m_consantHeadingMagnatuide = m_controllerTab.add("Consant Heading Magnatuide", Constants.oi.kConsantHeadingMagnatuide).getEntry();
 
+    m_invert = m_controllerTab.add("Invert", Constants.oi.kInvert).getEntry();
 
   }
 
@@ -364,15 +365,14 @@ public void robotTypeOptions() {
   public double getHeadingDeadband(){
   return m_headingDeadband.getDouble(Constants.oi.kHeadingDeadband);
   }
+  public boolean getConsantHeadingMagnatuide(){
+    return m_consantHeadingMagnatuide.getBoolean(Constants.oi.kConsantHeadingMagnatuide);
+  }
   public Controller getControllerType(){
     return m_controllerType.getSelected();
   }
-
-public RobotType getRobotType() {
-  return m_robotType.getSelected();
-}
 public Boolean getInverted(){
-  return invert;
+  return m_invert.getBoolean(Constants.oi.kInvert);
 }
 public Module getModule(){
   return m_module.getSelected();

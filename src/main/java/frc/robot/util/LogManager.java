@@ -7,6 +7,7 @@ import java.util.function.IntSupplier;
 
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.util.datalog.DoubleArrayLogEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.util.datalog.IntegerLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -17,16 +18,25 @@ public class LogManager {
    
     static ArrayList<DoubleLogEntry> doubleLogs = new ArrayList<DoubleLogEntry>(); 
     static ArrayList<DoubleSupplier> doubleValues = new ArrayList<DoubleSupplier>();
+
+    static ArrayList<DoubleArrayLogEntry> doubleArrayLogs = new ArrayList<DoubleArrayLogEntry>(); 
+    static ArrayList<DoubleSupplier[]> doubleArrayValues = new ArrayList<DoubleSupplier[]>();
+
     static ArrayList<BooleanLogEntry> boolLogs = new ArrayList<BooleanLogEntry>(); 
     static ArrayList<BooleanSupplier> boolValues = new ArrayList<BooleanSupplier>();
     static ArrayList<IntegerLogEntry> intLogs = new ArrayList<IntegerLogEntry>(); 
     static ArrayList<IntSupplier> intValues = new ArrayList<IntSupplier>();
 
     public static void addDouble(String name, DoubleSupplier logged) { 
-
         DoubleLogEntry myDoubleLog = new DoubleLogEntry(log, name);
         doubleLogs.add(myDoubleLog);
         doubleValues.add(logged);
+    }
+
+    public static void addDoubleArray(String name, DoubleSupplier[] logged) { 
+        DoubleArrayLogEntry myDoubleLog = new DoubleArrayLogEntry(log, name);
+        doubleArrayLogs.add(myDoubleLog);
+        doubleArrayValues.add(logged);
     }
 
     /**
@@ -59,6 +69,14 @@ public class LogManager {
         for (int i = 0; i < doubleLogs.size(); i++)
         {
             doubleLogs.get(i).append(doubleValues.get(i).getAsDouble());
+        }
+        for (int i = 0; i < doubleArrayLogs.size(); i++)
+        {
+            double[] values = new double[doubleArrayValues.get(i).length];
+            for (int j = 0; j < doubleArrayValues.get(i).length; j++) {
+                values[j] = doubleArrayValues.get(i)[j].getAsDouble();
+            }
+            doubleArrayLogs.get(i).append(values);
         }
         for (int i = 0; i < intLogs.size(); i++)
         {

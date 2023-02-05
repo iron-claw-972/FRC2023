@@ -39,13 +39,14 @@ public class Driver {
   private double m_headingExpo = Constants.oi.kHeadingExpo;
   private double m_headingDeadband = Constants.oi.kHeadingDeadband;
   private double m_previousHeading = 0;
+  private boolean m_consantHeadingMagnatuide = false;
 
   private DynamicSlewRateLimiter m_xspeedLimiter = new DynamicSlewRateLimiter(m_translationalSlewrate);
   private DynamicSlewRateLimiter m_yspeedLimiter = new DynamicSlewRateLimiter(m_translationalSlewrate);
   private DynamicSlewRateLimiter m_rotLimiter = new DynamicSlewRateLimiter(m_rotationSlewrate);
   private DynamicSlewRateLimiter m_headingLimiter = new DynamicSlewRateLimiter(m_headingSenseitiviy);
 
-  Boolean invert;
+  private boolean m_invert;
 
   public Driver(){
     m_headingLimiter.setContinuousLimits(-Math.PI,Math.PI);
@@ -102,36 +103,37 @@ public class Driver {
 */
 
   public double getRawSideTranslation() {
-    if (m_controllerType instanceof GameController && invert) return driverGC.get(GCAxis.RIGHT_X);
+    if (m_controllerType instanceof GameController && m_invert) return driverGC.get(GCAxis.RIGHT_X);
     if (m_controllerType instanceof GameController) return driverGC.get(GCAxis.LEFT_X);
     if (m_controllerType instanceof Ex3DProController) return -driverEPC.get(Ex3DProAxis.X);
     if (m_controllerType instanceof MadCatzController) return driverMCC.get(MadCatzAxis.X);
     return 0;
   }
   public double getRawForwardTranslation() {
-    if (m_controllerType instanceof GameController && invert) return driverGC.get(GCAxis.RIGHT_Y);
+    if (m_controllerType instanceof GameController && m_invert) return driverGC.get(GCAxis.RIGHT_Y);
     if (m_controllerType instanceof GameController) return driverGC.get(GCAxis.LEFT_Y);
     if (m_controllerType instanceof Ex3DProController) return -driverEPC.get(Ex3DProAxis.Y);
-    if (m_controllerType instanceof MadCatzController) return -driverMCC.get(MadCatzAxis.Y);
+    if (m_controllerType instanceof MadCatzController) return driverMCC.get(MadCatzAxis.Y);
     return 0;
   }
 
   public double getRawRotation(){
-    if (m_controllerType instanceof GameController && invert) return driverGC.get(GCAxis.LEFT_X);
+    if (m_controllerType instanceof GameController && m_invert) return driverGC.get(GCAxis.LEFT_X);
     if (m_controllerType instanceof GameController) return driverGC.get(GCAxis.RIGHT_X);
     if (m_controllerType instanceof Ex3DProController) return driverEPC.get(Ex3DProAxis.Z);
     if (m_controllerType instanceof MadCatzController) return driverMCC.get(MadCatzAxis.ZROTATE);
     return 0;
   }
   public double getRawHeadingAngle() {
-    if (m_controllerType instanceof GameController && invert) return Functions.calculateAngle(driverGC.get(GCAxis.LEFT_X),-driverGC.get(GCAxis.LEFT_Y))-Math.PI/2;
+    if (m_controllerType instanceof GameController && m_invert) return Functions.calculateAngle(driverGC.get(GCAxis.LEFT_X),-driverGC.get(GCAxis.LEFT_Y))-Math.PI/2;
     if (m_controllerType instanceof GameController) return Functions.calculateAngle(driverGC.get(GCAxis.RIGHT_X),-driverGC.get(GCAxis.RIGHT_Y))-Math.PI/2;
     if (m_controllerType instanceof Ex3DProController) return driverEPC.get(Ex3DProAxis.Z) * Math.PI;
     if (m_controllerType instanceof MadCatzController) return driverMCC.get(MadCatzAxis.ZROTATE) * Math.PI;
     return 0;
   }
   public double getRawHeadingMagnitude() {
-    if (m_controllerType instanceof GameController && invert) return Functions.calculateHypotenuse(driverGC.get(GCAxis.LEFT_X),driverGC.get(GCAxis.LEFT_Y));
+    if (m_consantHeadingMagnatuide) return 1;
+    if (m_controllerType instanceof GameController && m_invert) return Functions.calculateHypotenuse(driverGC.get(GCAxis.LEFT_X),driverGC.get(GCAxis.LEFT_Y));
     if (m_controllerType instanceof GameController) return Functions.calculateHypotenuse(driverGC.get(GCAxis.RIGHT_X),driverGC.get(GCAxis.RIGHT_Y));
     if (m_controllerType instanceof Ex3DProController) return driverEPC.get(Ex3DProAxis.SLIDER);
     if (m_controllerType instanceof MadCatzController) return driverMCC.get(MadCatzAxis.SLIDER);
@@ -155,7 +157,9 @@ public class Driver {
     m_headingSenseitiviy = Robot.shuffleboard.getHeadingSenseitiviy();
     m_headingExpo = Robot.shuffleboard.getHeadingExpo();
     m_headingDeadband = Robot.shuffleboard.getHeadingDeadband();
-    invert= Robot.shuffleboard.getInverted();
+
+    m_invert = Robot.shuffleboard.getInverted();
+    m_consantHeadingMagnatuide = Robot.shuffleboard.getConsantHeadingMagnatuide();
 
   }
 

@@ -20,4 +20,7 @@ public class OIConstants {
   public final double kHeadingSenseitiviy = 4;
   public final double kHeadingExpo = 2;
   public final double kHeadingDeadband = 0.05;
+  public final boolean kConsantHeadingMagnatuide = false;
+
+  public final boolean kInvert = false;
 }
