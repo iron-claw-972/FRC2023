@@ -41,7 +41,6 @@ public class ShuffleboardManager {
   public Map<Module,Double> m_driveStaticFeedForwardSaver=new HashMap<Module,Double>();
   public Map<Module,Double> m_steerVelFeedForwardSaver=new HashMap<Module,Double>();
   public Map<Module,Double> m_steerStaticFeedForwardSaver=new HashMap<Module,Double>();
-  Boolean invert = false;
   // modules needed to distigue in chooser
   Module m_dummyModule = Module.create(ModuleConstants.NONE);
   Module m_allModule = Module.create(ModuleConstants.NONE);
@@ -67,7 +66,9 @@ public class ShuffleboardManager {
   //controller inputs
   GenericEntry m_translationalSenseitivity, m_translationalExpo, m_translationalDeadband, m_translationalSlewrate, m_fieldRelative;
   GenericEntry m_rotationSenseitiviy, m_rotationExpo, m_rotationDeadband, m_rotationSlewrate;
-  GenericEntry m_headingSenseitiviy, m_headingExpo, m_headingDeadband;
+  GenericEntry m_headingSenseitiviy, m_headingExpo, m_headingDeadband, m_consantHeadingMagnatuide;
+  GenericEntry m_invert;
+
 
   GenericEntry m_commandScheduler;
   
@@ -104,7 +105,6 @@ public class ShuffleboardManager {
     m_mainTab.add("Practice Mode Type Chooser", m_testMode);
     m_mainTab.add("Robot Type Chooser", m_robotType);
     m_swerveModulesTab.add("Module Chooser", m_module);
-    m_controllerTab.add("Controller Chooser", m_controllerType);
 
     // tab setup
     setupDrivetrain();
@@ -180,10 +180,10 @@ public class ShuffleboardManager {
     // m_swerveModulesTab.addNumber("BR desired angle", () -> Robot.drive.m_swerveModuleStates[3].angle.getDegrees());
 
     // Steer angles
-    m_swerveModulesTab.addNumber("Angle FL", () -> Robot.drive.m_modules[0].getAngle());
-    m_swerveModulesTab.addNumber("Angle FR", () -> Robot.drive.m_modules[1].getAngle());
-    m_swerveModulesTab.addNumber("Angle BL", () -> Robot.drive.m_modules[2].getAngle());
-    m_swerveModulesTab.addNumber("Angle BR", () -> Robot.drive.m_modules[3].getAngle());
+    m_swerveModulesTab.addNumber("Angle FL", () -> Robot.drive.m_modules[0].getSteerAngle());
+    m_swerveModulesTab.addNumber("Angle FR", () -> Robot.drive.m_modules[1].getSteerAngle());
+    m_swerveModulesTab.addNumber("Angle BL", () -> Robot.drive.m_modules[2].getSteerAngle());
+    m_swerveModulesTab.addNumber("Angle BR", () -> Robot.drive.m_modules[3].getSteerAngle());
 
     // Steer Velocity
     m_swerveModulesTab.addNumber("Steer Vel FL", () -> Robot.drive.m_modules[0].getSteerVelocity());
@@ -367,15 +367,14 @@ public class ShuffleboardManager {
   public double getHeadingDeadband(){
   return m_headingDeadband.getDouble(Constants.oi.kHeadingDeadband);
   }
+  public boolean getConsantHeadingMagnatuide(){
+    return m_consantHeadingMagnatuide.getBoolean(Constants.oi.kConsantHeadingMagnatuide);
+  }
   public Controller getControllerType(){
     return m_controllerType.getSelected();
   }
-
-public RobotType getRobotType() {
-  return m_robotType.getSelected();
-}
 public Boolean getInverted(){
-  return invert;
+  return m_invert.getBoolean(Constants.oi.kInvert);
 }
 public Module getModule(){
   return m_module.getSelected();

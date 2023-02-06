@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
 import edu.wpi.first.math.MathUtil;
@@ -17,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.constants.ModuleConstants;
+import frc.robot.util.LogManager;
 import frc.robot.util.RobotType;
 import frc.robot.util.ShuffleboardManager;
 
@@ -72,6 +75,8 @@ public class Drivetrain extends SubsystemBase {
 
     m_odometry = new SwerveDriveOdometry(m_kinematics, m_pigeon.getRotation2d(), getModulePositions(), m_robotPose);
     m_rotationController.enableContinuousInput(-Math.PI,Math.PI);
+    DoubleSupplier[] poseSupplier = {() -> getPose().getX(), () -> getPose().getY(), () -> getPose().getRotation().getRadians()};
+    LogManager.addDoubleArray("Pose2d", poseSupplier);
   }
 
   @Override
@@ -211,10 +216,10 @@ public class Drivetrain extends SubsystemBase {
    */
   public SwerveModulePosition[] getModulePositions() {
     SwerveModulePosition[] positions = new SwerveModulePosition[]{
-      new SwerveModulePosition(m_modules[0].getState().speedMetersPerSecond, m_modules[0].getState().angle),
-      new SwerveModulePosition(m_modules[1].getState().speedMetersPerSecond, m_modules[1].getState().angle),
-      new SwerveModulePosition(m_modules[2].getState().speedMetersPerSecond, m_modules[2].getState().angle),
-      new SwerveModulePosition(m_modules[3].getState().speedMetersPerSecond, m_modules[3].getState().angle)
+      new SwerveModulePosition(m_modules[0].getDrivePosition(), m_modules[0].getState().angle),
+      new SwerveModulePosition(m_modules[1].getDrivePosition(), m_modules[1].getState().angle),
+      new SwerveModulePosition(m_modules[2].getDrivePosition(), m_modules[2].getState().angle),
+      new SwerveModulePosition(m_modules[3].getDrivePosition(), m_modules[3].getState().angle)
       // new SwerveModulePosition(m_modules[0].getDrivePosition(), Rotation2d.fromDegrees(m_modules[0].getAngle())),
       // new SwerveModulePosition(m_modules[1].getDrivePosition(), Rotation2d.fromDegrees(m_modules[1].getAngle())),
       // new SwerveModulePosition(m_modules[2].getDrivePosition(), Rotation2d.fromDegrees(m_modules[2].getAngle())),

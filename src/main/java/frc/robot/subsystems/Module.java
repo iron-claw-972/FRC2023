@@ -17,6 +17,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.constants.ModuleConstants;
+import frc.robot.util.LogManager;
 import frc.robot.util.MotorFactory;
 import frc.robot.util.TestType;
 import lib.ctre_shims.TalonEncoder;
@@ -93,6 +94,8 @@ public class Module {
   private SimpleMotorFeedforward m_steerFeedForward;
       
   private double m_offset = 0.0;
+
+  private double m_steerError = 0;
   
   public double m_drivePIDOutput = 0;
   public double m_driveFeedforwardOutput = 0;
@@ -188,6 +191,8 @@ public class Module {
 
     m_driveFeedforward = new SimpleMotorFeedforward(driveFeedForwardKS, driveFeedForwardKV);
     m_steerFeedForward = new SimpleMotorFeedforward(steerFeedForwardKS, steerFeedForwardKV);
+  
+    LogManager.addDouble(m_steerMotor.getDescription() + " Steer Error", () -> getSteerAngleError());
   }
 
 
@@ -236,7 +241,7 @@ public class Module {
    * @return module drive position
    */
   public double getDrivePosition() {
-      return m_driveEncoder.getDistance();
+      return m_driveEncoder.getDistance() * Constants.drive.kDriveGearRatio * 2 * Math.PI * Constants.drive.kWheelRadius;
   }
 
   /**

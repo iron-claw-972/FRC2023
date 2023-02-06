@@ -53,7 +53,7 @@ public class DefaultDriveCommand extends CommandBase {
     }
     // System.out.println("driving: " + xSpeed + "," + ySpeed + "," + rot +
     // "," + Robot.driver.getRawForwardTranslation() + "," + Robot.driver.getRawSideTranslation() +","+ Robot.driver.getRawRotation());
-    m_drive.driveRot(xSpeed, ySpeed, rot, true);
+    m_drive.driveRot(xSpeed, ySpeed, rot, fieldRelative);
 }
 
   @Override
