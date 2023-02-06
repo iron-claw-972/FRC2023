@@ -110,7 +110,7 @@ public class ModuleSim extends Module {
    * Gets the simulated angle of the module.
    */
   @Override
-  public double getAngle() {
+  public double getSteerAngle() {
     return m_currentSteerPositionRad;
   }
 

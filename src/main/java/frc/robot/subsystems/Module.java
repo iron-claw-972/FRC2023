@@ -184,7 +184,7 @@ public class Module {
 
     m_steerMotor.setInverted(true);
 
-    m_steerPIDController.reset(getAngle()); // reset the PID, and the Trapezoid motion profile needs to know the starting state
+    m_steerPIDController.reset(getSteerAngle()); // reset the PID, and the Trapezoid motion profile needs to know the starting state
 
     m_driveFeedforward = new SimpleMotorFeedforward(driveFeedForwardKS, driveFeedForwardKV);
     m_steerFeedForward = new SimpleMotorFeedforward(steerFeedForwardKS, steerFeedForwardKV);
@@ -204,7 +204,7 @@ public class Module {
 
     if (setOptimize==true) {
       // Optimize the reference state to avoid spinning further than 90 degrees
-      desiredState = SwerveModuleState.optimize(desiredState, new Rotation2d(getAngle()));
+      desiredState = SwerveModuleState.optimize(desiredState, new Rotation2d(getSteerAngle()));
     }
     setDriveVelocity(desiredState.speedMetersPerSecond);
     setSteerAngle(desiredState.angle);
@@ -218,7 +218,7 @@ public class Module {
 
   public void setSteerAngle(Rotation2d angle){
     // Calculate the steer motor output from the steer PID controller.
-    m_steerPIDOutput = m_steerPIDController.calculate(getAngle(), angle.getRadians());
+    m_steerPIDOutput = m_steerPIDController.calculate(getSteerAngle(), angle.getRadians());
     m_steerFeedForwardOutput = m_steerFeedForward.calculate(m_steerPIDController.getSetpoint().velocity);
     m_steerMotor.setVoltage(m_steerPIDOutput + m_steerFeedForwardOutput);// * Constants.kMaxVoltage / RobotController.getBatteryVoltage()
   }
@@ -252,7 +252,7 @@ public class Module {
    * @return the current state of the module
    */
   public SwerveModuleState getState() {
-    return new SwerveModuleState(m_driveMotor.getSelectedSensorVelocity(), new Rotation2d(getAngle()));
+    return new SwerveModuleState(m_driveMotor.getSelectedSensorVelocity(), new Rotation2d(getSteerAngle()));
   }
 
   /**
@@ -267,8 +267,14 @@ public class Module {
    * Gets the angle of the module.
    * @return encoder's absolute position - offset
    */
-  public double getAngle() {
-    return MathUtil.inputModulus(m_encoder.getAbsolutePosition() - m_offset, -Math.PI, Math.PI);
+  public double getSteerAngle() {
+    return MathUtil.angleModulus(m_encoder.getAbsolutePosition() - m_offset);
+  }
+  public double getSteerAngleError(){
+    double posError = MathUtil.angleModulus(getSteerAngle() - m_steerPIDController.getGoal().position);
+    double negError = MathUtil.angleModulus(m_steerPIDController.getGoal().position - getSteerAngle());
+    if (Math.abs(posError) < Math.abs(negError)) return posError;
+    return negError;
   }
 
   /**
