@@ -3,7 +3,7 @@ package frc.robot.controls;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.DoNothing;
-import frc.robot.constants.Constants;
+import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.util.ShuffleboardManager;
 import frc.robot.util.TestType;
@@ -11,7 +11,7 @@ import lib.controllers.GameController;
 import lib.controllers.GameController.Button;
 
 public class Driver {
-  private static GameController driver = new GameController(Constants.oi.kDriverJoy);
+  private static GameController driver = new GameController(OIConstants.kDriverJoy);
 
   /**
    * Configures all the driver controls, which are the default controls for the robot.

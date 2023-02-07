@@ -19,6 +19,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.constants.Constants;
+import frc.robot.constants.FalconConstants;
 
 public class MotorFactory {
 
@@ -62,7 +63,7 @@ public class MotorFactory {
 
     LogManager.addDouble("TalonFX/Current/" + talon.getDeviceID(), () -> talon.getStatorCurrent());
     LogManager.addDouble("TalonFX/Temperature/" + talon.getDeviceID(), () -> talon.getTemperature());
-    LogManager.addDouble("TalonFX/RPM/" + talon.getDeviceID(), () -> talon.getSelectedSensorVelocity() / Constants.falcon.kResolution * 10 * 60);
+    LogManager.addDouble("TalonFX/RPM/" + talon.getDeviceID(), () -> talon.getSelectedSensorVelocity() / FalconConstants.kResolution * 10 * 60);
 
     return talon;
   }
@@ -149,10 +150,10 @@ public class MotorFactory {
 
     WPI_TalonFX talon = new WPI_TalonFX(id, CANBus);
 
-    if (RobotBase.isReal() && talon.getFirmwareVersion() != Constants.falcon.kFirmwareVersion) {
+    if (RobotBase.isReal() && talon.getFirmwareVersion() != FalconConstants.kFirmwareVersion) {
       String errorMessage = "TalonFX " + id + " firmware incorrect. Has " + talon.getFirmwareVersion()
-          + ", currently FalconConstants.java requires: " + Constants.falcon.kFirmwareVersion;
-      if (Constants.falcon.kBreakOnWrongFirmware) {
+          + ", currently FalconConstants.java requires: " + FalconConstants.kFirmwareVersion;
+      if (FalconConstants.kBreakOnWrongFirmware) {
         DriverStation.reportError(errorMessage, true);
         throw new IOError(new IOException(errorMessage));
       } else {
@@ -187,10 +188,10 @@ public class MotorFactory {
    * @param CANBus the CAN bus the TalonFX is on. If connected to the rio it is "rio".
    */
   public static WPI_TalonFX createTalonFX(int id, String CANBus) {
-    return createTalonFXFull(id, CANBus, Constants.falcon.kStatorLimitEnable, Constants.falcon.kStatorCurrentLimit,
-        Constants.falcon.kStatorTriggerThreshold, Constants.falcon.kStatorTriggerDuration,
-        Constants.falcon.kSupplyLimitEnable, Constants.falcon.kSupplyCurrentLimit,
-        Constants.falcon.kSupplyTriggerThreshold, Constants.falcon.kSupplyTriggerDuration);
+    return createTalonFXFull(id, CANBus, FalconConstants.kStatorLimitEnable, FalconConstants.kStatorCurrentLimit,
+        FalconConstants.kStatorTriggerThreshold, FalconConstants.kStatorTriggerDuration,
+        FalconConstants.kSupplyLimitEnable, FalconConstants.kSupplyCurrentLimit,
+        FalconConstants.kSupplyTriggerThreshold, FalconConstants.kSupplyTriggerDuration);
   }
 
   /**
@@ -208,8 +209,8 @@ public class MotorFactory {
    */
   public static WPI_TalonFX createTalonFXSupplyLimit(int id, String CANBus, double currentLimit,
       double triggerThreshold, double triggerDuration) {
-    return createTalonFXFull(id, CANBus, Constants.falcon.kStatorLimitEnable, Constants.falcon.kStatorCurrentLimit,
-        Constants.falcon.kStatorTriggerThreshold, Constants.falcon.kStatorTriggerDuration, true, currentLimit,
+    return createTalonFXFull(id, CANBus, FalconConstants.kStatorLimitEnable, FalconConstants.kStatorCurrentLimit,
+        FalconFalconConstants.kStatorTriggerThreshold, FalconConstants.kStatorTriggerDuration, true, currentLimit,
         triggerThreshold, triggerDuration);
   }
 
@@ -229,7 +230,7 @@ public class MotorFactory {
   public static WPI_TalonFX createTalonFXStatorLimit(int id, String CANBus, double currentLimit,
       double triggerThreshold, double triggerDuration) {
     return createTalonFXFull(id, CANBus, true, currentLimit, triggerThreshold, triggerDuration,
-        Constants.falcon.kSupplyLimitEnable, Constants.falcon.kSupplyCurrentLimit,
-        Constants.falcon.kSupplyTriggerThreshold, Constants.falcon.kSupplyTriggerDuration);
+        FalconConstants.kSupplyLimitEnable, FalconConstants.kSupplyCurrentLimit,
+        FalconConstants.kSupplyTriggerThreshold, FalconConstants.kSupplyTriggerDuration);
   }
 }
