@@ -210,7 +210,7 @@ public class MotorFactory {
   public static WPI_TalonFX createTalonFXSupplyLimit(int id, String CANBus, double currentLimit,
       double triggerThreshold, double triggerDuration) {
     return createTalonFXFull(id, CANBus, FalconConstants.kStatorLimitEnable, FalconConstants.kStatorCurrentLimit,
-        FalconFalconConstants.kStatorTriggerThreshold, FalconConstants.kStatorTriggerDuration, true, currentLimit,
+        FalconConstants.kStatorTriggerThreshold, FalconConstants.kStatorTriggerDuration, true, currentLimit,
         triggerThreshold, triggerDuration);
   }
 
