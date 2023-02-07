@@ -22,17 +22,24 @@ public class LogManager {
     static ArrayList<IntegerLogEntry> intLogs = new ArrayList<IntegerLogEntry>(); 
     static ArrayList<IntSupplier> intValues = new ArrayList<IntSupplier>();
 
+    /**
+     * Logs a double from a function
+     * 
+     * @param name The name of the log. Use / to create subdirectories, and keep names unique.
+     * @param logged A double supplier of the value to be logged. Can be created by using a lambda on a function that returns a double.
+     */
     public static void addDouble(String name, DoubleSupplier logged) { 
-
         DoubleLogEntry myDoubleLog = new DoubleLogEntry(log, name);
         doubleLogs.add(myDoubleLog);
         doubleValues.add(logged);
     }
 
     /**
-     * When called, this function creates an integer data entry and stores it in an arraylist. 
+     * Logs a int from a function
+     * 
+     * @param name The name of the log. Use / to create subdirectories, and keep names unique.
+     * @param logged An int supplier of the value to be logged. Can be created by using a lambda on a function that returns a int.
      */
-
     public static void addInt(String name, IntSupplier logged) { 
      
         IntegerLogEntry IntegerLog = new IntegerLogEntry(log, name);
@@ -40,22 +47,21 @@ public class LogManager {
         intValues.add(logged);
     }
 
-    /**
-    * When called, this function creates a double data entry and stores it in an arraylist. 
+    /** Logs a boolean from a function
+    * 
+    * @param name The name of the log. Use / to create subdirectories, and keep names unique.
+    * @param logged An boolean supplier of the value to be logged. Can be created by using a lambda on a function that returns a boolean.
     */
     public static void addBool(String name, BooleanSupplier logged) { 
-
         BooleanLogEntry BooleanLog = new BooleanLogEntry(log, name);
         boolLogs.add(BooleanLog);
         boolValues.add(logged);
     }
 
     /**
-     * For every entry in the data entry array list, it logs a value of the corresponding index in the value array list. 
+     * Logs all the values that have been collected. Should be called periodically. 
      */
-
     public static void log() {
-        
         for (int i = 0; i < doubleLogs.size(); i++)
         {
             doubleLogs.get(i).append(doubleValues.get(i).getAsDouble());

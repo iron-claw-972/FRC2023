@@ -16,6 +16,11 @@ public class PathGroupLoader{
 
   private static HashMap<String, List<PathPlannerTrajectory>> pathGroups = new HashMap<String, List<PathPlannerTrajectory>>();
 
+  /**
+   * Loads all of the paths in the trajectory directory (specified in the constants). 
+   * These paths are loaded and stored so that they do not take time while the robot is running 
+   * and can be accessed with {@link #getPathGroup() PathGroupLoader.getPathGroup()}
+   */
   public static void loadPathGroups() {
     double totalTime = 0;
     File[] directoryListing = Filesystem.getDeployDirectory().toPath().resolve(Constants.auto.kTrajectoryDirectory).toFile().listFiles();
@@ -40,6 +45,14 @@ public class PathGroupLoader{
     System.out.println("File processing took a total of " + totalTime + " milliseconds");
   }
 
+  /**
+   * 
+   * Gets a path that has already been loaded with {@link #loadPathGroups()}. The path group is a list 
+   * of trajectores that path planner can run.
+   * 
+   * @param pathGroupName the name of the file, without any extensions. This should be the same exact name that is displayed in pathplanner
+   * @return a list of trajectores that path planner can run.
+   */
   public static List<PathPlannerTrajectory> getPathGroup(String pathGroupName) {
     if (pathGroups.get(pathGroupName) == null) {
       System.out.println("Error retrieving " + pathGroupName + " path!");

@@ -13,6 +13,9 @@ import lib.controllers.GameController.Button;
 public class Driver {
   private static GameController driver = new GameController(Constants.oi.kDriverJoy);
 
+  /**
+   * Configures all the driver controls, which are the default controls for the robot.
+   */
   public static void configureControls(ShuffleboardManager shuffleboard, Drivetrain drive) {
     
     // example button binding implementation

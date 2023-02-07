@@ -120,8 +120,8 @@ public class MotorFactory {
    * Creates a TalonFX with all current limit options. If you would like to use
    * defaults it is recommended to use the other createTalonFX.. methods.
    * 
-   * @param id                     the id of the the motor
-   * @param CANBus                 the CAN Bus the motor is on
+   * @param id                     the CAN ID of the the TalonFX
+   * @param CANBus                 the CAN bus the TalonFX is on. If connected to the rio it is "rio".
    * @param StatorLimitEnable      whether or not to enable stator limiting
    * @param StatorCurrentLimit     the current, in amps, to return to after the
    *                               stator limit is triggered
@@ -180,8 +180,11 @@ public class MotorFactory {
   }
 
   /**
-   * @param id
-   * @param CANBus
+   * 
+   * Creates a TalonFX with all the default settings.
+   * 
+   * @param id the id of the the motor
+   * @param CANBus the CAN bus the TalonFX is on. If connected to the rio it is "rio".
    */
   public static WPI_TalonFX createTalonFX(int id, String CANBus) {
     return createTalonFXFull(id, CANBus, Constants.falcon.kStatorLimitEnable, Constants.falcon.kStatorCurrentLimit,
@@ -190,6 +193,19 @@ public class MotorFactory {
         Constants.falcon.kSupplyTriggerThreshold, Constants.falcon.kSupplyTriggerDuration);
   }
 
+  /**
+   * 
+   * Creates a TalonFX with supply current limit options. 
+   * 
+   * Supply current is current that's being drawn at the input bus voltage. 
+   * Supply limiting is useful for preventing breakers from tripping in the PDP.
+   * 
+   * @param id               the CAN ID of the the TalonFX
+   * @param CANBus           the CAN bus the TalonFX is on. If connected to the rio it is "rio".
+   * @param currentLimit     the current, in amps, to return to after the supply limit is triggered
+   * @param triggerThreshold the threshold current to trigger the supply limit
+   * @param triggerDuration  the duration, in seconds, the current is above the threshold before triggering
+   */
   public static WPI_TalonFX createTalonFXSupplyLimit(int id, String CANBus, double currentLimit,
       double triggerThreshold, double triggerDuration) {
     return createTalonFXFull(id, CANBus, Constants.falcon.kStatorLimitEnable, Constants.falcon.kStatorCurrentLimit,
@@ -197,6 +213,19 @@ public class MotorFactory {
         triggerThreshold, triggerDuration);
   }
 
+  /**
+   * 
+   * Creates a TalonFX with stator current limit options.
+   * 
+   * Stator current is current that’s being drawn by the motor.
+   * Stator limiting is useful for limiting acceleration/heat.
+   * 
+   * @param id               the CAN ID of the the TalonFX
+   * @param CANBus           the CAN bus the TalonFX is on. If connected to the rio it is "rio".
+   * @param currentLimit     the current, in amps, to return to after the stator limit is triggered
+   * @param triggerThreshold the threshold current to trigger the stator limit
+   * @param triggerDuration  the duration, in seconds, the current is above the threshold before triggering
+   */
   public static WPI_TalonFX createTalonFXStatorLimit(int id, String CANBus, double currentLimit,
       double triggerThreshold, double triggerDuration) {
     return createTalonFXFull(id, CANBus, true, currentLimit, triggerThreshold, triggerDuration,
