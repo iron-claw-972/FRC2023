@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
-import frc.robot.constants.ModuleConstants;
+import frc.robot.constants.swerve.ModuleConstants;
 import frc.robot.util.ShuffleboardManager;
 
 /** Represents a swerve drive style drivetrain.
@@ -62,7 +62,7 @@ public class Drivetrain extends SubsystemBase {
   public Drivetrain() {
       m_modules = new Module[]{
         Module.create(ModuleConstants.FRONT_LEFT),
-        Module.create(ModuleConstants.FORNT_RIGHT),
+        Module.create(ModuleConstants.FRONT_RIGHT),
         Module.create(ModuleConstants.BACK_LEFT),
         Module.create(ModuleConstants.BACK_RIGHT)
       };

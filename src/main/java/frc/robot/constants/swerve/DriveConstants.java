@@ -1,205 +1,7 @@
 package frc.robot.constants.swerve;
 
-public enum SwerveDriveConstants {
-
-    COMP(
-        CompDriveConstants.kWheelRadius,
-
-        CompDriveConstants.kTrackWidth,
-        CompDriveConstants.kDriveGearRatio,
-        CompDriveConstants.kSteerGearRatio,
-
-        CompDriveConstants.kMaxSpeed,
-
-        CompDriveConstants.kMaxAngularSpeed,
-        CompDriveConstants.kMaxAngularAccel,
-
-        CompDriveConstants.kPigeon,
-
-        CompDriveConstants.kStartingHeadingDegrees,
-
-        CompDriveConstants.kDriveFrontLeft,
-        CompDriveConstants.kSteerFrontLeft,
-        CompDriveConstants.kEncoderFrontLeft,
-        CompDriveConstants.kSteerOffsetFrontLeft,
-        CompDriveConstants.kDriveKSFrontLeft,
-        CompDriveConstants.kDriveKVFrontLeft,
-        CompDriveConstants.kDrivePFrontLeft,
-        CompDriveConstants.kDriveIFrontLeft,
-        CompDriveConstants.kDriveDFrontLeft,
-        CompDriveConstants.kSteerKSFrontLeft,
-        CompDriveConstants.kSteerKVFrontLeft,
-        CompDriveConstants.kSteerPFrontLeft,
-        CompDriveConstants.kSteerIFrontLeft,
-        CompDriveConstants.kSteerDFrontLeft,
-
-        CompDriveConstants.kDriveFrontRight, 
-        CompDriveConstants.kSteerFrontRight,
-        CompDriveConstants.kEncoderFrontRight, 
-        CompDriveConstants.kSteerOffsetFrontRight,
-        CompDriveConstants.kDriveKSFrontRight,
-        CompDriveConstants.kDriveKVFrontRight,
-        CompDriveConstants.kDrivePFrontRight,
-        CompDriveConstants.kDriveIFrontRight,
-        CompDriveConstants.kDriveDFrontRight,
-        CompDriveConstants.kSteerKSFrontRight,
-        CompDriveConstants.kSteerKVFrontRight,
-        CompDriveConstants.kSteerPFrontRight,
-        CompDriveConstants.kSteerIFrontRight,
-        CompDriveConstants.kSteerDFrontRight,
-
-        CompDriveConstants.kDriveBackLeft,
-        CompDriveConstants.kSteerBackLeft,
-        CompDriveConstants.kEncoderBackLeft, 
-        CompDriveConstants.kSteerOffsetBackLeft,
-        CompDriveConstants.kDriveKSBackLeft,
-        CompDriveConstants.kDriveKVBackLeft,
-        CompDriveConstants.kDrivePBackLeft,
-        CompDriveConstants.kDriveIBackLeft,
-        CompDriveConstants.kDriveDBackLeft,
-        CompDriveConstants.kSteerKSBackLeft,
-        CompDriveConstants.kSteerKVBackLeft,
-        CompDriveConstants.kSteerPBackLeft,
-        CompDriveConstants.kSteerIBackLeft,
-        CompDriveConstants.kSteerDBackLeft,
-
-        CompDriveConstants.kDriveBackRight,
-        CompDriveConstants.kSteerBackRight,
-        CompDriveConstants.kEncoderBackRight, 
-        CompDriveConstants.kSteerOffsetBackRight,
-        CompDriveConstants.kDriveKSBackRight,
-        CompDriveConstants.kDriveKVBackRight,
-        CompDriveConstants.kDrivePBackRight,
-        CompDriveConstants.kDriveIBackRight,
-        CompDriveConstants.kDriveDBackRight,
-        CompDriveConstants.kSteerKSBackRight,
-        CompDriveConstants.kSteerKVBackRight,
-        CompDriveConstants.kSteerPBackRight,
-        CompDriveConstants.kSteerIBackRight,
-        CompDriveConstants.kSteerDBackRight,
-
-        // Drive
-        CompDriveConstants.kDrivePAll,
-        CompDriveConstants.kDriveIAll,
-        CompDriveConstants.kDriveDAll,
-        
-        // Steer
-        CompDriveConstants.kSteerPAll, //SDS: 0.2 - maunfacturer recomended values
-        CompDriveConstants.kSteerIAll,
-        CompDriveConstants.kSteerDAll, //SDS: 0.1 - maunfacturer recomended values
-
-        CompDriveConstants.kDriveKSAll,
-        CompDriveConstants.kDriveKVAll,
-
-        // Steer
-        CompDriveConstants.kSteerKS,
-        CompDriveConstants.kSteerKV,
-
-        // heading PID
-        CompDriveConstants.KheadingP,
-        CompDriveConstants.KheadingI,
-        CompDriveConstants.KheadingD
-    ),
-
-    TEST(
-        TestDriveConstants.kWheelRadius,
-
-        TestDriveConstants.kTrackWidth,
-        TestDriveConstants.kDriveGearRatio,
-        TestDriveConstants.kSteerGearRatio,
-
-        TestDriveConstants.kMaxSpeed,
-
-        TestDriveConstants.kMaxAngularSpeed,
-        TestDriveConstants.kMaxAngularAccel,
-
-        TestDriveConstants.kPigeon,
-
-        TestDriveConstants.kStartingHeadingDegrees,
-
-        TestDriveConstants.kDriveFrontLeft,
-        TestDriveConstants.kSteerFrontLeft,
-        TestDriveConstants.kEncoderFrontLeft,
-        TestDriveConstants.kSteerOffsetFrontLeft,
-        TestDriveConstants.kDriveKSFrontLeft,
-        TestDriveConstants.kDriveKVFrontLeft,
-        TestDriveConstants.kDrivePFrontLeft,
-        TestDriveConstants.kDriveIFrontLeft,
-        TestDriveConstants.kDriveDFrontLeft,
-        TestDriveConstants.kSteerKSFrontLeft,
-        TestDriveConstants.kSteerKVFrontLeft,
-        TestDriveConstants.kSteerPFrontLeft,
-        TestDriveConstants.kSteerIFrontLeft,
-        TestDriveConstants.kSteerDFrontLeft,
-
-        TestDriveConstants.kDriveFrontRight, 
-        TestDriveConstants.kSteerFrontRight,
-        TestDriveConstants.kEncoderFrontRight, 
-        TestDriveConstants.kSteerOffsetFrontRight,
-        TestDriveConstants.kDriveKSFrontRight,
-        TestDriveConstants.kDriveKVFrontRight,
-        TestDriveConstants.kDrivePFrontRight,
-        TestDriveConstants.kDriveIFrontRight,
-        TestDriveConstants.kDriveDFrontRight,
-        TestDriveConstants.kSteerKSFrontRight,
-        TestDriveConstants.kSteerKVFrontRight,
-        TestDriveConstants.kSteerPFrontRight,
-        TestDriveConstants.kSteerIFrontRight,
-        TestDriveConstants.kSteerDFrontRight,
-
-        TestDriveConstants.kDriveBackLeft,
-        TestDriveConstants.kSteerBackLeft,
-        TestDriveConstants.kEncoderBackLeft, 
-        TestDriveConstants.kSteerOffsetBackLeft,
-        TestDriveConstants.kDriveKSBackLeft,
-        TestDriveConstants.kDriveKVBackLeft,
-        TestDriveConstants.kDrivePBackLeft,
-        TestDriveConstants.kDriveIBackLeft,
-        TestDriveConstants.kDriveDBackLeft,
-        TestDriveConstants.kSteerKSBackLeft,
-        TestDriveConstants.kSteerKVBackLeft,
-        TestDriveConstants.kSteerPBackLeft,
-        TestDriveConstants.kSteerIBackLeft,
-        TestDriveConstants.kSteerDBackLeft,
-
-        TestDriveConstants.kDriveBackRight,
-        TestDriveConstants.kSteerBackRight,
-        TestDriveConstants.kEncoderBackRight, 
-        TestDriveConstants.kSteerOffsetBackRight,
-        TestDriveConstants.kDriveKSBackRight,
-        TestDriveConstants.kDriveKVBackRight,
-        TestDriveConstants.kDrivePBackRight,
-        TestDriveConstants.kDriveIBackRight,
-        TestDriveConstants.kDriveDBackRight,
-        TestDriveConstants.kSteerKSBackRight,
-        TestDriveConstants.kSteerKVBackRight,
-        TestDriveConstants.kSteerPBackRight,
-        TestDriveConstants.kSteerIBackRight,
-        TestDriveConstants.kSteerDBackRight,
-
-        // Drive
-        TestDriveConstants.kDrivePAll,
-        TestDriveConstants.kDriveIAll,
-        TestDriveConstants.kDriveDAll,
-        
-        // Steer
-        TestDriveConstants.kSteerPAll, //SDS: 0.2 - maunfacturer recomended values
-        TestDriveConstants.kSteerIAll,
-        TestDriveConstants.kSteerDAll, //SDS: 0.1 - maunfacturer recomended values
-
-        TestDriveConstants.kDriveKSAll,
-        TestDriveConstants.kDriveKVAll,
-
-        // Steer
-        TestDriveConstants.kSteerKS,
-        TestDriveConstants.kSteerKV,
-
-        // heading PID
-        TestDriveConstants.KheadingP,
-        TestDriveConstants.KheadingI,
-        TestDriveConstants.KheadingD
-    );
-
+public abstract class DriveConstants {
+    
     public double kWheelRadius;
 
     public double kTrackWidth;
@@ -297,7 +99,11 @@ public enum SwerveDriveConstants {
     public double KheadingI;
     public double KheadingD;
 
-    SwerveDriveConstants(
+    // CAN
+    public String kDriveMotorCAN;
+    public String kSteerMotorCAN;
+
+    public DriveConstants(
         double kWheelRadius,
 
         double kTrackWidth,
@@ -393,7 +199,11 @@ public enum SwerveDriveConstants {
         // heading PID
         double KheadingP,
         double KheadingI,
-        double KheadingD
+        double KheadingD,
+
+        // CAN
+        String kDriveMotorCAN,
+        String kSteerMotorCAN
     ) {
         this.kWheelRadius = kWheelRadius;
 
@@ -486,6 +296,9 @@ public enum SwerveDriveConstants {
         this.KheadingP = KheadingP;
         this.KheadingI = KheadingI;
         this.KheadingD = KheadingD;
+
+        this.kDriveMotorCAN = kDriveMotorCAN;
+        this.kSteerMotorCAN = kSteerMotorCAN;
     }
 
 }

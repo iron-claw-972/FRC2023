@@ -15,7 +15,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
-import frc.robot.constants.ModuleConstants;
+import frc.robot.constants.swerve.ModuleConstants;
 import frc.robot.util.MotorFactory;
 import frc.robot.util.TestType;
 import lib.ctre_shims.TalonEncoder;
@@ -136,14 +136,12 @@ public class Module {
   ) {
     
     if (Robot.isReal()) {
-      // TODO: The CANBus needs to be a constant because on the new 2023 bot, drive motors use Canivore, not rio
-      m_driveMotor = MotorFactory.createTalonFX(driveMotorPort, Constants.kCanivoreCAN);
-      m_steerMotor = MotorFactory.createTalonFX(steerMotorPort, Constants.kCanivoreCAN);
+      m_driveMotor = MotorFactory.createTalonFX(driveMotorPort, Constants.drive.kDriveMotorCAN);
+      m_steerMotor = MotorFactory.createTalonFX(steerMotorPort, Constants.drive.kSteerMotorCAN);
     } else {
       m_driveMotor = new WPI_TalonFX(driveMotorPort);
       m_steerMotor = new WPI_TalonFX(steerMotorPort);
     }
-    System.out.println("drive Port" + driveMotorPort);
     
     m_driveMotor.setNeutralMode(NeutralMode.Brake);
     m_steerMotor.setNeutralMode(NeutralMode.Brake);

@@ -8,7 +8,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import frc.robot.constants.Constants;
-import frc.robot.constants.ModuleConstants;
+import frc.robot.constants.swerve.ModuleConstants;
 import lib.ctre_shims.TalonEncoderSim;
 
 /**

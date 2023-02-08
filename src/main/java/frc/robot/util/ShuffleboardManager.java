@@ -19,7 +19,7 @@ import frc.robot.commands.DoNothing;
 import frc.robot.commands.DriveFeedForwardCharacterzation;
 import frc.robot.commands.SteerFeedForwardCharacterzation;
 import frc.robot.constants.Constants;
-import frc.robot.constants.ModuleConstants;
+import frc.robot.constants.swerve.ModuleConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Module;
 import lib.controllers.Controller;
