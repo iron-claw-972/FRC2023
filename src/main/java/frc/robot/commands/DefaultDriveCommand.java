@@ -120,6 +120,23 @@ public class DefaultDriveCommand extends CommandBase {
     }
   }
 
-  
+  private void testFFandPID(){
+    
+      if(
+      Robot.shuffleboard.getRequestedDriveVelocity()+0.1>Robot.drive.m_modules[0].getDriveVelocity()||
+      Robot.shuffleboard.getRequestedDriveVelocity()-0.1<Robot.drive.m_modules[0].getDriveVelocity()||
+      Robot.shuffleboard.getRequestedDriveVelocity()+0.1>Robot.drive.m_modules[1].getDriveVelocity()||
+      Robot.shuffleboard.getRequestedDriveVelocity()-0.1<Robot.drive.m_modules[1].getDriveVelocity()||
+      Robot.shuffleboard.getRequestedDriveVelocity()+0.1>Robot.drive.m_modules[2].getDriveVelocity()||
+      Robot.shuffleboard.getRequestedDriveVelocity()-0.1<Robot.drive.m_modules[2].getDriveVelocity()||
+      Robot.shuffleboard.getRequestedDriveVelocity()+0.1>Robot.drive.m_modules[3].getDriveVelocity()||
+      Robot.shuffleboard.getRequestedDriveVelocity()-0.1<Robot.drive.m_modules[3].getDriveVelocity())
+      {
+        System.out.println("ERROR VELOCITY INCORRECT");
+      }
+      }
+    
 
-}
+  }
+
+

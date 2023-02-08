@@ -7,12 +7,12 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 import frc.robot.subsystems.Drivetrain;
 
-public class CircleDrive extends CommandBase{
+public class TestDriveVelocity extends CommandBase{
 
     private Drivetrain m_drive;
     private double m_translationalVelocity = 0, m_rotationalVelocity = 0, m_steerPosition = 0, m_prevTime;
 
-    CircleDrive(Drivetrain drive){
+    TestDriveVelocity(Drivetrain drive){
         m_drive = drive;
         addRequirements(m_drive);
     }
@@ -35,7 +35,16 @@ public class CircleDrive extends CommandBase{
         }
         m_prevTime = currentTime;
     }
-  
+    public boolean isFinished(){
+        return m_translationalVelocity+0.1>Robot.drive.m_modules[0].getDriveVelocity()||
+        m_translationalVelocity-0.1<Robot.drive.m_modules[0].getDriveVelocity()||
+        m_translationalVelocity+0.1>Robot.drive.m_modules[1].getDriveVelocity()||
+        m_translationalVelocity-0.1<Robot.drive.m_modules[1].getDriveVelocity()||
+        m_translationalVelocity+0.1>Robot.drive.m_modules[2].getDriveVelocity()||
+        m_translationalVelocity-0.1<Robot.drive.m_modules[2].getDriveVelocity()||
+        m_translationalVelocity+0.1>Robot.drive.m_modules[3].getDriveVelocity()||
+        m_translationalVelocity-0.1<Robot.drive.m_modules[3].getDriveVelocity();
+    }
     @Override
     public void end(boolean interrupted) {
         for (int i = 0; i < 4; i++){
