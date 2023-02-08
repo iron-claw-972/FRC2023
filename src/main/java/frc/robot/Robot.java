@@ -49,6 +49,8 @@ public class Robot extends TimedRobot {
 
     Driver.configureControls();
     Operator.configureControls();
+
+    LogManager.recordMetadata();
   }
 
   /**
