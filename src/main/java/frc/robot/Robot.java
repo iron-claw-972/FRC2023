@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.controls.Driver;
 import frc.robot.controls.Operator;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Elevator;
 import frc.robot.util.LogManager;
 import frc.robot.util.PathGroupLoader;
 import frc.robot.util.ShuffleboardManager;
@@ -26,6 +27,7 @@ public class Robot extends TimedRobot {
   private Command m_autoCommand;
   public static ShuffleboardManager shuffleboard;
   public static Drivetrain drive;
+  public static Elevator elevator;
 
   private static boolean isTestMode = false;
 
@@ -45,11 +47,12 @@ public class Robot extends TimedRobot {
     // make subsystems
     shuffleboard = new ShuffleboardManager();
     drive = new Drivetrain();
+    elevator = new Elevator();
 
     shuffleboard.setup();
 
     Driver.configureControls();
-    Operator.configureControls();
+    Operator.configureControls(elevator);
   }
 
   /**
