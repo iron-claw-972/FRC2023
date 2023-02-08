@@ -10,6 +10,7 @@ import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleArrayLogEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.util.datalog.IntegerLogEntry;
+import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 
 public class LogManager {
@@ -27,6 +28,22 @@ public class LogManager {
   static ArrayList<DoubleSupplier[]> doubleArrayValues = new ArrayList<DoubleSupplier[]>();
   static ArrayList<BooleanSupplier> boolValues = new ArrayList<BooleanSupplier>();
   static ArrayList<IntSupplier> intValues = new ArrayList<IntSupplier>();
+
+  /**
+   * Records the metadata supplied by gversion (https://github.com/lessthanoptimal/gversion-plugin) in BuildData.java.
+   */
+  public static void recordMetadata() {
+    new StringLogEntry(log, "Maven Group").append(BuildData.MAVEN_GROUP);
+    new StringLogEntry(log, "Maven Name").append(BuildData.MAVEN_NAME); // The name of the repository
+    new StringLogEntry(log, "Version").append(BuildData.VERSION);
+    new IntegerLogEntry(log, "Git Revision").append(BuildData.GIT_REVISION);
+    new StringLogEntry(log, "Git SHA").append(BuildData.GIT_SHA); // The SHA code for the latest commit
+    new StringLogEntry(log, "Git date").append(BuildData.GIT_DATE);
+    new StringLogEntry(log, "Git Branch").append(BuildData.GIT_BRANCH); // The branch name
+    new StringLogEntry(log, "Build Date").append(BuildData.BUILD_DATE);
+    new IntegerLogEntry(log, "Build Unix Time").append(BuildData.BUILD_UNIX_TIME);
+    new IntegerLogEntry(log, "Dirty").append(BuildData.DIRTY);
+  }
 
   /**
    * Starts logging a double from a function.
