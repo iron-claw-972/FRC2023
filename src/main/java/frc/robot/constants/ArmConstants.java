@@ -4,15 +4,15 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import frc.robot.Robot;
 
 public class ArmConstants {
-  // arm ids
+  // arm ids - TBD
   public final int motorID = -1;
 
-  // pid values
+  // pid values - TBD
   public final double kP = -1;
   public final double kI = -1;
   public final double kD = -1;
 
-  // distance values
+  // distance values - TBD
   public final double initialPosition = 0;
   public final double shelfPosition = -1;
   public final double intakePosition = -1;
