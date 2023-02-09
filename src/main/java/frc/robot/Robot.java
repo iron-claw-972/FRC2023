@@ -52,9 +52,10 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().cancelAll();
   }
 
+  /** This function is called periodically when the robot is disabled */
   @Override
   public void disabledPeriodic() {
-    m_autoCommand = m_robotContainer.getAutonomousCommand();
+    m_autoCommand = m_robotContainer.getAutonomousCommand(); // update the auto command before auto starts
   }
 
   /** This autonomous runs the autonomous command selected by your {@link Robot} class. */
@@ -69,6 +70,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {}
 
+  /** This function is called once each time the robot enters Teleop mode. */
   @Override
   public void teleopInit() {
     // This makes sure that the autonomous stops running when
@@ -84,6 +86,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {}
 
+  /** This function is called once each time the robot enters Test mode. */
   @Override
   public void testInit() {
     // Cancels all running commands at the start of test mode.

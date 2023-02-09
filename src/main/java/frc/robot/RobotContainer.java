@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -66,25 +65,55 @@ public class RobotContainer {
     return m_autoCommand.getSelected();
   }
   
-  public TestType getTestType() {
+  /**
+   * Checks if the given test type is the current Test type is from Shuffleboard in test mode. 
+   * If the robot is not in test mode, {@link TestType#NOT_TESTING} is the test mode. 
+   * If the robot is in test mode, but no test is selected, {@link TestType#NO_TEST} is the test mode.
+   * 
+   * @param testType which test to check if it is selected
+   * @return if the robot is in that test mode
+   */
+  public boolean isTestType(TestType testType) {
     if (m_robot.isTest()) {
-      return m_testType.getSelected();
+      return m_testType.getSelected() == testType;
     }
-    return TestType.NONE;
+    return TestType.NOT_TESTING == testType;
   }
 
+  /**
+   * 
+   * Returns a trigger that is active when a certain test mode is active in shuffleboard.
+   * This is most useful for composing button bindings with .and() to require a robot be in a certain test mode for
+   * a button to work.
+   * 
+   * @param testType which test mode needs to be active for the trigger to be active.
+   * @return 
+   */
   public Trigger isTestTypeTrigger(TestType testType) {
-    return new Trigger(() -> m_testType.getSelected() == testType);
+    return new Trigger(() -> isTestType(testType));
   }
 
+  /**
+   * Updates the test chooser on shuffleboard to display what tests can be selected.
+   * 
+   * No Test should stay the default, other tests are added with m_testType.addOption()
+   */
   public void testChooserUpdate() {
-    m_testType.setDefaultOption("No Test", TestType.NONE);
+    m_testType.setDefaultOption("No Test", TestType.NO_TEST);
   }
 
+  /**
+   * Updates the auto chooser on shuffleboard to display what auto routines can be selected for running.
+   * 
+   * Do Nothing should stay the default, other autos are added with m_autoCommand.addOption()
+   */
   public void autoChooserUpdate() {
     m_autoCommand.setDefaultOption("Do Nothing", new PrintCommand("This will do nothing!"));
   }
 
+  /**
+   * Loads the command scheduler shuffleboard which will add event markers whenever a command finishes, ends, or is interrupted.
+   */
   public void loadCommandSchedulerShuffleboard() {
     // Set the scheduler to log Shuffleboard events for command initialize, interrupt, finish
     CommandScheduler.getInstance().onCommandInitialize(command -> Shuffleboard.addEventMarker("Command initialized", command.getName(), EventImportance.kNormal));
