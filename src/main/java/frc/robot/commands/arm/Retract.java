@@ -10,14 +10,10 @@ import frc.robot.subsystems.FourBarArm;
 
 public class Retract extends CommandBase {
   FourBarArm m_arm;
-  CANSparkMax m_motor;
   PIDController m_pid;
-  RelativeEncoder m_encoder;
-  public Retract(FourBarArm arm, CANSparkMax motor, PIDController pid, RelativeEncoder encoder) {
+  public Retract(FourBarArm arm, PIDController pid) {
     m_arm = arm;
-    m_motor = motor;
     m_pid = pid; 
-    m_encoder = encoder;
   }
   @Override
   public void initialize() {
@@ -25,16 +21,15 @@ public class Retract extends CommandBase {
   }
   @Override
   public void execute() {
-    m_motor.set(m_pid.calculate(m_encoder.getPosition(), Constants.arm.initialPosition));
+    m_arm.setMotor(m_pid.calculate(m_arm.getEncoderPosition(), Constants.arm.initialPosition));
   }
   @Override
   public boolean isFinished() {
-    double error = Constants.arm.initialPosition - m_encoder.getPosition();
+    double error = Constants.arm.initialPosition - m_arm.getEncoderPosition();
     return error <= -1 || error >= -1; // error values TBD
   }
   @Override
   public void end(boolean interrupted) {
-    m_motor.set(0);
-    m_motor.setIdleMode(IdleMode.kBrake);
+    m_arm.setMotor(0);
   }
 }

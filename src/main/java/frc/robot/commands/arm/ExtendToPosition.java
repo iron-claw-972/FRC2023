@@ -9,34 +9,29 @@ import frc.robot.subsystems.FourBarArm;
 
 public class ExtendToPosition extends CommandBase {
   FourBarArm m_arm;
-  CANSparkMax m_motor;
   PIDController m_pid;
-  RelativeEncoder m_encoder;
   double armSetpoint;
-  public ExtendToPosition(FourBarArm arm, CANSparkMax motor, PIDController pid, RelativeEncoder encoder, double setpoint) {
+  public ExtendToPosition(FourBarArm arm, PIDController pid, double setpoint) {
     m_arm = arm;
-    m_motor = motor;
     m_pid = pid; 
-    m_encoder = encoder;
     armSetpoint = setpoint;
   }
   @Override
   public void initialize() {
     m_pid.reset();
-    m_encoder.setPosition(0);
+    m_arm.setEncoderPosition(0);
   }
   @Override
   public void execute() {
-    m_motor.set(m_pid.calculate(m_encoder.getPosition(), armSetpoint));
+    m_arm.setMotor(m_pid.calculate(m_arm.getEncoderPosition(), armSetpoint));
   }
   @Override
   public boolean isFinished() {
-    double error = armSetpoint - m_encoder.getPosition();
+    double error = armSetpoint - m_arm.getEncoderPosition();
     return error <= -1 || error >= -1; // error values TBD
   }
   @Override
   public void end(boolean interrupted) {
-    m_motor.set(0);
-    m_motor.setIdleMode(IdleMode.kBrake);
+    m_arm.setMotor(0);
   }
 }

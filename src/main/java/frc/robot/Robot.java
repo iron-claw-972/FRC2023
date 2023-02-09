@@ -4,10 +4,18 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.simulation.BatterySim;
+import edu.wpi.first.wpilibj.simulation.EncoderSim;
+import edu.wpi.first.wpilibj.simulation.RoboRioSim;
+import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj.RobotController;
+import frc.robot.constants.Constants;
 import frc.robot.controls.Driver;
 import frc.robot.controls.Operator;
 import frc.robot.subsystems.Drivetrain;
@@ -142,5 +150,35 @@ public class Robot extends TimedRobot {
 
   public static boolean isTestMode() {
     return isTestMode;
+  }
+
+  private final SingleJointedArmSim armSim = 
+    new SingleJointedArmSim(
+      Constants.arm.armSimMotor, 
+      Constants.arm.armReduction, 
+      Constants.arm.armMOI, 
+      Constants.arm.armLength, 
+      Units.degreesToRadians(0), 
+      Units.degreesToRadians(180), 
+      Constants.arm.armMass, 
+      true
+      );
+  private double armPositionDeg = 0;
+  private double kArmEncoderDistPerPulse = 2.0*Math.PI/8192;
+  private final Encoder dummyEncoder = new Encoder(0, 1);
+  private final EncoderSim encoderSim = new EncoderSim(dummyEncoder);
+
+  @Override
+  public void simulationInit() {
+    dummyEncoder.setDistancePerPulse(kArmEncoderDistPerPulse);
+  } 
+
+  @Override
+  public void simulationPeriodic() {
+    armSim.setInput(Robot.arm.getMotorValue()*RobotController.getBatteryVoltage());
+    armSim.update(0.020);
+    encoderSim.setDistance(armSim.getAngleRads());
+    RoboRioSim.setVInVoltage(
+        BatterySim.calculateDefaultBatteryLoadedVoltage(armSim.getCurrentDrawAmps()));
   }
 }
