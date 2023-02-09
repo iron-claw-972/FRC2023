@@ -2,10 +2,10 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Elevator;
 
-public class ElevatorCalibration extends CommandBase {
+public class ElevatorCalibrationLimitSwitch extends CommandBase {
   Elevator m_elevator; 
 
-  public ElevatorCalibration(Elevator elevator) {
+  public ElevatorCalibrationLimitSwitch(Elevator elevator) {
     m_elevator = elevator; 
     addRequirements(m_elevator);
   }

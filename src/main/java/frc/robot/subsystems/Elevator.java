@@ -13,6 +13,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
@@ -24,20 +25,25 @@ public class Elevator extends SubsystemBase {
   private final DigitalInput m_bottomLimitSwitch;
   private final DigitalInput m_topLimitSwitch; 
   private final PIDController m_elevatorPID; 
+  private final DutyCycleEncoder m_absolutespoolEncoder; 
+
+  
 
   public Elevator(){
     this(
       MotorFactory.createTalonFX(Constants.elevator.kElevatorMotor, Constants.kRioCAN),
       new DigitalInput(-1),
-      new DigitalInput(-1)
+      new DigitalInput(-1),
+      new DutyCycleEncoder(-1)
     );
 
   }
 
-  public Elevator(WPI_TalonFX motor, DigitalInput bottomSwitch, DigitalInput topSwitch){
+  public Elevator(WPI_TalonFX motor, DigitalInput bottomSwitch, DigitalInput topSwitch, DutyCycleEncoder absoluteSpoolEncoder){
     m_elevatorMotor = motor; 
     m_bottomLimitSwitch = bottomSwitch; 
     m_topLimitSwitch = topSwitch;
+    m_absolutespoolEncoder = absoluteSpoolEncoder; 
 
     m_elevatorPID = new PIDController(Constants.elevator.kElevatorP, Constants.elevator.kElevatorI, Constants.elevator.kElevatorD);  
   }
