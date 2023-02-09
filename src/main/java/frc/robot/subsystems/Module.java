@@ -101,6 +101,10 @@ public class Module {
   public double m_driveFeedforwardOutput = 0;
   public double m_steerFeedForwardOutput = 0.0;
   public double m_steerPIDOutput = 0.0;
+
+  public double m_desiredSpeed = 0;
+  public double m_desiredAngle = 0;
+
   public MedianFilter m_driveVelocityMedianFilter = new MedianFilter(80);
   public Boolean setOptimize=false;
   public Module(ModuleConstants moduleConstants){
@@ -192,7 +196,16 @@ public class Module {
     m_driveFeedforward = new SimpleMotorFeedforward(driveFeedForwardKS, driveFeedForwardKV);
     m_steerFeedForward = new SimpleMotorFeedforward(steerFeedForwardKS, steerFeedForwardKV);
   
+    LogManager.addDouble(m_steerMotor.getDescription() + " Steer Absolute Position", () -> m_encoder.getAbsolutePosition());
+    LogManager.addDouble(m_steerMotor.getDescription() + " Steer Velocity", () -> getSteerVelocity());
     LogManager.addDouble(m_steerMotor.getDescription() + " Steer Error", () -> getSteerAngleError());
+    LogManager.addDouble(m_steerMotor.getDescription() + " Steer Voltage", () -> getSteerOutputVoltage());
+    LogManager.addDouble(m_steerMotor.getDescription() + " Bus to Steer Voltage", () -> getBusToSteerVoltage());
+    LogManager.addDouble(m_driveMotor.getDescription() + " Drive Velocity Filtered", () -> getDriveVelocityFiltered());
+    LogManager.addDouble(m_driveMotor.getDescription() + " Drive Voltage", () -> getDriveOutputVoltage());
+    LogManager.addDouble(m_driveMotor.getDescription() + " Bus to Drive Voltage", () -> getBusToDriveVoltage());
+    
+    
   }
 
 
@@ -294,7 +307,7 @@ public class Module {
     return m_driveEncoder.getRate();
   }
 
-  public double getDriveVelocityFilltered(){
+  public double getDriveVelocityFiltered(){
     return m_driveVelocityMedianFilter.calculate(getDriveVelocity());
   }
 
@@ -361,6 +374,22 @@ public class Module {
   }
   public void setOptimize(Boolean setOptimize){
     this.setOptimize=setOptimize;
+  }
+
+  public double getBusToDriveVoltage(){
+    return m_driveMotor.getBusVoltage();
+  }
+
+  public double getDriveOutputVoltage(){
+    return m_driveMotor.getMotorOutputVoltage();
+  }
+
+  public double getBusToSteerVoltage(){
+    return m_steerMotor.getBusVoltage();
+  }
+
+  public double getSteerOutputVoltage(){
+    return m_steerMotor.getMotorOutputVoltage();
   }
 
   public void periodic() {
