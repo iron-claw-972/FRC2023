@@ -26,7 +26,7 @@ public class DeployingBar extends SubsystemBase {
 
   private final CANSparkMax m_motor1;
   private final RelativeEncoder m_encoder1;
-  private double setpoint = Constants.deploybar.kmaxExtension;
+  private double setpoint;
   private SparkMaxPIDController m_pid;
 
   public DeployingBar() {
@@ -44,15 +44,25 @@ public class DeployingBar extends SubsystemBase {
     setpoint = target;
     m_pid.setReference(setpoint, CANSparkMax.ControlType.kPosition);
   }
+
+  public boolean atSetpoint(){
+    return (m_encoder1.getPosition() - setpoint < 0.01 && m_encoder1.getPosition() - setpoint > -0.01);
+  }
   
   public double getEncoderValue(){
     return m_encoder1.getPosition();
   }
 
+  public void zeroEncoder(){
+    m_encoder1.setPosition(0);
+  }
+
   public void toggleCoast(){
-    if(m_motor1.getIdleMode() == IdleMode.kBrake && m_encoder1.getPosition() >= 0.75*Constants.deploybar.kmaxExtension){
+    if(m_motor1.getIdleMode() == IdleMode.kBrake){
         m_motor1.setIdleMode(IdleMode.kCoast);
     }
+    else
+      m_motor1.setIdleMode(IdleMode.kBrake);
   }
 
 }
