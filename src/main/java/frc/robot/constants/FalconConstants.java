@@ -2,12 +2,13 @@ package frc.robot.constants;
 
 public class FalconConstants {
 
-  public final int kFirmwareVersion = 5633; // version 22.1.1.0
-  public final boolean kBreakOnWrongFirmware = true;
+  public static final int kFirmwareVersion = 5633; // version 22.1.1.0
+  public static final boolean kBreakOnWrongFirmware = true;
 
-  public final double kResolution = 2048;
-  public final double kMaxRpm = 6380.0; // Rotations per minute
+  public static final double kResolution = 2048;
+  public static final double kMaxRpm = 6380.0; // Rotations per minute
 
+  
   /*
    * Talon Stator / Supply Limits explanation
    * Supply current is current that’s being drawn at the input bus voltage. Stator
@@ -21,15 +22,15 @@ public class FalconConstants {
   // These are the default values
 
   // Stator
-  public final boolean kStatorLimitEnable = false; // enabled?
-  public final double kStatorCurrentLimit = 100; // Limit(amp)
-  public final double kStatorTriggerThreshold = 100; // Trigger Threshold(amp)
-  public final double kStatorTriggerDuration = 0; // Trigger Threshold Time(s)
+  public static final boolean kStatorLimitEnable = false; // enabled?
+  public static final double kStatorCurrentLimit = 100; // Limit(amp)
+  public static final double kStatorTriggerThreshold = 100; // Trigger Threshold(amp)
+  public static final double kStatorTriggerDuration = 0; // Trigger Threshold Time(s)
 
   // Supply
-  public final boolean kSupplyLimitEnable = false; // enabled?
-  public final double kSupplyCurrentLimit = 40; // Limit(amp), current to hold after trigger hit
-  public final double kSupplyTriggerThreshold = 55; // (amp), amps to activate trigger
-  public final double kSupplyTriggerDuration = 3; // (s), how long after trigger before reducing
+  public static final boolean kSupplyLimitEnable = false; // enabled?
+  public static final double kSupplyCurrentLimit = 40; // Limit(amp), current to hold after trigger hit
+  public static final double kSupplyTriggerThreshold = 55; // (amp), amps to activate trigger
+  public static final double kSupplyTriggerDuration = 3; // (s), how long after trigger before reducing
 
 }
