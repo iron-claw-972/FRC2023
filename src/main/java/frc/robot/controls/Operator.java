@@ -1,14 +1,17 @@
 package frc.robot.controls;
 
 import frc.robot.commands.DoNothing;
-import frc.robot.constants.Constants;
+import frc.robot.constants.OIConstants;
 import lib.controllers.GameController;
 import lib.controllers.GameController.Button;
 
 public class Operator {
-  private static GameController operator = new GameController(Constants.oi.kOperatorJoy);
+  private static GameController operator = new GameController(OIConstants.kOperatorJoy);
 
+  /**
+   * Configures all of the operator controls.
+   */
   public static void configureControls() {
-    operator.get(Button.A).whenPressed(new DoNothing());
+    operator.get(Button.A).onTrue(new DoNothing());
   }
 }

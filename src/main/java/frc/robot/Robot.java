@@ -4,16 +4,10 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.controls.Driver;
-import frc.robot.controls.Operator;
-import frc.robot.subsystems.Drivetrain;
 import frc.robot.util.LogManager;
-import frc.robot.util.PathGroupLoader;
-import frc.robot.util.ShuffleboardManager;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -23,10 +17,7 @@ import frc.robot.util.ShuffleboardManager;
  */
 public class Robot extends TimedRobot {
   private Command m_autoCommand;
-  public static ShuffleboardManager shuffleboard;
-  public static Drivetrain drive;
-
-  private static boolean isTestMode = false;
+  private RobotContainer m_robotContainer;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -34,23 +25,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-
-    // This is really annoying so it's disabled
-    DriverStation.silenceJoystickConnectionWarning(true);
-
-    // load paths before auto starts
-    PathGroupLoader.loadPathGroups();
-
-    // make subsystems
-    shuffleboard = new ShuffleboardManager();
-    drive = new Drivetrain();
-
-    shuffleboard.setup();
-
-    Driver.configureControls();
-    Operator.configureControls();
-
-    LogManager.recordMetadata();
+    m_robotContainer = new RobotContainer();
   }
 
   /**
@@ -75,18 +50,17 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     CommandScheduler.getInstance().cancelAll();
-    isTestMode = false;
   }
 
+  /** This function is called periodically when the robot is disabled */
   @Override
   public void disabledPeriodic() {
-    m_autoCommand = getAutonomousCommand();
+    m_autoCommand = m_robotContainer.getAutonomousCommand(); // update the auto command before auto starts
   }
 
   /** This autonomous runs the autonomous command selected by your {@link Robot} class. */
   @Override
   public void autonomousInit() {
-    isTestMode = false;
     if (m_autoCommand != null) {
       m_autoCommand.schedule();
     }
@@ -96,6 +70,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {}
 
+  /** This function is called once each time the robot enters Teleop mode. */
   @Override
   public void teleopInit() {
     // This makes sure that the autonomous stops running when
@@ -105,39 +80,20 @@ public class Robot extends TimedRobot {
     if (m_autoCommand != null) {
       m_autoCommand.cancel();
     }
-    isTestMode = false;
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {}
 
+  /** This function is called once each time the robot enters Test mode. */
   @Override
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
-
-    // it may be needed to disable LiveWindow (we don't use it anyway)
-    //LiveWindow.setEnabled(false)
-
-    isTestMode = true;
-
   }
 
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {}
-
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    return shuffleboard.getAutonomousCommand();
-  }
-
-  public static boolean isTestMode() {
-    return isTestMode;
-  }
 }
