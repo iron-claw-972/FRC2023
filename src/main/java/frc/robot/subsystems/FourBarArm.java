@@ -7,7 +7,7 @@ import com.revrobotics.SparkMaxAlternateEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.constants.Constants;
+import frc.robot.constants.ArmConstants;
 
 public class FourBarArm extends SubsystemBase {
   private final CANSparkMax m_motor;
@@ -15,10 +15,10 @@ public class FourBarArm extends SubsystemBase {
   private final RelativeEncoder m_encoder;
 
   public FourBarArm() {
-    m_motor = new CANSparkMax(Constants.arm.motorID, MotorType.kBrushless);
+    m_motor = new CANSparkMax(ArmConstants.motorID, MotorType.kBrushless);
     m_motor.setIdleMode(IdleMode.kBrake);
     m_encoder = m_motor.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, 8192);
-    m_pid = new PIDController(Constants.arm.kP, Constants.arm.kI, Constants.arm.kD);
+    m_pid = new PIDController(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD);
   }
 
   public double getEncoderPosition() {

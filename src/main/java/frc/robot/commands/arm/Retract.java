@@ -2,7 +2,7 @@ package frc.robot.commands.arm;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.constants.Constants;
+import frc.robot.constants.ArmConstants;
 import frc.robot.subsystems.FourBarArm;
 
 public class Retract extends CommandBase {
@@ -18,11 +18,11 @@ public class Retract extends CommandBase {
   }
   @Override
   public void execute() {
-    m_arm.setMotor(m_pid.calculate(m_arm.getEncoderPosition(), Constants.arm.initialPosition));
+    m_arm.setMotor(m_pid.calculate(m_arm.getEncoderPosition(), ArmConstants.initialPosition));
   }
   @Override
   public boolean isFinished() {
-    double error = Constants.arm.initialPosition - m_arm.getEncoderPosition();
+    double error = ArmConstants.initialPosition - m_arm.getEncoderPosition();
     return error <= -1 || error >= -1; // error values TBD
   }
   @Override

@@ -19,5 +19,6 @@ public final class Constants {
   public static final AutoConstants auto = new AutoConstants();
   @Deprecated
   public static final FalconConstants falcon = new FalconConstants();
+  @Deprecated
   public static final ArmConstants arm = new ArmConstants();
 }
