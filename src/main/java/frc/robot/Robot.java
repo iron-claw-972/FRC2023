@@ -7,11 +7,18 @@ package frc.robot;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj.RobotController;
@@ -38,6 +45,38 @@ public class Robot extends TimedRobot {
 
   private static boolean isTestMode = false;
 
+  private final SingleJointedArmSim armSim = 
+  new SingleJointedArmSim(
+    Constants.arm.armSimMotor, 
+    Constants.arm.armReduction, 
+    Constants.arm.armMOI, 
+    Constants.arm.armLength, 
+    Units.degreesToRadians(0), 
+    Units.degreesToRadians(180), 
+    Constants.arm.armMass, 
+    true
+    );
+  private double armPositionDeg = 0;
+  private double kArmEncoderDistPerPulse = 2.0*Math.PI/8192;
+  private final Encoder dummyEncoder = new Encoder(0, 1);
+  private final EncoderSim encoderSim = new EncoderSim(dummyEncoder);
+
+  public static final String kArmPositionKey = "ArmPosition";
+  public static final String kArmPKey = "ArmP";
+
+  // constructor arguments TBD
+  private final Mechanism2d mech2d = new Mechanism2d(60, 60);
+  private final MechanismRoot2d armPivot = mech2d.getRoot("ArmPivot", 30, 30);
+  private final MechanismLigament2d armTower =
+    armPivot.append(new MechanismLigament2d("ArmTower", 30, -90));
+  private final MechanismLigament2d armDiagram =
+      armPivot.append(
+          new MechanismLigament2d(
+              "Arm",
+              30,
+              Units.radiansToDegrees(armSim.getAngleRads()),
+              6,
+              new Color8Bit(Color.kYellow)));
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -60,6 +99,11 @@ public class Robot extends TimedRobot {
 
     Driver.configureControls();
     Operator.configureControls();
+
+    dummyEncoder.setDistancePerPulse(kArmEncoderDistPerPulse);
+
+    SmartDashboard.putData("Arm Sim", mech2d);
+    armTower.setColor(new Color8Bit(Color.kBlue));
   }
 
   /**
@@ -125,14 +169,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
-    // Cancels all running commands at the start of test mode.
-    CommandScheduler.getInstance().cancelAll();
-
-    // it may be needed to disable LiveWindow (we don't use it anyway)
-    //LiveWindow.setEnabled(false)
-
-    isTestMode = true;
-
+    armPositionDeg = Preferences.getDouble(kArmPositionKey, armPositionDeg);
   }
 
   /** This function is called periodically during test mode. */
@@ -152,25 +189,9 @@ public class Robot extends TimedRobot {
     return isTestMode;
   }
 
-  private final SingleJointedArmSim armSim = 
-    new SingleJointedArmSim(
-      Constants.arm.armSimMotor, 
-      Constants.arm.armReduction, 
-      Constants.arm.armMOI, 
-      Constants.arm.armLength, 
-      Units.degreesToRadians(0), 
-      Units.degreesToRadians(180), 
-      Constants.arm.armMass, 
-      true
-      );
-  private double armPositionDeg = 0;
-  private double kArmEncoderDistPerPulse = 2.0*Math.PI/8192;
-  private final Encoder dummyEncoder = new Encoder(0, 1);
-  private final EncoderSim encoderSim = new EncoderSim(dummyEncoder);
-
   @Override
   public void simulationInit() {
-    dummyEncoder.setDistancePerPulse(kArmEncoderDistPerPulse);
+    
   } 
 
   @Override
@@ -180,5 +201,6 @@ public class Robot extends TimedRobot {
     encoderSim.setDistance(armSim.getAngleRads());
     RoboRioSim.setVInVoltage(
         BatterySim.calculateDefaultBatteryLoadedVoltage(armSim.getCurrentDrawAmps()));
+    armDiagram.setAngle(Units.radiansToDegrees(armSim.getAngleRads()));
   }
 }
