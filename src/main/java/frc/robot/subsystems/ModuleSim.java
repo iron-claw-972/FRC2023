@@ -5,7 +5,6 @@ import com.ctre.phoenix.sensors.CANCoderSimCollection;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import frc.robot.constants.Constants;
 import frc.robot.constants.ModuleConstants;

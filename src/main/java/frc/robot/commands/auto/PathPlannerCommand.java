@@ -13,7 +13,6 @@ import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Robot;
 import frc.robot.commands.DoNothing;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.Drivetrain;
