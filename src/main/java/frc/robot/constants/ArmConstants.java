@@ -1,7 +1,6 @@
 package frc.robot.constants;
 
 import edu.wpi.first.math.system.plant.DCMotor;
-import frc.robot.Robot;
 
 public class ArmConstants {
   // arm ids - TBD
