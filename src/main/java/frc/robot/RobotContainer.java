@@ -41,7 +41,7 @@ public class RobotContainer {
     PathGroupLoader.loadPathGroups();
 
     Driver.configureControls(m_drive);
-    Operator.configureControls();
+    Operator.configureControls(m_arm);
     TestControls.configureControls(m_drive);
 
     LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
