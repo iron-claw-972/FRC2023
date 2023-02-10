@@ -7,11 +7,11 @@ import frc.robot.subsystems.FourBarArm;
 public class ExtendToPosition extends CommandBase {
   FourBarArm m_arm;
   PIDController m_pid;
-  double armSetpoint;
+  double m_armSetpoint;
   public ExtendToPosition(FourBarArm arm, PIDController pid, double setpoint) {
     m_arm = arm;
     m_pid = pid; 
-    armSetpoint = setpoint;
+    m_armSetpoint = setpoint;
   }
   @Override
   public void initialize() {
@@ -20,11 +20,11 @@ public class ExtendToPosition extends CommandBase {
   }
   @Override
   public void execute() {
-    m_arm.setMotor(m_pid.calculate(m_arm.getEncoderPosition(), armSetpoint));
+    m_arm.setMotor(m_pid.calculate(m_arm.getEncoderPosition(), m_armSetpoint));
   }
   @Override
   public boolean isFinished() {
-    double error = armSetpoint - m_arm.getEncoderPosition();
+    double error = m_armSetpoint - m_arm.getEncoderPosition();
     return error <= -1 || error >= -1; // error values TBD
   }
   @Override
