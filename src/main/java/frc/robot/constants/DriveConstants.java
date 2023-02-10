@@ -4,20 +4,20 @@ import edu.wpi.first.math.util.Units;
 
 public class DriveConstants {
 
-    public final double kWheelRadius = Units.inchesToMeters(2);
+    public static final double kWheelRadius = Units.inchesToMeters(2);
 
-    public final double kTrackWidth = Units.inchesToMeters(20.75);//22.75 swerve bot, 20.75 comp bot
-    public final double kDriveGearRatio = 6.75;
-    public final double kSteerGearRatio = 12.8;
+    public static final double kTrackWidth = Units.inchesToMeters(20.75);//22.75 swerve bot, 20.75 comp bot
+    public static final double kDriveGearRatio = 6.75;
+    public static final double kSteerGearRatio = 12.8;
 
-    public final double kMaxSpeed = Constants.falcon.kMaxRpm / 60.0 / kDriveGearRatio * kWheelRadius * 2 * Math.PI;
+    public static final double kMaxSpeed = FalconConstants.kMaxRpm / 60.0 / kDriveGearRatio * kWheelRadius * 2 * Math.PI;
 
-    public final double kMaxAngularSpeed = Constants.falcon.kMaxRpm / 60.0 / kSteerGearRatio * 2 * Math.PI; // 8.3 rot/s
-    public final double kMaxAngularAccel = 8 * 2 * Math.PI; // 8 rotations per second per second
+    public static final double kMaxAngularSpeed = FalconConstants.kMaxRpm / 60.0 / kSteerGearRatio * 2 * Math.PI; // 8.3 rot/s
+    public static final double kMaxAngularAccel = 8 * 2 * Math.PI; // 8 rotations per second per second
 
-    public final int kPigeon = 13;// TestSwerveBot=13 , CompBot=0?
+    public static final int kPigeon = 13;// TestSwerveBot=13 , CompBot=0?
 
-    public final double kStartingHeadingDegrees = 0;
+    public static final double kStartingHeadingDegrees = 0;
 
     // NEW 2023 BOT
     public static class CompDriveConstants {
@@ -148,26 +148,25 @@ public class DriveConstants {
 
     // PID
     // Drive
-    public final double kDriveP = 0;
-    public final double kDriveI = 0;
-    public final double kDriveD = 0;
+    public static final double kDriveP = 0;
+    public static final double kDriveI = 0;
+    public static final double kDriveD = 0;
   
     // Steer
-    public final double kSteerP = 12; //SDS: 0.2
-    public final double kSteerI = 0;
-    public final double kSteerD = 0; //SDS: 0.1
+    public static final double kSteerP = 12; //SDS: 0.2
+    public static final double kSteerI = 0;
+    public static final double kSteerD = 0; //SDS: 0.1
 
     
 
-    public final double kDriveKSAll = 0.63107;
-    public final double kDriveKVAll = 2.1592;
+    public static final double kDriveKSAll = 0.63107;
+    public static final double kDriveKVAll = 2.1592;
 
     // Steer
-    public final double kSteerKS = 1;
-    public final double kSteerKV = 0.5;
+    public static final double kSteerKS = 1;
+    public static final double kSteerKV = 0.5;
     // heading PID
-    public final double KheadingP = 4.6;
-    public final double KheadingI = 0;
-    public final double KheadingD = 0.4;
-
+    public static final double KheadingP = 4.6;
+    public static final double KheadingI = 0;
+    public static final double KheadingD = 0.4;
 }

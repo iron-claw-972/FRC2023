@@ -17,7 +17,9 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.constants.Constants;
+import frc.robot.constants.FalconConstants;
 
 public class MotorFactory {
 
@@ -115,8 +117,8 @@ public class MotorFactory {
    * Creates a TalonFX with all current limit options. If you would like to use
    * defaults it is recommended to use the other createTalonFX.. methods.
    * 
-   * @param id                     the id of the the motor
-   * @param CANBus                 the CAN Bus the motor is on
+   * @param id                     the CAN ID of the the TalonFX
+   * @param CANBus                 the CAN bus the TalonFX is on. If connected to the rio it is "rio".
    * @param StatorLimitEnable      whether or not to enable stator limiting
    * @param StatorCurrentLimit     the current, in amps, to return to after the
    *                               stator limit is triggered
@@ -144,10 +146,10 @@ public class MotorFactory {
 
     WPI_TalonFX talon = new WPI_TalonFX(id, CANBus);
 
-    if (talon.getFirmwareVersion() != Constants.falcon.kFirmwareVersion) {
+    if (RobotBase.isReal() && talon.getFirmwareVersion() != FalconConstants.kFirmwareVersion) {
       String errorMessage = "TalonFX " + id + " firmware incorrect. Has " + talon.getFirmwareVersion()
-          + ", currently FalconConstants.java requires: " + Constants.falcon.kFirmwareVersion;
-      if (Constants.falcon.kBreakOnWrongFirmware) {
+          + ", currently FalconConstants.java requires: " + FalconConstants.kFirmwareVersion;
+      if (FalconConstants.kBreakOnWrongFirmware) {
         DriverStation.reportError(errorMessage, true);
         throw new IOError(new IOException(errorMessage));
       } else {
@@ -173,33 +175,62 @@ public class MotorFactory {
 
     LogManager.addDouble("TalonFX/Current/" + talon.getDeviceID(), () -> talon.getStatorCurrent());
     LogManager.addDouble("TalonFX/Temperature/" + talon.getDeviceID(), () -> talon.getTemperature());
-    LogManager.addDouble("TalonFX/RPM/" + talon.getDeviceID(), () -> talon.getSelectedSensorVelocity() / Constants.falcon.kResolution * 10 * 60);
+    LogManager.addDouble("TalonFX/RPM/" + talon.getDeviceID(), () -> talon.getSelectedSensorVelocity() / FalconConstants.kResolution * 10 * 60);
 
     return talon;
   }
 
   /**
-   * @param id
-   * @param CANBus
+   * 
+   * Creates a TalonFX with all the default settings.
+   * 
+   * @param id the id of the the motor
+   * @param CANBus the CAN bus the TalonFX is on. If connected to the rio it is "rio".
    */
   public static WPI_TalonFX createTalonFX(int id, String CANBus) {
-    return createTalonFXFull(id, CANBus, Constants.falcon.kStatorLimitEnable, Constants.falcon.kStatorCurrentLimit,
-        Constants.falcon.kStatorTriggerThreshold, Constants.falcon.kStatorTriggerDuration,
-        Constants.falcon.kSupplyLimitEnable, Constants.falcon.kSupplyCurrentLimit,
-        Constants.falcon.kSupplyTriggerThreshold, Constants.falcon.kSupplyTriggerDuration);
+    return createTalonFXFull(id, CANBus, FalconConstants.kStatorLimitEnable, FalconConstants.kStatorCurrentLimit,
+        FalconConstants.kStatorTriggerThreshold, FalconConstants.kStatorTriggerDuration,
+        FalconConstants.kSupplyLimitEnable, FalconConstants.kSupplyCurrentLimit,
+        FalconConstants.kSupplyTriggerThreshold, FalconConstants.kSupplyTriggerDuration);
   }
 
+  /**
+   * 
+   * Creates a TalonFX with supply current limit options. 
+   * 
+   * Supply current is current that's being drawn at the input bus voltage. 
+   * Supply limiting is useful for preventing breakers from tripping in the PDP.
+   * 
+   * @param id               the CAN ID of the the TalonFX
+   * @param CANBus           the CAN bus the TalonFX is on. If connected to the rio it is "rio".
+   * @param currentLimit     the current, in amps, to return to after the supply limit is triggered
+   * @param triggerThreshold the threshold current to trigger the supply limit
+   * @param triggerDuration  the duration, in seconds, the current is above the threshold before triggering
+   */
   public static WPI_TalonFX createTalonFXSupplyLimit(int id, String CANBus, double currentLimit,
       double triggerThreshold, double triggerDuration) {
-    return createTalonFXFull(id, CANBus, Constants.falcon.kStatorLimitEnable, Constants.falcon.kStatorCurrentLimit,
-        Constants.falcon.kStatorTriggerThreshold, Constants.falcon.kStatorTriggerDuration, true, currentLimit,
+    return createTalonFXFull(id, CANBus, FalconConstants.kStatorLimitEnable, FalconConstants.kStatorCurrentLimit,
+        FalconConstants.kStatorTriggerThreshold, FalconConstants.kStatorTriggerDuration, true, currentLimit,
         triggerThreshold, triggerDuration);
   }
 
+  /**
+   * 
+   * Creates a TalonFX with stator current limit options.
+   * 
+   * Stator current is current that’s being drawn by the motor.
+   * Stator limiting is useful for limiting acceleration/heat.
+   * 
+   * @param id               the CAN ID of the the TalonFX
+   * @param CANBus           the CAN bus the TalonFX is on. If connected to the rio it is "rio".
+   * @param currentLimit     the current, in amps, to return to after the stator limit is triggered
+   * @param triggerThreshold the threshold current to trigger the stator limit
+   * @param triggerDuration  the duration, in seconds, the current is above the threshold before triggering
+   */
   public static WPI_TalonFX createTalonFXStatorLimit(int id, String CANBus, double currentLimit,
       double triggerThreshold, double triggerDuration) {
     return createTalonFXFull(id, CANBus, true, currentLimit, triggerThreshold, triggerDuration,
-        Constants.falcon.kSupplyLimitEnable, Constants.falcon.kSupplyCurrentLimit,
-        Constants.falcon.kSupplyTriggerThreshold, Constants.falcon.kSupplyTriggerDuration);
+        FalconConstants.kSupplyLimitEnable, FalconConstants.kSupplyCurrentLimit,
+        FalconConstants.kSupplyTriggerThreshold, FalconConstants.kSupplyTriggerDuration);
   }
 }

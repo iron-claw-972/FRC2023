@@ -11,8 +11,12 @@ public final class Constants {
   public static final String kCanivoreCAN = "CANivore";
   public static final String kRioCAN = "rio";
 
-  public static final FalconConstants falcon = new FalconConstants();
+  @Deprecated
   public static final OIConstants oi = new OIConstants();
+  @Deprecated
   public static final DriveConstants drive = new DriveConstants();
+  @Deprecated
   public static final AutoConstants auto = new AutoConstants();
+  @Deprecated
+  public static final FalconConstants falcon = new FalconConstants();
 }

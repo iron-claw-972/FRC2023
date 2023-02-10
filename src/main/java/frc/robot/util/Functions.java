@@ -1,6 +1,6 @@
 package frc.robot.util;
 
-import frc.robot.constants.Constants;
+import frc.robot.constants.OIConstants;
 
 public class Functions {
 
@@ -30,7 +30,7 @@ public class Functions {
    * @return the input rescaled and to fit [-1, -kDeadband], [kDeadband, 1]
    */
   public static double deadband(double input) {
-    return deadband(input, Constants.oi.kDeadband);
+    return deadband(input, OIConstants.kDeadband);
   }
 
   public static double simpleDeadband(double input, double deadband){

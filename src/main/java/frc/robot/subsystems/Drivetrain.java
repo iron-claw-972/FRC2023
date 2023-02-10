@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
 import java.util.function.DoubleSupplier;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constants.Constants;
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
@@ -14,14 +16,11 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
-import frc.robot.constants.Constants;
 import frc.robot.constants.ModuleConstants;
 import frc.robot.util.LogManager;
-import frc.robot.util.RobotType;
-import frc.robot.util.ShuffleboardManager;
 
 /** Represents a swerve drive style drivetrain.
  * Module IDs are:
@@ -40,6 +39,7 @@ public class Drivetrain extends SubsystemBase {
     new SwerveModuleState()
   };
 
+  //TODO: not m_ if it is public. Also should this be public?
   public final Module[] m_modules;
 
   public final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
@@ -58,6 +58,9 @@ public class Drivetrain extends SubsystemBase {
   // Odometry
   private final SwerveDriveOdometry m_odometry;
   private Pose2d m_robotPose = new Pose2d();
+
+  // Displays the field with the robots estimated pose on it
+  private final Field2d m_fieldDisplay = new Field2d();
   
   // PID Controllers
   private PIDController m_xController = new PIDController(0,0,0);
@@ -72,11 +75,13 @@ public class Drivetrain extends SubsystemBase {
         Module.create(ModuleConstants.TEST_BR)
       };
 
-
     m_odometry = new SwerveDriveOdometry(m_kinematics, m_pigeon.getRotation2d(), getModulePositions(), m_robotPose);
     m_rotationController.enableContinuousInput(-Math.PI,Math.PI);
     DoubleSupplier[] poseSupplier = {() -> getPose().getX(), () -> getPose().getY(), () -> getPose().getRotation().getRadians()};
     LogManager.addDoubleArray("Pose2d", poseSupplier);
+
+    m_fieldDisplay.setRobotPose(getPose());
+    SmartDashboard.putData("Field", m_fieldDisplay);
   }
 
   @Override
@@ -88,6 +93,7 @@ public class Drivetrain extends SubsystemBase {
     }
     updateOdometry();
     
+    m_fieldDisplay.setRobotPose(getPose());
   }
 
   public void runChassisPID(double x, double y, double rot) {
@@ -105,8 +111,8 @@ public class Drivetrain extends SubsystemBase {
   /**
    * Resets the pigeon yaw, but only if it hasn't already been reset. Will reset it to {@link Constants.drive.kStartingHeadingDegrees}
    */
-  public void initializePigeonYaw() {
-    if (!m_hasResetYaw) {
+  public void initializePigeonYaw(boolean force) {
+    if (!m_hasResetYaw || force) {
       m_hasResetYaw = true;
       setPigeonYaw(Constants.drive.kStartingHeadingDegrees);
     }
@@ -250,7 +256,7 @@ public class Drivetrain extends SubsystemBase {
   }
   public void setAllOptimize(Boolean optimizeSate){
     for (int i = 0; i < 4; i++) {
-      Robot.drive.m_modules[i].setOptimize(optimizeSate);
+      m_modules[i].setOptimize(optimizeSate);
     }
   }
 
