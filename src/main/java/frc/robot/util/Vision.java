@@ -31,6 +31,7 @@ import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
@@ -44,6 +45,7 @@ import frc.robot.constants.Constants;
 
 public class Vision {
   private static RobotPoseEstimator robotPoseEstimator;
+  // private static RobotPoseEstimator robotPoseEstimator2;
   private static AprilTagFieldLayout aprilTagFieldLayout;
  
 
@@ -55,12 +57,12 @@ public class Vision {
     ArrayList<Pair<PhotonCamera, Transform3d>> camList;
     if(Constants.vision.k2Cameras){
       camList = new ArrayList<Pair<PhotonCamera, Transform3d>>(List.of(
-        new Pair<PhotonCamera, Transform3d>(camera1, Constants.vision.kCameraToRobot1),
-        new Pair<PhotonCamera, Transform3d>(camera2, Constants.vision.kCameraToRobot2)
+        new Pair<PhotonCamera, Transform3d>(camera1, Constants.vision.kRobotToCamera1),
+        new Pair<PhotonCamera, Transform3d>(camera2, Constants.vision.kRobotToCamera2)
       ));
     }else{
       camList = new ArrayList<Pair<PhotonCamera, Transform3d>>(List.of(
-        new Pair<PhotonCamera, Transform3d>(camera1, Constants.vision.kCameraToRobot1)
+        new Pair<PhotonCamera, Transform3d>(camera1, Constants.vision.kRobotToCamera1)
       ));
     }
     getTagFieldLayout();
@@ -68,14 +70,20 @@ public class Vision {
     
     robotPoseEstimator = new RobotPoseEstimator(aprilTagFieldLayout, PoseStrategy.AVERAGE_BEST_TARGETS, camList);
 
-    
+    if(Constants.vision.k2Cameras){
+      // ArrayList<Pair<PhotonCamera, Transform3d>>camList = new ArrayList<Pair<PhotonCamera, Transform3d>>(List.of(
+      //   new Pair<PhotonCamera, Transform3d>(camera2, Constants.vision.kCameraToRobot2)
+      // ));
+      // robotPoseEstimator2 = new RobotPoseEstimator(aprilTagFieldLayout, PoseStrategy.AVERAGE_BEST_TARGETS, camList);    
+    }
+
   }
 
   public static AprilTagFieldLayout getTagFieldLayout() {
     try {
-      // TODO: fix this
+      //TODO: Fix this
       // aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
-      aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource("Delete this line after fixing ^");
+      aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2022RapidReact.m_resourceFile);
     } catch (IOException ex) {
       aprilTagFieldLayout = new AprilTagFieldLayout(Constants.vision.kTagPoses, Constants.field.kFieldLength, Constants.field.kFieldWidth);
       System.out.println("Vision setup IOException: "+ex.getMessage());
@@ -94,9 +102,27 @@ public class Vision {
   //   return null;
   // }
 
+  public static void printEstimate(){
+    robotPoseEstimator.setReferencePose(new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0)));
+    Optional<Pair<Pose3d,Double>> r = robotPoseEstimator.update();
+    if(r.isPresent()){
+      System.out.printf("Present: %b\nPose: (%.2f, %.2f, %.2f)\nRotation: %.2f degrees\nTime: %.2f\n",
+        r.isPresent(), 
+        r.get().getFirst().getX(), 
+        r.get().getFirst().getY(), 
+        r.get().getFirst().getZ(), 
+        r.get().getFirst().getRotation().toRotation2d().getDegrees(), 
+        r.get().getSecond()
+      );
+    }else{
+      System.out.println("Result is not present");
+    }
+  }
+
   public static Optional<Pair<Pose3d,Double>> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
     robotPoseEstimator.setReferencePose(prevEstimatedRobotPose);
-    return robotPoseEstimator.update();
+    Optional<Pair<Pose3d,Double>> r = robotPoseEstimator.update();
+    return r;
 
     // double currentTime = Timer.getFPGATimestamp();
     // Optional<Pair<Pose3d, Double>> result = m_robotPoseEstimator.update();
@@ -105,6 +131,19 @@ public class Vision {
     // } else {
     //     return new Pair<Pose2d, Double>(null, 0.0);
     // }
+}
+public static Optional<Pair<Pose3d,Double>> getEstimatedGlobalPose2(Pose2d prevEstimatedRobotPose) {
+  // robotPoseEstimator2.setReferencePose(prevEstimatedRobotPose);
+  // return robotPoseEstimator2.update();
+  return null;
+
+  // double currentTime = Timer.getFPGATimestamp();
+  // Optional<Pair<Pose3d, Double>> result = m_robotPoseEstimator.update();
+  // if (result.isPresent()) {
+  //     return new Pair<Pose2d, Double>(result.get().getFirst().toPose2d(), currentTime - result.get().getSecond());
+  // } else {
+  //     return new Pair<Pose2d, Double>(null, 0.0);
+  // }
 }
 
   public static AprilTagFieldLayout getAprilTagFieldLayout(){
