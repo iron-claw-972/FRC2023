@@ -4,19 +4,13 @@
 
 package frc.robot;
 
-
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.commands.auto.OdometryTestCommand;
-import frc.robot.constants.Constants;
 import frc.robot.controls.Driver;
 import frc.robot.controls.Operator;
 import frc.robot.subsystems.Drivetrain;
@@ -36,12 +30,12 @@ public class Robot extends TimedRobot {
   private Command m_autoCommand;
   public static ShuffleboardManager shuffleboard;
   public static Drivetrain drive;
-  public static Driver driver= new Driver();
+  public static Driver driver = new Driver();
   public static Operator operator = new Operator();
  
   private static boolean isTestMode = false;
 
-  private final Field2d m_simField  = new Field2d();
+  private final Field2d m_simField = new Field2d();
  
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -71,7 +65,6 @@ public class Robot extends TimedRobot {
       m_simField.setRobotPose(drive.getPose());
       SmartDashboard.putData("Field", m_simField);
     }
-    
   }
 
   /**
@@ -113,15 +106,12 @@ public class Robot extends TimedRobot {
   
   @Override
   public void autonomousInit() {
-    
-   
     isTestMode = false;
     drive.initializePigeonYaw();
 
     if (m_autoCommand != null) {
       m_autoCommand.schedule();
     }
-    
   }
 
   /**
@@ -129,11 +119,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-  
-   
-    
-   
-
   }
   
 
@@ -175,7 +160,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void simulationPeriodic() {
-    SmartDashboard.putData("Field", m_simField);
     m_simField.setRobotPose(drive.getPose());
   }
 

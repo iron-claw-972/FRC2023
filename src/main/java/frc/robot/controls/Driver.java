@@ -1,6 +1,5 @@
 package frc.robot.controls;
 
-import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Robot;
 import frc.robot.commands.SetFormationX;
@@ -48,7 +47,7 @@ public class Driver {
 
   private boolean m_invert;
 
-  public Driver(){
+  public Driver() {
     m_headingLimiter.setContinuousLimits(-Math.PI,Math.PI);
     m_headingLimiter.enableContinuous(true);
   }
@@ -73,7 +72,7 @@ public class Driver {
   public double getRotation() {
     return m_rotLimiter.calculate(-Functions.expoMS(Functions.deadband(getRawRotation(), m_rotationDeadband), m_rotationExpo) * Constants.drive.kMaxAngularSpeed * m_rotationSenseitiviy, m_rotationSlewrate);
   }
-  public double getHeading(){
+  public double getHeading() {
     if (getRawHeadingMagnitude() <= m_headingDeadband) return m_headingLimiter.calculate(m_previousHeading,1e-6);
     m_previousHeading = m_headingLimiter.calculate(getRawHeadingAngle(), Functions.expoMS(getRawHeadingMagnitude(), m_headingExpo) * m_headingSenseitiviy);
     // if (getRawHeadingMagnitude() <= m_headingDeadband) return m_previousHeading;
@@ -84,7 +83,7 @@ public class Driver {
     // return 0;
   }
 
-  public boolean getFieldRelative(){
+  public boolean getFieldRelative() {
     return m_fieldRelative;
   }
   
@@ -117,7 +116,7 @@ public class Driver {
     return 0;
   }
 
-  public double getRawRotation(){
+  public double getRawRotation() {
     if (m_controllerType instanceof GameController && m_invert) return driverGC.get(GCAxis.LEFT_X);
     if (m_controllerType instanceof GameController) return driverGC.get(GCAxis.RIGHT_X);
     if (m_controllerType instanceof Ex3DProController) return driverEPC.get(Ex3DProAxis.Z);
@@ -140,7 +139,7 @@ public class Driver {
     return 0;
   }
   
-  public void updateSettings(){
+  public void updateSettings() {
     m_controllerType = Robot.shuffleboard.getControllerType();
 
     m_translationalSenseitivity = Robot.shuffleboard.getTranslationalSenseitivity();
@@ -160,7 +159,6 @@ public class Driver {
 
     m_invert = Robot.shuffleboard.getInverted();
     m_consantHeadingMagnatuide = Robot.shuffleboard.getConsantHeadingMagnatuide();
-
   }
 
 }
