@@ -19,7 +19,6 @@ import frc.robot.constants.Constants;
 import frc.robot.constants.ModuleConstants;
 import frc.robot.util.LogManager;
 import frc.robot.util.MotorFactory;
-import frc.robot.util.TestType;
 import lib.ctre_shims.TalonEncoder;
 
 public class Module {
@@ -215,7 +214,7 @@ public class Module {
    * @param desiredState Desired state with speed and angle.
    */
   public void setDesiredState(SwerveModuleState desiredState) {
-    if (Math.abs(desiredState.speedMetersPerSecond) < 0.001 && Robot.shuffleboard.getTestModeType() != TestType.HEADING_PID) {
+    if (Math.abs(desiredState.speedMetersPerSecond) < 0.001) { //TODO are there cases where we don't want to do this for testing?
       stop();
       return;
     }

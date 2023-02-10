@@ -4,55 +4,55 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.controls.Driver;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.util.TestType;
 
 public class DefaultDriveCommand extends CommandBase {
   private final Drivetrain m_drive;
 
   public DefaultDriveCommand(Drivetrain drive) {
-    this.m_drive = drive;
+    m_drive = drive;
 
     addRequirements(drive);
   }
 
   @Override
   public void execute() {
-    if (Robot.shuffleboard.getTestModeType() == TestType.HEADING_PID) {
-      runHeadingPID();
-      return;
-    } else if (Robot.shuffleboard.getTestModeType() == TestType.MODULE_DRIVE_VELOCITY) {
-      testDriveVel();
-      Robot.shuffleboard.setDriveModuleFeedforward();
-      return;
-    } else if (Robot.shuffleboard.getTestModeType() == TestType.MODULE_STEER_ANGLE){
-      testSteerAngle();
-      Robot.shuffleboard.setSteerModuleFeedforward();
-      return;
-    } else if (Robot.shuffleboard.getTestModeType() == TestType.DRIVE_VOLTAGE){
-      testDriveVolts();
-      return;
-    } else if (Robot.shuffleboard.getTestModeType() == TestType.STEER_VOLTAGE){
-      testSteerVolts();
-      return;
-    }
+
+    // TODO: rewrite these as commands and add them to the test tab in robot container
+    // if (Robot.shuffleboard.getTestModeType() == TestType.HEADING_PID) {
+    //   runHeadingPID();
+    //   return;
+    // } else if (Robot.shuffleboard.getTestModeType() == TestType.MODULE_DRIVE_VELOCITY) {
+    //   testDriveVel();
+    //   Robot.shuffleboard.setDriveModuleFeedforward();
+    //   return;
+    // } else if (Robot.shuffleboard.getTestModeType() == TestType.MODULE_STEER_ANGLE){
+    //   testSteerAngle();
+    //   Robot.shuffleboard.setSteerModuleFeedforward();
+    //   return;
+    // } else if (Robot.shuffleboard.getTestModeType() == TestType.DRIVE_VOLTAGE){
+    //   testDriveVolts();
+    //   return;
+    // } else if (Robot.shuffleboard.getTestModeType() == TestType.STEER_VOLTAGE){
+    //   testSteerVolts();
+    //   return;
+    // }
+    // if (Robot.shuffleboard.getTestModeType() == TestType.HEADING_DRIVE){
+    //   rot = Driver.getHeading();
+    //   m_drive.driveHeading(xSpeed, ySpeed, rot, fieldRelative);
+    //   return;
+    // }
 
     m_drive.setAllOptimize(true);
-    double xSpeed = Robot.driver.getForwardTranslation();
-    double ySpeed = Robot.driver.getSideTranslation();
-    double rot = Robot.driver.getRotation();
-    boolean fieldRelative = Robot.driver.getFieldRelative();
+    double xSpeed = Driver.getForwardTranslation();
+    double ySpeed = Driver.getSideTranslation();
+    double rot = Driver.getRotation();
+    boolean fieldRelative = Driver.getFieldRelative();
 
-    if (Robot.shuffleboard.getTestModeType() == TestType.HEADING_DRIVE){
-      rot = Robot.driver.getHeading();
-      m_drive.driveHeading(xSpeed, ySpeed, rot, fieldRelative);
-      return;
-    }
     // System.out.println("driving: " + xSpeed + "," + ySpeed + "," + rot +
-    // "," + Robot.driver.getRawForwardTranslation() + "," + Robot.driver.getRawSideTranslation() +","+ Robot.driver.getRawRotation());
+    // "," + Driver.getRawForwardTranslation() + "," + Driver.getRawSideTranslation() +","+ Driver.getRawRotation());
     m_drive.driveRot(xSpeed, ySpeed, rot, fieldRelative);
 }
 
@@ -61,9 +61,11 @@ public class DefaultDriveCommand extends CommandBase {
     m_drive.driveRot(0.0, 0.0, 0.0, false);
   }
 
+  // TODO: ALL OF THE FUNCTIONS BELOW SHOULD BE IN DRIVETRAIN.JAVA AND PART OF SOME OTHER TEST COMMAND
+
   private void runHeadingPID() {
     m_drive.setAllOptimize(false);
-    m_drive.m_headingPIDOutput = m_drive.getRotationController().calculate(m_drive.getAngleHeading(), Robot.shuffleboard.getRequestedHeading()); // should be in rad/s
+    m_drive.m_headingPIDOutput = m_drive.getRotationController().calculate(m_drive.getAngleHeading(), 0); //TODO: fix, was : Robot.shuffleboard.getRequestedHeading()); // should be in rad/s
     
     // headingOutput is in rad/s. Need to convert to m/s by multiplying by radius
     m_drive.m_headingPIDOutput *= Math.sqrt(0.5) * Constants.drive.kTrackWidth;
@@ -80,63 +82,58 @@ public class DefaultDriveCommand extends CommandBase {
 
   private void testDriveVel() {
     m_drive.setAllOptimize(true);
-    double value = Robot.shuffleboard.getRequestedDriveVelocity();
+    double value = 0; //TODO: fix, was: Robot.shuffleboard.getRequestedDriveVelocity();
     for (int i = 0; i < 4; i++) {
-      Robot.drive.m_modules[i].setDriveVelocity(value);
+      m_drive.m_modules[i].setDriveVelocity(value);
     }
-    Robot.drive.m_modules[0].setSteerAngle(new Rotation2d(Units.degreesToRadians(135)));
-    Robot.drive.m_modules[1].setSteerAngle(new Rotation2d(Units.degreesToRadians(45)));
-    Robot.drive.m_modules[2].setSteerAngle(new Rotation2d(Units.degreesToRadians(225)));
-    Robot.drive.m_modules[3].setSteerAngle(new Rotation2d(Units.degreesToRadians(315)));
+    m_drive.m_modules[0].setSteerAngle(new Rotation2d(Units.degreesToRadians(135)));
+    m_drive.m_modules[1].setSteerAngle(new Rotation2d(Units.degreesToRadians(45)));
+    m_drive.m_modules[2].setSteerAngle(new Rotation2d(Units.degreesToRadians(225)));
+    m_drive.m_modules[3].setSteerAngle(new Rotation2d(Units.degreesToRadians(315)));
   }
 
   private void testDriveVolts() {
     m_drive.setAllOptimize(false);
-    double value = Robot.shuffleboard.getRequestedVolts();
+    double value = 0; //TODO fix, was: Robot.shuffleboard.getRequestedVolts();
     for (int i = 0; i < 4; i++) {
-      Robot.drive.m_modules[i].setDriveVoltage(value);
+      m_drive.m_modules[i].setDriveVoltage(value);
     }
-    Robot.drive.m_modules[0].setSteerAngle(new Rotation2d(Units.degreesToRadians(135)));
-    Robot.drive.m_modules[1].setSteerAngle(new Rotation2d(Units.degreesToRadians(45)));
-    Robot.drive.m_modules[2].setSteerAngle(new Rotation2d(Units.degreesToRadians(225)));
-    Robot.drive.m_modules[3].setSteerAngle(new Rotation2d(Units.degreesToRadians(315)));
+    m_drive.m_modules[0].setSteerAngle(new Rotation2d(Units.degreesToRadians(135)));
+    m_drive.m_modules[1].setSteerAngle(new Rotation2d(Units.degreesToRadians(45)));
+    m_drive.m_modules[2].setSteerAngle(new Rotation2d(Units.degreesToRadians(225)));
+    m_drive.m_modules[3].setSteerAngle(new Rotation2d(Units.degreesToRadians(315)));
   }
 
   private void testSteerAngle() {
     m_drive.setAllOptimize(true);
-    double value = Robot.shuffleboard.getRequestedSteerAngle();
+    double value = 0; //TODO: fix, was: Robot.shuffleboard.getRequestedSteerAngle();
     for (int i = 0; i < 4; i++) {
-      Robot.drive.m_modules[i].setDriveVoltage(0);
-      Robot.drive.m_modules[i].setSteerAngle(new Rotation2d(value));
+      m_drive.m_modules[i].setDriveVoltage(0);
+      m_drive.m_modules[i].setSteerAngle(new Rotation2d(value));
     }
   }
 
   private void testSteerVolts() {
     m_drive.setAllOptimize(true);
-    double value = Robot.shuffleboard.getRequestedVolts();
+    double value = 0; //TODO fix, was: Robot.shuffleboard.getRequestedVolts();
     for (int i = 0; i < 4; i++) {
-      Robot.drive.m_modules[i].setDriveVoltage(0);
-      Robot.drive.m_modules[i].setSteerVoltage(value);
+      m_drive.m_modules[i].setDriveVoltage(0);
+      m_drive.m_modules[i].setSteerVoltage(value);
     }
   }
 
   private void testFFandPID(){
-    
-      if(
-      Robot.shuffleboard.getRequestedDriveVelocity()+0.1>Robot.drive.m_modules[0].getDriveVelocity()||
-      Robot.shuffleboard.getRequestedDriveVelocity()-0.1<Robot.drive.m_modules[0].getDriveVelocity()||
-      Robot.shuffleboard.getRequestedDriveVelocity()+0.1>Robot.drive.m_modules[1].getDriveVelocity()||
-      Robot.shuffleboard.getRequestedDriveVelocity()-0.1<Robot.drive.m_modules[1].getDriveVelocity()||
-      Robot.shuffleboard.getRequestedDriveVelocity()+0.1>Robot.drive.m_modules[2].getDriveVelocity()||
-      Robot.shuffleboard.getRequestedDriveVelocity()-0.1<Robot.drive.m_modules[2].getDriveVelocity()||
-      Robot.shuffleboard.getRequestedDriveVelocity()+0.1>Robot.drive.m_modules[3].getDriveVelocity()||
-      Robot.shuffleboard.getRequestedDriveVelocity()-0.1<Robot.drive.m_modules[3].getDriveVelocity())
-      {
-        System.out.println("ERROR VELOCITY INCORRECT");
-      }
-      }
-    
-
+    if(false) //TODO: do better than this
+    // Robot.shuffleboard.getRequestedDriveVelocity()+0.1>m_drive.m_modules[0].getDriveVelocity()||
+    // Robot.shuffleboard.getRequestedDriveVelocity()-0.1<m_drive.m_modules[0].getDriveVelocity()||
+    // Robot.shuffleboard.getRequestedDriveVelocity()+0.1>m_drive.m_modules[1].getDriveVelocity()||
+    // Robot.shuffleboard.getRequestedDriveVelocity()-0.1<m_drive.m_modules[1].getDriveVelocity()||
+    // Robot.shuffleboard.getRequestedDriveVelocity()+0.1>m_drive.m_modules[2].getDriveVelocity()||
+    // Robot.shuffleboard.getRequestedDriveVelocity()-0.1<m_drive.m_modules[2].getDriveVelocity()||
+    // Robot.shuffleboard.getRequestedDriveVelocity()+0.1>m_drive.m_modules[3].getDriveVelocity()||
+    // Robot.shuffleboard.getRequestedDriveVelocity()-0.1<m_drive.m_modules[3].getDriveVelocity()
+    {
+      System.out.println("ERROR VELOCITY INCORRECT");
+    }
   }
-
-
+}

@@ -1,15 +1,20 @@
 package frc.robot;
 
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.DoNothing;
+import frc.robot.commands.TestDriveVelocity;
 import frc.robot.controls.Driver;
 import frc.robot.controls.Operator;
 import frc.robot.controls.TestControls;
@@ -26,8 +31,16 @@ public class RobotContainer {
   // The robot's subsystems are defined here...
   private final Drivetrain m_drive = new Drivetrain();
 
-  // Shuffleboard stuff
+  // Shuffleboard auto chooser
   SendableChooser<Command> m_autoCommand = new SendableChooser<>();
+
+  //shuffleboard tabs
+  private ShuffleboardTab m_mainTab = Shuffleboard.getTab("Main");
+  private ShuffleboardTab m_drivetrainTab = Shuffleboard.getTab("Drive");
+  private ShuffleboardTab m_swerveModulesTab = Shuffleboard.getTab("Swerve Modules");
+  private ShuffleboardTab m_autoTab = Shuffleboard.getTab("Auto");
+  private ShuffleboardTab m_controllerTab = Shuffleboard.getTab("Controller");
+  private ShuffleboardTab m_testTab = Shuffleboard.getTab("Test");
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -48,8 +61,13 @@ public class RobotContainer {
     addTestCommands();
     autoChooserUpdate();
     loadCommandSchedulerShuffleboard();
+
+    m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive));
   }
 
+  public void initDriveYaw(boolean force) {
+    m_drive.initializePigeonYaw(force);
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -64,8 +82,12 @@ public class RobotContainer {
    * Adds the test commands to shuffleboard so they can be run that way.
    */
   public void addTestCommands() {
-    ShuffleboardTab tab = Shuffleboard.getTab("Test");
-    tab.add("Do Nothing", new DoNothing());
+    
+    m_testTab.add("Do Nothing", new DoNothing());
+
+    GenericEntry driveVel = m_swerveModulesTab.add("Set Drive Velocity", 0).getEntry();
+    GenericEntry steerVel = m_swerveModulesTab.add("Set Steer Velocity", 0).getEntry();
+    m_testTab.add("Test Drive Velocity", new TestDriveVelocity(m_drive, driveVel, steerVel));
   }
 
   /**

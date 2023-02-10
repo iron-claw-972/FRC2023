@@ -4,7 +4,6 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Robot;
 import frc.robot.subsystems.Drivetrain;
 
 public class CircleDrive extends CommandBase{
@@ -24,8 +23,9 @@ public class CircleDrive extends CommandBase{
 
     @Override
     public void execute() {
-        m_translationalVelocity = Robot.shuffleboard.getRequestedDriveVelocity();
-        m_rotationalVelocity = Robot.shuffleboard.getRequestedSteerVelocity();
+        //TODO: fix
+        // m_translationalVelocity = Robot.shuffleboard.getRequestedDriveVelocity();
+        // m_rotationalVelocity = Robot.shuffleboard.getRequestedSteerVelocity();
 
         double currentTime = WPIUtilJNI.now() * 1e-6;
         m_steerPosition = MathUtil.angleModulus( m_steerPosition + (currentTime - m_prevTime) * m_rotationalVelocity );

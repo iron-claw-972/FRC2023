@@ -45,7 +45,7 @@ public class DriveFeedForwardCharacterzation extends CommandBase {
     runcharacterazationVolts();
     if (m_timer.get() > 0.5) {
       for (int i=0; i<4; i++){
-        m_feedForwardCharacterizationData[i].add(Robot.drive.m_modules[i].getDriveVelocity(), value); 
+        m_feedForwardCharacterizationData[i].add(m_drive.m_modules[i].getDriveVelocity(), value); 
       }
       
     }
@@ -60,12 +60,12 @@ public class DriveFeedForwardCharacterzation extends CommandBase {
 
   private void runcharacterazationVolts() {
     for (int i = 0; i < 4; i++) {
-      Robot.drive.m_modules[i].setDriveVoltage(value);
+      m_drive.m_modules[i].setDriveVoltage(value);
     }
-    Robot.drive.m_modules[0].setSteerAngle(new Rotation2d(Units.degreesToRadians(135)));
-    Robot.drive.m_modules[1].setSteerAngle(new Rotation2d(Units.degreesToRadians(45)));
-    Robot.drive.m_modules[2].setSteerAngle(new Rotation2d(Units.degreesToRadians(225)));
-    Robot.drive.m_modules[3].setSteerAngle(new Rotation2d(Units.degreesToRadians(315)));
+    m_drive.m_modules[0].setSteerAngle(new Rotation2d(Units.degreesToRadians(135)));
+    m_drive.m_modules[1].setSteerAngle(new Rotation2d(Units.degreesToRadians(45)));
+    m_drive.m_modules[2].setSteerAngle(new Rotation2d(Units.degreesToRadians(225)));
+    m_drive.m_modules[3].setSteerAngle(new Rotation2d(Units.degreesToRadians(315)));
   }
 
   public void end(boolean interrupted) {
@@ -76,19 +76,20 @@ public class DriveFeedForwardCharacterzation extends CommandBase {
     }
     
     for (int i=0; i<4;i++){
-      Robot.shuffleboard.m_driveStaticFeedForwardSaver.replace(Robot.drive.m_modules[i], m_feedForwardCharacterizationData[i].getStatic());
-      Robot.shuffleboard.m_driveVelFeedForwardSaver.replace(Robot.drive.m_modules[i], m_feedForwardCharacterizationData[i].getVelocity());
+      //TODO: fix this
+      // Robot.shuffleboard.m_driveStaticFeedForwardSaver.replace(m_drive.m_modules[i], m_feedForwardCharacterizationData[i].getStatic());
+      // Robot.shuffleboard.m_driveVelFeedForwardSaver.replace(m_drive.m_modules[i], m_feedForwardCharacterizationData[i].getVelocity());
       System.out.println("Static " + i + ": " + m_feedForwardCharacterizationData[i].getStatic());
       System.out.println("Velocity " + i + ": " + m_feedForwardCharacterizationData[i].getVelocity());
     }
     
     for (int i = 0; i < 4; i++) {
-      // Robot.drive.m_modules[i].setDriveVoltage(0);
+      // m_drive.m_modules[i].setDriveVoltage(0);
     }
-    Robot.drive.m_modules[0].setSteerAngle(new Rotation2d(Units.degreesToRadians(135)));
-    Robot.drive.m_modules[1].setSteerAngle(new Rotation2d(Units.degreesToRadians(45)));
-    Robot.drive.m_modules[2].setSteerAngle(new Rotation2d(Units.degreesToRadians(225)));
-    Robot.drive.m_modules[3].setSteerAngle(new Rotation2d(Units.degreesToRadians(315)));
+    m_drive.m_modules[0].setSteerAngle(new Rotation2d(Units.degreesToRadians(135)));
+    m_drive.m_modules[1].setSteerAngle(new Rotation2d(Units.degreesToRadians(45)));
+    m_drive.m_modules[2].setSteerAngle(new Rotation2d(Units.degreesToRadians(225)));
+    m_drive.m_modules[3].setSteerAngle(new Rotation2d(Units.degreesToRadians(315)));
   }
 
   public boolean isFinished() {
