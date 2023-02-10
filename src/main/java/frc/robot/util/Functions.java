@@ -1,6 +1,5 @@
 package frc.robot.util;
 
-import frc.robot.constants.Constants;
 import frc.robot.constants.OIConstants;
 
 public class Functions {
