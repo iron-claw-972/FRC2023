@@ -1,7 +1,6 @@
 package frc.robot.constants;
 
-import frc.robot.constants.swerve.CompDriveConstants;
-import frc.robot.constants.swerve.DriveConstants;
+import frc.robot.util.RobotType;
 
 public final class Constants {
   public static final double kGravitationalAccel = 9.8;
@@ -10,8 +9,10 @@ public final class Constants {
   
   public static final double kCancoderResolution = 4096;
 
+  public static final RobotType kRobotType = RobotType.COMP;
+
   // CAN bus names
-  // Replaced for DriveConstants.kConstants.xxxxCAN constants
+  // Replaced for DriveConstants.xxxxCAN constants
   @Deprecated
   public static final String kCanivoreCAN = "CANivore";
   @Deprecated
@@ -19,8 +20,6 @@ public final class Constants {
 
   @Deprecated
   public static final OIConstants oi = new OIConstants();
-  @Deprecated
-  public static final DriveConstants drive = new CompDriveConstants();
   @Deprecated
   public static final AutoConstants auto = new AutoConstants();
   @Deprecated

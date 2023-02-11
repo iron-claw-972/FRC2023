@@ -20,7 +20,7 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
   }
 
   public void configureControls() { 
-    driverGC.get(GCButton.START).onTrue(new InstantCommand(() -> super.getDrivetrain().setPigeonYaw(DriveConstants.kConstants.kStartingHeadingDegrees)));
+    driverGC.get(GCButton.START).onTrue(new InstantCommand(() -> super.getDrivetrain().setPigeonYaw(DriveConstants.kStartingHeadingDegrees)));
     driverGC.get(GCButton.A).whileTrue(new SetFormationX(super.getDrivetrain()));
   }
 

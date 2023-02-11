@@ -112,8 +112,8 @@ public class Module {
     
     if (Robot.isReal()) {
       // TODO: The CANBus needs to be a constant because on the new 2023 bot, drive motors use Canivore, not rio
-      m_driveMotor = MotorFactory.createTalonFX(driveMotorPort, DriveConstants.kConstants.kDriveMotorCAN);
-      m_steerMotor = MotorFactory.createTalonFX(steerMotorPort, DriveConstants.kConstants.kSteerMotorCAN);
+      m_driveMotor = MotorFactory.createTalonFX(driveMotorPort, DriveConstants.kDriveMotorCAN);
+      m_steerMotor = MotorFactory.createTalonFX(steerMotorPort, DriveConstants.kSteerMotorCAN);
     } else {
       m_driveMotor = new WPI_TalonFX(driveMotorPort);
       m_steerMotor = new WPI_TalonFX(steerMotorPort);
@@ -126,7 +126,7 @@ public class Module {
     m_steerMotor.setNeutralMode(NeutralMode.Brake);
 
     m_driveEncoder = new TalonEncoder(m_driveMotor);
-    m_encoder = new WPI_CANCoder(encoderPort, DriveConstants.kConstants.kEncoderCAN);
+    m_encoder = new WPI_CANCoder(encoderPort, DriveConstants.kEncoderCAN);
 
     m_drivePIDController = new PIDController(driveP, driveI,driveD);
     m_steerPIDController = new ProfiledPIDController(
@@ -134,7 +134,7 @@ public class Module {
       steerI,
       steerD,
       new TrapezoidProfile.Constraints(
-        DriveConstants.kConstants.kMaxAngularSpeed, DriveConstants.kConstants.kMaxAngularAccel));
+        DriveConstants.kMaxAngularSpeed, DriveConstants.kMaxAngularAccel));
 
     // reset encoder to factory defaults, reset position to the measurement of the
     // absolute encoder
@@ -153,7 +153,7 @@ public class Module {
     // distance traveled for one rotation of the wheel divided by the encoder
     // resolution.
     m_driveEncoder.setDistancePerPulse(
-        2 * Math.PI * DriveConstants.kConstants.kWheelRadius / DriveConstants.kConstants.kDriveGearRatio / Constants.kCancoderResolution);
+        2 * Math.PI * DriveConstants.kWheelRadius / DriveConstants.kDriveGearRatio / Constants.kCancoderResolution);
 
     // Limit the PID Controller's input range between -pi and pi and set the input
     // to be continuous. Factor in the offset amount.
@@ -243,7 +243,7 @@ public class Module {
    * @return module drive position in meters.
    */
   public double getDrivePosition() {
-      return m_driveEncoder.getDistance() * DriveConstants.kConstants.kDriveGearRatio * 2 * Math.PI * DriveConstants.kConstants.kWheelRadius;
+      return m_driveEncoder.getDistance() * DriveConstants.kDriveGearRatio * 2 * Math.PI * DriveConstants.kWheelRadius;
   }
 
   /**

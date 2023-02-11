@@ -49,14 +49,14 @@ public class Drivetrain extends SubsystemBase {
   public final Module[] m_modules;
 
   public final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
-    new Translation2d(DriveConstants.kConstants.kTrackWidth / 2, DriveConstants.kConstants.kTrackWidth / 2),
-    new Translation2d(DriveConstants.kConstants.kTrackWidth / 2, -DriveConstants.kConstants.kTrackWidth / 2),
-    new Translation2d(-DriveConstants.kConstants.kTrackWidth / 2, DriveConstants.kConstants.kTrackWidth / 2),
-    new Translation2d(-DriveConstants.kConstants.kTrackWidth / 2, -DriveConstants.kConstants.kTrackWidth / 2)
+    new Translation2d(DriveConstants.kTrackWidth / 2, DriveConstants.kTrackWidth / 2),
+    new Translation2d(DriveConstants.kTrackWidth / 2, -DriveConstants.kTrackWidth / 2),
+    new Translation2d(-DriveConstants.kTrackWidth / 2, DriveConstants.kTrackWidth / 2),
+    new Translation2d(-DriveConstants.kTrackWidth / 2, -DriveConstants.kTrackWidth / 2)
   );
 
   // Pigeon
-  private final WPI_Pigeon2 m_pigeon = new WPI_Pigeon2(DriveConstants.kConstants.kPigeon, DriveConstants.kConstants.kPigeonCAN);
+  private final WPI_Pigeon2 m_pigeon = new WPI_Pigeon2(DriveConstants.kPigeon, DriveConstants.kPigeonCAN);
   private boolean m_hasResetYaw = false; // the initial yaw has been set 
 
   public double m_headingPIDOutput = 0;
@@ -71,7 +71,7 @@ public class Drivetrain extends SubsystemBase {
   // PID Controllers
   private PIDController m_xController = new PIDController(0,0,0);
   private PIDController m_yController = new PIDController(0, 0, 0);
-  private PIDController m_rotationController = new PIDController(DriveConstants.kConstants.KheadingP, DriveConstants.kConstants.KheadingI, DriveConstants.kConstants.KheadingD);
+  private PIDController m_rotationController = new PIDController(DriveConstants.KheadingP, DriveConstants.KheadingI, DriveConstants.KheadingD);
 
   //Shuffleboard
   GenericEntry 
@@ -146,12 +146,12 @@ public class Drivetrain extends SubsystemBase {
   }
 
   /**
-   * Resets the pigeon yaw, but only if it hasn't already been reset. Will reset it to {@link DriveConstants.kConstants.kStartingHeadingDegrees}
+   * Resets the pigeon yaw, but only if it hasn't already been reset. Will reset it to {@link DriveConstants.kStartingHeadingDegrees}
    */
   public void initializePigeonYaw(boolean force) {
     if (!m_hasResetYaw || force) {
       m_hasResetYaw = true;
-      setPigeonYaw(DriveConstants.kConstants.kStartingHeadingDegrees);
+      setPigeonYaw(DriveConstants.kStartingHeadingDegrees);
     }
   }
 
@@ -176,7 +176,7 @@ public class Drivetrain extends SubsystemBase {
             fieldRelative
                 ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_pigeon.getRotation2d())
                 : new ChassisSpeeds(xSpeed, ySpeed, rot));
-    SwerveDriveKinematics.desaturateWheelSpeeds(m_swerveModuleStates, DriveConstants.kConstants.kMaxSpeed);
+    SwerveDriveKinematics.desaturateWheelSpeeds(m_swerveModuleStates, DriveConstants.kMaxSpeed);
     setModuleStates(m_swerveModuleStates);
   }
 
@@ -197,7 +197,7 @@ public class Drivetrain extends SubsystemBase {
             fieldRelative
                 ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_pigeon.getRotation2d())
                 : new ChassisSpeeds(xSpeed, ySpeed, rot));
-    SwerveDriveKinematics.desaturateWheelSpeeds(m_swerveModuleStates, DriveConstants.kConstants.kMaxSpeed);
+    SwerveDriveKinematics.desaturateWheelSpeeds(m_swerveModuleStates, DriveConstants.kMaxSpeed);
     setModuleStates(m_swerveModuleStates);
   }
 
@@ -339,7 +339,7 @@ public class Drivetrain extends SubsystemBase {
 
   public void setChassisSpeeds(ChassisSpeeds chassisSpeeds) {
     m_swerveModuleStates = m_kinematics.toSwerveModuleStates(chassisSpeeds);
-    SwerveDriveKinematics.desaturateWheelSpeeds(m_swerveModuleStates, DriveConstants.kConstants.kMaxSpeed);
+    SwerveDriveKinematics.desaturateWheelSpeeds(m_swerveModuleStates, DriveConstants.kMaxSpeed);
     setModuleStates(m_swerveModuleStates);
     
     if (!Robot.isReal()) {
@@ -400,25 +400,25 @@ public class Drivetrain extends SubsystemBase {
     }
   }
   private void setUpFeedforwardHashmap(){
-    m_driveStaticFeedForwardSaver[0] = DriveConstants.kConstants.kDriveKSFrontLeft;
-    m_driveStaticFeedForwardSaver[1] = DriveConstants.kConstants.kDriveKSFrontRight;
-    m_driveStaticFeedForwardSaver[2] = DriveConstants.kConstants.kDriveKSBackLeft;
-    m_driveStaticFeedForwardSaver[3] = DriveConstants.kConstants.kDriveKSBackRight;
+    m_driveStaticFeedForwardSaver[0] = DriveConstants.kDriveKSFrontLeft;
+    m_driveStaticFeedForwardSaver[1] = DriveConstants.kDriveKSFrontRight;
+    m_driveStaticFeedForwardSaver[2] = DriveConstants.kDriveKSBackLeft;
+    m_driveStaticFeedForwardSaver[3] = DriveConstants.kDriveKSBackRight;
     
-    m_driveVelFeedForwardSaver[0] = DriveConstants.kConstants.kDriveKVFrontLeft;
-    m_driveVelFeedForwardSaver[1] = DriveConstants.kConstants.kDriveKVFrontRight;
-    m_driveVelFeedForwardSaver[2] = DriveConstants.kConstants.kDriveKVBackLeft;
-    m_driveVelFeedForwardSaver[3] = DriveConstants.kConstants.kDriveKVBackRight;
+    m_driveVelFeedForwardSaver[0] = DriveConstants.kDriveKVFrontLeft;
+    m_driveVelFeedForwardSaver[1] = DriveConstants.kDriveKVFrontRight;
+    m_driveVelFeedForwardSaver[2] = DriveConstants.kDriveKVBackLeft;
+    m_driveVelFeedForwardSaver[3] = DriveConstants.kDriveKVBackRight;
     
-    m_steerStaticFeedForwardSaver[0] = DriveConstants.kConstants.kSteerKSFrontLeft;
-    m_steerStaticFeedForwardSaver[1] = DriveConstants.kConstants.kSteerKSFrontRight;
-    m_steerStaticFeedForwardSaver[2] = DriveConstants.kConstants.kSteerKSBackLeft;
-    m_steerStaticFeedForwardSaver[3] = DriveConstants.kConstants.kSteerKSBackRight;
+    m_steerStaticFeedForwardSaver[0] = DriveConstants.kSteerKSFrontLeft;
+    m_steerStaticFeedForwardSaver[1] = DriveConstants.kSteerKSFrontRight;
+    m_steerStaticFeedForwardSaver[2] = DriveConstants.kSteerKSBackLeft;
+    m_steerStaticFeedForwardSaver[3] = DriveConstants.kSteerKSBackRight;
     
-    m_steerVelFeedForwardSaver[0] = DriveConstants.kConstants.kSteerKVFrontLeft;
-    m_steerVelFeedForwardSaver[1] = DriveConstants.kConstants.kSteerKVFrontRight;
-    m_steerVelFeedForwardSaver[2] = DriveConstants.kConstants.kSteerKVBackLeft;
-    m_steerVelFeedForwardSaver[3] = DriveConstants.kConstants.kSteerKVBackRight;
+    m_steerVelFeedForwardSaver[0] = DriveConstants.kSteerKVFrontLeft;
+    m_steerVelFeedForwardSaver[1] = DriveConstants.kSteerKVFrontRight;
+    m_steerVelFeedForwardSaver[2] = DriveConstants.kSteerKVBackLeft;
+    m_steerVelFeedForwardSaver[3] = DriveConstants.kSteerKVBackRight;
   }
 
   public GenericEntry getRequestedHeadingEntry() {

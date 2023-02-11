@@ -20,7 +20,7 @@ public class Ex3DProDriverConfig extends BaseDriverConfig {
 
   public void configureControls() { 
   driverEPC.get(Ex3DProButton.B1).whileTrue(new SetFormationX(super.getDrivetrain()));
-  driverEPC.get(Ex3DProButton.B2).onTrue(new InstantCommand(() -> super.getDrivetrain().setPigeonYaw(DriveConstants.kConstants.kStartingHeadingDegrees)));
+  driverEPC.get(Ex3DProButton.B2).onTrue(new InstantCommand(() -> super.getDrivetrain().setPigeonYaw(DriveConstants.kStartingHeadingDegrees)));
   }
 
   public double getRawSideTranslation() { 

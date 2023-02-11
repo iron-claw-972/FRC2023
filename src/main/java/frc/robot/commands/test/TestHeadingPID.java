@@ -26,7 +26,7 @@ public class TestHeadingPID extends CommandBase {
     m_drive.m_headingPIDOutput = m_drive.getRotationController().calculate(m_drive.getAngleHeading(), m_headingAngleEntry.getDouble(0));
     
     // headingOutput is in rad/s. Need to convert to m/s by multiplying by radius
-    m_drive.m_headingPIDOutput *= Math.sqrt(0.5) * DriveConstants.kConstants.kTrackWidth;
+    m_drive.m_headingPIDOutput *= Math.sqrt(0.5) * DriveConstants.kTrackWidth;
     m_drive.setModuleStates(
      new SwerveModuleState[] {
       new SwerveModuleState(m_drive.m_headingPIDOutput, new Rotation2d(Units.degreesToRadians(135))),

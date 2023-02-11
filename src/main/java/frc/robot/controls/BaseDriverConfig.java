@@ -47,13 +47,13 @@ public abstract class BaseDriverConfig {
   }
 
   public double getForwardTranslation() {
-    return m_yspeedLimiter.calculate(-Functions.expoMS(Functions.deadband(getRawForwardTranslation(), m_translationalDeadband), m_translationalExpo) * DriveConstants.kConstants.kMaxSpeed * m_translationalSenseitivity, m_translationalSlewrate);
+    return m_yspeedLimiter.calculate(-Functions.expoMS(Functions.deadband(getRawForwardTranslation(), m_translationalDeadband), m_translationalExpo) * DriveConstants.kMaxSpeed * m_translationalSenseitivity, m_translationalSlewrate);
   }
   public double getSideTranslation() {
-    return m_xspeedLimiter.calculate(-Functions.expoMS(Functions.deadband(getRawSideTranslation(), m_translationalDeadband), m_translationalExpo) * DriveConstants.kConstants.kMaxSpeed * m_translationalSenseitivity, m_translationalSlewrate);
+    return m_xspeedLimiter.calculate(-Functions.expoMS(Functions.deadband(getRawSideTranslation(), m_translationalDeadband), m_translationalExpo) * DriveConstants.kMaxSpeed * m_translationalSenseitivity, m_translationalSlewrate);
   }
   public double getRotation() {
-    return m_rotLimiter.calculate(-Functions.expoMS(Functions.deadband(getRawRotation(), m_rotationDeadband), m_rotationExpo) * DriveConstants.kConstants.kMaxAngularSpeed * m_rotationSenseitiviy, m_rotationSlewrate);
+    return m_rotLimiter.calculate(-Functions.expoMS(Functions.deadband(getRawRotation(), m_rotationDeadband), m_rotationExpo) * DriveConstants.kMaxAngularSpeed * m_rotationSenseitiviy, m_rotationSlewrate);
   }
 
   public double getHeading(){

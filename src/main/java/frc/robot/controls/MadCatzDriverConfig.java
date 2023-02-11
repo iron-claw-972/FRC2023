@@ -20,7 +20,7 @@ public class MadCatzDriverConfig extends BaseDriverConfig {
 
   public void configureControls() { 
     driverMCC.get(MadCatzButton.B1).whileTrue(new SetFormationX(super.getDrivetrain()));
-    driverMCC.get(MadCatzButton.B2).onTrue(new InstantCommand(() -> super.getDrivetrain().setPigeonYaw(DriveConstants.kConstants.kStartingHeadingDegrees)));
+    driverMCC.get(MadCatzButton.B2).onTrue(new InstantCommand(() -> super.getDrivetrain().setPigeonYaw(DriveConstants.kStartingHeadingDegrees)));
   }
 
   public double getRawSideTranslation() { 

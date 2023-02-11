@@ -1,312 +1,204 @@
 package frc.robot.constants.swerve;
 
+import edu.wpi.first.math.util.Units;
+import frc.robot.constants.Constants;
+import frc.robot.constants.FalconConstants;
+import frc.robot.util.RobotType;
+
 public abstract class DriveConstants {
 
-    public static final DriveConstants kConstants = new CompDriveConstants();
+    public static double kWheelRadius = Units.inchesToMeters(2);
+
+    public static double kTrackWidth = Units.inchesToMeters(22.75);//22.75 swerve bot, 20.75 comp bot
+    public static double kDriveGearRatio = 6.75;
+    public static double kSteerGearRatio = 12.8;
+
+    public static double kMaxSpeed = FalconConstants.kMaxRpm / 60.0 / kDriveGearRatio * kWheelRadius * 2 * Math.PI;
+
+    public static double kMaxAngularSpeed = FalconConstants.kMaxRpm / 60.0 / kSteerGearRatio * 2 * Math.PI; // 8.3 rot/s
+    public static double kMaxAngularAccel = 8 * 2 * Math.PI; // 8 rotations per second per second
+
+    public static int kPigeon = 0;
+
+    public static double kStartingHeadingDegrees = 0;
     
-    public double kWheelRadius;
+    public static int kDriveFrontLeft = 20;
+    public static int kSteerFrontLeft = 15;
+    public static int kEncoderFrontLeft = 40;
+    public static double kSteerOffsetFrontLeft = 0.058291152119637;//-3.060285486280918+Math.PI;
+    public static double kDriveKSFrontLeft = 0.5671488314798404;
+    public static double kDriveKVFrontLeft = 4.546193650654074;
+    public static double kDrivePFrontLeft = 2;
+    public static double kDriveIFrontLeft = 0;
+    public static double kDriveDFrontLeft = 0;
+    public static double kSteerKSFrontLeft = 0.6996691434004014;
+    public static double kSteerKVFrontLeft = 0.3632874182531057;
+    public static double kSteerPFrontLeft = 14;
+    public static double kSteerIFrontLeft = 0;
+    public static double kSteerDFrontLeft = 0;
 
-    public double kTrackWidth;
-    public double kDriveGearRatio;
-    public double kSteerGearRatio;
+    public static int kDriveFrontRight = 33; 
+    public static int kSteerFrontRight = 30;
+    public static int kEncoderFrontRight = 41; 
+    public static double kSteerOffsetFrontRight = -2.994324445724487;//-3.001994334161282;
+    public static double kDriveKSFrontRight = 0.6880086692853459;
+    public static double kDriveKVFrontRight = 4.336917320413962;
+    public static double kDrivePFrontRight = 2;
+    public static double kDriveIFrontRight = 0;
+    public static double kDriveDFrontRight = 0;
+    public static double kSteerKSFrontRight = 0.6429664500296258;
+    public static double kSteerKVFrontRight = 0.3645372486658138;
+    public static double kSteerPFrontRight = 14;
+    public static double kSteerIFrontRight = 0;
+    public static double kSteerDFrontRight = 0;
 
-    public double kMaxSpeed;
+    public static int kDriveBackLeft = 16;
+    public static int kSteerBackLeft = 18;
+    public static int kEncoderBackLeft = 42; 
+    public static double kSteerOffsetBackLeft = -2.540267050266266;//0.650406539440155+Math.PI;
+    public static double kDriveKSBackLeft = 0.4549680357672717;
+    public static double kDriveKVBackLeft = 4.936626078325219;
+    public static double kDrivePBackLeft = 2;
+    public static double kDriveIBackLeft = 0;
+    public static double kDriveDBackLeft = 0;
+    public static double kSteerKSBackLeft = 0.6685253827543534;
+    public static double kSteerKVBackLeft = 0.3703123041002871;
+    public static double kSteerPBackLeft = 14;
+    public static double kSteerIBackLeft = 0;
+    public static double kSteerDBackLeft = 0;
 
-    public double kMaxAngularSpeed;
-    public double kMaxAngularAccel;
-
-    public int kPigeon;
-
-    public double kStartingHeadingDegrees;
-
-    public int kDriveFrontLeft;
-    public int kSteerFrontLeft;
-    public int kEncoderFrontLeft;
-    public double kSteerOffsetFrontLeft;
-    public double kDriveKSFrontLeft;
-    public double kDriveKVFrontLeft;
-    public double kDrivePFrontLeft;
-    public double kDriveIFrontLeft;
-    public double kDriveDFrontLeft;
-    public double kSteerKSFrontLeft;
-    public double kSteerKVFrontLeft;
-    public double kSteerPFrontLeft;
-    public double kSteerIFrontLeft;
-    public double kSteerDFrontLeft;
-
-    public int kDriveFrontRight; 
-    public int kSteerFrontRight;
-    public int kEncoderFrontRight; 
-    public double kSteerOffsetFrontRight;
-    public double kDriveKSFrontRight;
-    public double kDriveKVFrontRight;
-    public double kDrivePFrontRight;
-    public double kDriveIFrontRight;
-    public double kDriveDFrontRight;
-    public double kSteerKSFrontRight;
-    public double kSteerKVFrontRight;
-    public double kSteerPFrontRight;
-    public double kSteerIFrontRight;
-    public double kSteerDFrontRight;
-
-    public int kDriveBackLeft;
-    public int kSteerBackLeft;
-    public int kEncoderBackLeft; 
-    public double kSteerOffsetBackLeft;
-    public double kDriveKSBackLeft;
-    public double kDriveKVBackLeft;
-    public double kDrivePBackLeft;
-    public double kDriveIBackLeft;
-    public double kDriveDBackLeft;
-    public double kSteerKSBackLeft;
-    public double kSteerKVBackLeft;
-    public double kSteerPBackLeft;
-    public double kSteerIBackLeft;
-    public double kSteerDBackLeft;
-
-    public int kDriveBackRight;
-    public int kSteerBackRight;
-    public int kEncoderBackRight; 
-    public double kSteerOffsetBackRight;
-    public double kDriveKSBackRight;
-    public double kDriveKVBackRight;
-    public double kDrivePBackRight;
-    public double kDriveIBackRight;
-    public double kDriveDBackRight;
-    public double kSteerKSBackRight;
-    public double kSteerKVBackRight;
-    public double kSteerPBackRight;
-    public double kSteerIBackRight;
-    public double kSteerDBackRight;
-
+    public static int kDriveBackRight = 32;
+    public static int kSteerBackRight = 35;
+    public static int kEncoderBackRight = 43; 
+    public static double kSteerOffsetBackRight = 2.626169800758362;//2.771897681057453;
+    public static double kDriveKSBackRight = 0.46914605136974696;
+    public static double kDriveKVBackRight = 4.625248274107886;
+    public static double kDrivePBackRight = 2.2;
+    public static double kDriveIBackRight = 0;
+    public static double kDriveDBackRight = 0;
+    public static double kSteerKSBackRight = 0.7151324607226578;
+    public static double kSteerKVBackRight = 0.3731499810181726;
+    public static double kSteerPBackRight = 14;
+    public static double kSteerIBackRight = 0;
+    public static double kSteerDBackRight = 0;
+    
     // Drive
-    public double kDrivePAll;
-    public double kDriveIAll;
-    public double kDriveDAll;
-    
+    public static double kDrivePAll = 0;
+    public static double kDriveIAll = 0;
+    public static double kDriveDAll = 0;
     // Steer
-    public double kSteerPAll; //SDS: 0.2 - maunfacturer recomended values
-    public double kSteerIAll;
-    public double kSteerDAll; //SDS: 0.1 - maunfacturer recomended values
+    public static double kSteerPAll = 12; //SDS: 0.2
+    public static double kSteerIAll = 0;
+    public static double kSteerDAll = 0; //SDS: 0.1
 
-    public double kDriveKSAll;
-    public double kDriveKVAll;
+    public static double kDriveKSAll = 0.63107;
+    public static double kDriveKVAll = 2.1592;
 
     // Steer
-    public double kSteerKS;
-    public double kSteerKV;
-
+    public static double kSteerKS = 1;
+    public static double kSteerKV = 0.5;
     // heading PID
-    public double KheadingP;
-    public double KheadingI;
-    public double KheadingD;
+    public static double KheadingP= 4.6;
+    public static double KheadingI= 0;
+    public static double KheadingD= 0.4;
 
     // CAN
-    public String kDriveMotorCAN;
-    public String kSteerMotorCAN;
-    public String kPigeonCAN;
-    public String kEncoderCAN;
+    public static String kDriveMotorCAN = "CANivore";
+    public static String kSteerMotorCAN = "CANivore";
+    public static String kPigeonCAN = "CANivore";
+    public static String kEncoderCAN = "CANivore";
 
-    public DriveConstants(
-        double kWheelRadius,
+    static {
+        if (Constants.kRobotType == RobotType.COMP) {
+            kWheelRadius = Units.inchesToMeters(2);
 
-        double kTrackWidth,
-        double kDriveGearRatio,
-        double kSteerGearRatio,
+            kTrackWidth = Units.inchesToMeters(22.75);//22.75 swerve bot, 20.75 comp bot
 
-        double kMaxSpeed,
+            kPigeon = 13;
 
-        double kMaxAngularSpeed,
-        double kMaxAngularAccel,
+            kDriveFrontLeft = 1;
+            kSteerFrontLeft = 2;
+            kEncoderFrontLeft = 3;
+            kSteerOffsetFrontLeft = 1.561;
+            kDriveKSFrontLeft = 0.61534;
+            kDriveKVFrontLeft = 4.45071;
+            kDrivePFrontLeft = 2;
+            kDriveIFrontLeft = 0;
+            kDriveDFrontLeft = 0;
+            kSteerKSFrontLeft = 1;
+            kSteerKVFrontLeft = 0.5;
+            kSteerPFrontLeft = 12;
+            kSteerIFrontLeft = 0;
+            kSteerDFrontLeft = 0;
 
-        int kPigeon,
+            kDriveFrontRight = 4; 
+            kSteerFrontRight = 5;
+            kEncoderFrontRight = 6; 
+            kSteerOffsetFrontRight = -2.764+Math.PI;
+            kDriveKSFrontRight = 0.61283;
+            kDriveKVFrontRight = 4.45431;
+            kDrivePFrontRight = 2;
+            kDriveIFrontRight = 0;
+            kDriveDFrontRight = 0;
+            kSteerKSFrontRight = 1;
+            kSteerKVFrontRight = 0.5;
+            kSteerPFrontRight = 12;
+            kSteerIFrontRight = 0;
+            kSteerDFrontRight = 0;
 
-        double kStartingHeadingDegrees,
+            kDriveBackLeft = 7;
+            kSteerBackLeft = 8;
+            kEncoderBackLeft = 9; 
+            kSteerOffsetBackLeft = 0;
+            kDriveKSBackLeft = 0.54150;
+            kDriveKVBackLeft = 4.53909;
+            kDrivePBackLeft = 2;
+            kDriveIBackLeft = 0;
+            kDriveDBackLeft = 0;
+            kSteerKSBackLeft = 1;
+            kSteerKVBackLeft = 0.5;
+            kSteerPBackLeft = 12;
+            kSteerIBackLeft = 0;
+            kSteerDBackLeft = 0;
 
-        int kDriveFrontLeft,
-        int kSteerFrontLeft,
-        int kEncoderFrontLeft,
-        double kSteerOffsetFrontLeft,
-        double kDriveKSFrontLeft,
-        double kDriveKVFrontLeft,
-        double kDrivePFrontLeft,
-        double kDriveIFrontLeft,
-        double kDriveDFrontLeft,
-        double kSteerKSFrontLeft,
-        double kSteerKVFrontLeft,
-        double kSteerPFrontLeft,
-        double kSteerIFrontLeft,
-        double kSteerDFrontLeft,
+            kDriveBackRight = 10;
+            kSteerBackRight = 11;
+            kEncoderBackRight = 12; 
+            kSteerOffsetBackRight = 2.73;
+            kDriveKSBackRight = 0.49599;
+            kDriveKVBackRight = 4.75897;
+            kDrivePBackRight = 2.2;
+            kDriveIBackRight = 0;
+            kDriveDBackRight = 0;
+            kSteerKSBackRight = 1;
+            kSteerKVBackRight = 0.5;
+            kSteerPBackRight = 12;
+            kSteerIBackRight = 0;
+            kSteerDBackRight = 0;
 
-        int kDriveFrontRight, 
-        int kSteerFrontRight,
-        int kEncoderFrontRight, 
-        double kSteerOffsetFrontRight,
-        double kDriveKSFrontRight,
-        double kDriveKVFrontRight,
-        double kDrivePFrontRight,
-        double kDriveIFrontRight,
-        double kDriveDFrontRight,
-        double kSteerKSFrontRight,
-        double kSteerKVFrontRight,
-        double kSteerPFrontRight,
-        double kSteerIFrontRight,
-        double kSteerDFrontRight,
+            // Drive
+            kDrivePAll = 0;
+            kDriveIAll = 0;
+            kDriveDAll = 0;
+            // Steer
+            kSteerPAll = 12; //SDS: 0.2
+            kSteerIAll = 0;
+            kSteerDAll = 0; //SDS: 0.1
 
-        int kDriveBackLeft,
-        int kSteerBackLeft,
-        int kEncoderBackLeft, 
-        double kSteerOffsetBackLeft,
-        double kDriveKSBackLeft,
-        double kDriveKVBackLeft,
-        double kDrivePBackLeft,
-        double kDriveIBackLeft,
-        double kDriveDBackLeft,
-        double kSteerKSBackLeft,
-        double kSteerKVBackLeft,
-        double kSteerPBackLeft,
-        double kSteerIBackLeft,
-        double kSteerDBackLeft,
+            kDriveKSAll = 0.63107;
+            kDriveKVAll = 2.1592;
 
-        int kDriveBackRight,
-        int kSteerBackRight,
-        int kEncoderBackRight, 
-        double kSteerOffsetBackRight,
-        double kDriveKSBackRight,
-        double kDriveKVBackRight,
-        double kDrivePBackRight,
-        double kDriveIBackRight,
-        double kDriveDBackRight,
-        double kSteerKSBackRight,
-        double kSteerKVBackRight,
-        double kSteerPBackRight,
-        double kSteerIBackRight,
-        double kSteerDBackRight,
+            // Steer
+            kSteerKS = 1;
+            kSteerKV = 0.5;
+            // heading PID
+            KheadingP= 4.6;
+            KheadingI= 0;
+            KheadingD= 0.4;
 
-        // Drive
-        double kDrivePAll,
-        double kDriveIAll,
-        double kDriveDAll,
-        
-        // Steer
-        double kSteerPAll, //SDS: 0.2 - maunfacturer recomended values
-        double kSteerIAll,
-        double kSteerDAll, //SDS: 0.1 - maunfacturer recomended values
-
-        double kDriveKSAll,
-        double kDriveKVAll,
-
-        // Steer
-        double kSteerKS,
-        double kSteerKV,
-
-        // heading PID
-        double KheadingP,
-        double KheadingI,
-        double KheadingD,
-
-        // CAN
-        String kDriveMotorCAN,
-        String kSteerMotorCAN,
-        String kPigeonCan,
-        String kEncoderCAN
-    ) {
-        this.kWheelRadius = kWheelRadius;
-
-        this.kTrackWidth = kTrackWidth;
-        this.kDriveGearRatio = kDriveGearRatio;
-        this.kSteerGearRatio = kSteerGearRatio;
-
-        this.kMaxSpeed = kMaxSpeed;
-
-        this.kMaxAngularSpeed = kMaxAngularSpeed;
-        this.kMaxAngularAccel = kMaxAngularAccel;
-
-        this.kPigeon = kPigeon;
-
-        this.kStartingHeadingDegrees = kStartingHeadingDegrees;
-
-        this.kDriveFrontLeft = kDriveFrontLeft;
-        this.kSteerFrontLeft = kSteerFrontLeft;
-        this.kEncoderFrontLeft = kEncoderFrontLeft;
-        this.kSteerOffsetFrontLeft = kSteerOffsetFrontLeft;
-        this.kDriveKSFrontLeft = kDriveKSFrontLeft;
-        this.kDriveKVFrontLeft = kDriveKVFrontLeft;
-        this.kDrivePFrontLeft = kDrivePFrontLeft;
-        this.kDriveIFrontLeft = kDriveIFrontLeft;
-        this.kDriveDFrontLeft = kDriveDFrontLeft;
-        this.kSteerKSFrontLeft = kSteerKSFrontLeft;
-        this.kSteerKVFrontLeft = kSteerKVFrontLeft;
-        this.kSteerPFrontLeft = kSteerPFrontLeft;
-        this.kSteerIFrontLeft = kSteerIFrontLeft;
-        this.kSteerDFrontLeft = kSteerDFrontLeft;
-
-        this.kDriveFrontRight = kDriveFrontRight;
-        this.kSteerFrontRight = kSteerFrontRight;
-        this.kEncoderFrontRight = kEncoderFrontRight;
-        this.kSteerOffsetFrontRight = kSteerOffsetFrontRight;
-        this.kDriveKSFrontRight = kDriveKSFrontRight;
-        this.kDriveKVFrontRight = kDriveKVFrontRight;
-        this.kDrivePFrontRight = kDrivePFrontRight;
-        this.kDriveIFrontRight = kDriveIFrontRight;
-        this.kDriveDFrontRight = kDriveDFrontRight;
-        this.kSteerKSFrontRight = kSteerKSFrontRight;
-        this.kSteerKVFrontRight = kSteerKVFrontRight;
-        this.kSteerPFrontRight = kSteerPFrontRight;
-        this.kSteerIFrontRight = kSteerIFrontRight;
-
-        this.kDriveBackLeft = kDriveBackLeft;
-        this.kSteerBackLeft = kSteerBackLeft;
-        this.kEncoderBackLeft = kEncoderBackLeft;
-        this.kSteerOffsetBackLeft = kSteerOffsetBackLeft;
-        this.kDriveKSBackLeft = kDriveKSBackLeft;
-        this.kDriveKVBackLeft = kDriveKVBackLeft;
-        this.kDrivePBackLeft = kDrivePBackLeft;
-        this.kDriveIBackLeft = kDriveIBackLeft;
-        this.kDriveDBackLeft = kDriveDBackLeft;
-        this.kSteerKSBackLeft = kSteerKSBackLeft;
-        this.kSteerKVBackLeft = kSteerKVBackLeft;
-        this.kSteerPBackLeft = kSteerPBackLeft;
-        this.kSteerIBackLeft = kSteerIBackLeft;
-        this.kSteerDBackLeft = kSteerDBackLeft;
-
-        this.kDriveBackRight = kDriveBackRight;
-        this.kSteerBackRight = kSteerBackRight;
-        this.kEncoderBackRight = kEncoderBackRight;
-        this.kSteerOffsetBackRight = kSteerOffsetBackRight;
-        this.kDriveKSBackRight = kDriveKSBackRight;
-        this.kDriveKVBackRight = kDriveKVBackRight;
-        this.kDrivePBackRight = kDrivePBackRight;
-        this.kDriveIBackRight = kDriveIBackRight;
-        this.kDriveDBackRight = kDriveDBackRight;
-        this.kSteerKSBackRight = kSteerKSBackRight;
-        this.kSteerKVBackRight = kSteerKVBackRight;
-        this.kSteerPBackRight = kSteerPBackRight;
-        this.kSteerIBackRight = kSteerIBackRight;
-        this.kSteerDBackRight = kSteerDBackRight;
-
-        this.kDrivePAll = kDrivePAll;
-        this.kDriveIAll = kDriveIAll;
-        this.kDriveDAll = kDriveDAll;
-
-        this.kSteerPAll = kSteerPAll;
-        this.kSteerIAll = kSteerIAll;
-        this.kSteerDAll = kSteerDAll;
-
-        this.kDriveKSAll = kDriveKSAll;
-        this.kDriveKVAll = kDriveKVAll;
-
-        this.kSteerKS = kSteerKS;
-        this.kSteerKV = kSteerKV;
-
-        this.KheadingP = KheadingP;
-        this.KheadingI = KheadingI;
-        this.KheadingD = KheadingD;
-
-        this.kDriveMotorCAN = kDriveMotorCAN;
-        this.kSteerMotorCAN = kSteerMotorCAN;
-        this.kPigeonCAN = kPigeonCan;
-        this.kEncoderCAN = kEncoderCAN;
+            // CAN
+            kDriveMotorCAN = "rio";
+        }
     }
 
 }

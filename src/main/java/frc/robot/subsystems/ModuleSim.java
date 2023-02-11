@@ -14,8 +14,8 @@ import frc.robot.constants.swerve.ModuleConstants;
  */
 public class ModuleSim extends Module {
 
-  // private final FlywheelSim m_driveMotorSim = new FlywheelSim(DCMotor.getFalcon500(1), DriveConstants.kConstants.kDriveGearRatio, 0.025);
-  // private final FlywheelSim m_steerMotorSim = new FlywheelSim(DCMotor.getFalcon500(1), DriveConstants.kConstants.kSteerGearRatio, 0.004096955);
+  // private final FlywheelSim m_driveMotorSim = new FlywheelSim(DCMotor.getFalcon500(1), DriveConstants.kDriveGearRatio, 0.025);
+  // private final FlywheelSim m_steerMotorSim = new FlywheelSim(DCMotor.getFalcon500(1), DriveConstants.kSteerGearRatio, 0.004096955);
 
 
   private double m_currentSteerPositionRad = 0;
