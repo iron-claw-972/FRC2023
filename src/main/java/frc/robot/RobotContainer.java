@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import frc.robot.commands.Align;
 import frc.robot.commands.DoNothing;
 import frc.robot.commands.TestVision;
 import frc.robot.commands.TestVision2;
@@ -113,6 +114,10 @@ public class RobotContainer {
     tab.add("Test vision (backward then forward)", new TestVision2(-0.1, 3, m_drive));
     tab.add("Print robot pose", new InstantCommand(()->m_drive.printPose()));
     tab.add("Print pose from vision", new InstantCommand(()->Vision.printEstimate()));
+    tab.add("Align to 0 degrees", new Align(0, m_drive));
+    tab.add("Align to 90 degrees", new Align(Math.PI/2, m_drive));
+    tab.add("Align to -90 degrees", new Align(-Math.PI/2, m_drive));
+    tab.add("Align to 180 degrees", new Align(Math.PI, m_drive));
   }
 
   /**
