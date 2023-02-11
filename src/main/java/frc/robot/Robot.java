@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -71,6 +72,11 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    dummyEncoder.setDistancePerPulse(kArmEncoderDistPerPulse);
+
+    SmartDashboard.putData("Arm Sim", mech2d);
+    armTower.setColor(new Color8Bit(Color.kBlue));
+
     m_robotContainer = new RobotContainer();
   }
 
@@ -142,11 +148,6 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {}
-
-  @Override
-  public void simulationInit() {
-    
-  } 
 
   @Override
   public void simulationPeriodic() {
