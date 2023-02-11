@@ -75,8 +75,10 @@ public class Drivetrain extends SubsystemBase {
   // PID Controllers
   private PIDController m_xController = new PIDController(0,0,0);
   private PIDController m_yController = new PIDController(0, 0, 0);
-//Shuffleboard
-GenericEntry 
+  private PIDController m_rotationController = new PIDController(DriveConstants.KheadingP, DriveConstants.KheadingI, DriveConstants.KheadingD);
+
+  //Shuffleboard
+  GenericEntry 
     m_driveVelocity,
     m_steerVelocity, 
     m_steerAngle, 
@@ -98,10 +100,11 @@ GenericEntry
   // previous module for switching
   Module m_prevModule = m_dummyModule;
   SendableChooser<Module> m_module = new SendableChooser<>();
- ;
-  private PIDController m_rotationController = new PIDController(DriveConstants.KheadingP, DriveConstants.KheadingI, DriveConstants.KheadingD);
 
-  public Drivetrain() {
+
+
+
+  public Drivetrain(ShuffleboardTab drivetrainTab, ShuffleboardTab swerveModulesTab) {
       m_modules = new Module[]{
         Module.create(ModuleConstants.TEST_FL),
         Module.create(ModuleConstants.TEST_FR),
@@ -119,8 +122,8 @@ GenericEntry
     
     LiveWindow.disableAllTelemetry();
     m_swerveModulesTab.add("Module Chooser", m_module);
-    m_drivetrainTab = Shuffleboard.getTab("Drive");
-    m_swerveModulesTab = Shuffleboard.getTab("Swerve Modules");
+    m_drivetrainTab = drivetrainTab;
+    m_swerveModulesTab = swerveModulesTab;
   }
 
   @Override
@@ -169,8 +172,8 @@ GenericEntry
 
     // TODO: Fix Swerve drive sim
     if (!Robot.isReal()) {
-      System.out.println(xSpeed + " " + ySpeed + " " + rot);
-      m_pigeon.getSimCollection().addHeading(rot / (2 * Math.PI));
+      m_pigeon.getSimCollection().addHeading(
+        Units.radiansToDegrees(rot * Constants.kLoopTime));
     }
 
     m_swerveModuleStates =
@@ -187,9 +190,11 @@ GenericEntry
     double rot = m_headingPIDOutput;
 
     // TODO: Fix Swerve drive sim
+    // TODO: Check which lines were supse to be commented
     if (!Robot.isReal()) {
-      System.out.println(xSpeed + " " + ySpeed + " " + rot);
-      m_pigeon.getSimCollection().addHeading(rot / (2 * Math.PI));
+      // System.out.println(xSpeed + " " + ySpeed + " " + rot);
+      // m_pigeon.getSimCollection().addHeading(rot / (2 * Math.PI));
+      m_pigeon.getSimCollection().addHeading(Units.radiansToDegrees(rot * Constants.kLoopTime));
     }
 
     m_swerveModuleStates =
@@ -260,15 +265,21 @@ GenericEntry
    * @return an array of all swerve module positions
    */
   public SwerveModulePosition[] getModulePositions() {
+    // SwerveModulePosition[] positions = new SwerveModulePosition[]{
+    //   new SwerveModulePosition(m_modules[0].getState().speedMetersPerSecond, m_modules[0].getState().angle),
+    //   new SwerveModulePosition(m_modules[1].getState().speedMetersPerSecond, m_modules[1].getState().angle),
+    //   new SwerveModulePosition(m_modules[2].getState().speedMetersPerSecond, m_modules[2].getState().angle),
+    //   new SwerveModulePosition(m_modules[3].getState().speedMetersPerSecond, m_modules[3].getState().angle)
+    //   // new SwerveModulePosition(m_modules[0].getDrivePosition(), Rotation2d.fromDegrees(m_modules[0].getAngle())),
+    //   // new SwerveModulePosition(m_modules[1].getDrivePosition(), Rotation2d.fromDegrees(m_modules[1].getAngle())),
+    //   // new SwerveModulePosition(m_modules[2].getDrivePosition(), Rotation2d.fromDegrees(m_modules[2].getAngle())),
+    //   // new SwerveModulePosition(m_modules[3].getDrivePosition(), Rotation2d.fromDegrees(m_modules[3].getAngle()))
+    // };
     SwerveModulePosition[] positions = new SwerveModulePosition[]{
-      new SwerveModulePosition(m_modules[0].getDrivePosition(), m_modules[0].getState().angle),
-      new SwerveModulePosition(m_modules[1].getDrivePosition(), m_modules[1].getState().angle),
-      new SwerveModulePosition(m_modules[2].getDrivePosition(), m_modules[2].getState().angle),
-      new SwerveModulePosition(m_modules[3].getDrivePosition(), m_modules[3].getState().angle)
-      // new SwerveModulePosition(m_modules[0].getDrivePosition(), Rotation2d.fromDegrees(m_modules[0].getAngle())),
-      // new SwerveModulePosition(m_modules[1].getDrivePosition(), Rotation2d.fromDegrees(m_modules[1].getAngle())),
-      // new SwerveModulePosition(m_modules[2].getDrivePosition(), Rotation2d.fromDegrees(m_modules[2].getAngle())),
-      // new SwerveModulePosition(m_modules[3].getDrivePosition(), Rotation2d.fromDegrees(m_modules[3].getAngle()))
+      m_modules[0].getPosition(),
+      m_modules[1].getPosition(),
+      m_modules[2].getPosition(),
+      m_modules[3].getPosition()
     };
     return positions;
   }
@@ -342,6 +353,17 @@ GenericEntry
   }
   
 
+  public void setChassisSpeeds(ChassisSpeeds chassisSpeeds) {
+    m_swerveModuleStates = m_kinematics.toSwerveModuleStates(chassisSpeeds);
+    SwerveDriveKinematics.desaturateWheelSpeeds(m_swerveModuleStates, DriveConstants.kMaxSpeed);
+    setModuleStates(m_swerveModuleStates);
+    
+    if (!Robot.isReal()) {
+      m_pigeon.getSimCollection().addHeading(
+        Units.radiansToDegrees(chassisSpeeds.omegaRadiansPerSecond * Constants.kLoopTime));
+    }
+  }
+
   public PIDController getXController() {
       return m_xController;
   }
@@ -356,7 +378,7 @@ GenericEntry
       m_modules[i].setOptimize(optimizeSate);
     }
   }
-  private void setupDrivetrain() {
+  public void setupDrivetrainShuffleboard() {
     // inputs
     m_heading = m_drivetrainTab.add("Set Heading (-pi to pi)", 0).getEntry();
     
@@ -376,7 +398,7 @@ GenericEntry
     m_drivetrainTab.add(getYController());
     m_drivetrainTab.add(getRotationController());
   }
-  private void setupModules(){
+  public void setupModulesShuffleboard(){
     // inputs
     m_driveVelocity = m_swerveModulesTab.add("Set Drive Velocity", 0).getEntry();
     m_steerVelocity = m_swerveModulesTab.add("Set Steer Velocity", 0).getEntry();
@@ -388,40 +410,40 @@ GenericEntry
     m_steerVelocityFeedforward = m_swerveModulesTab.add("Steer kV k FF", 0).getEntry();
     
     // Desired Drive Velocitys
-    // m_swerveModulesTab.addNumber("FL desired speed", () -> Robot.drive.swerveModuleStates[0].speedMetersPerSecond);
-    // m_swerveModulesTab.addNumber("FR desired speed", () -> Robot.drive.swerveModuleStates[1].speedMetersPerSecond);
-    // m_swerveModulesTab.addNumber("BL desired speed", () -> Robot.drive.swerveModuleStates[2].speedMetersPerSecond);
-    // m_swerveModulesTab.addNumber("BR desired speed", () -> Robot.drive.swerveModuleStates[3].speedMetersPerSecond);
+    m_swerveModulesTab.addNumber("FL desired speed", () -> m_swerveModuleStates[0].speedMetersPerSecond);
+    m_swerveModulesTab.addNumber("FR desired speed", () -> m_swerveModuleStates[1].speedMetersPerSecond);
+    m_swerveModulesTab.addNumber("BL desired speed", () -> m_swerveModuleStates[2].speedMetersPerSecond);
+    m_swerveModulesTab.addNumber("BR desired speed", () -> m_swerveModuleStates[3].speedMetersPerSecond);
 
     // Drive PID output
-    // m_swerveModulesTab.addNumber("FL PID Output", () -> Robot.drive.m_modules[0].getDrivePIDOutput());
-    // m_swerveModulesTab.addNumber("FR PID Output", () -> Robot.drive.m_modules[1].getDrivePIDOutput());
-    // m_swerveModulesTab.addNumber("BL PID Output", () -> Robot.drive.m_modules[2].getDrivePIDOutput());
-    // m_swerveModulesTab.addNumber("BR PID Output", () -> Robot.drive.m_modules[3].getDrivePIDOutput());
+    m_swerveModulesTab.addNumber("FL PID Output", () -> m_modules[0].getDrivePIDOutput());
+    m_swerveModulesTab.addNumber("FR PID Output", () -> m_modules[1].getDrivePIDOutput());
+    m_swerveModulesTab.addNumber("BL PID Output", () -> m_modules[2].getDrivePIDOutput());
+    m_swerveModulesTab.addNumber("BR PID Output", () -> m_modules[3].getDrivePIDOutput());
 
     // get drive velocity
-    // m_swerveModulesTab.addNumber("Vel FL Raw", () -> Robot.drive.m_modules[0].getDriveVelocity());
-    // m_swerveModulesTab.addNumber("Vel FR Raw", () -> Robot.drive.m_modules[1].getDriveVelocity());
-    // m_swerveModulesTab.addNumber("Vel BL Raw", () -> Robot.drive.m_modules[2].getDriveVelocity());
-    // m_swerveModulesTab.addNumber("Vel BR Raw", () -> Robot.drive.m_modules[3].getDriveVelocity());
+    m_swerveModulesTab.addNumber("Vel FL Raw", () -> m_modules[0].getDriveVelocity());
+    m_swerveModulesTab.addNumber("Vel FR Raw", () -> m_modules[1].getDriveVelocity());
+    m_swerveModulesTab.addNumber("Vel BL Raw", () -> m_modules[2].getDriveVelocity());
+    m_swerveModulesTab.addNumber("Vel BR Raw", () -> m_modules[3].getDriveVelocity());
 
     // drivePIDS
-    // m_swerveModulesTab.add("Drive PID FL", Robot.drive.m_modules[0].getDrivePID());
-    // m_swerveModulesTab.add("Drive PID FR", Robot.drive.m_modules[1].getDrivePID());
-    // m_swerveModulesTab.add("Drive PID BL", Robot.drive.m_modules[2].getDrivePID());
-    // m_swerveModulesTab.add("Drive PID BR", Robot.drive.m_modules[3].getDrivePID());
+    m_swerveModulesTab.add("Drive PID FL", m_modules[0].getDrivePID());
+    m_swerveModulesTab.add("Drive PID FR", m_modules[1].getDrivePID());
+    m_swerveModulesTab.add("Drive PID BL", m_modules[2].getDrivePID());
+    m_swerveModulesTab.add("Drive PID BR", m_modules[3].getDrivePID());
 
-    //Median Filltered Velocity Values
-    // m_swerveModulesTab.addNumber("Vel FL Filtered", () -> Robot.drive.m_modules[0].getDriveVelocityFilltered());
-    // m_swerveModulesTab.addNumber("Vel FR Filtered", () -> Robot.drive.m_modules[1].getDriveVelocityFilltered());
-    // m_swerveModulesTab.addNumber("Vel BL Filtered", () -> Robot.drive.m_modules[2].getDriveVelocityFilltered());
-    // m_swerveModulesTab.addNumber("Vel BR Filtered", () -> Robot.drive.m_modules[3].getDriveVelocityFilltered());
+    // Median Filltered Velocity Values
+    m_swerveModulesTab.addNumber("Vel FL Filtered", () -> m_modules[0].getDriveVelocityFiltered());
+    m_swerveModulesTab.addNumber("Vel FR Filtered", () -> m_modules[1].getDriveVelocityFiltered());
+    m_swerveModulesTab.addNumber("Vel BL Filtered", () -> m_modules[2].getDriveVelocityFiltered());
+    m_swerveModulesTab.addNumber("Vel BR Filtered", () -> m_modules[3].getDriveVelocityFiltered());
 
     // Desired Steer angles
-    // m_swerveModulesTab.addNumber("FL desired angle", () -> Robot.drive.m_swerveModuleStates[0].angle.getDegrees());
-    // m_swerveModulesTab.addNumber("FR desired angle", () -> Robot.drive.m_swerveModuleStates[1].angle.getDegrees());
-    // m_swerveModulesTab.addNumber("BL desired angle", () -> Robot.drive.m_swerveModuleStates[2].angle.getDegrees());
-    // m_swerveModulesTab.addNumber("BR desired angle", () -> Robot.drive.m_swerveModuleStates[3].angle.getDegrees());
+    m_swerveModulesTab.addNumber("FL desired angle", () -> m_swerveModuleStates[0].angle.getDegrees());
+    m_swerveModulesTab.addNumber("FR desired angle", () -> m_swerveModuleStates[1].angle.getDegrees());
+    m_swerveModulesTab.addNumber("BL desired angle", () -> m_swerveModuleStates[2].angle.getDegrees());
+    m_swerveModulesTab.addNumber("BR desired angle", () -> m_swerveModuleStates[3].angle.getDegrees());
 
     // Steer angles
     m_swerveModulesTab.addNumber("Angle FL", () -> m_modules[0].getSteerAngle());

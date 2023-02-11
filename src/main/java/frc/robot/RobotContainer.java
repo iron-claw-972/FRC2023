@@ -13,9 +13,9 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.DoNothing;
 import frc.robot.commands.test.TestDriveVelocity;
-import frc.robot.controls.Driver;
+import frc.robot.controls.BaseDriverConfig;
+import frc.robot.controls.GameControllerDriverConfig;
 import frc.robot.controls.Operator;
-import frc.robot.controls.TestControls;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.util.PathGroupLoader;
 
@@ -26,8 +26,6 @@ import frc.robot.util.PathGroupLoader;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems are defined here...
-  private final Drivetrain m_drive = new Drivetrain();
 
   // Shuffleboard auto chooser
   SendableChooser<Command> m_autoCommand = new SendableChooser<>();
@@ -40,6 +38,10 @@ public class RobotContainer {
   private ShuffleboardTab m_controllerTab = Shuffleboard.getTab("Controller");
   private ShuffleboardTab m_testTab = Shuffleboard.getTab("Test");
 
+  // The robot's subsystems are defined here...
+  private final Drivetrain m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab);
+  private final BaseDriverConfig m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab);
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
@@ -49,9 +51,8 @@ public class RobotContainer {
     // load paths before auto starts
     PathGroupLoader.loadPathGroups();
 
-    Driver.configureControls(m_drive);
+    m_driver.configureControls();
     Operator.configureControls();
-    TestControls.configureControls(m_drive);
 
     LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
     LiveWindow.setEnabled(false);
@@ -59,8 +60,11 @@ public class RobotContainer {
     addTestCommands();
     autoChooserUpdate();
     loadCommandSchedulerShuffleboard();
+    m_drive.setupDrivetrainShuffleboard();
+    m_drive.setupModulesShuffleboard();
+    m_driver.setupShuffleboard();
 
-    m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive));
+    m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive,m_driver));
   }
 
   public void initDriveYaw(boolean force) {

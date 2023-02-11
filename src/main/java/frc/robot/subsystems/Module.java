@@ -12,6 +12,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.Robot;
@@ -106,7 +107,9 @@ public class Module {
   public double m_desiredAngle = 0;
 
   public MedianFilter m_driveVelocityMedianFilter = new MedianFilter(80);
-  public Boolean setOptimize=false;
+
+  public boolean setOptimize = false;
+  
   public Module(ModuleConstants moduleConstants){
     this(
       moduleConstants.getDrivePort(),
@@ -220,10 +223,11 @@ public class Module {
       return;
     }
 
-    if (setOptimize==true) {
+    if (setOptimize == true) {
       // Optimize the reference state to avoid spinning further than 90 degrees
       desiredState = SwerveModuleState.optimize(desiredState, new Rotation2d(getSteerAngle()));
     }
+
     setDriveVelocity(desiredState.speedMetersPerSecond);
     setSteerAngle(desiredState.angle);
   }
@@ -293,6 +297,10 @@ public class Module {
     double negError = MathUtil.angleModulus(m_steerPIDController.getGoal().position - getSteerAngle());
     if (Math.abs(posError) < Math.abs(negError)) return posError;
     return negError;
+  }
+
+  public SwerveModulePosition getPosition(){
+    return new SwerveModulePosition(getDrivePosition(), new Rotation2d(getSteerAngle()));
   }
 
   /**

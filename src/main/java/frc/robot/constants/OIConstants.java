@@ -19,7 +19,7 @@ public class OIConstants {
   public static final double kRotationDeadband = 0.01;
   public static final double kRotationSlewrate = 10;
 
-  public static final double kHeadingSensitivity = 4;
+  public static final double kHeadingSenseitiviy = 4;
   public static final double kHeadingExpo = 2;
   public static final double kHeadingDeadband = 0.05;
   public static final boolean kConsantHeadingMagnatuide = false;

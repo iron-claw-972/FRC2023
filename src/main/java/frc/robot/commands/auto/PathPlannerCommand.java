@@ -9,12 +9,12 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
-
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.DoNothing;
-import frc.robot.constants.Constants;
+import frc.robot.constants.AutoConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.util.PathGroupLoader;
 
@@ -25,7 +25,7 @@ public class PathPlannerCommand extends SequentialCommandGroup{
     
     public PathPlannerCommand(ArrayList<PathPoint> waypoints, Drivetrain drive) {
         this(PathPlanner.generatePath(
-          new PathConstraints(Constants.auto.kMaxAutoSpeed, Constants.auto.kMaxAutoAccel),
+          new PathConstraints(AutoConstants.kMaxAutoSpeed, AutoConstants.kMaxAutoAccel),
           waypoints.get(0),
           waypoints.get(1),
           (PathPoint[]) Arrays.copyOfRange(waypoints.toArray(), 2, waypoints.size())
@@ -44,7 +44,9 @@ public class PathPlannerCommand extends SequentialCommandGroup{
         if (pathIndex < 0 || pathIndex > pathGroup.size() - 1){
             throw new IndexOutOfBoundsException("Path index out of range"); 
         } 
-        PathPlannerTrajectory path = pathGroup.get(pathIndex);  
+        PathPlannerTrajectory path = PathPlannerTrajectory.transformTrajectoryForAlliance(pathGroup.get(pathIndex),
+            DriverStation.getAlliance());
+
         addCommands(
             (pathIndex == 0 && resetPose ? new InstantCommand(() -> drive.resetOdometry(path.getInitialHolonomicPose(), drive.getRotation2d())) : new DoNothing()),
             new PrintCommand("Number of paths: " + pathGroup.size()),
