@@ -23,8 +23,8 @@ public class Functions {
   }
 
   /**
-   * Deadbands an input to [-1, -Constants.oi.kDeadband], [Constants.oi.kDeadband, 1], rescaling inputs to be linear from
-   * (Constants.oi.kDeadband, 0) to (1,1)
+   * Deadbands an input to [-1, -OIConstants.kDeadband], [OIConstants.kDeadband, 1], rescaling inputs to be linear from
+   * (OIConstants.kDeadband, 0) to (1,1)
    *
    * @param input The input value to rescale
    * @return the input rescaled and to fit [-1, -kDeadband], [kDeadband, 1]

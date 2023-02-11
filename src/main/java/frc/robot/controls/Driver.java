@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.SetFormationX;
 import frc.robot.constants.Constants;
+import frc.robot.constants.DriveConstants;
 import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.util.DynamicSlewRateLimiter;
@@ -23,7 +24,7 @@ import lib.controllers.MadCatzController.MadCatzAxis;
 import lib.controllers.MadCatzController.MadCatzButton;
 
 public class Driver {
-  private static GameController driverGC = new GameController(Constants.oi.kDriverJoy);
+  private static GameController driverGC = new GameController(OIConstants.kDriverJoy);
   private static Ex3DProController driverEPC = new Ex3DProController(2);
   private static MadCatzController driverMCC = new MadCatzController(3);
   private static Controller m_controllerType = new GameController(-1);
@@ -52,20 +53,20 @@ public class Driver {
 
     controllerTab.add("Controller Type", m_controllerType);
 
-    m_translationalSensitivityEntry = controllerTab.add("translationalSenseitivity", Constants.oi.kTranslationalSenseitivity).getEntry();
-    m_translationalExpoEntry = controllerTab.add("translationalExpo", Constants.oi.kTranslationalExpo).getEntry();
-    m_translationalDeadbandEntry = controllerTab.add("translationalDeadband", Constants.oi.kTranslationalDeadband).getEntry();
-    m_translationalSlewrateEntry = controllerTab.add("translationalSlewrate", Constants.oi.kTranslationalSlewrate).getEntry();
-    m_fieldRelativeEntry = controllerTab.add("Field Relitive", Constants.oi.kFieldRelative).getEntry();
+    m_translationalSensitivityEntry = controllerTab.add("translationalSenseitivity", OIConstants.kTranslationalSenseitivity).getEntry();
+    m_translationalExpoEntry = controllerTab.add("translationalExpo", OIConstants.kTranslationalExpo).getEntry();
+    m_translationalDeadbandEntry = controllerTab.add("translationalDeadband", OIConstants.kTranslationalDeadband).getEntry();
+    m_translationalSlewrateEntry = controllerTab.add("translationalSlewrate", OIConstants.kTranslationalSlewrate).getEntry();
+    m_fieldRelativeEntry = controllerTab.add("Field Relitive", OIConstants.kFieldRelative).getEntry();
 
-    m_rotationSensitivityEntry = controllerTab.add("rotationSenseitiviy", Constants.oi.kRotationSenseitiviy).getEntry();
-    m_rotationExpoEntry = controllerTab.add("rotationExpo", Constants.oi.kRotationExpo).getEntry();
-    m_rotationDeadbandEntry = controllerTab.add("rotationDeadband", Constants.oi.kRotationDeadband).getEntry();
-    m_rotationSlewrateEntry = controllerTab.add("rotationSlewrate", Constants.oi.kRotationSlewrate).getEntry();
+    m_rotationSensitivityEntry = controllerTab.add("rotationSenseitiviy", OIConstants.kRotationSenseitiviy).getEntry();
+    m_rotationExpoEntry = controllerTab.add("rotationExpo", OIConstants.kRotationExpo).getEntry();
+    m_rotationDeadbandEntry = controllerTab.add("rotationDeadband", OIConstants.kRotationDeadband).getEntry();
+    m_rotationSlewrateEntry = controllerTab.add("rotationSlewrate", OIConstants.kRotationSlewrate).getEntry();
 
-    m_headingSensitivityEntry = controllerTab.add("headingSenseitiviy", Constants.oi.kHeadingSensitivity).getEntry();
-    m_headingExpoEntry = controllerTab.add("headingExpo", Constants.oi.kHeadingExpo).getEntry();
-    m_headingDeadbandEntry = controllerTab.add("headingDeadband", Constants.oi.kHeadingDeadband).getEntry();
+    m_headingSensitivityEntry = controllerTab.add("headingSenseitiviy", OIConstants.kHeadingSensitivity).getEntry();
+    m_headingExpoEntry = controllerTab.add("headingExpo", OIConstants.kHeadingExpo).getEntry();
+    m_headingDeadbandEntry = controllerTab.add("headingDeadband", OIConstants.kHeadingDeadband).getEntry();
     
     m_headingLimiter.setContinuousLimits(-Math.PI,Math.PI);
     m_headingLimiter.enableContinuous(true);
@@ -75,19 +76,19 @@ public class Driver {
     driverMCC.get(MadCatzButton.B1).whileTrue(new SetFormationX(drive));
 
     
-    driverGC.get(GCButton.START).onTrue(new InstantCommand(() -> drive.setPigeonYaw(Constants.drive.kStartingHeadingDegrees)));
-    driverEPC.get(Ex3DProButton.B2).whileTrue(new InstantCommand(() -> drive.setPigeonYaw(Constants.drive.kStartingHeadingDegrees)));
-    driverMCC.get(MadCatzButton.B2).whileTrue(new InstantCommand(() -> drive.setPigeonYaw(Constants.drive.kStartingHeadingDegrees)));
+    driverGC.get(GCButton.START).onTrue(new InstantCommand(() -> drive.setPigeonYaw(DriveConstants.kStartingHeadingDegrees)));
+    driverEPC.get(Ex3DProButton.B2).whileTrue(new InstantCommand(() -> drive.setPigeonYaw(DriveConstants.kStartingHeadingDegrees)));
+    driverMCC.get(MadCatzButton.B2).whileTrue(new InstantCommand(() -> drive.setPigeonYaw(DriveConstants.kStartingHeadingDegrees)));
   }
 
   public static double getForwardTranslation() {
-    return m_yspeedLimiter.calculate(-Functions.expoMS(Functions.deadband(getRawForwardTranslation(), getTranslationDeadband()), getTranslationExpo()) * Constants.drive.kMaxSpeed * getTranslationSensitivity(), getTranslationSlewrate());
+    return m_yspeedLimiter.calculate(-Functions.expoMS(Functions.deadband(getRawForwardTranslation(), getTranslationDeadband()), getTranslationExpo()) * DriveConstants.kMaxSpeed * getTranslationSensitivity(), getTranslationSlewrate());
   }
   public static double getSideTranslation() {
-    return m_xspeedLimiter.calculate(-Functions.expoMS(Functions.deadband(getRawSideTranslation(), getTranslationDeadband()), getTranslationExpo()) * Constants.drive.kMaxSpeed * getTranslationSensitivity(), getTranslationSlewrate());
+    return m_xspeedLimiter.calculate(-Functions.expoMS(Functions.deadband(getRawSideTranslation(), getTranslationDeadband()), getTranslationExpo()) * DriveConstants.kMaxSpeed * getTranslationSensitivity(), getTranslationSlewrate());
   }
   public static double getRotation() {
-    return m_rotLimiter.calculate(-Functions.expoMS(Functions.deadband(getRawRotation(), getRotationDeadband()), getRotationExpo()) * Constants.drive.kMaxAngularSpeed * getRotationSensitivity(), getRotationSlewrate());
+    return m_rotLimiter.calculate(-Functions.expoMS(Functions.deadband(getRawRotation(), getRotationDeadband()), getRotationExpo()) * DriveConstants.kMaxAngularSpeed * getRotationSensitivity(), getRotationSlewrate());
   }
   public static double getHeading() {
     if (getRawHeadingMagnitude() <= getHeadingDeadband()) return m_headingLimiter.calculate(m_previousHeading,1e-6);
@@ -102,15 +103,15 @@ public class Driver {
   
 /*
   public double getForwardTranslationSlew() {
-    return -m_xspeedLimiter.calculate(Functions.deadband(getRawLeftY(), Constants.oi.kDeadband)) * Constants.drive.kMaxSpeed * 0.1;
+    return -m_xspeedLimiter.calculate(Functions.deadband(getRawLeftY(), OIConstants.kDeadband)) * DriveConstants.kMaxSpeed * 0.1;
   }
 
   public double getSideTranslationSlew() {
-    return -m_yspeedLimiter.calculate(Functions.deadband(getRawLeftX(), Constants.oi.kDeadband)) * Constants.drive.kMaxSpeed * 0.1;
+    return -m_yspeedLimiter.calculate(Functions.deadband(getRawLeftX(), OIConstants.kDeadband)) * DriveConstants.kMaxSpeed * 0.1;
   }
 
   public double getRotationSlew() {
-    return -m_rotLimiter.calculate(Functions.deadband(getRawRightX(), Constants.oi.kDeadband)) * Constants.drive.kMaxAngularSpeed * 0.1;
+    return -m_rotLimiter.calculate(Functions.deadband(getRawRightX(), OIConstants.kDeadband)) * DriveConstants.kMaxAngularSpeed * 0.1;
   }
 */
 
@@ -153,49 +154,49 @@ public class Driver {
   }
 
   public static double getTranslationSensitivity(){
-    return m_translationalSensitivityEntry.getDouble(Constants.oi.kTranslationalSenseitivity);
+    return m_translationalSensitivityEntry.getDouble(OIConstants.kTranslationalSenseitivity);
   }
   public static double getTranslationExpo(){
-    return m_translationalExpoEntry.getDouble(Constants.oi.kTranslationalExpo);
+    return m_translationalExpoEntry.getDouble(OIConstants.kTranslationalExpo);
   }
   public static double getTranslationDeadband(){
-    return m_translationalDeadbandEntry.getDouble(Constants.oi.kTranslationalDeadband);
+    return m_translationalDeadbandEntry.getDouble(OIConstants.kTranslationalDeadband);
   }
   public static double getTranslationSlewrate(){
-    return m_translationalSlewrateEntry.getDouble(Constants.oi.kTranslationalSlewrate);
+    return m_translationalSlewrateEntry.getDouble(OIConstants.kTranslationalSlewrate);
   }
   public static boolean getFieldRelative() {
-    return m_fieldRelativeEntry.getBoolean(Constants.oi.kFieldRelative);
+    return m_fieldRelativeEntry.getBoolean(OIConstants.kFieldRelative);
   }
   public static double getRotationSenseitiviy(){
-    return m_rotationSensitivityEntry.getDouble(Constants.oi.kRotationSenseitiviy);
+    return m_rotationSensitivityEntry.getDouble(OIConstants.kRotationSenseitiviy);
   }
   public static double getRotationExpo(){
-    return m_rotationExpoEntry.getDouble(Constants.oi.kRotationExpo);
+    return m_rotationExpoEntry.getDouble(OIConstants.kRotationExpo);
   }
   public static double getRotationDeadband(){
-    return m_rotationDeadbandEntry.getDouble(Constants.oi.kRotationDeadband);
+    return m_rotationDeadbandEntry.getDouble(OIConstants.kRotationDeadband);
   }
   public static double getRotationSlewrate(){
-    return m_rotationSlewrateEntry.getDouble(Constants.oi.kRotationSlewrate);
+    return m_rotationSlewrateEntry.getDouble(OIConstants.kRotationSlewrate);
   }
   public static double getRotationSensitivity(){
-    return m_headingSensitivityEntry.getDouble(Constants.oi.kHeadingSensitivity);
+    return m_headingSensitivityEntry.getDouble(OIConstants.kHeadingSensitivity);
   }
   public static double getHeadingExpo(){
-    return m_headingExpoEntry.getDouble(Constants.oi.kHeadingExpo);
+    return m_headingExpoEntry.getDouble(OIConstants.kHeadingExpo);
   }
   public static double getHeadingDeadband(){
-  return m_headingDeadbandEntry.getDouble(Constants.oi.kHeadingDeadband);
+  return m_headingDeadbandEntry.getDouble(OIConstants.kHeadingDeadband);
   }
   public static boolean getConsantHeadingMagnitude(){
-    return m_consantHeadingMagnitudeEntry.getBoolean(Constants.oi.kConsantHeadingMagnatuide);
+    return m_consantHeadingMagnitudeEntry.getBoolean(OIConstants.kConsantHeadingMagnatuide);
   }
   public static Controller getControllerType(){
     return m_controllerTypeChooser.getSelected();
   }
   public static boolean getInverted(){
-    return m_invertEntry.getBoolean(Constants.oi.kInvert);
+    return m_invertEntry.getBoolean(OIConstants.kInvert);
   }
 
 }

@@ -7,6 +7,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import frc.robot.constants.Constants;
+import frc.robot.constants.DriveConstants;
 import frc.robot.constants.ModuleConstants;
 import lib.ctre_shims.TalonEncoderSim;
 
@@ -17,8 +18,8 @@ import lib.ctre_shims.TalonEncoderSim;
  */
 public class ModuleSim extends Module {
 
-  private final FlywheelSim m_driveMotorSim = new FlywheelSim(DCMotor.getFalcon500(1), Constants.drive.kDriveGearRatio, 0.025);
-  private final FlywheelSim m_steerMotorSim = new FlywheelSim(DCMotor.getFalcon500(1), Constants.drive.kSteerGearRatio, 0.004096955);
+  private final FlywheelSim m_driveMotorSim = new FlywheelSim(DCMotor.getFalcon500(1), DriveConstants.kDriveGearRatio, 0.025);
+  private final FlywheelSim m_steerMotorSim = new FlywheelSim(DCMotor.getFalcon500(1), DriveConstants.kSteerGearRatio, 0.004096955);
 
   private final TalonEncoderSim m_driveEncoderSim;
   private final CANCoderSimCollection m_encoderSim;
@@ -59,7 +60,7 @@ public class ModuleSim extends Module {
    */
   @Override
   public SwerveModuleState getState() {
-    return new SwerveModuleState(m_driveMotorSim.getAngularVelocityRPM() * Constants.drive.kWheelRadius * 2 * Math.PI / 60, new Rotation2d(m_currentSteerPositionRad));
+    return new SwerveModuleState(m_driveMotorSim.getAngularVelocityRPM() * DriveConstants.kWheelRadius * 2 * Math.PI / 60, new Rotation2d(m_currentSteerPositionRad));
   }
 
   /**

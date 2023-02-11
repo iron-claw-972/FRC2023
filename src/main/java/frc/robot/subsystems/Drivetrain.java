@@ -20,12 +20,14 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
+import frc.robot.constants.DriveConstants;
 import frc.robot.constants.ModuleConstants;
 import frc.robot.constants.DriveConstants.TestDriveConstants;
 import frc.robot.util.LogManager;
@@ -51,14 +53,14 @@ public class Drivetrain extends SubsystemBase {
   public final Module[] m_modules;
 
   public final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
-    new Translation2d(Constants.drive.kTrackWidth / 2, Constants.drive.kTrackWidth / 2),
-    new Translation2d(Constants.drive.kTrackWidth / 2, -Constants.drive.kTrackWidth / 2),
-    new Translation2d(-Constants.drive.kTrackWidth / 2, Constants.drive.kTrackWidth / 2),
-    new Translation2d(-Constants.drive.kTrackWidth / 2, -Constants.drive.kTrackWidth / 2)
+    new Translation2d(DriveConstants.kTrackWidth / 2, DriveConstants.kTrackWidth / 2),
+    new Translation2d(DriveConstants.kTrackWidth / 2, -DriveConstants.kTrackWidth / 2),
+    new Translation2d(-DriveConstants.kTrackWidth / 2, DriveConstants.kTrackWidth / 2),
+    new Translation2d(-DriveConstants.kTrackWidth / 2, -DriveConstants.kTrackWidth / 2)
   );
 
   // Pigeon
-  private final WPI_Pigeon2 m_pigeon = new WPI_Pigeon2(Constants.drive.kPigeon, Constants.kCanivoreCAN);
+  private final WPI_Pigeon2 m_pigeon = new WPI_Pigeon2(DriveConstants.kPigeon, Constants.kCanivoreCAN);
   private boolean m_hasResetYaw = false; // the initial yaw has been set 
 
   public double m_headingPIDOutput = 0;
@@ -73,7 +75,6 @@ public class Drivetrain extends SubsystemBase {
   // PID Controllers
   private PIDController m_xController = new PIDController(0,0,0);
   private PIDController m_yController = new PIDController(0, 0, 0);
-  private PIDController m_rotationController = new PIDController(Constants.drive.KheadingP, Constants.drive.KheadingI, Constants.drive.KheadingD);
 //Shuffleboard
 GenericEntry 
     m_driveVelocity,
@@ -98,6 +99,7 @@ GenericEntry
   Module m_prevModule = m_dummyModule;
   SendableChooser<Module> m_module = new SendableChooser<>();
  ;
+  private PIDController m_rotationController = new PIDController(DriveConstants.KheadingP, DriveConstants.KheadingI, DriveConstants.KheadingD);
 
   public Drivetrain() {
       m_modules = new Module[]{
@@ -146,12 +148,12 @@ GenericEntry
   }
 
   /**
-   * Resets the pigeon yaw, but only if it hasn't already been reset. Will reset it to {@link Constants.drive.kStartingHeadingDegrees}
+   * Resets the pigeon yaw, but only if it hasn't already been reset. Will reset it to {@link DriveConstants.kStartingHeadingDegrees}
    */
   public void initializePigeonYaw(boolean force) {
     if (!m_hasResetYaw || force) {
       m_hasResetYaw = true;
-      setPigeonYaw(Constants.drive.kStartingHeadingDegrees);
+      setPigeonYaw(DriveConstants.kStartingHeadingDegrees);
     }
   }
 
@@ -176,7 +178,7 @@ GenericEntry
             fieldRelative
                 ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_pigeon.getRotation2d())
                 : new ChassisSpeeds(xSpeed, ySpeed, rot));
-    SwerveDriveKinematics.desaturateWheelSpeeds(m_swerveModuleStates, Constants.drive.kMaxSpeed);
+    SwerveDriveKinematics.desaturateWheelSpeeds(m_swerveModuleStates, DriveConstants.kMaxSpeed);
     setModuleStates(m_swerveModuleStates);
   }
 
@@ -195,7 +197,7 @@ GenericEntry
             fieldRelative
                 ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_pigeon.getRotation2d())
                 : new ChassisSpeeds(xSpeed, ySpeed, rot));
-    SwerveDriveKinematics.desaturateWheelSpeeds(m_swerveModuleStates, Constants.drive.kMaxSpeed);
+    SwerveDriveKinematics.desaturateWheelSpeeds(m_swerveModuleStates, DriveConstants.kMaxSpeed);
     setModuleStates(m_swerveModuleStates);
   }
 
@@ -280,6 +282,17 @@ GenericEntry
     for (int i = 0; i < 4; i++) {
       m_modules[i].setDesiredState(swerveModuleStates[i]);
     }
+  }
+
+  public void testDriveVolts(double value) {
+    // setAllOptimize(false);
+    for (int i = 0; i < 4; i++) {
+      m_modules[i].setDriveVoltage(value);
+    }
+    m_modules[0].setSteerAngle(new Rotation2d(Units.degreesToRadians(135)));
+    m_modules[1].setSteerAngle(new Rotation2d(Units.degreesToRadians(45)));
+    m_modules[2].setSteerAngle(new Rotation2d(Units.degreesToRadians(225)));
+    m_modules[3].setSteerAngle(new Rotation2d(Units.degreesToRadians(315)));
   }
 
   public PIDController getXController() {
