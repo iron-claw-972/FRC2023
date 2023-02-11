@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.test;
 
 
 
@@ -41,7 +41,7 @@ public class DriveFeedForwardCharacterzation extends CommandBase {
   }
 
   public void execute() {
-    runcharacterazationVolts();
+    runCharacterizationVolts();
     if (m_timer.get() > 0.5) {
       for (int i=0; i<4; i++){
         m_feedForwardCharacterizationData[i].add(m_drive.m_modules[i].getDriveVelocity(), value); 
@@ -57,7 +57,7 @@ public class DriveFeedForwardCharacterzation extends CommandBase {
 
   }
 
-  private void runcharacterazationVolts() {
+  private void runCharacterizationVolts() {
     for (int i = 0; i < 4; i++) {
       m_drive.m_modules[i].setDriveVoltage(value);
     }

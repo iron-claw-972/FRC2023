@@ -13,9 +13,15 @@ public class DriveVoltage extends CommandBase {
     m_drive = drive; 
     addRequirements(m_drive);
   }
-
+  
+  @Override
   public void execute(){
-    m_drive.testDriveVolts(m_voltsEntry.getDouble(0));
+    m_drive.driveVoltsTest(m_voltsEntry.getDouble(0));
+  }
+
+  @Override
+  public void end(boolean interrupted) {
+    m_drive.stop();
   }
 
 }

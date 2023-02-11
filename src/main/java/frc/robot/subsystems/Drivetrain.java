@@ -284,16 +284,46 @@ GenericEntry
     }
   }
 
-  public void testDriveVolts(double value) {
+  public void stop(){
+    for (int i = 0; i < 4; i++) {
+      m_modules[i].setDriveVoltage(0);
+      m_modules[i].setSteerVoltage(0);
+    }
+  }
+
+  public void driveVoltsTest(double volts) {
     // setAllOptimize(false);
     for (int i = 0; i < 4; i++) {
-      m_modules[i].setDriveVoltage(value);
+      m_modules[i].setDriveVoltage(volts);
     }
     m_modules[0].setSteerAngle(new Rotation2d(Units.degreesToRadians(135)));
     m_modules[1].setSteerAngle(new Rotation2d(Units.degreesToRadians(45)));
     m_modules[2].setSteerAngle(new Rotation2d(Units.degreesToRadians(225)));
     m_modules[3].setSteerAngle(new Rotation2d(Units.degreesToRadians(315)));
   }
+  public void steerVoltsTest(double volts) {
+    // setAllOptimize(false);
+    for (int i = 0; i < 4; i++) {
+      m_modules[i].setDriveVoltage(0);
+      m_modules[i].setSteerVoltage(volts);
+    }
+  }
+  public boolean isDriveVelocityAcurate(){
+    return 
+      Math.abs(m_modules[0].getDriveVelocityError()) < 0.1 &&
+      Math.abs(m_modules[1].getDriveVelocityError()) < 0.1 &&
+      Math.abs(m_modules[2].getDriveVelocityError()) < 0.1 &&
+      Math.abs(m_modules[3].getDriveVelocityError()) < 0.1;
+  }
+
+  public boolean isSteerAngleAcurate(){
+    return 
+      Math.abs(m_modules[0].getSteerAngleError()) < Units.degreesToRadians(1) &&
+      Math.abs(m_modules[1].getSteerAngleError()) < Units.degreesToRadians(1) &&
+      Math.abs(m_modules[2].getSteerAngleError()) < Units.degreesToRadians(1) &&
+      Math.abs(m_modules[3].getSteerAngleError()) < Units.degreesToRadians(1);
+  }
+  
 
   public PIDController getXController() {
       return m_xController;
