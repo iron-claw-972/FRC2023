@@ -12,6 +12,8 @@ public abstract class BaseDriverConfig {
 
   private Drivetrain m_drive;
 
+  boolean m_shuffleboardUpdates = false;
+
   ShuffleboardTab m_controllerTab;
   GenericEntry m_translationalSenseitivityEntry, m_translationalExpoEntry, m_translationalDeadbandEntry, m_translationalSlewrateEntry;
   GenericEntry m_rotationSenseitiviyEntry, m_rotationExpoEntry, m_rotationDeadbandEntry, m_rotationSlewrateEntry;
@@ -37,10 +39,11 @@ public abstract class BaseDriverConfig {
   private DynamicSlewRateLimiter m_rotLimiter = new DynamicSlewRateLimiter(m_rotationSlewrate);
   private DynamicSlewRateLimiter m_headingLimiter = new DynamicSlewRateLimiter(m_headingSenseitiviy);
 
-  public BaseDriverConfig(Drivetrain drive, ShuffleboardTab controllerTab){
+  public BaseDriverConfig(Drivetrain drive, ShuffleboardTab controllerTab, boolean shuffleboardUpdates){
     m_headingLimiter.setContinuousLimits(-Math.PI,Math.PI);
     m_headingLimiter.enableContinuous(true);
     m_controllerTab = controllerTab;
+    m_shuffleboardUpdates = shuffleboardUpdates;
   }
 
   public double getForwardTranslation() {
@@ -64,6 +67,8 @@ public abstract class BaseDriverConfig {
   }
 
   public void setupShuffleboard(){
+    if (!m_shuffleboardUpdates) return;
+    
     m_translationalSenseitivityEntry = m_controllerTab.add("translationalSenseitivity",OIConstants.kTranslationalSenseitivity).getEntry();
     m_translationalExpoEntry = m_controllerTab.add("translationalExpo",OIConstants.kTranslationalExpo).getEntry();
     m_translationalDeadbandEntry = m_controllerTab.add("translationalDeadband",OIConstants.kTranslationalDeadband).getEntry();
@@ -78,6 +83,7 @@ public abstract class BaseDriverConfig {
   }
 
   public void updateSettings(){ //updates the shuffleboard data
+    if (!m_shuffleboardUpdates) return;
 
     m_translationalSenseitivity = m_translationalSenseitivityEntry.getDouble(OIConstants.kTranslationalSenseitivity);
     m_translationalExpo = m_translationalExpoEntry.getDouble(OIConstants.kTranslationalExpo);

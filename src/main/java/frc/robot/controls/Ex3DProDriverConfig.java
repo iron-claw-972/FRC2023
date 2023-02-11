@@ -14,8 +14,8 @@ public class Ex3DProDriverConfig extends BaseDriverConfig {
 
   private Ex3DProController driverEPC = new Ex3DProController(OIConstants.kDriverJoy);
   
-  public Ex3DProDriverConfig(Drivetrain drive, ShuffleboardTab controllerTab){
-    super(drive, controllerTab);
+  public Ex3DProDriverConfig(Drivetrain drive, ShuffleboardTab controllerTab, boolean shuffleboardUpdates){
+    super(drive, controllerTab, shuffleboardUpdates);
   }
 
   public void configureControls() { 

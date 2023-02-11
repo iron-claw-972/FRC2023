@@ -15,8 +15,8 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
 
   private GameController driverGC = new GameController(OIConstants.kDriverJoy);
 
-  public GameControllerDriverConfig(Drivetrain drive, ShuffleboardTab controllerTab){
-    super(drive, controllerTab);
+  public GameControllerDriverConfig(Drivetrain drive, ShuffleboardTab controllerTab, boolean shuffleboardUpdates){
+    super(drive, controllerTab,shuffleboardUpdates);
   }
 
   public void configureControls() { 

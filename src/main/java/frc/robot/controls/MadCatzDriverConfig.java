@@ -14,8 +14,8 @@ public class MadCatzDriverConfig extends BaseDriverConfig {
 
   private MadCatzController driverMCC = new MadCatzController(OIConstants.kDriverJoy);
 
-  public MadCatzDriverConfig(Drivetrain drive, ShuffleboardTab controllerTab){
-    super(drive, controllerTab);
+  public MadCatzDriverConfig(Drivetrain drive, ShuffleboardTab controllerTab, boolean shuffleboardUpdates){
+    super(drive, controllerTab, shuffleboardUpdates);
   }
 
   public void configureControls() { 

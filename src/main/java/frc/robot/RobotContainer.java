@@ -43,7 +43,7 @@ public class RobotContainer {
 
 
   // Controllers are defined here
-  private final BaseDriverConfig m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab);
+  private final BaseDriverConfig m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
   private final Operator m_operator = new Operator();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
