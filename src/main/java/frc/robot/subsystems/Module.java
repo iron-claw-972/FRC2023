@@ -413,23 +413,23 @@ public class Module {
   }
   
   public void setupModulesShuffleboard(){
-    m_moduleTab.addNumber("FL desired speed", () -> getDesieredVelocity());
+    m_moduleTab.addNumber(m_moduleType.getAbbreviation() + " FL desired speed", () -> getDesieredVelocity());
     // Drive PID output
-    m_moduleTab.addNumber("FL PID Output", () -> getDrivePIDOutput());
+    m_moduleTab.addNumber(m_moduleType.getAbbreviation() + " FL PID Output", () -> getDrivePIDOutput());
     // get drive velocity
-    m_moduleTab.addNumber("Vel FL Raw", () -> getDriveVelocity());
+    m_moduleTab.addNumber(m_moduleType.getAbbreviation() + " Vel FL Raw", () -> getDriveVelocity());
     // drivePIDS
-    m_moduleTab.add("Drive PID " + m_moduleType.getAbbreviation(), getDrivePID());
+    m_moduleTab.add(m_moduleType.getAbbreviation() + " Drive PID", getDrivePID());
     // Median Filltered Velocity Values
-    m_moduleTab.addNumber("Vel " + m_moduleType.getAbbreviation() + " Filtered", () -> getDriveVelocityFiltered());
+    m_moduleTab.addNumber(m_moduleType.getAbbreviation() + " Vel Filtered", () -> getDriveVelocityFiltered());
     // Desired Steer angles
-    m_moduleTab.addNumber( m_moduleType.getAbbreviation() + "desired angle", () -> getDesieredAngle().getRadians());
+    m_moduleTab.addNumber(m_moduleType.getAbbreviation() + " Desired angle", () -> getDesieredAngle().getRadians());
     // Steer angles
-    m_moduleTab.addNumber("Angle " + m_moduleType.getAbbreviation(), () -> getSteerAngle());
+    m_moduleTab.addNumber(m_moduleType.getAbbreviation() + " Angle", () -> getSteerAngle());
     // Steer Velocity
-    m_moduleTab.addNumber("Steer Vel " + m_moduleType.getAbbreviation(), () -> getSteerVelocity());
+    m_moduleTab.addNumber(m_moduleType.getAbbreviation() + " Steer Vel", () -> getSteerVelocity());
     //Steer PID
-    m_moduleTab.add("Steer PID " + m_moduleType.getAbbreviation(), getSteerPID());
+    m_moduleTab.add(m_moduleType.getAbbreviation() + " Steer PID", getSteerPID());
   }
 
 }

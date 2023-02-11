@@ -99,12 +99,13 @@ public class Drivetrain extends SubsystemBase {
 
 
   public Drivetrain(ShuffleboardTab drivetrainTab, ShuffleboardTab swerveModulesTab) {
-      m_modules = new Module[]{
-        Module.create(ModuleConstants.FRONT_LEFT, m_swerveModulesTab),
-        Module.create(ModuleConstants.FRONT_RIGHT, m_swerveModulesTab),
-        Module.create(ModuleConstants.BACK_LEFT, m_swerveModulesTab),
-        Module.create(ModuleConstants.BACK_RIGHT, m_swerveModulesTab)
-      };
+    m_swerveModulesTab = swerveModulesTab;
+    m_modules = new Module[]{
+      Module.create(ModuleConstants.FRONT_LEFT, m_swerveModulesTab),
+      Module.create(ModuleConstants.FRONT_RIGHT, m_swerveModulesTab),
+      Module.create(ModuleConstants.BACK_LEFT, m_swerveModulesTab),
+      Module.create(ModuleConstants.BACK_RIGHT, m_swerveModulesTab)
+    };
     m_prevModule = m_modules[0];
 
     m_odometry = new SwerveDriveOdometry(m_kinematics, m_pigeon.getRotation2d(), getModulePositions(), m_robotPose);
@@ -118,7 +119,6 @@ public class Drivetrain extends SubsystemBase {
     LiveWindow.disableAllTelemetry();
     m_swerveModulesTab.add("Module Chooser", m_moduleChooser);
     m_drivetrainTab = drivetrainTab;
-    m_swerveModulesTab = swerveModulesTab;
   }
 
   @Override
