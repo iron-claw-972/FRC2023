@@ -110,7 +110,7 @@ public class Module {
 
   public boolean setOptimize = false;
   
-  public Module(ModuleConstants moduleConstants){
+  public Module(ModuleConstants moduleConstants) {
     this(
       moduleConstants.getDrivePort(),
       moduleConstants.getSteerPort(),
@@ -207,8 +207,6 @@ public class Module {
     LogManager.addDouble(m_driveMotor.getDescription() + " Drive Velocity Filtered", () -> getDriveVelocityFiltered());
     LogManager.addDouble(m_driveMotor.getDescription() + " Drive Voltage", () -> getDriveOutputVoltage());
     LogManager.addDouble(m_driveMotor.getDescription() + " Bus to Drive Voltage", () -> getBusToDriveVoltage());
-    
-    
   }
 
 
@@ -232,30 +230,47 @@ public class Module {
     setSteerAngle(desiredState.angle);
   }
 
-  public void setDriveVelocity(double speedMetersPerSecond){
+  /**
+   * Sets the drive velocity of the module using PIDF once. Should be called repeatedly to be effective.
+   * @param speedMetersPerSecond the drive velocity in m/s
+   */
+  public void setDriveVelocity(double speedMetersPerSecond) {
     m_drivePIDOutput = m_drivePIDController.calculate(m_driveEncoder.getRate(), speedMetersPerSecond);
     m_driveFeedforwardOutput = m_driveFeedforward.calculate(speedMetersPerSecond);
-    m_driveMotor.setVoltage(m_drivePIDOutput + m_driveFeedforwardOutput);
+    setDriveVoltage(m_drivePIDOutput + m_driveFeedforwardOutput);
   }
 
-  public void setSteerAngle(Rotation2d angle){
+  /**
+   * Sets the steer angle of the module using a profiled PIDF. Should be called repeatedly to be effective.
+   * @param angle a Rotation2d object representing the angle the steer of the module should go to.
+   */
+  public void setSteerAngle(Rotation2d angle) {
     // Calculate the steer motor output from the steer PID controller.
-    m_steerPIDOutput = m_steerPIDController.calculate(getSteerAngle(), angle.getRadians());
+    m_steerPIDOutput = m_steerPIDController.calculate(getSteerAngle(), MathUtil.angleModulus(angle.getRadians()));
     m_steerFeedForwardOutput = m_steerFeedForward.calculate(m_steerPIDController.getSetpoint().velocity);
-    m_steerMotor.setVoltage(m_steerPIDOutput + m_steerFeedForwardOutput);// * Constants.kMaxVoltage / RobotController.getBatteryVoltage()
+    setSteerVoltage(m_steerPIDOutput + m_steerFeedForwardOutput);// * Constants.kMaxVoltage / RobotController.getBatteryVoltage()
   }
 
-  public void setDriveVoltage(double voltage){
+  /**
+   * Directly sets the voltage of the drive motor, should be called repeatedly.
+   * @param voltage the voltage of the drive motor.
+   */
+  public void setDriveVoltage(double voltage) {
     m_driveMotor.setVoltage(voltage);
   }
-  public void setSteerVoltage(double voltage){
+
+  /**
+   * Directly sets the voltage of the steer motor, should be called repeatedly.
+   * @param voltage the voltage of the steer motor.
+   */
+  public void setSteerVoltage(double voltage) {
     m_steerMotor.setVoltage(voltage);
   }
   
   /**
-   * Gets the drive position of the module.
+   * Gets the drive position of the module in meters, scaled from the internal Falcon encoder.
    * 
-   * @return module drive position
+   * @return module drive position in meters.
    */
   public double getDrivePosition() {
       return m_driveEncoder.getDistance() * DriveConstants.kDriveGearRatio * 2 * Math.PI * DriveConstants.kWheelRadius;
@@ -270,8 +285,9 @@ public class Module {
   }
 
   /**
-   * Returns the current state of the module.
-   * @return the current state of the module
+   * Returns the current drive velocity and steer angle of the module. 
+   * Velocity comes from the internal drive motor encoder, angle from the CANcoder.
+   * @return A SwerveModuleState object with the current velocity and angle.
    */
   public SwerveModuleState getState() {
     return new SwerveModuleState(m_driveMotor.getSelectedSensorVelocity(), new Rotation2d(getSteerAngle()));
@@ -286,20 +302,26 @@ public class Module {
   }
   
   /**
-   * Gets the angle of the module.
-   * @return encoder's absolute position - offset
+   * Gets the angle of the module from the CANcoder with the offset specified by the constructor to ensure 0 is forward for all modules.
+   * @return encoder's position in radians, from -pi to pi
    */
   public double getSteerAngle() {
     return MathUtil.angleModulus(m_encoder.getAbsolutePosition() - m_offset);
   }
-  public double getSteerAngleError(){
-    double posError = MathUtil.angleModulus(getSteerAngle() - m_steerPIDController.getGoal().position);
-    double negError = MathUtil.angleModulus(m_steerPIDController.getGoal().position - getSteerAngle());
-    if (Math.abs(posError) < Math.abs(negError)) return posError;
-    return negError;
+
+  /**
+   * Gets the difference between the last set goal of the steer profiled pid and the current angle.
+   * @return the error in radians, from -pi to pi
+   */
+  public double getSteerAngleError() {
+    return MathUtil.angleModulus(getSteerAngle() - m_steerPIDController.getGoal().position);
   }
 
-  public SwerveModulePosition getPosition(){
+  /**
+   * Returns the position and angle of the module. The position is in meters, and it is from the internal encoder of the drive motor.
+   * @return a SwerveModulePosition object with the distance traveled by the drive motor and the current steer angle.
+   */
+  public SwerveModulePosition getPosition() {
     return new SwerveModulePosition(getDrivePosition(), new Rotation2d(getSteerAngle()));
   }
 
@@ -310,19 +332,20 @@ public class Module {
   public double getDriveVelocity() {
     return m_driveEncoder.getRate();
   }
-  public double getDriveVelocityError(){
+
+  public double getDriveVelocityError() {
     return m_drivePIDController.getSetpoint() - getDriveVelocity();
   }
+
   public double selfFeedforwardCharacterazation() {
-    
     return m_driveEncoder.getRate();
   }
 
-  public double getDriveVelocityFiltered(){
+  public double getDriveVelocityFiltered() {
     return m_driveVelocityMedianFilter.calculate(getDriveVelocity());
   }
 
-  public double getSteerVelocity(){
+  public double getSteerVelocity() {
     return m_encoder.getVelocity();
   }
 
@@ -331,13 +354,13 @@ public class Module {
    * @param staticFeedforward static feedforward value from Shuffleboard
    * @param velocityFeedForward velocity feedforward value from Shuffleboard
    */
-  public void setDriveFeedForwardValues(double staticFeedforward, double velocityFeedForward){
+  public void setDriveFeedForwardValues(double staticFeedforward, double velocityFeedForward) {
     m_driveFeedforward = new SimpleMotorFeedforward(staticFeedforward, velocityFeedForward);
   }
-  public void setSteerFeedForwardValues(double staticFeedforward, double velocityFeedForward){
+
+  public void setSteerFeedForwardValues(double staticFeedforward, double velocityFeedForward) {
     m_steerFeedForward= new SimpleMotorFeedforward(staticFeedforward, velocityFeedForward);
   }
-
   
   // Getter Methods
   public ProfiledPIDController getSteerPID() {
@@ -383,28 +406,28 @@ public class Module {
   public double getSteerOutput() {
     return m_steerPIDOutput;
   }
-  public void setOptimize(Boolean setOptimize){
+
+  public void setOptimize(Boolean setOptimize) {
     this.setOptimize=setOptimize;
   }
 
-  public double getBusToDriveVoltage(){
+  public double getBusToDriveVoltage() {
     return m_driveMotor.getBusVoltage();
   }
 
-  public double getDriveOutputVoltage(){
+  public double getDriveOutputVoltage() {
     return m_driveMotor.getMotorOutputVoltage();
   }
 
-  public double getBusToSteerVoltage(){
+  public double getBusToSteerVoltage() {
     return m_steerMotor.getBusVoltage();
   }
 
-  public double getSteerOutputVoltage(){
+  public double getSteerOutputVoltage() {
     return m_steerMotor.getMotorOutputVoltage();
   }
 
   public void periodic() {
     // This method will be called once per scheduler run, mainly only used for simulation
   }
-
 }
