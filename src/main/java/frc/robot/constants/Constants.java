@@ -11,11 +11,18 @@ public final class Constants {
   public static final double kCancoderResolution = 4096;
 
   // CAN bus names
+  // Replaced for DriveConstants.kConstants.xxxxCAN constants
+  @Deprecated
   public static final String kCanivoreCAN = "CANivore";
+  @Deprecated
   public static final String kRioCAN = "rio";
 
-  public static final FalconConstants falcon = new FalconConstants();
+  @Deprecated
   public static final OIConstants oi = new OIConstants();
+  @Deprecated
   public static final DriveConstants drive = new CompDriveConstants();
+  @Deprecated
   public static final AutoConstants auto = new AutoConstants();
+  @Deprecated
+  public static final FalconConstants falcon = new FalconConstants();
 }

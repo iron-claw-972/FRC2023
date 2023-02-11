@@ -1,6 +1,8 @@
 package frc.robot.constants.swerve;
 
 public abstract class DriveConstants {
+
+    public static final DriveConstants kConstants = new CompDriveConstants();
     
     public double kWheelRadius;
 
@@ -102,6 +104,8 @@ public abstract class DriveConstants {
     // CAN
     public String kDriveMotorCAN;
     public String kSteerMotorCAN;
+    public String kPigeonCAN;
+    public String kEncoderCAN;
 
     public DriveConstants(
         double kWheelRadius,
@@ -203,7 +207,9 @@ public abstract class DriveConstants {
 
         // CAN
         String kDriveMotorCAN,
-        String kSteerMotorCAN
+        String kSteerMotorCAN,
+        String kPigeonCan,
+        String kEncoderCAN
     ) {
         this.kWheelRadius = kWheelRadius;
 
@@ -299,6 +305,8 @@ public abstract class DriveConstants {
 
         this.kDriveMotorCAN = kDriveMotorCAN;
         this.kSteerMotorCAN = kSteerMotorCAN;
+        this.kPigeonCAN = kPigeonCan;
+        this.kEncoderCAN = kEncoderCAN;
     }
 
 }

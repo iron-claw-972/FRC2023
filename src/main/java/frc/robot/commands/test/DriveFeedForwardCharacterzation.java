@@ -2,15 +2,12 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.test;
 
 
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Robot;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.util.FeedForwardCharacterizationData;
 
@@ -42,10 +39,10 @@ public class DriveFeedForwardCharacterzation extends CommandBase {
   }
 
   public void execute() {
-    runcharacterazationVolts();
+    runCharacterizationVolts();
     if (m_timer.get() > 0.5) {
       for (int i=0; i<4; i++){
-        m_feedForwardCharacterizationData[i].add(Robot.drive.m_modules[i].getDriveVelocity(), value); 
+        m_feedForwardCharacterizationData[i].add(m_drive.getDriveVelocities()[i], value); 
       }
       
     }
@@ -58,37 +55,24 @@ public class DriveFeedForwardCharacterzation extends CommandBase {
 
   }
 
-  private void runcharacterazationVolts() {
-    for (int i = 0; i < 4; i++) {
-      Robot.drive.m_modules[i].setDriveVoltage(value);
-    }
-    Robot.drive.m_modules[0].setSteerAngle(new Rotation2d(Units.degreesToRadians(135)));
-    Robot.drive.m_modules[1].setSteerAngle(new Rotation2d(Units.degreesToRadians(45)));
-    Robot.drive.m_modules[2].setSteerAngle(new Rotation2d(Units.degreesToRadians(225)));
-    Robot.drive.m_modules[3].setSteerAngle(new Rotation2d(Units.degreesToRadians(315)));
+  private void runCharacterizationVolts() {
+    m_drive.driveVoltsTest(value);
   }
 
   public void end(boolean interrupted) {
     System.out.println("FINISHED");
     for (int i=0; i<4; i++){
       m_feedForwardCharacterizationData[i].print();
-    
     }
     
     for (int i=0; i<4;i++){
-      Robot.shuffleboard.m_driveStaticFeedForwardSaver.replace(Robot.drive.m_modules[i], m_feedForwardCharacterizationData[i].getSatic());
-      Robot.shuffleboard.m_driveVelFeedForwardSaver.replace(Robot.drive.m_modules[i], m_feedForwardCharacterizationData[i].getVelocity());
-      System.out.println("Static " + i + ": " + m_feedForwardCharacterizationData[i].getSatic());
+      m_drive.getDriveStaticFeedforwardArray()[i] = m_feedForwardCharacterizationData[i].getStatic();
+      m_drive.getDriveVelocityFeedforwardArray()[i] = m_feedForwardCharacterizationData[i].getVelocity();
+      System.out.println("Static " + i + ": " + m_feedForwardCharacterizationData[i].getStatic());
       System.out.println("Velocity " + i + ": " + m_feedForwardCharacterizationData[i].getVelocity());
     }
     
-    for (int i = 0; i < 4; i++) {
-      // Robot.drive.m_modules[i].setDriveVoltage(0);
-    }
-    Robot.drive.m_modules[0].setSteerAngle(new Rotation2d(Units.degreesToRadians(135)));
-    Robot.drive.m_modules[1].setSteerAngle(new Rotation2d(Units.degreesToRadians(45)));
-    Robot.drive.m_modules[2].setSteerAngle(new Rotation2d(Units.degreesToRadians(225)));
-    Robot.drive.m_modules[3].setSteerAngle(new Rotation2d(Units.degreesToRadians(315)));
+    m_drive.stop();
   }
 
   public boolean isFinished() {

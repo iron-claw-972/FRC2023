@@ -83,6 +83,7 @@ public class DynamicSlewRateLimiter {
     // TODO: make continuse work proporly with + and - slewrates
     if (m_continuous){
       // convert value to be inbetween limits
+      // input = MathUtil.inputModulus(input, m_lowerContinuousLimit, m_upperContinuousLimit);
       //input %= m_upperCycleLimit - m_lowerCycleLimit;
       while (input < m_lowerContinuousLimit || input > m_upperContinuousLimit){
         if (input < m_lowerContinuousLimit) input += m_upperContinuousLimit - m_lowerContinuousLimit;
@@ -96,6 +97,7 @@ public class DynamicSlewRateLimiter {
       m_prevVal += change;
 
       //converting vlaue to be in limits
+      // m_prevVal = MathUtil.inputModulus(m_prevVal, m_lowerContinuousLimit, m_upperContinuousLimit);
       while (m_prevVal < m_lowerContinuousLimit || m_prevVal > m_upperContinuousLimit){
         if (m_prevVal < m_lowerContinuousLimit) m_prevVal += m_upperContinuousLimit - m_lowerContinuousLimit;
         if (m_prevVal > m_upperContinuousLimit) m_prevVal -= m_upperContinuousLimit - m_lowerContinuousLimit;

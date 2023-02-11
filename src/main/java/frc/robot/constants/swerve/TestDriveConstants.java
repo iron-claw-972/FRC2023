@@ -1,22 +1,22 @@
 package frc.robot.constants.swerve;
 
 import edu.wpi.first.math.util.Units;
-import frc.robot.constants.Constants;
+import frc.robot.constants.FalconConstants;
 
 public class TestDriveConstants extends DriveConstants {
 
     private static final double kWheelRadius = Units.inchesToMeters(2);
 
-    private static final double kTrackWidth = Units.inchesToMeters(22.75);//22.75 swerve bot, 20.75 comp bot
+    private static final double kTrackWidth = Units.inchesToMeters(20.75);//22.75 swerve bot, 20.75 comp bot
     private static final double kDriveGearRatio = 6.75;
     private static final double kSteerGearRatio = 12.8;
 
-    private static final double kMaxSpeed = Constants.falcon.kMaxRpm / 60.0 / kDriveGearRatio * kWheelRadius * 2 * Math.PI;
+    private static final double kMaxSpeed = FalconConstants.kMaxRpm / 60.0 / kDriveGearRatio * kWheelRadius * 2 * Math.PI;
 
-    private static final double kMaxAngularSpeed = Constants.falcon.kMaxRpm / 60.0 / kSteerGearRatio * 2 * Math.PI; // 8.3 rot/s
+    private static final double kMaxAngularSpeed = FalconConstants.kMaxRpm / 60.0 / kSteerGearRatio * 2 * Math.PI; // 8.3 rot/s
     private static final double kMaxAngularAccel = 8 * 2 * Math.PI; // 8 rotations per second per second
 
-    private static final int kPigeon = 0;
+    private static final int kPigeon = 13;
 
     private static final double kStartingHeadingDegrees = 0;
 
@@ -31,7 +31,7 @@ public class TestDriveConstants extends DriveConstants {
     private static final double kDriveDFrontLeft = 0;
     private static final double kSteerKSFrontLeft = 1;
     private static final double kSteerKVFrontLeft = 0.5;
-    private static final double kSteerPFrontLeft = 2;
+    private static final double kSteerPFrontLeft = 12;
     private static final double kSteerIFrontLeft = 0;
     private static final double kSteerDFrontLeft = 0;
 
@@ -46,7 +46,7 @@ public class TestDriveConstants extends DriveConstants {
     private static final double kDriveDFrontRight = 0;
     private static final double kSteerKSFrontRight = 1;
     private static final double kSteerKVFrontRight = 0.5;
-    private static final double kSteerPFrontRight = 2;
+    private static final double kSteerPFrontRight = 12;
     private static final double kSteerIFrontRight = 0;
     private static final double kSteerDFrontRight = 0;
 
@@ -61,7 +61,7 @@ public class TestDriveConstants extends DriveConstants {
     private static final double kDriveDBackLeft = 0;
     private static final double kSteerKSBackLeft = 1;
     private static final double kSteerKVBackLeft = 0.5;
-    private static final double kSteerPBackLeft = 2;
+    private static final double kSteerPBackLeft = 12;
     private static final double kSteerIBackLeft = 0;
     private static final double kSteerDBackLeft = 0;
 
@@ -76,11 +76,10 @@ public class TestDriveConstants extends DriveConstants {
     private static final double kDriveDBackRight = 0;
     private static final double kSteerKSBackRight = 1;
     private static final double kSteerKVBackRight = 0.5;
-    private static final double kSteerPBackRight = 2;
+    private static final double kSteerPBackRight = 12;
     private static final double kSteerIBackRight = 0;
     private static final double kSteerDBackRight = 0;
 
-    // PID
     // Drive
     private static final double kDrivePAll = 0;
     private static final double kDriveIAll = 0;
@@ -104,6 +103,8 @@ public class TestDriveConstants extends DriveConstants {
     // CAN
     private static final String kDriveMotorCAN = "rio";
     private static final String kSteerMotorCAN = "CANivore";
+    private static final String kPigeonCAN = "CANivore";
+    private static final String kEncoderCAN = "CANivore";
 
     public TestDriveConstants() {
         super(
@@ -194,7 +195,9 @@ public class TestDriveConstants extends DriveConstants {
             KheadingD,
 
             kDriveMotorCAN,
-            kSteerMotorCAN
+            kSteerMotorCAN,
+            kPigeonCAN,
+            kEncoderCAN
         );
     }
     

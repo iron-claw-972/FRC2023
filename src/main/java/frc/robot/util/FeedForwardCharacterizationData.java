@@ -30,7 +30,7 @@ public class FeedForwardCharacterizationData {
 
     
   }
-  public double getSatic(){
+  public double getStatic(){
       return regression.beta(0);
   }
   public double getVelocity(){

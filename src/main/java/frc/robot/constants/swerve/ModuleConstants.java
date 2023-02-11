@@ -1,74 +1,76 @@
 package frc.robot.constants.swerve;
 
-import frc.robot.constants.Constants;
-
 public enum ModuleConstants {
 
     FRONT_LEFT(
-            Constants.drive.kDriveFrontLeft,
-            Constants.drive.kSteerFrontLeft,
-            Constants.drive.kEncoderFrontLeft,
-            Constants.drive.kSteerOffsetFrontLeft,
-            Constants.drive.kDriveKSFrontLeft,
-            Constants.drive.kDriveKVFrontLeft,
-            Constants.drive.kDrivePFrontLeft,
-            Constants.drive.kDriveIFrontLeft,
-            Constants.drive.kDriveDFrontLeft,
-            Constants.drive.kSteerKSFrontLeft,
-            Constants.drive.kSteerKVFrontLeft,
-            Constants.drive.kSteerPFrontLeft,
-            Constants.drive.kSteerIFrontLeft,
-            Constants.drive.kSteerDFrontLeft
+            DriveConstants.kConstants.kConstants.kDriveFrontLeft,
+            DriveConstants.kConstants.kConstants.kSteerFrontLeft,
+            DriveConstants.kConstants.kConstants.kEncoderFrontLeft,
+            DriveConstants.kConstants.kConstants.kSteerOffsetFrontLeft,
+            DriveConstants.kConstants.kConstants.kDriveKSFrontLeft,
+            DriveConstants.kConstants.kConstants.kDriveKVFrontLeft,
+            DriveConstants.kConstants.kConstants.kDrivePFrontLeft,
+            DriveConstants.kConstants.kConstants.kDriveIFrontLeft,
+            DriveConstants.kConstants.kConstants.kDriveDFrontLeft,
+            DriveConstants.kConstants.kConstants.kSteerKSFrontLeft,
+            DriveConstants.kConstants.kConstants.kSteerKVFrontLeft,
+            DriveConstants.kConstants.kConstants.kSteerPFrontLeft,
+            DriveConstants.kConstants.kConstants.kSteerIFrontLeft,
+            DriveConstants.kConstants.kConstants.kSteerDFrontLeft,
+            ModuleType.FRONT_LEFT
         ),
     FRONT_RIGHT(
-            Constants.drive.kDriveFrontRight,
-            Constants.drive.kSteerFrontRight,
-            Constants.drive.kEncoderFrontRight,
-            Constants.drive.kSteerOffsetFrontRight,
-            Constants.drive.kDriveKSFrontRight,
-            Constants.drive.kDriveKVFrontRight,
-            Constants.drive.kDrivePFrontRight,
-            Constants.drive.kDriveIFrontRight,
-            Constants.drive.kDriveDFrontRight,
-            Constants.drive.kSteerKSFrontRight,
-            Constants.drive.kSteerKVFrontRight,
-            Constants.drive.kSteerPFrontRight,
-            Constants.drive.kSteerIFrontRight,
-            Constants.drive.kSteerDFrontRight
+            DriveConstants.kConstants.kConstants.kDriveFrontRight,
+            DriveConstants.kConstants.kConstants.kSteerFrontRight,
+            DriveConstants.kConstants.kConstants.kEncoderFrontRight,
+            DriveConstants.kConstants.kConstants.kSteerOffsetFrontRight,
+            DriveConstants.kConstants.kConstants.kDriveKSFrontRight,
+            DriveConstants.kConstants.kConstants.kDriveKVFrontRight,
+            DriveConstants.kConstants.kConstants.kDrivePFrontRight,
+            DriveConstants.kConstants.kConstants.kDriveIFrontRight,
+            DriveConstants.kConstants.kConstants.kDriveDFrontRight,
+            DriveConstants.kConstants.kConstants.kSteerKSFrontRight,
+            DriveConstants.kConstants.kConstants.kSteerKVFrontRight,
+            DriveConstants.kConstants.kConstants.kSteerPFrontRight,
+            DriveConstants.kConstants.kConstants.kSteerIFrontRight,
+            DriveConstants.kConstants.kConstants.kSteerDFrontRight,
+            ModuleType.FRONT_RIGHT
         ),
     BACK_LEFT(
-            Constants.drive.kDriveBackLeft,
-            Constants.drive.kSteerBackLeft,
-            Constants.drive.kEncoderBackLeft,
-            Constants.drive.kSteerOffsetBackLeft,
-            Constants.drive.kDriveKSBackLeft,
-            Constants.drive.kDriveKVBackLeft,
-            Constants.drive.kDrivePBackLeft,
-            Constants.drive.kDriveIBackLeft,
-            Constants.drive.kDriveDBackLeft,
-            Constants.drive.kSteerKSBackLeft,
-            Constants.drive.kSteerKVBackLeft,
-            Constants.drive.kSteerPBackLeft,
-            Constants.drive.kSteerIBackLeft,
-            Constants.drive.kSteerDBackLeft
+            DriveConstants.kConstants.kConstants.kDriveBackLeft,
+            DriveConstants.kConstants.kConstants.kSteerBackLeft,
+            DriveConstants.kConstants.kConstants.kEncoderBackLeft,
+            DriveConstants.kConstants.kConstants.kSteerOffsetBackLeft,
+            DriveConstants.kConstants.kConstants.kDriveKSBackLeft,
+            DriveConstants.kConstants.kConstants.kDriveKVBackLeft,
+            DriveConstants.kConstants.kConstants.kDrivePBackLeft,
+            DriveConstants.kConstants.kConstants.kDriveIBackLeft,
+            DriveConstants.kConstants.kConstants.kDriveDBackLeft,
+            DriveConstants.kConstants.kConstants.kSteerKSBackLeft,
+            DriveConstants.kConstants.kConstants.kSteerKVBackLeft,
+            DriveConstants.kConstants.kConstants.kSteerPBackLeft,
+            DriveConstants.kConstants.kConstants.kSteerIBackLeft,
+            DriveConstants.kConstants.kConstants.kSteerDBackLeft,
+            ModuleType.BACK_LEFT
     ),
     BACK_RIGHT(
-            Constants.drive.kDriveBackRight,
-            Constants.drive.kSteerBackRight,
-            Constants.drive.kEncoderBackRight,
-            Constants.drive.kSteerOffsetBackRight,
-            Constants.drive.kDriveKSBackRight,
-            Constants.drive.kDriveKVBackRight,
-            Constants.drive.kDrivePBackRight,
-            Constants.drive.kDriveIBackRight,
-            Constants.drive.kDriveDBackRight,
-            Constants.drive.kSteerKSBackRight,
-            Constants.drive.kSteerKVBackRight,
-            Constants.drive.kSteerPBackRight,
-            Constants.drive.kSteerIBackRight,
-            Constants.drive.kSteerDBackRight
+            DriveConstants.kConstants.kConstants.kDriveBackRight,
+            DriveConstants.kConstants.kConstants.kSteerBackRight,
+            DriveConstants.kConstants.kConstants.kEncoderBackRight,
+            DriveConstants.kConstants.kConstants.kSteerOffsetBackRight,
+            DriveConstants.kConstants.kConstants.kDriveKSBackRight,
+            DriveConstants.kConstants.kConstants.kDriveKVBackRight,
+            DriveConstants.kConstants.kConstants.kDrivePBackRight,
+            DriveConstants.kConstants.kConstants.kDriveIBackRight,
+            DriveConstants.kConstants.kConstants.kDriveDBackRight,
+            DriveConstants.kConstants.kConstants.kSteerKSBackRight,
+            DriveConstants.kConstants.kConstants.kSteerKVBackRight,
+            DriveConstants.kConstants.kConstants.kSteerPBackRight,
+            DriveConstants.kConstants.kConstants.kSteerIBackRight,
+            DriveConstants.kConstants.kConstants.kSteerDBackRight,
+            ModuleType.BACK_RIGHT
     ),
-    NONE(0,0,0,0.0,0.0,0.0,0.0,0.0,0.0,0,0,0,0,0);
+    NONE(0,0,0,0.0,0.0,0.0,0.0,0.0,0.0,0,0,0,0,0,ModuleType.NONE);
 
     private int m_drivePort;
     private int m_steerPort;
@@ -84,6 +86,7 @@ public enum ModuleConstants {
     private double m_steerP;
     private double m_steerI;
     private double m_steerD;
+    private ModuleType m_type;
     
     ModuleConstants(
         int drivePort,
@@ -99,7 +102,8 @@ public enum ModuleConstants {
         double steerKV,
         double steerP,
         double steerI,
-        double steerD
+        double steerD,
+        ModuleType type
     ){
         m_drivePort = drivePort;
         m_steerPort = steerPort;
@@ -115,8 +119,7 @@ public enum ModuleConstants {
         m_steerP = steerP;
         m_steerI = steerI;
         m_steerD = steerD;
-
-
+        m_type = type;
     }
     public int getDrivePort() {
         return m_drivePort;
@@ -161,5 +164,8 @@ public enum ModuleConstants {
     }
     public double getSteerD(){
         return m_steerD;
+    }
+    public ModuleType getType(){
+        return m_type;
     }
 }
