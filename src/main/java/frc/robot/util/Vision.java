@@ -68,7 +68,7 @@ public class Vision {
     getTagFieldLayout();
     aprilTagFieldLayout.setOrigin(AprilTagFieldLayout.OriginPosition.kBlueAllianceWallRightSide);
     
-    robotPoseEstimator = new RobotPoseEstimator(aprilTagFieldLayout, PoseStrategy.AVERAGE_BEST_TARGETS, camList);
+    robotPoseEstimator = new RobotPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, camList);
 
     if(Constants.vision.k2Cameras){
       // ArrayList<Pair<PhotonCamera, Transform3d>>camList = new ArrayList<Pair<PhotonCamera, Transform3d>>(List.of(

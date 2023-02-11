@@ -16,6 +16,8 @@ import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.MatBuilder;
+import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -73,9 +75,7 @@ public class Drivetrain extends SubsystemBase {
     m_gyro = gyro;
     resetGyro();
 
-    m_poseEstimator = new DifferentialDrivePoseEstimator(m_kinematics, m_gyro.getRotation2d(), m_leftEncoder.getDistance(), m_rightEncoder.getDistance(), new Pose2d(new Translation2d(15.05, 2.79), new Rotation2d(0)));
-
-
+    m_poseEstimator = new DifferentialDrivePoseEstimator(m_kinematics, m_gyro.getRotation2d(), m_leftEncoder.getDistance(), m_rightEncoder.getDistance(), new Pose2d(new Translation2d(15.05, 2.79), new Rotation2d(0)), new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02, 0.02, 0.01), new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.1, 0.1, 0.01));
   }
 
   /**
@@ -116,6 +116,17 @@ public class Drivetrain extends SubsystemBase {
       // m_poseEstimator.addVisionMeasurement(new Pose2d(), 0.02);
       // System.out.println(camPose.getFirst().toPose2d().toString());
     }
+  }
+
+  public double getLeftDistance(){
+    return m_leftEncoder.getDistance();
+  }
+  public double getRightDistance(){
+    return m_rightEncoder.getDistance();
+  }
+
+  public Pose2d getPose(){
+    return m_poseEstimator.getEstimatedPosition();
   }
 
   public void resetGyro() {
