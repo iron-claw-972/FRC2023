@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Robot;
 import frc.robot.commands.DoNothing;
 import frc.robot.constants.Constants;
+import frc.robot.subsystems.Drivetrain;
 import lib.controllers.GameController;
 import lib.controllers.GameController.Button;
 import lib.controllers.GameController.DPad;
@@ -11,7 +12,7 @@ import lib.controllers.GameController.DPad;
 public class Operator {
   private static GameController operator = new GameController(Constants.oi.kOperatorJoy);
 
-  public static void configureControls() {
+  public static void configureControls(Drivetrain drive) {
     operator.get(Button.A).whenPressed(new DoNothing());
     operator.get(DPad.LEFT).onTrue(new InstantCommand(()->Robot.DPadPress(DPad.LEFT)));
     operator.get(DPad.UP).onTrue(new InstantCommand(()->Robot.DPadPress(DPad.UP)));

@@ -29,9 +29,6 @@ public class TestVision extends CommandBase{
   //How many frames it will wait between prints
   private final int printDelay = 50;
 
-  public TestVision(double speed){
-    this(speed, Robot.drive);
-  }
 
   public TestVision(double speed, Drivetrain drive){
     addRequirements(drive);

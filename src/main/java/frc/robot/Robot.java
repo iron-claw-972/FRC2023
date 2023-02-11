@@ -11,10 +11,10 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.RobotContainer.Teams;
 import frc.robot.util.LogManager;
 import frc.robot.util.Node;
 import frc.robot.util.PathGroupLoader;
-import frc.robot.util.ShuffleboardManager;
 import frc.robot.util.Vision;
 import lib.controllers.GameController.DPad;
 
@@ -46,7 +46,6 @@ public class Robot extends TimedRobot {
   public final static double selectTimeAmount=100;
 
   // Possible teams
-  public static enum Teams {BLUE, RED};
   public static Teams team;
 
   private RobotContainer m_robotContainer;
@@ -142,7 +141,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically when the robot is disabled */
   @Override
   public void disabledPeriodic() {
-    team = getTeam();
+    team = m_robotContainer.getTeam();
     m_autoCommand = m_robotContainer.getAutonomousCommand(); // update the auto command before auto starts
   }
 
@@ -184,9 +183,4 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {}
-
-  public Teams getTeam() {
-    return shuffleboard.getTeam();
-  }
-
 }

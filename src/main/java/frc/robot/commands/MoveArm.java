@@ -9,10 +9,6 @@ import frc.robot.subsystems.Drivetrain;
 
 public class MoveArm extends CommandBase{
   
-  public MoveArm(){
-    this(Robot.drive);
-  }
-
   public MoveArm(Drivetrain drive){
     addRequirements(drive);
   }

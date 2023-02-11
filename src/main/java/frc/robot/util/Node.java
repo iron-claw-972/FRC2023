@@ -34,7 +34,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 import frc.robot.Robot;
-import frc.robot.Robot.Teams;
+import frc.robot.RobotContainer.Teams;
 
 /**Class to store data about scoring locations*/
 public class Node {
