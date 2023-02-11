@@ -19,7 +19,7 @@ public class Align extends CommandBase{
   private Drivetrain m_drive;
   private double setpoint;
   private double angle;
-  private PIDController m_pid = new PIDController(1, 0.01, 0.1);
+  // private PIDController m_pid = new PIDController(1, 0.01, 0.1);
 
   public Align(double angle, Drivetrain drive){
     addRequirements(drive);
@@ -50,7 +50,8 @@ public class Align extends CommandBase{
     }else if(a>0&&setpoint<0){
       a-=2*Math.PI;
     }
-    m_drive.arcadeDrive(0, -m_pid.calculate(a, setpoint));
+    double speed = a>setpoint?-0.1:0.1;
+    m_drive.arcadeDrive(0, -speed);
   }
 
   @Override
