@@ -34,6 +34,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 import frc.robot.Robot;
+import frc.robot.RobotContainer;
 import frc.robot.RobotContainer.Teams;
 
 /**Class to store data about scoring locations*/
@@ -63,7 +64,7 @@ public class Node {
         this.x=x;
         type = row==1?Types.HYBRID:x%3==2?Types.CUBE:Types.CONE;
 
-        Pose3d tag = Robot.aprilTags[(x-1)/3+(team==Teams.RED?1:6)];
+        Pose3d tag = RobotContainer.aprilTags[(x-1)/3+(team==Teams.RED?1:6)];
         double x2;
         double z;
         switch(row){

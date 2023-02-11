@@ -17,7 +17,7 @@ import frc.robot.util.Node;
 import frc.robot.util.PathGroupLoader;
 import frc.robot.util.Vision;
 import lib.controllers.GameController.DPad;
-import frc.robot.RobotContainer.Teams;
+// import frc.robot.RobotContainer.Teams;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -27,13 +27,8 @@ import frc.robot.RobotContainer.Teams;
  */
 public class Robot extends TimedRobot {
   private Command m_autoCommand;
-  // Array of april tags. The index of the april tag in the array is equal to its id, and aprilTags[0] is null.
-  public final static Pose3d[] aprilTags = new Pose3d[9];
-
-  // 2D arrays of nodes. blueNodes[3][1] will return the top row cone node on the far left side (from the perspective of the driver)
-  public final static Node[][] blueNodes = new Node[4][];
-  public final static Node[][] redNodes = new Node[4][];
-
+  
+  
   // Where the robot will score.
   
 
@@ -48,16 +43,16 @@ public class Robot extends TimedRobot {
 
     // Puts April tags in array
     for(int i = 1; i <= 8; i++){
-      aprilTags[i] = Vision.getTagPose(i);
+      RobotContainer.aprilTags[i] = Vision.getTagPose(i);
     }
 
     // Puts nodes in arrays
     for(int i = 1; i <= 3; i++){
-      blueNodes[i] = new Node[10];
-      redNodes[i] = new Node[10];
+      RobotContainer.blueNodes[i] = new Node[10];
+      RobotContainer.redNodes[i] = new Node[10];
       for(int j = 1; j <= 9; j++){
-        blueNodes[i][j] = new Node(Teams.BLUE, i, j);
-        redNodes[i][j] = new Node(Teams.RED, i, j);
+        RobotContainer.blueNodes[i][j] = new Node(Teams.BLUE, i, j);
+        RobotContainer.redNodes[i][j] = new Node(Teams.RED, i, j);
       }
     }
 
@@ -112,9 +107,9 @@ public class Robot extends TimedRobot {
         RobotContainer.selectTime = 1;
 
         if (RobotContainer.team == RobotContainer.Teams.BLUE) {
-          RobotContainer.selectedNode = blueNodes[RobotContainer.selectValues[1]][RobotContainer.selectValues[0]*3-3+RobotContainer.selectValues[2]];
+          RobotContainer.selectedNode = RobotContainer.blueNodes[RobotContainer.selectValues[1]][RobotContainer.selectValues[0]*3-3+RobotContainer.selectValues[2]];
         }else{
-          RobotContainer.selectedNode=redNodes[RobotContainer.selectValues[1]][RobotContainer.selectValues[0]*3-3+RobotContainer.selectValues[2]];
+          RobotContainer.selectedNode = RobotContainer.redNodes[RobotContainer.selectValues[1]][RobotContainer.selectValues[0]*3-3+RobotContainer.selectValues[2]];
         }
       }
     }
