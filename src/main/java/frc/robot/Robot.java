@@ -129,7 +129,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically when the robot is disabled */
   @Override
   public void disabledPeriodic() {
-    RobotContainer.team = getTeam();
+    RobotContainer.team = m_robotContainer.getTeam();
     m_autoCommand = m_robotContainer.getAutonomousCommand(); // update the auto command before auto starts
   }
 
@@ -171,9 +171,5 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {}
-
-  public Teams getTeam() {
-    return shuffleboard.getTeam();
-  }
 
 }
