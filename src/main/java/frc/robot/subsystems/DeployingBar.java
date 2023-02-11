@@ -8,15 +8,8 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxAlternateEncoder;
-import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
@@ -24,45 +17,51 @@ import frc.robot.util.MotorFactory;
 
 public class DeployingBar extends SubsystemBase {
 
-  private final CANSparkMax m_motor1;
-  private final RelativeEncoder m_encoder1;
+  private final TalonFX m_motor1;
   private double setpoint;
-  private SparkMaxPIDController m_pid;
+  private PIDController m_pid;
+  private boolean isEnabled;
 
   public DeployingBar() {
-    m_motor1 = MotorFactory.createSparkMAXDefault(Constants.deploybar.kmotorId, MotorType.kBrushless);
-    m_encoder1 = m_motor1.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, 8192);
-    m_pid = m_motor1.getPIDController();
-    m_pid.setP(Constants.deploybar.kp);
-    m_pid.setI(Constants.deploybar.ki);
-    m_pid.setD(Constants.deploybar.kd);
-    m_pid.setReference(setpoint, CANSparkMax.ControlType.kPosition);
-    m_motor1.setIdleMode(IdleMode.kBrake);
+    m_motor1 = MotorFactory.createTalonFX(Constants.deploybar.kmotorId, getName());
+    m_pid = new PIDController(Constants.deploybar.kp, Constants.deploybar.ki, Constants.deploybar.kd);
+    m_motor1.setNeutralMode(NeutralMode.Brake);
+  }
+  @Override
+  public void periodic() {
+    // TODO 4.1: Periodic runs periodically, so we will update the PID here and set the motors. 
+    // If the pid is enabled (a boolean value declared above) then you should set the motors using the pid's calculate() function. Otherwise, it should set the motor power to zero.
+    // pid.calculate() takes two values: calculate(processVariable, setpoint). get the process var by getting the encoders, and the setpoint is a variable declared above.
+    if(isEnabled){
+      m_motor1.set(ControlMode.PercentOutput, m_pid.calculate(getEncoderValue(), setpoint));
+    }
   }
 
   public void setSetpoint(double target){
     setpoint = target;
-    m_pid.setReference(setpoint, CANSparkMax.ControlType.kPosition);
   }
 
   public boolean atSetpoint(){
-    return (m_encoder1.getPosition() - setpoint < 0.01 && m_encoder1.getPosition() - setpoint > -0.01);
+    return m_pid.atSetpoint();
   }
   
   public double getEncoderValue(){
-    return m_encoder1.getPosition();
+    return m_motor1.getSelectedSensorPosition();
   }
 
-  public void zeroEncoder(){
-    m_encoder1.setPosition(0);
-  }
-
-  public void toggleCoast(){
-    if(m_motor1.getIdleMode() == IdleMode.kBrake){
-        m_motor1.setIdleMode(IdleMode.kCoast);
-    }
+  public void setEnableStatus(boolean enableStatus){
+    if(enableStatus)
+      isEnabled = true;
     else
-      m_motor1.setIdleMode(IdleMode.kBrake);
+      isEnabled = false;
+  }
+
+  public void zeroEncoders(){
+    m_motor1.setSelectedSensorPosition(0);
+  }
+
+  public void resetPID(){
+    m_pid.reset();
   }
 
 }
