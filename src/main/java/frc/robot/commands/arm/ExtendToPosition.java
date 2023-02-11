@@ -1,34 +1,28 @@
 package frc.robot.commands.arm;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.FourBarArm;
 
 public class ExtendToPosition extends CommandBase {
   FourBarArm m_arm;
-  PIDController m_pid;
   double m_armSetpoint;
-  public ExtendToPosition(FourBarArm arm, PIDController pid, double setpoint) {
+  public ExtendToPosition(FourBarArm arm, double setpoint) {
+    addRequirements(arm);
     m_arm = arm;
-    m_pid = pid; 
     m_armSetpoint = setpoint;
   }
   @Override
   public void initialize() {
-    m_pid.reset();
-    m_arm.setEncoderPosition(0);
+    m_arm.setArmSetpoint(m_armSetpoint);
   }
-  @Override
-  public void execute() {
-    m_arm.setMotor(m_pid.calculate(m_arm.getEncoderPosition(), m_armSetpoint));
-  }
+
   @Override
   public boolean isFinished() {
-    double error = m_armSetpoint - m_arm.getEncoderPosition();
-    return error <= -1 || error >= -1; // error values TBD
+    return m_arm.isFinished();
   }
+
   @Override
   public void end(boolean interrupted) {
-    m_arm.setMotor(0);
+    m_arm.end();
   }
 }

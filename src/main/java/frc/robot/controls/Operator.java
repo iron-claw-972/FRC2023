@@ -1,9 +1,7 @@
 package frc.robot.controls;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.DoNothing;
 import frc.robot.commands.arm.ExtendToPosition;
-import frc.robot.commands.arm.Retract;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.FourBarArm;
@@ -17,9 +15,9 @@ public class Operator {
    * Configures all of the operator controls.
    */
   public static void configureControls(FourBarArm arm) {
-    operator.get(Button.Y).onTrue(new SequentialCommandGroup(new ExtendToPosition(arm, arm.getPIDController(), ArmConstants.topPosition), new Retract(arm, arm.getPIDController())));
-    operator.get(Button.X).onTrue(new SequentialCommandGroup(new ExtendToPosition(arm, arm.getPIDController(), ArmConstants.middlePosiiton), new Retract(arm, arm.getPIDController())));
-    operator.get(Button.A).onTrue(new SequentialCommandGroup(new ExtendToPosition(arm, arm.getPIDController(), ArmConstants.intakePosition), new Retract(arm, arm.getPIDController())));
-    operator.get(Button.Y).onTrue(new SequentialCommandGroup(new ExtendToPosition(arm, arm.getPIDController(), ArmConstants.shelfPosition), new Retract(arm, arm.getPIDController())));
+    operator.get(Button.Y).onTrue(new SequentialCommandGroup(new ExtendToPosition(arm, ArmConstants.topPosition), new ExtendToPosition(arm, ArmConstants.initialPosition)));
+    operator.get(Button.X).onTrue(new SequentialCommandGroup(new ExtendToPosition(arm, ArmConstants.middlePosiiton), new ExtendToPosition(arm, ArmConstants.initialPosition)));
+    operator.get(Button.A).onTrue(new SequentialCommandGroup(new ExtendToPosition(arm, ArmConstants.intakePosition), new ExtendToPosition(arm, ArmConstants.initialPosition)));
+    operator.get(Button.Y).onTrue(new SequentialCommandGroup(new ExtendToPosition(arm, ArmConstants.shelfPosition), new ExtendToPosition(arm, ArmConstants.initialPosition)));
   }
 }

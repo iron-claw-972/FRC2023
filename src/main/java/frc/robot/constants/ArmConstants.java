@@ -10,6 +10,9 @@ public class ArmConstants {
   public static final double kP = -1;
   public static final double kI = -1;
   public static final double kD = -1;
+  public static final double kTolerance = -1;
+  public static final double minMotorPower = -1;
+  public static final double maxMotorPower = -1;
 
   // distance values - TBD
   public static final double initialPosition = 0;

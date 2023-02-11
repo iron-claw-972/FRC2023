@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -13,29 +14,39 @@ public class FourBarArm extends SubsystemBase {
   private final CANSparkMax m_motor;
   private final PIDController m_pid;
   private final RelativeEncoder m_encoder;
+  private double m_armSetpoint;
 
   public FourBarArm() {
     m_motor = new CANSparkMax(ArmConstants.motorID, MotorType.kBrushless);
     m_motor.setIdleMode(IdleMode.kBrake);
     m_encoder = m_motor.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, 8192);
+    m_encoder.setPosition(0);
+    m_encoder.setPositionConversionFactor(360);
     m_pid = new PIDController(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD);
+    m_pid.setSetpoint(ArmConstants.initialPosition);
+    m_pid.setTolerance(ArmConstants.kTolerance);
+    MathUtil.clamp(m_pid.calculate(m_encoder.getPosition()), ArmConstants.minMotorPower, ArmConstants.maxMotorPower);
   }
 
-  public double getEncoderPosition() {
-    return m_encoder.getPosition();
-  }
-  public void setEncoderPosition(double position) {
-    m_encoder.setPosition(position);
-  }
-
-  public void setMotor(double val) {
-    m_motor.set(val);
-  }
-  public double getMotorValue() {
-    return m_motor.get();
+  public void setArmSetpoint(double setpoint) {
+    m_pid.reset();
+    m_pid.setSetpoint(setpoint);
+    m_armSetpoint = setpoint;
   }
 
-  public PIDController getPIDController() {
-    return m_pid;
+  @Override
+  public void periodic() {
+    m_motor.set(m_pid.calculate(m_encoder.getPosition()));
+  }
+
+  public boolean isFinished() {
+    return m_pid.atSetpoint();
+  }
+
+  public void end() {
+    m_motor.set(0);
+    if (m_armSetpoint == ArmConstants.initialPosition) {
+      m_encoder.setPosition(0);
+    }
   }
 }
