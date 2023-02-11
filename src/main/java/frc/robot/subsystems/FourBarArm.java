@@ -22,6 +22,7 @@ public class FourBarArm extends SubsystemBase {
     m_encoder = m_motor.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, 8192);
     m_encoder.setPosition(0);
     m_encoder.setPositionConversionFactor(360);
+    m_encoder.setVelocityConversionFactor(60);
     m_pid = new PIDController(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD);
     m_pid.setSetpoint(ArmConstants.initialPosition);
     m_pid.setTolerance(ArmConstants.kTolerance);
