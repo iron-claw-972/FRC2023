@@ -112,8 +112,8 @@ public class Module {
     
     if (Robot.isReal()) {
       // TODO: The CANBus needs to be a constant because on the new 2023 bot, drive motors use Canivore, not rio
-      m_driveMotor = MotorFactory.createTalonFX(driveMotorPort, Constants.kRioCAN);
-      m_steerMotor = MotorFactory.createTalonFX(steerMotorPort, Constants.kCanivoreCAN);
+      m_driveMotor = MotorFactory.createTalonFX(driveMotorPort, DriveConstants.kConstants.kDriveMotorCAN);
+      m_steerMotor = MotorFactory.createTalonFX(steerMotorPort, DriveConstants.kConstants.kSteerMotorCAN);
     } else {
       m_driveMotor = new WPI_TalonFX(driveMotorPort);
       m_steerMotor = new WPI_TalonFX(steerMotorPort);
@@ -126,7 +126,7 @@ public class Module {
     m_steerMotor.setNeutralMode(NeutralMode.Brake);
 
     m_driveEncoder = new TalonEncoder(m_driveMotor);
-    m_encoder = new WPI_CANCoder(encoderPort, Constants.kCanivoreCAN);
+    m_encoder = new WPI_CANCoder(encoderPort, DriveConstants.kConstants.kEncoderCAN);
 
     m_drivePIDController = new PIDController(driveP, driveI,driveD);
     m_steerPIDController = new ProfiledPIDController(
