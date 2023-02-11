@@ -14,6 +14,7 @@ import frc.robot.controls.Driver;
 import frc.robot.controls.Operator;
 import frc.robot.controls.TestControls;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.util.Node;
 import frc.robot.util.PathGroupLoader;
 
 /**
@@ -28,6 +29,22 @@ public class RobotContainer {
 
   // Shuffleboard stuff
   SendableChooser<Command> m_autoCommand = new SendableChooser<>();
+
+  // Vision stuff 
+  public static Node selectedNode = null;
+
+  /// Selection values (grid, row, spot)
+  public static int[] selectValues = {0,0,0};
+
+  // Timer for clearing array
+  public static double selectTime;
+
+  // How much time it should take (in frames)
+  public final static double selectTimeAmount=100;
+
+  // Possible teams
+  public static enum Teams {BLUE, RED};
+  public static Teams team;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {

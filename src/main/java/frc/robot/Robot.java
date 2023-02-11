@@ -17,6 +17,7 @@ import frc.robot.util.PathGroupLoader;
 import frc.robot.util.ShuffleboardManager;
 import frc.robot.util.Vision;
 import lib.controllers.GameController.DPad;
+import frc.robot.RobotContainer.Teams;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -34,20 +35,7 @@ public class Robot extends TimedRobot {
   public final static Node[][] redNodes = new Node[4][];
 
   // Where the robot will score.
-  public static Node selectedNode = null;
-
-  /// Selection values (grid, row, spot)
-  public static int[] selectValues = {0,0,0};
-
-  // Timer for clearing array
-  public static double selectTime;
-
-  // How much time it should take (in frames)
-  public final static double selectTimeAmount=100;
-
-  // Possible teams
-  public static enum Teams {BLUE, RED};
-  public static Teams team;
+  
 
   private RobotContainer m_robotContainer;
 
@@ -63,7 +51,7 @@ public class Robot extends TimedRobot {
 
     // Puts April tags in array
     for(int i = 1; i <= 8; i++){
-      aprilTags[i]=Vision.getTagPose(i);
+      aprilTags[i] = Vision.getTagPose(i);
     }
 
     // Puts nodes in arrays
@@ -89,11 +77,11 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    selectTime--;
-    if(selectTime==0){
-      selectValues[0]=0;
-      selectValues[1]=0;
-      selectValues[2]=0;
+    RobotContainer.selectTime--;
+    if(RobotContainer.selectTime==0){
+      RobotContainer.selectValues[0]=0;
+      RobotContainer.selectValues[1]=0;
+      RobotContainer.selectValues[2]=0;
     }
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
@@ -111,23 +99,25 @@ public class Robot extends TimedRobot {
    * For example, up right left will select the center grid, top row, and left spot.
    * @param direction = Which DPad button is pressed
    */
-  public static void DPadPress(DPad direction){
-    if(direction==DPad.DOWN){
-      selectTime=1;
-    }else{
-      selectTime=selectTimeAmount;
-      int pressValue = direction==DPad.LEFT?1:direction==DPad.UP?2:3;
-      if(selectValues[0]==0){
-        selectValues[0]=pressValue;
-      }else if(selectValues[1]==0){
-        selectValues[1]=pressValue;
-      }else{
-        selectValues[2]=pressValue;
-        selectTime=1;
-        if(team==Teams.BLUE){
-          selectedNode=blueNodes[selectValues[1]][selectValues[0]*3-3+selectValues[2]];
+  public static void DPadPress(DPad direction) { 
+    if (direction==DPad.DOWN) {
+      RobotContainer.selectTime=1;
+    } else {
+      RobotContainer.selectTime = RobotContainer.selectTimeAmount;
+      int pressValue = direction == DPad.LEFT?1:direction==DPad.UP?2:3;
+
+      if (RobotContainer.selectValues[0]==0){
+        RobotContainer.selectValues[0]=pressValue;
+      } else if (RobotContainer.selectValues[1]==0) {
+        RobotContainer.selectValues[1]=pressValue;
+      } else {
+        RobotContainer.selectValues[2] = pressValue;
+        RobotContainer.selectTime = 1;
+
+        if (RobotContainer.team == Teams.BLUE) {
+          RobotContainer.selectedNode = blueNodes[RobotContainer.selectValues[1]][RobotContainer.selectValues[0]*3-3+RobotContainer.selectValues[2]];
         }else{
-          selectedNode=redNodes[selectValues[1]][selectValues[0]*3-3+selectValues[2]];
+          RobotContainer.selectedNode=redNodes[RobotContainer.selectValues[1]][RobotContainer.selectValues[0]*3-3+RobotContainer.selectValues[2]];
         }
       }
     }
@@ -142,7 +132,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically when the robot is disabled */
   @Override
   public void disabledPeriodic() {
-    team = getTeam();
+    RobotContainer.team = getTeam();
     m_autoCommand = m_robotContainer.getAutonomousCommand(); // update the auto command before auto starts
   }
 
