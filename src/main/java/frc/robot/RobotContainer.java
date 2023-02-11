@@ -8,13 +8,17 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.commands.DoNothing;
+import frc.robot.commands.TestVision;
+import frc.robot.commands.TestVision2;
 import frc.robot.controls.Driver;
 import frc.robot.controls.Operator;
 import frc.robot.controls.TestControls;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.util.PathGroupLoader;
+import frc.robot.util.Vision;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -44,6 +48,8 @@ public class RobotContainer {
     Driver.configureControls(m_drive);
     Operator.configureControls(m_drive);
     TestControls.configureControls(m_drive);
+
+    Vision.setup();
 
     LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
     LiveWindow.setEnabled(false);
@@ -75,6 +81,12 @@ public class RobotContainer {
   public void addTestCommands() {
     ShuffleboardTab tab = Shuffleboard.getTab("Test");
     tab.add("Do Nothing", new DoNothing());
+    tab.add("Test vision (forward)", new TestVision(0.1, m_drive));
+    tab.add("Test vision (backward)", new TestVision(-0.1, m_drive));
+    tab.add("Test vision (forward then backward)", new TestVision2(0.1, 3, m_drive));
+    tab.add("Test vision (backward then forward)", new TestVision2(-0.1, 3, m_drive));
+    tab.add("Print robot pose", new InstantCommand(()->m_drive.printPose()));
+    tab.add("Print pose from vision", new InstantCommand(()->Vision.printEstimate()));
   }
 
   /**

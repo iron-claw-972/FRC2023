@@ -57,9 +57,6 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
 
-
-    Vision.setup();
-
     // Puts April tags in array
     for(int i = 1; i <= 8; i++){
       aprilTags[i]=Vision.getTagPose(i);
