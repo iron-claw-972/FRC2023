@@ -97,4 +97,8 @@ public class FourBarArm extends SubsystemBase {
   public void setEnabled(boolean enable)  {
     m_enabled = enable;
   }
+
+  public double getMotorPower() {
+    return m_motor.get();
+  }
 }
