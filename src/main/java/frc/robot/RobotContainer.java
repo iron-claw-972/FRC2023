@@ -31,23 +31,36 @@ public class RobotContainer {
   SendableChooser<Command> m_autoCommand = new SendableChooser<>();
 
   //shuffleboard tabs
-  private ShuffleboardTab m_mainTab = Shuffleboard.getTab("Main");
-  private ShuffleboardTab m_drivetrainTab = Shuffleboard.getTab("Drive");
-  private ShuffleboardTab m_swerveModulesTab = Shuffleboard.getTab("Swerve Modules");
-  private ShuffleboardTab m_autoTab = Shuffleboard.getTab("Auto");
-  private ShuffleboardTab m_controllerTab = Shuffleboard.getTab("Controller");
-  private ShuffleboardTab m_testTab = Shuffleboard.getTab("Test");
+  private ShuffleboardTab m_mainTab;
+  private ShuffleboardTab m_drivetrainTab;
+  private ShuffleboardTab m_swerveModulesTab;
+  private ShuffleboardTab m_autoTab;
+  private ShuffleboardTab m_controllerTab;
+  private ShuffleboardTab m_testTab;
 
   // The robot's subsystems are defined here...
-  private final Drivetrain m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab);
+  private final Drivetrain m_drive;
 
 
   // Controllers are defined here
-  private final BaseDriverConfig m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
-  private final Operator m_operator = new Operator();
+  private final BaseDriverConfig m_driver;
+  private final Operator m_operator;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
+    m_mainTab = Shuffleboard.getTab("Main");
+    m_drivetrainTab = Shuffleboard.getTab("Drive");
+    m_swerveModulesTab = Shuffleboard.getTab("Swerve Modules");
+    m_autoTab = Shuffleboard.getTab("Auto");
+    m_controllerTab = Shuffleboard.getTab("Controller");
+    m_testTab = Shuffleboard.getTab("Test");
+    
+
+    m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab);
+
+    m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
+    m_operator = new Operator();
 
     // This is really annoying so it's disabled
     DriverStation.silenceJoystickConnectionWarning(true);
@@ -61,12 +74,14 @@ public class RobotContainer {
     LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
     LiveWindow.setEnabled(false);
     
-    addTestCommands();
+    
     autoChooserUpdate();
     loadCommandSchedulerShuffleboard();
     m_drive.setupDrivetrainShuffleboard();
     m_drive.setupModulesShuffleboard();
     m_driver.setupShuffleboard();
+    
+    addTestCommands();
 
     m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive,m_driver));
   }
@@ -97,8 +112,8 @@ public class RobotContainer {
     m_testTab.add("Drive Voltage", new DriveVoltage(m_drive, m_drive.getRequestedVoltsEntry()));
     m_testTab.add("Drive Steer", new SteerVoltage(m_drive, m_drive.getRequestedVoltsEntry()));
     m_testTab.add("Test Drive Velocity", new TestDriveVelocity(m_drive, m_drive.getRequestedDriveVelocityEntry(), testEntry));
-    m_testTab.add("Heading PID", new TestHeadingPID(m_drive, m_drive.getRequestedSteerAngleEntry()));
-    m_testTab.add("Steer angle", new TestSteerAngle(m_drive, m_drive.getRequestedHeadingEntry(), testEntry));
+    m_testTab.add("Heading PID", new TestHeadingPID(m_drive, m_drive.getRequestedHeadingEntry()));
+    m_testTab.add("Steer angle", new TestSteerAngle(m_drive, m_drive.getRequestedSteerAngleEntry(), testEntry));
   }
 
   /**

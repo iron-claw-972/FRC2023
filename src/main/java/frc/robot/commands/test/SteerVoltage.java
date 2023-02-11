@@ -11,6 +11,7 @@ public class SteerVoltage extends CommandBase {
 
   public SteerVoltage(Drivetrain drive, GenericEntry voltsEntry){
     m_drive = drive; 
+    m_voltsEntry = voltsEntry;
     addRequirements(m_drive);
   }
 

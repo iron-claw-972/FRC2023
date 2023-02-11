@@ -11,6 +11,7 @@ public class DriveVoltage extends CommandBase {
 
   public DriveVoltage(Drivetrain drive, GenericEntry voltsEntry){
     m_drive = drive; 
+    m_voltsEntry = voltsEntry;
     addRequirements(m_drive);
   }
   

@@ -100,7 +100,12 @@ public class Drivetrain extends SubsystemBase {
 
 
   public Drivetrain(ShuffleboardTab drivetrainTab, ShuffleboardTab swerveModulesTab) {
-      m_modules = new Module[]{
+    LiveWindow.disableAllTelemetry();
+    m_drivetrainTab = drivetrainTab;
+    m_swerveModulesTab = swerveModulesTab;
+    m_swerveModulesTab.add("Module Chooser", m_moduleChooser);
+    
+    m_modules = new Module[]{
         Module.create(ModuleConstants.TEST_FL, m_swerveModulesTab),
         Module.create(ModuleConstants.TEST_FR, m_swerveModulesTab),
         Module.create(ModuleConstants.TEST_BL, m_swerveModulesTab),
@@ -116,10 +121,6 @@ public class Drivetrain extends SubsystemBase {
     m_fieldDisplay.setRobotPose(getPose());
     SmartDashboard.putData("Field", m_fieldDisplay);
     
-    LiveWindow.disableAllTelemetry();
-    m_swerveModulesTab.add("Module Chooser", m_moduleChooser);
-    m_drivetrainTab = drivetrainTab;
-    m_swerveModulesTab = swerveModulesTab;
   }
 
   @Override
@@ -503,5 +504,12 @@ public class Drivetrain extends SubsystemBase {
   }
   public SendableChooser<Module> getModuleChooser(){
     return m_moduleChooser;
+  }
+  public void setUpModuleChooser(){
+    m_moduleChooser.addOption("Front Left", m_modules[0]);
+    m_moduleChooser.addOption("Front Right", m_modules[1]);
+    m_moduleChooser.addOption("Back Left", m_modules[2]);
+    m_moduleChooser.addOption("Back Right", m_modules[3]);
+    
   }
 }

@@ -44,6 +44,7 @@ public abstract class BaseDriverConfig {
     m_headingLimiter.enableContinuous(true);
     m_controllerTab = controllerTab;
     m_shuffleboardUpdates = shuffleboardUpdates;
+    m_drive = drive;
   }
 
   public double getForwardTranslation() {

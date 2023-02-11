@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
@@ -459,11 +460,11 @@ public class Module {
   }
   
   public void setupModulesShuffleboard(){
-    m_moduleTab.addNumber("FL desired speed", () -> getDesieredVelocity());
+    m_moduleTab.addNumber(m_moduleType.getAbbreviation() + " desired speed", () -> getDesieredVelocity());
     // Drive PID output
-    m_moduleTab.addNumber("FL PID Output", () -> getDrivePIDOutput());
+    m_moduleTab.addNumber(m_moduleType.getAbbreviation() +" PID Output", () -> getDrivePIDOutput());
     // get drive velocity
-    m_moduleTab.addNumber("Vel FL Raw", () -> getDriveVelocity());
+    m_moduleTab.addNumber("Vel " + m_moduleType.getAbbreviation() + " Raw", () -> getDriveVelocity());
     // drivePIDS
     m_moduleTab.add("Drive PID " + m_moduleType.getAbbreviation(), getDrivePID());
     // Median Filltered Velocity Values
