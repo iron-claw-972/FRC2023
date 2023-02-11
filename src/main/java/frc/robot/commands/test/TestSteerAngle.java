@@ -22,20 +22,19 @@ public class TestSteerAngle extends CommandBase{
 
   @Override
   public void execute() {
+    m_drive.setAllOptimize(false);
     m_drive.setModuleStates(new SwerveModuleState[] {
       new SwerveModuleState(0.01, new Rotation2d(m_angleEntry.getDouble(0))),
       new SwerveModuleState(0.01, new Rotation2d(m_angleEntry.getDouble(0))),
       new SwerveModuleState(0.01, new Rotation2d(m_angleEntry.getDouble(0))),
       new SwerveModuleState(0.01, new Rotation2d(m_angleEntry.getDouble(0)))
     });
-    
-    
-    m_testEntry.setBoolean(
-      Math.abs(m_angleEntry.getDouble(0) - m_drive.m_modules[0].getSteerAngle()) < Units.degreesToRadians(1) &&
-      Math.abs(m_angleEntry.getDouble(0) - m_drive.m_modules[1].getSteerAngle()) < Units.degreesToRadians(1) &&
-      Math.abs(m_angleEntry.getDouble(0) - m_drive.m_modules[2].getSteerAngle()) < Units.degreesToRadians(1) &&
-      Math.abs(m_angleEntry.getDouble(0) - m_drive.m_modules[3].getSteerAngle()) < Units.degreesToRadians(1));
+    m_testEntry.setBoolean(m_drive.isSteerAngleAcurate());
+  }
 
+  @Override
+  public void end(boolean interrupted) {
+    m_drive.stop();
   }
   
 }

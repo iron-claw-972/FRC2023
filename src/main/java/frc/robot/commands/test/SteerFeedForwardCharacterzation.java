@@ -7,6 +7,7 @@ package frc.robot.commands.test;
 
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Module;
@@ -21,9 +22,11 @@ public class SteerFeedForwardCharacterzation extends CommandBase {
 
   Timer m_timer = new Timer();
   Drivetrain m_drive;
+  SendableChooser<Module> m_moduleChooser;
 
-  public SteerFeedForwardCharacterzation(Drivetrain drive) {
-    this.m_drive = drive;
+  public SteerFeedForwardCharacterzation(Drivetrain drive, SendableChooser<Module> moduleChooser) {
+    m_drive = drive;
+    m_moduleChooser = moduleChooser;
     addRequirements(drive);
   }
 
@@ -31,7 +34,7 @@ public class SteerFeedForwardCharacterzation extends CommandBase {
     m_timer.start();
     m_drive.setAllOptimize(false);
     m_feedForwardCharacterizationData = new FeedForwardCharacterizationData();
-    this.m_module = m_drive.m_modules[0]; //TODO: fix, was: Robot.shuffleboard.getModule();
+    this.m_module = m_moduleChooser.getSelected();
   }
 
   public void execute() {

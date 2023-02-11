@@ -2,6 +2,8 @@ package frc.robot.commands.test;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -19,19 +21,19 @@ public class TestDriveVelocity extends CommandBase{
 
     @Override
     public void execute() {
-        m_testEntry.setBoolean(
-            Math.abs(m_driveVelocityEntry.getDouble(0) - m_drive.m_modules[0].getDriveVelocity()) < 0.1 &&
-            Math.abs(m_driveVelocityEntry.getDouble(0) - m_drive.m_modules[1].getDriveVelocity()) < 0.1 &&
-            Math.abs(m_driveVelocityEntry.getDouble(0) - m_drive.m_modules[2].getDriveVelocity()) < 0.1 &&
-            Math.abs(m_driveVelocityEntry.getDouble(0) - m_drive.m_modules[3].getDriveVelocity()) < 0.1);
+        m_drive.setAllOptimize(false);
+    m_drive.setModuleStates(new SwerveModuleState[] {
+      new SwerveModuleState(m_driveVelocityEntry.getDouble(0), new Rotation2d(Units.degreesToRadians(135))),
+      new SwerveModuleState(m_driveVelocityEntry.getDouble(0), new Rotation2d(Units.degreesToRadians(45))),
+      new SwerveModuleState(m_driveVelocityEntry.getDouble(0), new Rotation2d(Units.degreesToRadians(225))),
+      new SwerveModuleState(m_driveVelocityEntry.getDouble(0), new Rotation2d(Units.degreesToRadians(315)))
+    });
+    m_testEntry.setBoolean(m_drive.isDriveVelocityAcurate());
     }
 
     @Override
     public void end(boolean interrupted) {
-        for (int i = 0; i < 4; i++){
-            m_drive.m_modules[i].setDriveVelocity(0);
-            m_drive.m_modules[i].setSteerAngle(new Rotation2d(0) );
-        }
+        m_drive.stop();
     }
     
 }

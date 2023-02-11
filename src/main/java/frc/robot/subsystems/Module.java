@@ -302,6 +302,9 @@ public class Module {
   public double getDriveVelocity() {
     return m_driveEncoder.getRate();
   }
+  public double getDriveVelocityError(){
+    return m_drivePIDController.getSetpoint() - getDriveVelocity();
+  }
   public double selfFeedforwardCharacterazation() {
     
     return m_driveEncoder.getRate();
