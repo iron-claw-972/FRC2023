@@ -19,6 +19,39 @@ public class Robot extends TimedRobot {
   private Command m_autoCommand;
   private RobotContainer m_robotContainer;
 
+  private final SingleJointedArmSim armSim = 
+  new SingleJointedArmSim(
+    Constants.arm.armSimMotor, 
+    Constants.arm.armReduction, 
+    Constants.arm.armMOI, 
+    Constants.arm.armLength, 
+    Units.degreesToRadians(0), 
+    Units.degreesToRadians(180), 
+    Constants.arm.armMass, 
+    true
+    );
+  private double armPositionDeg = 0;
+  private double kArmEncoderDistPerPulse = 2.0*Math.PI/8192;
+  private final Encoder dummyEncoder = new Encoder(0, 1);
+  private final EncoderSim encoderSim = new EncoderSim(dummyEncoder);
+
+  public static final String kArmPositionKey = "ArmPosition";
+  public static final String kArmPKey = "ArmP";
+
+  // constructor arguments TBD
+  private final Mechanism2d mech2d = new Mechanism2d(60, 60);
+  private final MechanismRoot2d armPivot = mech2d.getRoot("ArmPivot", 30, 30);
+  private final MechanismLigament2d armTower =
+    armPivot.append(new MechanismLigament2d("ArmTower", 30, -90));
+  private final MechanismLigament2d armDiagram =
+      armPivot.append(
+          new MechanismLigament2d(
+              "Arm",
+              30,
+              Units.radiansToDegrees(armSim.getAngleRads()),
+              6,
+              new Color8Bit(Color.kYellow)));
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -96,4 +129,19 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {}
+
+  @Override
+  public void simulationInit() {
+    
+  } 
+
+  @Override
+  public void simulationPeriodic() {
+    armSim.setInput(Robot.arm.getMotorValue()*RobotController.getBatteryVoltage());
+    armSim.update(0.020);
+    encoderSim.setDistance(armSim.getAngleRads());
+    RoboRioSim.setVInVoltage(
+        BatterySim.calculateDefaultBatteryLoadedVoltage(armSim.getCurrentDrawAmps()));
+    armDiagram.setAngle(Units.radiansToDegrees(armSim.getAngleRads()));
+  }
 }
