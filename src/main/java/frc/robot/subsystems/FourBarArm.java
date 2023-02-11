@@ -49,4 +49,8 @@ public class FourBarArm extends SubsystemBase {
       m_encoder.setPosition(0);
     }
   }
+
+  public double getMotorPower() {
+    return m_motor.get();
+  }
 }

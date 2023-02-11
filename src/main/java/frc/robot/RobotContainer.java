@@ -26,7 +26,7 @@ import frc.robot.util.PathGroupLoader;
 public class RobotContainer {
   // The robot's subsystems are defined here...
   private final Drivetrain m_drive = new Drivetrain();
-  private final FourBarArm m_arm = new FourBarArm();
+  public final FourBarArm m_arm = new FourBarArm();
 
   // Shuffleboard stuff
   SendableChooser<Command> m_autoCommand = new SendableChooser<>();

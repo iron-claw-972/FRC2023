@@ -4,9 +4,22 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.simulation.BatterySim;
+import edu.wpi.first.wpilibj.simulation.EncoderSim;
+import edu.wpi.first.wpilibj.simulation.RoboRioSim;
+import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.constants.ArmConstants;
 import frc.robot.util.LogManager;
 
 /**
@@ -21,13 +34,13 @@ public class Robot extends TimedRobot {
 
   private final SingleJointedArmSim armSim = 
   new SingleJointedArmSim(
-    Constants.arm.armSimMotor, 
-    Constants.arm.armReduction, 
-    Constants.arm.armMOI, 
-    Constants.arm.armLength, 
+    ArmConstants.armSimMotor, 
+    ArmConstants.armReduction, 
+    ArmConstants.armMOI, 
+    ArmConstants.armLength, 
     Units.degreesToRadians(0), 
     Units.degreesToRadians(180), 
-    Constants.arm.armMass, 
+    ArmConstants.armMass, 
     true
     );
   private double armPositionDeg = 0;
@@ -137,7 +150,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void simulationPeriodic() {
-    armSim.setInput(Robot.arm.getMotorValue()*RobotController.getBatteryVoltage());
+    armSim.setInput(m_robotContainer.m_arm.getMotorPower()*RobotController.getBatteryVoltage());
     armSim.update(0.020);
     encoderSim.setDistance(armSim.getAngleRads());
     RoboRioSim.setVInVoltage(
