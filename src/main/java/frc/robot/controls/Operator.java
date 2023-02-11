@@ -3,7 +3,6 @@ package frc.robot.controls;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Robot;
 import frc.robot.commands.ExtendDeployingBar;
-import frc.robot.commands.DoNothing;
 import frc.robot.constants.Constants;
 import lib.controllers.GameController;
 import lib.controllers.GameController.Button;

@@ -1,6 +1,5 @@
 package frc.robot.commands;
 
-import frc.robot.constants.Constants;
 import frc.robot.subsystems.DeployingBar;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -10,7 +9,7 @@ public class ExtendDeployingBar extends CommandBase {
   private final DeployingBar m_deployingbar;
   double setpoint;
   /**
-   * Creates a new ExampleCommand.
+   * Creates a new ExtendDeployingBar
    *
    * @param subsystem The subsystem used by this command.
    */

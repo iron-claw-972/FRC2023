@@ -29,9 +29,6 @@ public class DeployingBar extends SubsystemBase {
   }
   @Override
   public void periodic() {
-    // TODO 4.1: Periodic runs periodically, so we will update the PID here and set the motors. 
-    // If the pid is enabled (a boolean value declared above) then you should set the motors using the pid's calculate() function. Otherwise, it should set the motor power to zero.
-    // pid.calculate() takes two values: calculate(processVariable, setpoint). get the process var by getting the encoders, and the setpoint is a variable declared above.
     if(isEnabled){
       m_motor1.set(ControlMode.PercentOutput, m_pid.calculate(getEncoderValue(), setpoint));
     }
