@@ -13,11 +13,15 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.DoNothing;
 import frc.robot.commands.test.TestDriveVelocity;
+import frc.robot.constants.OIConstants;
+import frc.robot.controls.BaseControllerConfig;
 import frc.robot.controls.Driver;
+import frc.robot.controls.GameControllerConfig;
 import frc.robot.controls.Operator;
 import frc.robot.controls.TestControls;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.util.PathGroupLoader;
+import lib.controllers.GameController;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -28,6 +32,9 @@ import frc.robot.util.PathGroupLoader;
 public class RobotContainer {
   // The robot's subsystems are defined here...
   private final Drivetrain m_drive = new Drivetrain();
+
+  private final BaseControllerConfig m_config = new GameControllerConfig();
+  
 
   // Shuffleboard auto chooser
   SendableChooser<Command> m_autoCommand = new SendableChooser<>();
@@ -49,13 +56,14 @@ public class RobotContainer {
     // load paths before auto starts
     PathGroupLoader.loadPathGroups();
 
-    Driver.configureControls(m_drive);
-    Operator.configureControls();
+    
     TestControls.configureControls(m_drive);
 
     LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
     LiveWindow.setEnabled(false);
-    
+
+    m_config.configureControls();
+
     addTestCommands();
     autoChooserUpdate();
     loadCommandSchedulerShuffleboard();
