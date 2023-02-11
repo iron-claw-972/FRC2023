@@ -323,6 +323,23 @@ GenericEntry
       Math.abs(m_modules[2].getSteerAngleError()) < Units.degreesToRadians(1) &&
       Math.abs(m_modules[3].getSteerAngleError()) < Units.degreesToRadians(1);
   }
+
+  public double[] getDriveVelocities(){
+    return new double[] {
+      m_modules[0].getDriveVelocity(),
+      m_modules[1].getDriveVelocity(),
+      m_modules[2].getDriveVelocity(),
+      m_modules[3].getDriveVelocity()
+    };
+  }
+  public double[] getSteerVelocities(){
+    return new double[] {
+      m_modules[0].getSteerVelocity(),
+      m_modules[1].getSteerVelocity(),
+      m_modules[2].getSteerVelocity(),
+      m_modules[3].getSteerVelocity()
+    };
+  }
   
 
   public PIDController getXController() {
@@ -426,14 +443,14 @@ GenericEntry
   }
   private void setUpFeedforwardHashmap(){
     m_driveStaticFeedForwardSaver.put(m_dummyModule,0.0);
-    m_driveVelFeedForwardSaver.put(m_allModule,Constants.drive.kDriveKVAll);
+    m_driveVelFeedForwardSaver.put(m_allModule,DriveConstants.kDriveKVAll);
     m_driveStaticFeedForwardSaver.put(m_modules[0],TestDriveConstants.kDriveKSFrontLeft);
     m_driveStaticFeedForwardSaver.put(m_modules[1],TestDriveConstants.kDriveKSFrontRight);
     m_driveStaticFeedForwardSaver.put(m_modules[2],TestDriveConstants.kDriveKSBackLeft);
     m_driveStaticFeedForwardSaver.put(m_modules[3],TestDriveConstants.kDriveKSBackRight);
     
     m_driveVelFeedForwardSaver.put(m_dummyModule,0.0);
-    m_driveStaticFeedForwardSaver.put(m_allModule,Constants.drive.kDriveKSAll);
+    m_driveStaticFeedForwardSaver.put(m_allModule,DriveConstants.kDriveKSAll);
     m_driveVelFeedForwardSaver.put(m_modules[0],TestDriveConstants.kDriveKVFrontLeft);
     m_driveVelFeedForwardSaver.put(m_modules[1],TestDriveConstants.kDriveKVFrontRight);
     m_driveVelFeedForwardSaver.put(m_modules[2],TestDriveConstants.kDriveKVBackLeft);
@@ -441,19 +458,20 @@ GenericEntry
     
 
     m_steerStaticFeedForwardSaver.put(m_dummyModule,0.0);
-    m_steerVelFeedForwardSaver.put(m_allModule,Constants.drive.kDriveKVAll);
+    m_steerVelFeedForwardSaver.put(m_allModule,DriveConstants.kDriveKVAll);
     m_steerStaticFeedForwardSaver.put(m_modules[0],TestDriveConstants.kDriveKSFrontLeft);
     m_steerStaticFeedForwardSaver.put(m_modules[1],TestDriveConstants.kDriveKSFrontRight);
     m_steerStaticFeedForwardSaver.put(m_modules[2],TestDriveConstants.kDriveKSBackLeft);
     m_steerStaticFeedForwardSaver.put(m_modules[3],TestDriveConstants.kDriveKSBackRight);
     
     m_steerVelFeedForwardSaver.put(m_dummyModule,0.0);
-    m_steerStaticFeedForwardSaver.put(m_allModule,Constants.drive.kDriveKSAll);
+    m_steerStaticFeedForwardSaver.put(m_allModule,DriveConstants.kDriveKSAll);
     m_steerVelFeedForwardSaver.put(m_modules[0],TestDriveConstants.kDriveKVFrontLeft);
     m_steerVelFeedForwardSaver.put(m_modules[1],TestDriveConstants.kDriveKVFrontRight);
     m_steerVelFeedForwardSaver.put(m_modules[2],TestDriveConstants.kDriveKVBackLeft);
     m_steerVelFeedForwardSaver.put(m_modules[3],TestDriveConstants.kDriveKVBackRight);
   }
+
   public double getRequestedHeading() {
     return m_heading.getDouble(0);
   }
@@ -497,7 +515,6 @@ GenericEntry
     //set selected module
     m_module.getSelected().setDriveFeedForwardValues(m_driveStaticFeedForwardSaver.get(m_module.getSelected()),m_driveVelFeedForwardSaver.get(m_module.getSelected()));
   }
-
   public void setSteerModuleFeedforward(){
     //revert to previous saved feed forward data if changed
     

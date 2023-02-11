@@ -71,7 +71,6 @@ public class DriveFeedForwardCharacterzation extends CommandBase {
     System.out.println("FINISHED");
     for (int i=0; i<4; i++){
       m_feedForwardCharacterizationData[i].print();
-    
     }
     
     for (int i=0; i<4;i++){
@@ -82,13 +81,7 @@ public class DriveFeedForwardCharacterzation extends CommandBase {
       System.out.println("Velocity " + i + ": " + m_feedForwardCharacterizationData[i].getVelocity());
     }
     
-    for (int i = 0; i < 4; i++) {
-      // m_drive.m_modules[i].setDriveVoltage(0);
-    }
-    m_drive.m_modules[0].setSteerAngle(new Rotation2d(Units.degreesToRadians(135)));
-    m_drive.m_modules[1].setSteerAngle(new Rotation2d(Units.degreesToRadians(45)));
-    m_drive.m_modules[2].setSteerAngle(new Rotation2d(Units.degreesToRadians(225)));
-    m_drive.m_modules[3].setSteerAngle(new Rotation2d(Units.degreesToRadians(315)));
+    m_drive.stop();
   }
 
   public boolean isFinished() {

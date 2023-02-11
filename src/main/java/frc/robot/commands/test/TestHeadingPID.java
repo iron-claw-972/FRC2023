@@ -33,7 +33,7 @@ public class TestHeadingPID extends CommandBase {
   }
 
   @Override
-  public void end(){
-    m_drive.stop();
+  public void end(boolean interrupted) {
+      m_drive.stop();
   }
 }
