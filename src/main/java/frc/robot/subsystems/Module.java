@@ -16,6 +16,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
+import frc.robot.constants.DriveConstants;
 import frc.robot.constants.ModuleConstants;
 import frc.robot.util.LogManager;
 import frc.robot.util.MotorFactory;
@@ -163,7 +164,7 @@ public class Module {
       steerI,
       steerD,
       new TrapezoidProfile.Constraints(
-        Constants.drive.kMaxAngularSpeed, Constants.drive.kMaxAngularAccel));
+        DriveConstants.kMaxAngularSpeed, DriveConstants.kMaxAngularAccel));
 
     // reset encoder to factory defaults, reset position to the measurement of the
     // absolute encoder
@@ -182,7 +183,7 @@ public class Module {
     // distance traveled for one rotation of the wheel divided by the encoder
     // resolution.
     m_driveEncoder.setDistancePerPulse(
-        2 * Math.PI * Constants.drive.kWheelRadius / Constants.drive.kDriveGearRatio / Constants.kCancoderResolution);
+        2 * Math.PI * DriveConstants.kWheelRadius / DriveConstants.kDriveGearRatio / Constants.kCancoderResolution);
 
     // Limit the PID Controller's input range between -pi and pi and set the input
     // to be continuous. Factor in the offset amount.
@@ -253,7 +254,7 @@ public class Module {
    * @return module drive position
    */
   public double getDrivePosition() {
-      return m_driveEncoder.getDistance() * Constants.drive.kDriveGearRatio * 2 * Math.PI * Constants.drive.kWheelRadius;
+      return m_driveEncoder.getDistance() * DriveConstants.kDriveGearRatio * 2 * Math.PI * DriveConstants.kWheelRadius;
   }
 
   /**

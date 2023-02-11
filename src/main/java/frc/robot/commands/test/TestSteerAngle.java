@@ -1,0 +1,41 @@
+package frc.robot.commands.test;
+
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.Drivetrain;
+
+public class TestSteerAngle extends CommandBase{
+
+  Drivetrain m_drive;
+  GenericEntry m_angleEntry;
+  GenericEntry m_testEntry;
+
+  public TestSteerAngle(Drivetrain drive, GenericEntry angleEntry, GenericEntry testEntry){
+    m_drive = drive;
+    m_angleEntry = angleEntry;
+    m_testEntry = testEntry;
+    addRequirements(m_drive);
+  }
+
+  @Override
+  public void execute() {
+    m_drive.setModuleStates(new SwerveModuleState[] {
+      new SwerveModuleState(0.01, new Rotation2d(m_angleEntry.getDouble(0))),
+      new SwerveModuleState(0.01, new Rotation2d(m_angleEntry.getDouble(0))),
+      new SwerveModuleState(0.01, new Rotation2d(m_angleEntry.getDouble(0))),
+      new SwerveModuleState(0.01, new Rotation2d(m_angleEntry.getDouble(0)))
+    });
+    
+    
+    m_testEntry.setBoolean(
+      Math.abs(m_angleEntry.getDouble(0) - m_drive.m_modules[0].getSteerAngle()) < Units.degreesToRadians(1) &&
+      Math.abs(m_angleEntry.getDouble(0) - m_drive.m_modules[1].getSteerAngle()) < Units.degreesToRadians(1) &&
+      Math.abs(m_angleEntry.getDouble(0) - m_drive.m_modules[2].getSteerAngle()) < Units.degreesToRadians(1) &&
+      Math.abs(m_angleEntry.getDouble(0) - m_drive.m_modules[3].getSteerAngle()) < Units.degreesToRadians(1));
+
+  }
+  
+}
