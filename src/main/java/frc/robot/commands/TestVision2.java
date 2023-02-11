@@ -29,10 +29,6 @@ public class TestVision2 extends CommandBase{
   //How many frames it has to not see anything to end the command
   private final int endDelay = 5;
 
-  public TestVision2(double speed, double distance){
-    this(speed, distance, Robot.drive);
-  }
-
   public TestVision2(double speed, double distance, Drivetrain drive){
     addRequirements(drive);
     m_drive=drive;

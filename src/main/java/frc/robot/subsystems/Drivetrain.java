@@ -26,6 +26,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
@@ -50,6 +51,9 @@ public class Drivetrain extends SubsystemBase {
   private final AHRS m_gyro;
 
 
+  public Drivetrain(){
+    this(new AHRS(SPI.Port.kMXP));
+  }
 
   public Drivetrain(AHRS gyro) {
 

@@ -11,10 +11,10 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.RobotContainer.Teams;
 import frc.robot.util.LogManager;
 import frc.robot.util.Node;
 import frc.robot.util.PathGroupLoader;
-import frc.robot.util.ShuffleboardManager;
 import frc.robot.util.Vision;
 import lib.controllers.GameController.DPad;
 import frc.robot.RobotContainer.Teams;
@@ -114,7 +114,7 @@ public class Robot extends TimedRobot {
         RobotContainer.selectValues[2] = pressValue;
         RobotContainer.selectTime = 1;
 
-        if (RobotContainer.team == Teams.BLUE) {
+        if (RobotContainer.team == RobotContainer.Teams.BLUE) {
           RobotContainer.selectedNode = blueNodes[RobotContainer.selectValues[1]][RobotContainer.selectValues[0]*3-3+RobotContainer.selectValues[2]];
         }else{
           RobotContainer.selectedNode=redNodes[RobotContainer.selectValues[1]][RobotContainer.selectValues[0]*3-3+RobotContainer.selectValues[2]];

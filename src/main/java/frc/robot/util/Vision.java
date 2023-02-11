@@ -40,6 +40,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
+import frc.robot.constants.VisionConstants;
 
 
 
@@ -50,19 +51,19 @@ public class Vision {
  
 
   public static void setup() {
-    setup(new PhotonCamera(Constants.vision.kCameraName1), new PhotonCamera(Constants.vision.kCameraName2));
+    setup(new PhotonCamera(VisionConstants.kCameraName1), new PhotonCamera(VisionConstants.kCameraName2));
   }
 
   public static void setup(PhotonCamera camera1, PhotonCamera camera2) {
     ArrayList<Pair<PhotonCamera, Transform3d>> camList;
-    if(Constants.vision.k2Cameras){
+    if(VisionConstants.k2Cameras){
       camList = new ArrayList<Pair<PhotonCamera, Transform3d>>(List.of(
-        new Pair<PhotonCamera, Transform3d>(camera1, Constants.vision.kRobotToCamera1),
-        new Pair<PhotonCamera, Transform3d>(camera2, Constants.vision.kRobotToCamera2)
+        new Pair<PhotonCamera, Transform3d>(camera1, VisionConstants.kRobotToCamera1),
+        new Pair<PhotonCamera, Transform3d>(camera2, VisionConstants.kRobotToCamera2)
       ));
     }else{
       camList = new ArrayList<Pair<PhotonCamera, Transform3d>>(List.of(
-        new Pair<PhotonCamera, Transform3d>(camera1, Constants.vision.kRobotToCamera1)
+        new Pair<PhotonCamera, Transform3d>(camera1, VisionConstants.kRobotToCamera1)
       ));
     }
     getTagFieldLayout();
@@ -70,9 +71,9 @@ public class Vision {
     
     robotPoseEstimator = new RobotPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, camList);
 
-    if(Constants.vision.k2Cameras){
+    if(VisionConstants.k2Cameras){
       // ArrayList<Pair<PhotonCamera, Transform3d>>camList = new ArrayList<Pair<PhotonCamera, Transform3d>>(List.of(
-      //   new Pair<PhotonCamera, Transform3d>(camera2, Constants.vision.kCameraToRobot2)
+      //   new Pair<PhotonCamera, Transform3d>(camera2, VisionConstants.kCameraToRobot2)
       // ));
       // robotPoseEstimator2 = new RobotPoseEstimator(aprilTagFieldLayout, PoseStrategy.AVERAGE_BEST_TARGETS, camList);    
     }
@@ -85,7 +86,7 @@ public class Vision {
       // aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
       aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2022RapidReact.m_resourceFile);
     } catch (IOException ex) {
-      aprilTagFieldLayout = new AprilTagFieldLayout(Constants.vision.kTagPoses, Constants.field.kFieldLength, Constants.field.kFieldWidth);
+      aprilTagFieldLayout = new AprilTagFieldLayout(VisionConstants.kTagPoses, Constants.field.kFieldLength, Constants.field.kFieldWidth);
       System.out.println("Vision setup IOException: "+ex.getMessage());
     }
 
@@ -96,8 +97,8 @@ public class Vision {
   //   if (m_hasTargets) {
   //     double imageCaptureTime = Timer.getFPGATimestamp() - m_latency;
   //     Transform3d camToTargetTrans = m_bestTarget.getBestCameraToTarget();
-  //     Pose3d camPose = Constants.vision.kTagPoses.get(m_targetId).transformBy(camToTargetTrans.inverse());
-  //     return Collections.singletonMap(camPose.transformBy(Constants.vision.kCameraToRobot), imageCaptureTime);
+  //     Pose3d camPose = VisionConstants.kTagPoses.get(m_targetId).transformBy(camToTargetTrans.inverse());
+  //     return Collections.singletonMap(camPose.transformBy(VisionConstants.kCameraToRobot), imageCaptureTime);
   //   }
   //   return null;
   // }

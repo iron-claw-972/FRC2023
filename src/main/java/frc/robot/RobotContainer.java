@@ -24,11 +24,14 @@ import frc.robot.util.PathGroupLoader;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+  public static enum Teams {BLUE, RED};
+
   // The robot's subsystems are defined here...
   private final Drivetrain m_drive = new Drivetrain();
 
   // Shuffleboard stuff
   SendableChooser<Command> m_autoCommand = new SendableChooser<>();
+  SendableChooser<Teams> m_teamChooser = new SendableChooser<>();
 
   // Vision stuff 
   public static Node selectedNode = null;
@@ -56,7 +59,7 @@ public class RobotContainer {
     PathGroupLoader.loadPathGroups();
 
     Driver.configureControls(m_drive);
-    Operator.configureControls();
+    Operator.configureControls(m_drive);
     TestControls.configureControls(m_drive);
 
     LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
@@ -65,6 +68,9 @@ public class RobotContainer {
     addTestCommands();
     autoChooserUpdate();
     loadCommandSchedulerShuffleboard();
+
+    // Sets robot pose to 1 meter in front of april tag 2
+    m_drive.resetPose(aprilTags[2].getX()-1, aprilTags[2].getY(), Math.PI);
   }
 
 
@@ -75,6 +81,9 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return m_autoCommand.getSelected();
+  }
+  public Teams getTeam() {
+    return m_teamChooser.getSelected();
   }
 
   /**
