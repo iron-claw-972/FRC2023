@@ -106,6 +106,9 @@ public class Drivetrain extends SubsystemBase {
     m_rightMotor1.set(ControlMode.PercentOutput, throttle - turn);
   }
 
+  /**
+   * Updates the robot's pose using encoders, gyro, and vision
+   */
   public void updateOdometry() {
     // Upate robot pose (x, y, theta)
     m_poseEstimator.update(
@@ -134,14 +137,26 @@ public class Drivetrain extends SubsystemBase {
     return m_poseEstimator.getEstimatedPosition();
   }
 
+  /**
+   * Resets the gyro
+   */
   public void resetGyro() {
     m_gyro.reset();
   }
 
+  /**
+   * Sets the robot's position
+   * @param x The x coordinate
+   * @param y The y coordinate
+   * @param rotation The rotation in radians
+   */
   public void resetPose(double x, double y, double rotation){
     m_poseEstimator.resetPosition(m_gyro.getRotation2d(), m_leftEncoder.getDistance(), m_rightEncoder.getDistance(), new Pose2d(new Translation2d(x, y), new Rotation2d(rotation)));
   }
 
+  /**
+   * Prints out the robot's current pose
+   */
   public void printPose(){
     Pose2d p = m_poseEstimator.getEstimatedPosition();
     System.out.println(Vision.getTagFieldLayout().getTagPose(2).toString());

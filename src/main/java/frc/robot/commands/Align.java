@@ -21,6 +21,11 @@ public class Align extends CommandBase{
   private double angle;
   // private PIDController m_pid = new PIDController(1, 0.01, 0.1);
 
+  /**
+   * Aligns the robot to a specific angle
+   * @param angle The angle to go to
+   * @param drive The drivetrain
+   */
   public Align(double angle, Drivetrain drive){
     addRequirements(drive);
     setpoint=angle;
@@ -35,12 +40,19 @@ public class Align extends CommandBase{
     return angle;
   }
 
+  /**
+   * Initializes the command
+   */
   @Override
   public void initialize(){
     angle=setpoint-2*Math.PI;
     angle=getAngle();
   }
 
+  /**
+   * Turns the robot
+   * PID broke the classbot, so this doesn't use it
+   */
   @Override
   public void execute(){
     angle=getAngle();
@@ -54,12 +66,20 @@ public class Align extends CommandBase{
     m_drive.arcadeDrive(0, -speed);
   }
 
+  /**
+   * Stops the robot and prints the final angle
+   * @param interrupted If the command was interrupted
+   */
   @Override
   public void end(boolean interrupted){
     System.out.printf("\nExact angle: %.4f degrees\n", Units.radiansToDegrees(getAngle()));
     m_drive.arcadeDrive(0, 0);
   }
 
+  /**
+   * Determines if the angle is close enough (within 1 degree)
+   * @return If the command is finished
+   */
   @Override
   public boolean isFinished(){
     double a = getAngle();

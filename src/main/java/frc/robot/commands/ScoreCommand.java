@@ -13,7 +13,11 @@ import frc.robot.util.Node;
 
 public class ScoreCommand extends SequentialCommandGroup{
   
-
+  /**
+   * A sequential command group that will move to the selected pose and score
+   * The commands it calls are unfinished
+   * @param drive The drivetrain
+   */
   public ScoreCommand(Drivetrain drive/*, other subsystem*/){
     addRequirements(drive/*, other subsystem*/);
     if(RobotContainer.selectedNode==null){

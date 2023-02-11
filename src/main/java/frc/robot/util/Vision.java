@@ -50,10 +50,18 @@ public class Vision {
   private static AprilTagFieldLayout aprilTagFieldLayout;
  
 
+  /**
+   * Calls the other setup function
+   */
   public static void setup() {
     setup(new PhotonCamera(VisionConstants.kCameraName1), new PhotonCamera(VisionConstants.kCameraName2));
   }
 
+  /**
+   * Sets up the cameras and pose estimator
+   * @param camera1 The first camera
+   * @param camera2 The second camera
+   */
   public static void setup(PhotonCamera camera1, PhotonCamera camera2) {
     ArrayList<Pair<PhotonCamera, Transform3d>> camList;
     if(VisionConstants.k2Cameras){
@@ -81,10 +89,11 @@ public class Vision {
   }
 
   public static AprilTagFieldLayout getTagFieldLayout() {
+    // AprilTagFields.loadAprilTagLayoutField();
     try {
       //TODO: Fix this
-      // aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
-      aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2022RapidReact.m_resourceFile);
+      aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
+      // aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2022RapidReact.m_resourceFile);
     } catch (IOException ex) {
       aprilTagFieldLayout = new AprilTagFieldLayout(VisionConstants.kTagPoses, Constants.field.kFieldLength, Constants.field.kFieldWidth);
       System.out.println("Vision setup IOException: "+ex.getMessage());
@@ -103,6 +112,9 @@ public class Vision {
   //   return null;
   // }
 
+  /**
+   * Prints the estimated pose from the vision
+   */
   public static void printEstimate(){
     robotPoseEstimator.setReferencePose(new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0)));
     Optional<Pair<Pose3d,Double>> r = robotPoseEstimator.update();
@@ -133,6 +145,12 @@ public class Vision {
     //     return new Pair<Pose2d, Double>(null, 0.0);
     // }
 }
+
+/**
+ * Not used
+ * @param prevEstimatedRobotPose Doesn't do anything
+ * @return null
+ */
 public static Optional<Pair<Pose3d,Double>> getEstimatedGlobalPose2(Pose2d prevEstimatedRobotPose) {
   // robotPoseEstimator2.setReferencePose(prevEstimatedRobotPose);
   // return robotPoseEstimator2.update();

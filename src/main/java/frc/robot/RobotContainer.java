@@ -78,6 +78,21 @@ public class RobotContainer {
 
     Vision.setup();
 
+    // Puts April tags in array
+    for(int i = 1; i <= 8; i++){
+      aprilTags[i] = Vision.getTagPose(i);
+    }
+
+    // Puts nodes in arrays
+    for(int i = 1; i <= 3; i++){
+      blueNodes[i] = new Node[10];
+      redNodes[i] = new Node[10];
+      for(int j = 1; j <= 9; j++){
+        blueNodes[i][j] = new Node(Teams.BLUE, i, j);
+        redNodes[i][j] = new Node(Teams.RED, i, j);
+      }
+    }
+
     LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
     LiveWindow.setEnabled(false);
     

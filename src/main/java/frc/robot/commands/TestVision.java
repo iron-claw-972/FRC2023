@@ -29,7 +29,11 @@ public class TestVision extends CommandBase{
   //How many frames it will wait between prints
   private final int printDelay = 50;
 
-
+  /**
+   * A command that moves and prints out distances
+   * @param speed What speed to move at
+   * @param drive The drivetrain
+   */
   public TestVision(double speed, Drivetrain drive){
     addRequirements(drive);
     m_drive=drive;
@@ -49,12 +53,19 @@ public class TestVision extends CommandBase{
     return null;
   }
 
+  /**
+   * Initializes the command
+   */
   @Override
   public void initialize(){
     encoderStart=getDist();
     startPose=getPose();
   }
 
+  /**
+   * Moves the robot and prints the distances
+   * If it can't see an April tag, it increases endCounter
+   */
   @Override
   public void execute(){
     m_drive.arcadeDrive(m_speed, 0);
@@ -73,11 +84,19 @@ public class TestVision extends CommandBase{
     }
   }
 
+  /**
+   * Stops the robot
+   * @param interrupted If the command is interrupted
+  */
   @Override
   public void end(boolean interrupted){
     m_drive.arcadeDrive(0, 0);
   }
 
+  /**
+   * Returns if the command is finished
+   * @return If endCounter is greater than endDelay
+   */
   @Override
   public boolean isFinished(){
     return endCounter>=endDelay;

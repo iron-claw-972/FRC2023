@@ -29,6 +29,12 @@ public class TestVision2 extends CommandBase{
   //How many frames it has to not see anything to end the command
   private final int endDelay = 5;
 
+  /**
+   * Moves the robot a certain distance and then moves it back
+   * @param speed What speed the robot should move at
+   * @param distance How far it should move
+   * @param drive The drivetrain
+   */
   public TestVision2(double speed, double distance, Drivetrain drive){
     addRequirements(drive);
     m_drive=drive;
@@ -49,6 +55,9 @@ public class TestVision2 extends CommandBase{
     return null;
   }
 
+  /**
+   * Initializes the command
+   */
   @Override
   public void initialize(){
     encoderStart=getDist();
@@ -59,6 +68,11 @@ public class TestVision2 extends CommandBase{
     closest=100;
   }
 
+  /**
+   * Moves the robot
+   * If it has moves farther than the specified distance, it turns around
+   * It stops when it can't see an April tag or it has passed its starting position
+   */
   @Override
   public void execute(){
     m_drive.arcadeDrive(direction*m_speed, 0);
@@ -88,12 +102,20 @@ public class TestVision2 extends CommandBase{
     }
   }
 
+  /**
+   * Stops the robot and prints the distance it traveled
+   * @param interrupted If the command was interrupted
+   */
   @Override
   public void end(boolean interrupted){
     System.out.printf("\nVision distance: %.4f\nEncoder distance: %.4f\n", Math.sqrt(Math.pow(currentPose.getX()-startPose.getX(), 2) + Math.pow(currentPose.getY()-startPose.getY(), 2)), Math.abs(encoderPosition-encoderStart));
     m_drive.arcadeDrive(0, 0);
   }
 
+  /**
+   * Returns if the command is finished
+   * @return If endCounter is greater than endDelay
+   */
   @Override
   public boolean isFinished(){
     return endCounter>=endDelay;
