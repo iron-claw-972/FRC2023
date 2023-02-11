@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
@@ -47,6 +48,15 @@ public class RobotContainer {
 
   // How much time it should take (in frames)
   public final static double selectTimeAmount=100;
+
+  // Array of april tags. The index of the april tag in the array is equal to its id, and aprilTags[0] is null.
+  public final static Pose3d[] aprilTags = new Pose3d[9];
+
+  // 2D arrays of nodes. blueNodes[3][1] will return the top row cone node on the far left side (from the perspective of the driver)
+  public final static Node[][] blueNodes = new Node[4][];
+  public final static Node[][] redNodes = new Node[4][];
+
+
 
   // Possible teams
   public static enum Teams {BLUE, RED};
