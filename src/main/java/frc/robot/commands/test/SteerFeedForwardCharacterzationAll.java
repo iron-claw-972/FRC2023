@@ -46,7 +46,7 @@ public class SteerFeedForwardCharacterzationAll extends CommandBase {
 
     runCharacterizationVolts();
     if (m_timer.get() > 0.5) {
-        m_feedForwardCharacterizationData[m_module].add(m_drive.m_modules[m_module].getSteerVelocity(), value);
+        m_feedForwardCharacterizationData[m_module].add(m_drive.getDriveVelocities()[m_module], value);
       
     }
     if (m_timer.get() > 2.5) {
@@ -63,6 +63,8 @@ public class SteerFeedForwardCharacterzationAll extends CommandBase {
 
   }
 
+
+  //remove static module refrence
   private void runCharacterizationVolts() {
     for (int i = 0; i < 4; i++) {
       m_drive.m_modules[i].setDriveVoltage(0);
@@ -81,17 +83,13 @@ public class SteerFeedForwardCharacterzationAll extends CommandBase {
     }
     
     for (int i=0; i<4;i++){
-      //TODO: fix this
-      // Robot.shuffleboard.m_steerStaticFeedForwardSaver.replace(m_drive.m_modules[i], m_feedForwardCharacterizationData[i].getStatic());
-      // Robot.shuffleboard.m_steerVelFeedForwardSaver.replace(m_drive.m_modules[i], m_feedForwardCharacterizationData[i].getVelocity());
+      m_drive.getSteerStaticFeedforwardArray()[i] = m_feedForwardCharacterizationData[i].getStatic();
+      m_drive.getSteerVelocityFeedforwardArray()[i] = m_feedForwardCharacterizationData[i].getVelocity();
       System.out.println("Static " + i + ": " + m_feedForwardCharacterizationData[i].getStatic());
       System.out.println("Velocity " + i + ": " + m_feedForwardCharacterizationData[i].getVelocity());
     }
     
-    for (int i = 0; i < 4; i++) {
-      m_drive.m_modules[i].setDriveVoltage(0);
-      m_drive.m_modules[i].setSteerVoltage(0);
-    }
+    m_drive.stop();
     
   }
 

@@ -169,4 +169,7 @@ public class DriveConstants {
     public static final double KheadingP = 4.6;
     public static final double KheadingI = 0;
     public static final double KheadingD = 0.4;
+
+    public static Double kSteerKSAll = 0.69;
+    public static Double kSteerKVAll = 0.37;
 }

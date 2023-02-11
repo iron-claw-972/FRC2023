@@ -6,8 +6,6 @@ package frc.robot.commands.test;
 
 
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
@@ -44,7 +42,7 @@ public class DriveFeedForwardCharacterzation extends CommandBase {
     runCharacterizationVolts();
     if (m_timer.get() > 0.5) {
       for (int i=0; i<4; i++){
-        m_feedForwardCharacterizationData[i].add(m_drive.m_modules[i].getDriveVelocity(), value); 
+        m_feedForwardCharacterizationData[i].add(m_drive.getDriveVelocities()[i], value); 
       }
       
     }
@@ -58,13 +56,7 @@ public class DriveFeedForwardCharacterzation extends CommandBase {
   }
 
   private void runCharacterizationVolts() {
-    for (int i = 0; i < 4; i++) {
-      m_drive.m_modules[i].setDriveVoltage(value);
-    }
-    m_drive.m_modules[0].setSteerAngle(new Rotation2d(Units.degreesToRadians(135)));
-    m_drive.m_modules[1].setSteerAngle(new Rotation2d(Units.degreesToRadians(45)));
-    m_drive.m_modules[2].setSteerAngle(new Rotation2d(Units.degreesToRadians(225)));
-    m_drive.m_modules[3].setSteerAngle(new Rotation2d(Units.degreesToRadians(315)));
+    m_drive.driveVoltsTest(value);
   }
 
   public void end(boolean interrupted) {
@@ -74,9 +66,8 @@ public class DriveFeedForwardCharacterzation extends CommandBase {
     }
     
     for (int i=0; i<4;i++){
-      //TODO: fix this
-      // Robot.shuffleboard.m_driveStaticFeedForwardSaver.replace(m_drive.m_modules[i], m_feedForwardCharacterizationData[i].getStatic());
-      // Robot.shuffleboard.m_driveVelFeedForwardSaver.replace(m_drive.m_modules[i], m_feedForwardCharacterizationData[i].getVelocity());
+      m_drive.getDriveStaticFeedforwardArray()[i] = m_feedForwardCharacterizationData[i].getStatic();
+      m_drive.getDriveVelocityFeedforwardArray()[i] = m_feedForwardCharacterizationData[i].getVelocity();
       System.out.println("Static " + i + ": " + m_feedForwardCharacterizationData[i].getStatic());
       System.out.println("Velocity " + i + ": " + m_feedForwardCharacterizationData[i].getVelocity());
     }

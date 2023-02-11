@@ -6,6 +6,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.system.plant.DCMotor;
+import frc.robot.constants.ModuleType;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.Constants;
@@ -31,7 +33,7 @@ public class ModuleSim extends Module {
   private double m_currentSpeed = 0;
 
   public ModuleSim(
-    ModuleConstants moduleConstants
+    ModuleConstants moduleConstants, ShuffleboardTab moduleTab
   ) {
     this(
       moduleConstants.getDrivePort(),
@@ -39,7 +41,8 @@ public class ModuleSim extends Module {
       moduleConstants.getEncoderPort(),
       moduleConstants.getSteerOffset(),
       moduleConstants.getDriveKS(),
-      moduleConstants.getDriveKV()
+      moduleConstants.getDriveKV(),
+      moduleTab
     );
   }
 
@@ -49,11 +52,12 @@ public class ModuleSim extends Module {
     int encoderPort,
     double encoderOffset,
     double feedforwardKS,
-    double feedforwardKV
+    double feedforwardKV,
+    ShuffleboardTab moduleTab
   ) {
 
-    // TODO: fix constudctor
-    super(driveMotorPort, steerMotorPort, encoderPort, encoderOffset, feedforwardKS, feedforwardKV,0,0,0,0,0,0,0,0);
+    // TODO: clean constudctor
+    super(driveMotorPort, steerMotorPort, encoderPort, encoderOffset, feedforwardKS, feedforwardKV,0,0,0,0,0,0,0,0, ModuleType.NONE, moduleTab);
     m_driveEncoderSim = new TalonEncoderSim(getDriveEncoder());
     m_encoderSim = new CANCoderSimCollection(getEncoder());
 

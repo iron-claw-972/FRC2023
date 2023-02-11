@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.DoNothing;
-import frc.robot.commands.test.TestDriveVelocity;
+import frc.robot.commands.test.*;
 import frc.robot.controls.BaseDriverConfig;
 import frc.robot.controls.GameControllerDriverConfig;
 import frc.robot.controls.Operator;
@@ -40,7 +40,11 @@ public class RobotContainer {
 
   // The robot's subsystems are defined here...
   private final Drivetrain m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab);
+
+
+  // Controllers are defined here
   private final BaseDriverConfig m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab);
+  private final Operator m_operator = new Operator();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -52,7 +56,7 @@ public class RobotContainer {
     PathGroupLoader.loadPathGroups();
 
     m_driver.configureControls();
-    Operator.configureControls();
+    m_operator.configureControls();
 
     LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
     LiveWindow.setEnabled(false);
@@ -84,12 +88,17 @@ public class RobotContainer {
    * Adds the test commands to shuffleboard so they can be run that way.
    */
   public void addTestCommands() {
-    
-    m_testTab.add("Do Nothing", new DoNothing());
 
-    GenericEntry driveVel = m_swerveModulesTab.add("Set Drive Velocity", 0).getEntry();
-    GenericEntry steerVel = m_swerveModulesTab.add("Set Steer Velocity", 0).getEntry();
-    m_testTab.add("Test Drive Velocity", new TestDriveVelocity(m_drive, driveVel, steerVel));
+    GenericEntry testEntry = m_testTab.add("Test Results", false).getEntry();
+    m_testTab.add("Circle Drive", new CircleDrive(m_drive, m_drive.getRequestedDriveVelocityEntry(), m_drive.getRequestedSteerVelocityEntry()));
+    m_testTab.add("Drive FeedForawrd", new DriveFeedForwardCharacterzation(m_drive));
+    m_testTab.add("Steer All FeedForawrd", new SteerFeedForwardCharacterzationAll(m_drive));
+    m_testTab.add("Steer Single FeedForawrd", new SteerFeedForwardCharacterzationSingle(m_drive, m_drive.getModuleChooser()));
+    m_testTab.add("Drive Voltage", new DriveVoltage(m_drive, m_drive.getRequestedVoltsEntry()));
+    m_testTab.add("Drive Steer", new SteerVoltage(m_drive, m_drive.getRequestedVoltsEntry()));
+    m_testTab.add("Test Drive Velocity", new TestDriveVelocity(m_drive, m_drive.getRequestedDriveVelocityEntry(), testEntry));
+    m_testTab.add("Heading PID", new TestHeadingPID(m_drive, m_drive.getRequestedSteerAngleEntry()));
+    m_testTab.add("Steer angle", new TestSteerAngle(m_drive, m_drive.getRequestedHeadingEntry(), testEntry));
   }
 
   /**
@@ -100,9 +109,8 @@ public class RobotContainer {
   public void autoChooserUpdate() {
     m_autoCommand.setDefaultOption("Do Nothing", new PrintCommand("This will do nothing!"));
     // add commands below with: m_autoCommand.addOption("Example", new ExampleCommand());
-
     
-    Shuffleboard.getTab("Auto").add("Auto Chooser", m_autoCommand);
+    m_autoTab.add("Auto Chooser", m_autoCommand);
   }
 
   /**

@@ -19,7 +19,8 @@ public enum ModuleConstants {
     TestDriveConstants.kSteerKVFrontLeft,
     TestDriveConstants.kSteerPFrontLeft,
     TestDriveConstants.kSteerIFrontLeft,
-    TestDriveConstants.kSteerDFrontLeft
+    TestDriveConstants.kSteerDFrontLeft,
+    ModuleType.FRONT_LEFT
   ),
   TEST_FR(
     TestDriveConstants.kDriveFrontRight,
@@ -35,7 +36,8 @@ public enum ModuleConstants {
     TestDriveConstants.kSteerKVFrontRight,
     TestDriveConstants.kSteerPFrontRight,
     TestDriveConstants.kSteerIFrontRight,
-    TestDriveConstants.kSteerDFrontRight
+    TestDriveConstants.kSteerDFrontRight,
+    ModuleType.FRONT_RIGHT
   ),
   TEST_BL(
       TestDriveConstants.kDriveBackLeft,
@@ -51,7 +53,8 @@ public enum ModuleConstants {
       TestDriveConstants.kSteerKVBackLeft,
       TestDriveConstants.kSteerPBackLeft,
       TestDriveConstants.kSteerIBackLeft,
-      TestDriveConstants.kSteerDBackLeft
+      TestDriveConstants.kSteerDBackLeft,
+      ModuleType.BACK_LEFT
     ),
   TEST_BR(
     TestDriveConstants.kDriveBackRight,
@@ -67,7 +70,8 @@ public enum ModuleConstants {
     TestDriveConstants.kSteerKVBackRight,
     TestDriveConstants.kSteerPBackRight,
     TestDriveConstants.kSteerIBackRight,
-    TestDriveConstants.kSteerDBackRight
+    TestDriveConstants.kSteerDBackRight,
+    ModuleType.BACK_RIGHT
   ),
 
   COMP_FL(
@@ -84,8 +88,9 @@ public enum ModuleConstants {
     CompDriveConstants.kSteerKVFrontLeft,
     CompDriveConstants.kSteerPFrontLeft,
     CompDriveConstants.kSteerIFrontLeft,
-    CompDriveConstants.kSteerDFrontLeft
-      ),
+    CompDriveConstants.kSteerDFrontLeft,
+    ModuleType.FRONT_LEFT
+    ),
   COMP_FR(
     CompDriveConstants.kDriveFrontRight,
     CompDriveConstants.kSteerFrontRight,
@@ -100,7 +105,8 @@ public enum ModuleConstants {
     CompDriveConstants.kSteerKVFrontRight,
     CompDriveConstants.kSteerPFrontRight,
     CompDriveConstants.kSteerIFrontRight,
-    CompDriveConstants.kSteerDFrontRight
+    CompDriveConstants.kSteerDFrontRight,
+    ModuleType.FRONT_RIGHT
   ),
   COMP_BL(
     CompDriveConstants.kDriveBackLeft,
@@ -116,7 +122,8 @@ public enum ModuleConstants {
     CompDriveConstants.kSteerKVBackLeft,
     CompDriveConstants.kSteerPBackLeft,
     CompDriveConstants.kSteerIBackLeft,
-    CompDriveConstants.kSteerDBackLeft
+    CompDriveConstants.kSteerDBackLeft,
+    ModuleType.BACK_LEFT
     ),
     COMP_BR(
       CompDriveConstants.kDriveBackRight,
@@ -132,9 +139,10 @@ public enum ModuleConstants {
       CompDriveConstants.kSteerKVBackRight,
       CompDriveConstants.kSteerPBackRight,
       CompDriveConstants.kSteerIBackRight,
-      CompDriveConstants.kSteerDBackRight
+      CompDriveConstants.kSteerDBackRight,
+      ModuleType.BACK_RIGHT
     ),
-    NONE(0,0,0,0.0,0.0,0.0,0.0,0.0,0.0,0,0,0,0,0);
+    NONE(0,0,0,0.0,0.0,0.0,0.0,0.0,0.0,0,0,0,0,0, ModuleType.NONE);
 
     private int m_drivePort;
     private int m_steerPort;
@@ -150,6 +158,7 @@ public enum ModuleConstants {
     private double m_steerP;
     private double m_steerI;
     private double m_steerD;
+    private ModuleType m_type;
     
     ModuleConstants(
         int drivePort,
@@ -165,7 +174,8 @@ public enum ModuleConstants {
         double steerKV,
         double steerP,
         double steerI,
-        double steerD
+        double steerD,
+        ModuleType type
     ){
         m_drivePort = drivePort;
         m_steerPort = steerPort;
@@ -181,6 +191,7 @@ public enum ModuleConstants {
         m_steerP = steerP;
         m_steerI = steerI;
         m_steerD = steerD;
+        m_type = type;
 
 
     }
@@ -227,5 +238,8 @@ public enum ModuleConstants {
     }
     public double getSteerD(){
         return m_steerD;
+    }
+    public ModuleType getType() {
+        return m_type;
     }
 }

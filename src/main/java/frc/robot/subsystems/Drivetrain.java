@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
@@ -18,7 +16,6 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -90,27 +87,26 @@ public class Drivetrain extends SubsystemBase {
     m_heading;
   ShuffleboardTab m_swerveModulesTab,m_drivetrainTab;
 
-  public Map<Module,Double> m_driveVelFeedForwardSaver=new HashMap<Module,Double>();
-  public Map<Module,Double> m_driveStaticFeedForwardSaver=new HashMap<Module,Double>();
-  public Map<Module,Double> m_steerVelFeedForwardSaver=new HashMap<Module,Double>();
-  public Map<Module,Double> m_steerStaticFeedForwardSaver=new HashMap<Module,Double>();
+  public Double[] m_driveVelFeedForwardSaver=new Double[4];
+  public Double[] m_driveStaticFeedForwardSaver=new Double[4];
+  public Double[] m_steerVelFeedForwardSaver=new Double[4];
+  public Double[] m_steerStaticFeedForwardSaver=new Double[4];
   // modules needed to distigue in chooser
-  Module m_dummyModule = Module.create(ModuleConstants.NONE);
-  Module m_allModule = Module.create(ModuleConstants.NONE);
-  // previous module for switching
-  Module m_prevModule = m_dummyModule;
-  SendableChooser<Module> m_module = new SendableChooser<>();
+  Module m_prevModule;
+  
+  SendableChooser<Module> m_moduleChooser = new SendableChooser<>();
 
 
 
 
   public Drivetrain(ShuffleboardTab drivetrainTab, ShuffleboardTab swerveModulesTab) {
       m_modules = new Module[]{
-        Module.create(ModuleConstants.TEST_FL),
-        Module.create(ModuleConstants.TEST_FR),
-        Module.create(ModuleConstants.TEST_BL),
-        Module.create(ModuleConstants.TEST_BR)
+        Module.create(ModuleConstants.TEST_FL, m_swerveModulesTab),
+        Module.create(ModuleConstants.TEST_FR, m_swerveModulesTab),
+        Module.create(ModuleConstants.TEST_BL, m_swerveModulesTab),
+        Module.create(ModuleConstants.TEST_BR, m_swerveModulesTab)
       };
+    m_prevModule = m_modules[0];
 
     m_odometry = new SwerveDriveOdometry(m_kinematics, m_pigeon.getRotation2d(), getModulePositions(), m_robotPose);
     m_rotationController.enableContinuousInput(-Math.PI,Math.PI);
@@ -121,7 +117,7 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putData("Field", m_fieldDisplay);
     
     LiveWindow.disableAllTelemetry();
-    m_swerveModulesTab.add("Module Chooser", m_module);
+    m_swerveModulesTab.add("Module Chooser", m_moduleChooser);
     m_drivetrainTab = drivetrainTab;
     m_swerveModulesTab = swerveModulesTab;
   }
@@ -190,7 +186,7 @@ public class Drivetrain extends SubsystemBase {
     double rot = m_headingPIDOutput;
 
     // TODO: Fix Swerve drive sim
-    // TODO: Check which lines were supse to be commented
+    // TODO: Check which lines were sapouse to be commented
     if (!Robot.isReal()) {
       // System.out.println(xSpeed + " " + ySpeed + " " + rot);
       // m_pigeon.getSimCollection().addHeading(rot / (2 * Math.PI));
@@ -265,16 +261,6 @@ public class Drivetrain extends SubsystemBase {
    * @return an array of all swerve module positions
    */
   public SwerveModulePosition[] getModulePositions() {
-    // SwerveModulePosition[] positions = new SwerveModulePosition[]{
-    //   new SwerveModulePosition(m_modules[0].getState().speedMetersPerSecond, m_modules[0].getState().angle),
-    //   new SwerveModulePosition(m_modules[1].getState().speedMetersPerSecond, m_modules[1].getState().angle),
-    //   new SwerveModulePosition(m_modules[2].getState().speedMetersPerSecond, m_modules[2].getState().angle),
-    //   new SwerveModulePosition(m_modules[3].getState().speedMetersPerSecond, m_modules[3].getState().angle)
-    //   // new SwerveModulePosition(m_modules[0].getDrivePosition(), Rotation2d.fromDegrees(m_modules[0].getAngle())),
-    //   // new SwerveModulePosition(m_modules[1].getDrivePosition(), Rotation2d.fromDegrees(m_modules[1].getAngle())),
-    //   // new SwerveModulePosition(m_modules[2].getDrivePosition(), Rotation2d.fromDegrees(m_modules[2].getAngle())),
-    //   // new SwerveModulePosition(m_modules[3].getDrivePosition(), Rotation2d.fromDegrees(m_modules[3].getAngle()))
-    // };
     SwerveModulePosition[] positions = new SwerveModulePosition[]{
       m_modules[0].getPosition(),
       m_modules[1].getPosition(),
@@ -297,8 +283,7 @@ public class Drivetrain extends SubsystemBase {
 
   public void stop(){
     for (int i = 0; i < 4; i++) {
-      m_modules[i].setDriveVoltage(0);
-      m_modules[i].setSteerVoltage(0);
+      m_modules[i].stop();
     }
   }
 
@@ -408,156 +393,115 @@ public class Drivetrain extends SubsystemBase {
     m_driveVelocityFeedforward = m_swerveModulesTab.add("Drive kV FF", 0).getEntry();
     m_steerStaticFeedforward = m_swerveModulesTab.add("Steer kS FF", 0).getEntry();
     m_steerVelocityFeedforward = m_swerveModulesTab.add("Steer kV k FF", 0).getEntry();
+
+    setUpFeedforwardHashmap();
     
-    // Desired Drive Velocitys
-    m_swerveModulesTab.addNumber("FL desired speed", () -> m_swerveModuleStates[0].speedMetersPerSecond);
-    m_swerveModulesTab.addNumber("FR desired speed", () -> m_swerveModuleStates[1].speedMetersPerSecond);
-    m_swerveModulesTab.addNumber("BL desired speed", () -> m_swerveModuleStates[2].speedMetersPerSecond);
-    m_swerveModulesTab.addNumber("BR desired speed", () -> m_swerveModuleStates[3].speedMetersPerSecond);
-
-    // Drive PID output
-    m_swerveModulesTab.addNumber("FL PID Output", () -> m_modules[0].getDrivePIDOutput());
-    m_swerveModulesTab.addNumber("FR PID Output", () -> m_modules[1].getDrivePIDOutput());
-    m_swerveModulesTab.addNumber("BL PID Output", () -> m_modules[2].getDrivePIDOutput());
-    m_swerveModulesTab.addNumber("BR PID Output", () -> m_modules[3].getDrivePIDOutput());
-
-    // get drive velocity
-    m_swerveModulesTab.addNumber("Vel FL Raw", () -> m_modules[0].getDriveVelocity());
-    m_swerveModulesTab.addNumber("Vel FR Raw", () -> m_modules[1].getDriveVelocity());
-    m_swerveModulesTab.addNumber("Vel BL Raw", () -> m_modules[2].getDriveVelocity());
-    m_swerveModulesTab.addNumber("Vel BR Raw", () -> m_modules[3].getDriveVelocity());
-
-    // drivePIDS
-    m_swerveModulesTab.add("Drive PID FL", m_modules[0].getDrivePID());
-    m_swerveModulesTab.add("Drive PID FR", m_modules[1].getDrivePID());
-    m_swerveModulesTab.add("Drive PID BL", m_modules[2].getDrivePID());
-    m_swerveModulesTab.add("Drive PID BR", m_modules[3].getDrivePID());
-
-    // Median Filltered Velocity Values
-    m_swerveModulesTab.addNumber("Vel FL Filtered", () -> m_modules[0].getDriveVelocityFiltered());
-    m_swerveModulesTab.addNumber("Vel FR Filtered", () -> m_modules[1].getDriveVelocityFiltered());
-    m_swerveModulesTab.addNumber("Vel BL Filtered", () -> m_modules[2].getDriveVelocityFiltered());
-    m_swerveModulesTab.addNumber("Vel BR Filtered", () -> m_modules[3].getDriveVelocityFiltered());
-
-    // Desired Steer angles
-    m_swerveModulesTab.addNumber("FL desired angle", () -> m_swerveModuleStates[0].angle.getDegrees());
-    m_swerveModulesTab.addNumber("FR desired angle", () -> m_swerveModuleStates[1].angle.getDegrees());
-    m_swerveModulesTab.addNumber("BL desired angle", () -> m_swerveModuleStates[2].angle.getDegrees());
-    m_swerveModulesTab.addNumber("BR desired angle", () -> m_swerveModuleStates[3].angle.getDegrees());
-
-    // Steer angles
-    m_swerveModulesTab.addNumber("Angle FL", () -> m_modules[0].getSteerAngle());
-    m_swerveModulesTab.addNumber("Angle FR", () -> m_modules[1].getSteerAngle());
-    m_swerveModulesTab.addNumber("Angle BL", () -> m_modules[2].getSteerAngle());
-    m_swerveModulesTab.addNumber("Angle BR", () -> m_modules[3].getSteerAngle());
-
-    // Steer Velocity
-    m_swerveModulesTab.addNumber("Steer Vel FL", () -> m_modules[0].getSteerVelocity());
-    m_swerveModulesTab.addNumber("Steer Vel FR", () -> m_modules[1].getSteerVelocity());
-    m_swerveModulesTab.addNumber("Steer Vel BL", () -> m_modules[2].getSteerVelocity());
-    m_swerveModulesTab.addNumber("Steer Vel BR", () -> m_modules[3].getSteerVelocity());
-
-    //Steer PID
-    m_swerveModulesTab.add("Steer PID FL", m_modules[0].getSteerPID());
-    m_swerveModulesTab.add("Steer PID FR", m_modules[1].getSteerPID());
-    m_swerveModulesTab.add("Steer PID BL", m_modules[2].getSteerPID());
-    m_swerveModulesTab.add("Steer PID BR", m_modules[3].getSteerPID());
+    for (int i = 0; i < 4; i++){
+      m_modules[i].setupModulesShuffleboard();
+    }
   }
   private void setUpFeedforwardHashmap(){
-    m_driveStaticFeedForwardSaver.put(m_dummyModule,0.0);
-    m_driveVelFeedForwardSaver.put(m_allModule,DriveConstants.kDriveKVAll);
-    m_driveStaticFeedForwardSaver.put(m_modules[0],TestDriveConstants.kDriveKSFrontLeft);
-    m_driveStaticFeedForwardSaver.put(m_modules[1],TestDriveConstants.kDriveKSFrontRight);
-    m_driveStaticFeedForwardSaver.put(m_modules[2],TestDriveConstants.kDriveKSBackLeft);
-    m_driveStaticFeedForwardSaver.put(m_modules[3],TestDriveConstants.kDriveKSBackRight);
+    m_driveStaticFeedForwardSaver[0] = TestDriveConstants.kDriveKSFrontLeft;
+    m_driveStaticFeedForwardSaver[1] = TestDriveConstants.kDriveKSFrontRight;
+    m_driveStaticFeedForwardSaver[2] = TestDriveConstants.kDriveKSBackLeft;
+    m_driveStaticFeedForwardSaver[3] = TestDriveConstants.kDriveKSBackRight;
     
-    m_driveVelFeedForwardSaver.put(m_dummyModule,0.0);
-    m_driveStaticFeedForwardSaver.put(m_allModule,DriveConstants.kDriveKSAll);
-    m_driveVelFeedForwardSaver.put(m_modules[0],TestDriveConstants.kDriveKVFrontLeft);
-    m_driveVelFeedForwardSaver.put(m_modules[1],TestDriveConstants.kDriveKVFrontRight);
-    m_driveVelFeedForwardSaver.put(m_modules[2],TestDriveConstants.kDriveKVBackLeft);
-    m_driveVelFeedForwardSaver.put(m_modules[3],TestDriveConstants.kDriveKVBackRight);
+    m_driveVelFeedForwardSaver[0] = TestDriveConstants.kDriveKVFrontLeft;
+    m_driveVelFeedForwardSaver[1] = TestDriveConstants.kDriveKVFrontRight;
+    m_driveVelFeedForwardSaver[2] = TestDriveConstants.kDriveKVBackLeft;
+    m_driveVelFeedForwardSaver[3] = TestDriveConstants.kDriveKVBackRight;
     
-
-    m_steerStaticFeedForwardSaver.put(m_dummyModule,0.0);
-    m_steerVelFeedForwardSaver.put(m_allModule,DriveConstants.kDriveKVAll);
-    m_steerStaticFeedForwardSaver.put(m_modules[0],TestDriveConstants.kDriveKSFrontLeft);
-    m_steerStaticFeedForwardSaver.put(m_modules[1],TestDriveConstants.kDriveKSFrontRight);
-    m_steerStaticFeedForwardSaver.put(m_modules[2],TestDriveConstants.kDriveKSBackLeft);
-    m_steerStaticFeedForwardSaver.put(m_modules[3],TestDriveConstants.kDriveKSBackRight);
+    m_steerStaticFeedForwardSaver[0] = TestDriveConstants.kSteerKSFrontLeft;
+    m_steerStaticFeedForwardSaver[1] = TestDriveConstants.kSteerKSFrontRight;
+    m_steerStaticFeedForwardSaver[2] = TestDriveConstants.kSteerKSBackLeft;
+    m_steerStaticFeedForwardSaver[3] = TestDriveConstants.kSteerKSBackRight;
     
-    m_steerVelFeedForwardSaver.put(m_dummyModule,0.0);
-    m_steerStaticFeedForwardSaver.put(m_allModule,DriveConstants.kDriveKSAll);
-    m_steerVelFeedForwardSaver.put(m_modules[0],TestDriveConstants.kDriveKVFrontLeft);
-    m_steerVelFeedForwardSaver.put(m_modules[1],TestDriveConstants.kDriveKVFrontRight);
-    m_steerVelFeedForwardSaver.put(m_modules[2],TestDriveConstants.kDriveKVBackLeft);
-    m_steerVelFeedForwardSaver.put(m_modules[3],TestDriveConstants.kDriveKVBackRight);
+    m_steerVelFeedForwardSaver[0] = TestDriveConstants.kSteerKVFrontLeft;
+    m_steerVelFeedForwardSaver[1] = TestDriveConstants.kSteerKVFrontRight;
+    m_steerVelFeedForwardSaver[2] = TestDriveConstants.kSteerKVBackLeft;
+    m_steerVelFeedForwardSaver[3] = TestDriveConstants.kSteerKVBackRight;
   }
 
-  public double getRequestedHeading() {
-    return m_heading.getDouble(0);
+  public GenericEntry getRequestedHeadingEntry() {
+    return m_heading;
   }
-  public double getRequestedDriveVelocity() {
-    return m_driveVelocity.getDouble(0);
+  public GenericEntry getRequestedDriveVelocityEntry() {
+    return m_driveVelocity;
   }
-  public double getRequestedSteerVelocity() {
-    return m_steerVelocity.getDouble(0);
+  public GenericEntry getRequestedSteerVelocityEntry() {
+    return m_steerVelocity;
   }
-  public double getRequestedVolts(){
-    return m_drivetrainvolts.getDouble(0);
+  public GenericEntry getRequestedVoltsEntry() {
+    return m_drivetrainvolts;
   }
-  public double getRequestedSteerAngle() {
-    return m_steerAngle.getDouble(0);
+  public GenericEntry getRequestedSteerAngleEntry() {
+    return m_steerAngle;
   }
-  public double getDriveStaticFeedforward() {
-    return m_driveStaticFeedforward.getDouble(0);
+  public GenericEntry getDriveStaticFeedforwardEntry() {
+    return m_driveStaticFeedforward;
   }
-  public double getDriveVelocityFeedforward() {
-    return m_driveVelocityFeedforward.getDouble(0);
+  public GenericEntry getDriveVelocityFeedforwardEntry() {
+    return m_driveVelocityFeedforward;
   }
-  public void setDriveModuleFeedforward(){
+  public void setDriveModuleFeedforward() {
     //revert to previous saved feed forward data if changed
     
-    if (m_prevModule != m_module.getSelected()){
-      m_driveStaticFeedforward.setDouble(m_driveStaticFeedForwardSaver.get(m_module.getSelected()));
-      m_driveVelocityFeedforward.setDouble(m_driveVelFeedForwardSaver.get(m_module.getSelected()));
-      m_prevModule = m_module.getSelected();
+    if (m_prevModule != m_moduleChooser.getSelected()){
+      m_driveStaticFeedforward.setDouble(m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()]);
+      m_driveVelocityFeedforward.setDouble(m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()]);
+      m_prevModule = m_moduleChooser.getSelected();
     }
     
     // update saved feedforward data
-    m_driveStaticFeedForwardSaver.replace(m_module.getSelected(),m_driveStaticFeedforward.getDouble(0) );
-    m_driveVelFeedForwardSaver.replace(m_module.getSelected(),m_driveVelocityFeedforward.getDouble(0) );
+    m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()] = m_driveStaticFeedforward.getDouble(0);
+    m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()] = m_driveVelocityFeedforward.getDouble(0);
     
     //to set all modules to same feedforward values if all
-    if (m_module.getSelected() == m_allModule){
-      for(int i = 0; i < 4; i++){
-        m_modules[i].setDriveFeedForwardValues(m_driveStaticFeedForwardSaver.get(m_module.getSelected()), m_driveVelFeedForwardSaver.get(m_module.getSelected()));
-      }
-    }
+    // if (m_module.getSelected() == m_allModule){
+    //   for(int i = 0; i < 4; i++){
+    //     m_modules[i].setDriveFeedForwardValues(m_driveStaticFeedForwardSaver.get(m_module.getSelected()), m_driveVelFeedForwardSaver.get(m_module.getSelected()));
+    //   }
+    // }
+    
     //set selected module
-    m_module.getSelected().setDriveFeedForwardValues(m_driveStaticFeedForwardSaver.get(m_module.getSelected()),m_driveVelFeedForwardSaver.get(m_module.getSelected()));
+    m_moduleChooser.getSelected().setDriveFeedForwardValues(m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()],m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()]);
   }
-  public void setSteerModuleFeedforward(){
+  public void setSteerModuleFeedforward() {
     //revert to previous saved feed forward data if changed
     
-    if (m_prevModule != m_module.getSelected()){
-      m_steerStaticFeedforward.setDouble(m_steerStaticFeedForwardSaver.get(m_module.getSelected()));
-      m_steerVelocityFeedforward.setDouble(m_steerVelFeedForwardSaver.get(m_module.getSelected()));
-      m_prevModule = m_module.getSelected();
+    if (m_prevModule != m_moduleChooser.getSelected()){
+      m_steerStaticFeedforward.setDouble(m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()]);
+      m_steerVelocityFeedforward.setDouble(m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()]);
+      m_prevModule = m_moduleChooser.getSelected();
     }
     
     // update saved feedforward data
-    m_steerStaticFeedForwardSaver.replace(m_module.getSelected(),m_steerStaticFeedforward.getDouble(0) );
-    m_steerVelFeedForwardSaver.replace(m_module.getSelected(),m_steerVelocityFeedforward.getDouble(0) );
+    m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()] = m_steerStaticFeedforward.getDouble(0);
+    m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()] =m_steerVelocityFeedforward.getDouble(0);
     
     //to set all modules to same feedforward values if all
-    if (m_module.getSelected() == m_allModule){
-      for(int i = 0; i < 4; i++){
-        m_modules[i].setDriveFeedForwardValues(m_steerStaticFeedForwardSaver.get(m_module.getSelected()), m_steerVelFeedForwardSaver.get(m_module.getSelected()));
-      }
-    }
+    // if (m_module.getSelected() == m_allModule){
+    //   for(int i = 0; i < 4; i++){
+    //     m_modules[i].setDriveFeedForwardValues(m_steerStaticFeedForwardSaver[m_module.getSelected().getModuleType().getID()], m_steerVelFeedForwardSaver[m_module.getSelected().getModuleType().getID()]);
+    //   }
+    // }
+    
     //set selected module
-    m_module.getSelected().setDriveFeedForwardValues(m_steerStaticFeedForwardSaver.get(m_module.getSelected()),m_steerVelFeedForwardSaver.get(m_module.getSelected()));
+    m_moduleChooser.getSelected().setDriveFeedForwardValues(m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()],m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()]);
   }
-
+  public Double[] getDriveStaticFeedforwardArray(){
+    return m_driveStaticFeedForwardSaver;
+  }
+  public Double[] getDriveVelocityFeedforwardArray(){
+    return m_driveVelFeedForwardSaver;
+  }
+  public Double[] getSteerStaticFeedforwardArray(){
+    return m_steerStaticFeedForwardSaver;
+  }
+  public Double[] getSteerVelocityFeedforwardArray(){
+    return m_steerVelFeedForwardSaver;
+  }
+  public SendableChooser<Module> getModuleChooser(){
+    return m_moduleChooser;
+  }
 }

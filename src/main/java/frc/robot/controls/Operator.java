@@ -6,12 +6,12 @@ import lib.controllers.GameController;
 import lib.controllers.GameController.GCButton;
 
 public class Operator {
-  private static GameController operator = new GameController(OIConstants.kOperatorJoy);
+  private GameController operator = new GameController(OIConstants.kOperatorJoy);
 
   /**
    * Configures all of the operator controls.
    */
-  public static void configureControls() {
+  public void configureControls() {
     operator.get(GCButton.A).onTrue(new DoNothing());
   }
 }

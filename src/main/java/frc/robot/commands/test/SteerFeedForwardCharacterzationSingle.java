@@ -15,7 +15,7 @@ import frc.robot.util.FeedForwardCharacterizationData;
 
 
 /** Add your docs here. */
-public class SteerFeedForwardCharacterzation extends CommandBase {
+public class SteerFeedForwardCharacterzationSingle extends CommandBase {
   double value = 0;
   FeedForwardCharacterizationData m_feedForwardCharacterizationData;
   Module m_module;
@@ -24,7 +24,7 @@ public class SteerFeedForwardCharacterzation extends CommandBase {
   Drivetrain m_drive;
   SendableChooser<Module> m_moduleChooser;
 
-  public SteerFeedForwardCharacterzation(Drivetrain drive, SendableChooser<Module> moduleChooser) {
+  public SteerFeedForwardCharacterzationSingle(Drivetrain drive, SendableChooser<Module> moduleChooser) {
     m_drive = drive;
     m_moduleChooser = moduleChooser;
     addRequirements(drive);
@@ -62,9 +62,8 @@ public class SteerFeedForwardCharacterzation extends CommandBase {
  
       m_feedForwardCharacterizationData.print();
     
-      //TODO: fix this
-      // Robot.shuffleboard.m_steerStaticFeedForwardSaver.replace(m_module, m_feedForwardCharacterizationData.getStatic());
-      // Robot.shuffleboard.m_steerVelFeedForwardSaver.replace(m_module, m_feedForwardCharacterizationData.getVelocity());
+      m_drive.getSteerStaticFeedforwardArray()[m_module.getModuleType().getID()] = m_feedForwardCharacterizationData.getStatic();
+      m_drive.getSteerVelocityFeedforwardArray()[m_module.getModuleType().getID()] = m_feedForwardCharacterizationData.getVelocity();
       System.out.println("Static " + ": " + m_feedForwardCharacterizationData.getStatic());
       System.out.println("Velocity " + ": " + m_feedForwardCharacterizationData.getVelocity());
 

@@ -15,10 +15,12 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.constants.DriveConstants;
 import frc.robot.constants.ModuleConstants;
+import frc.robot.constants.ModuleType;
 import frc.robot.util.LogManager;
 import frc.robot.util.MotorFactory;
 import lib.ctre_shims.TalonEncoder;
@@ -36,11 +38,11 @@ public class Module {
    * @param feedforwardKV the velocity feedforward of the drive motor
    * @return
    */
-  public static Module create(ModuleConstants moduleConstants) {
+  public static Module create(ModuleConstants moduleConstants, ShuffleboardTab moduleTab) {
     if (Robot.isReal()) {
-      return new Module(moduleConstants);
+      return new Module(moduleConstants, moduleTab);
     } else {
-      return new ModuleSim(moduleConstants);
+      return new ModuleSim(moduleConstants, moduleTab);
     }
   }
   public static Module create(
@@ -57,7 +59,9 @@ public class Module {
       double steerFeedForwardKV,
       double steerP,
       double steerI,
-      double steerD
+      double steerD,
+      ModuleType moduleType,
+      ShuffleboardTab moduleTab
     ) {
     if (Robot.isReal()) { 
       return new Module(
@@ -74,10 +78,12 @@ public class Module {
           steerFeedForwardKV,
           steerP,
           steerI,
-          steerD
+          steerD,
+          moduleType,
+          moduleTab
         );
     } else {
-      return new ModuleSim(driveMotorPort, steerMotorPort, encoderPort, encoderOffset, driveFeedForwardKS, driveFeedForwardKV);
+      return new ModuleSim(driveMotorPort, steerMotorPort, encoderPort, encoderOffset, driveFeedForwardKS, driveFeedForwardKV, moduleTab);
     }
   }
 
@@ -95,22 +101,22 @@ public class Module {
   private SimpleMotorFeedforward m_steerFeedForward;
       
   private double m_offset = 0.0;
-
-  private double m_steerError = 0;
   
-  public double m_drivePIDOutput = 0;
-  public double m_driveFeedforwardOutput = 0;
-  public double m_steerFeedForwardOutput = 0.0;
-  public double m_steerPIDOutput = 0.0;
+  private double m_drivePIDOutput = 0;
+  private double m_driveFeedforwardOutput = 0;
+  private double m_steerFeedForwardOutput = 0.0;
+  private double m_steerPIDOutput = 0.0;
 
-  public double m_desiredSpeed = 0;
-  public double m_desiredAngle = 0;
+  private SwerveModuleState m_desieredState = new SwerveModuleState();
+  ShuffleboardTab m_moduleTab;
 
-  public MedianFilter m_driveVelocityMedianFilter = new MedianFilter(80);
+  private MedianFilter m_driveVelocityMedianFilter = new MedianFilter(80);
 
-  public boolean setOptimize = false;
+  private boolean m_optimizeStates = false;
+
+  private ModuleType m_moduleType;
   
-  public Module(ModuleConstants moduleConstants) {
+  public Module(ModuleConstants moduleConstants, ShuffleboardTab moduleTab) {
     this(
       moduleConstants.getDrivePort(),
       moduleConstants.getSteerPort(),
@@ -125,7 +131,9 @@ public class Module {
       moduleConstants.getSteerKV(),
       moduleConstants.getSteerP(),
       moduleConstants.getSteerI(),
-      moduleConstants.getSteerD()
+      moduleConstants.getSteerD(),
+      moduleConstants.getType(),
+      moduleTab
     );
   }
 
@@ -143,7 +151,9 @@ public class Module {
     double steerFeedForwardKV,
     double steerP,
     double steerI,
-    double steerD
+    double steerD,
+    ModuleType moduleType,
+    ShuffleboardTab moduleTab
   ) {
     
     if (Robot.isReal()) {
@@ -154,6 +164,9 @@ public class Module {
       m_driveMotor = new WPI_TalonFX(driveMotorPort);
       m_steerMotor = new WPI_TalonFX(steerMotorPort);
     }
+
+    m_moduleTab = moduleTab;
+    m_moduleType = moduleType;
     
     m_driveMotor.setNeutralMode(NeutralMode.Brake);
     m_steerMotor.setNeutralMode(NeutralMode.Brake);
@@ -216,16 +229,17 @@ public class Module {
    * @param desiredState Desired state with speed and angle.
    */
   public void setDesiredState(SwerveModuleState desiredState) {
-    if (Math.abs(desiredState.speedMetersPerSecond) < 0.001) { //TODO are there cases where we don't want to do this for testing?
+    if (Math.abs(desiredState.speedMetersPerSecond) < 0.001) {
       stop();
       return;
     }
 
-    if (setOptimize == true) {
+    if (m_optimizeStates == true) {
       // Optimize the reference state to avoid spinning further than 90 degrees
       desiredState = SwerveModuleState.optimize(desiredState, new Rotation2d(getSteerAngle()));
     }
 
+    //no need to set the desisier stae directly as the angle and velocity set desierd values
     setDriveVelocity(desiredState.speedMetersPerSecond);
     setSteerAngle(desiredState.angle);
   }
@@ -235,6 +249,7 @@ public class Module {
    * @param speedMetersPerSecond the drive velocity in m/s
    */
   public void setDriveVelocity(double speedMetersPerSecond) {
+    m_desieredState.speedMetersPerSecond = speedMetersPerSecond;
     m_drivePIDOutput = m_drivePIDController.calculate(m_driveEncoder.getRate(), speedMetersPerSecond);
     m_driveFeedforwardOutput = m_driveFeedforward.calculate(speedMetersPerSecond);
     setDriveVoltage(m_drivePIDOutput + m_driveFeedforwardOutput);
@@ -245,6 +260,7 @@ public class Module {
    * @param angle a Rotation2d object representing the angle the steer of the module should go to.
    */
   public void setSteerAngle(Rotation2d angle) {
+    m_desieredState.angle = angle;
     // Calculate the steer motor output from the steer PID controller.
     m_steerPIDOutput = m_steerPIDController.calculate(getSteerAngle(), MathUtil.angleModulus(angle.getRadians()));
     m_steerFeedForwardOutput = m_steerFeedForward.calculate(m_steerPIDController.getSetpoint().velocity);
@@ -314,7 +330,7 @@ public class Module {
    * @return the error in radians, from -pi to pi
    */
   public double getSteerAngleError() {
-    return MathUtil.angleModulus(getSteerAngle() - m_steerPIDController.getGoal().position);
+    return MathUtil.angleModulus(getSteerAngle() - m_desieredState.speedMetersPerSecond);
   }
 
   /**
@@ -334,7 +350,7 @@ public class Module {
   }
 
   public double getDriveVelocityError() {
-    return m_drivePIDController.getSetpoint() - getDriveVelocity();
+    return m_desieredState.speedMetersPerSecond - getDriveVelocity();
   }
 
   public double selfFeedforwardCharacterazation() {
@@ -406,9 +422,8 @@ public class Module {
   public double getSteerOutput() {
     return m_steerPIDOutput;
   }
-
   public void setOptimize(Boolean setOptimize) {
-    this.setOptimize=setOptimize;
+    this.m_optimizeStates = setOptimize;
   }
 
   public double getBusToDriveVoltage() {
@@ -430,4 +445,37 @@ public class Module {
   public void periodic() {
     // This method will be called once per scheduler run, mainly only used for simulation
   }
+
+  public ModuleType getModuleType(){
+    return m_moduleType;
+  }
+
+  public double getDesieredVelocity(){
+    return m_desieredState.speedMetersPerSecond;
+  }
+
+  public Rotation2d getDesieredAngle(){
+    return m_desieredState.angle;
+  }
+  
+  public void setupModulesShuffleboard(){
+    m_moduleTab.addNumber("FL desired speed", () -> getDesieredVelocity());
+    // Drive PID output
+    m_moduleTab.addNumber("FL PID Output", () -> getDrivePIDOutput());
+    // get drive velocity
+    m_moduleTab.addNumber("Vel FL Raw", () -> getDriveVelocity());
+    // drivePIDS
+    m_moduleTab.add("Drive PID " + m_moduleType.getAbbreviation(), getDrivePID());
+    // Median Filltered Velocity Values
+    m_moduleTab.addNumber("Vel " + m_moduleType.getAbbreviation() + " Filtered", () -> getDriveVelocityFiltered());
+    // Desired Steer angles
+    m_moduleTab.addNumber( m_moduleType.getAbbreviation() + "desired angle", () -> getDesieredAngle().getRadians());
+    // Steer angles
+    m_moduleTab.addNumber("Angle " + m_moduleType.getAbbreviation(), () -> getSteerAngle());
+    // Steer Velocity
+    m_moduleTab.addNumber("Steer Vel " + m_moduleType.getAbbreviation(), () -> getSteerVelocity());
+    //Steer PID
+    m_moduleTab.add("Steer PID " + m_moduleType.getAbbreviation(), getSteerPID());
+  }
+
 }
