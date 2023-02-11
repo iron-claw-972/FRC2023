@@ -24,7 +24,6 @@ import frc.robot.util.PathGroupLoader;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  public static enum Teams {BLUE, RED};
 
   // The robot's subsystems are defined here...
   private final Drivetrain m_drive = new Drivetrain();
