@@ -44,7 +44,13 @@ public class Align extends CommandBase{
   @Override
   public void execute(){
     angle=getAngle();
-    m_drive.arcadeDrive(0, m_pid.calculate(angle, setpoint));
+    double a = angle;
+    if(a<0&&setpoint>0){
+      a+=2*Math.PI;
+    }else if(a>0&&setpoint<0){
+      a-=2*Math.PI;
+    }
+    m_drive.arcadeDrive(0, -m_pid.calculate(a, setpoint));
   }
 
   @Override
@@ -57,7 +63,7 @@ public class Align extends CommandBase{
   public boolean isFinished(){
     double a = getAngle();
     if(a<0&&setpoint>0){
-      a = 2*Math.PI - a;
+      a += 2*Math.PI;
     }
     return Math.abs(a-setpoint)<Units.degreesToRadians(1);
   }
