@@ -20,13 +20,11 @@ public class FourBarArm extends SubsystemBase {
     m_motor = new CANSparkMax(ArmConstants.motorID, MotorType.kBrushless);
     m_motor.setIdleMode(IdleMode.kBrake);
     m_encoder = m_motor.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, 8192);
-    m_encoder.setPosition(0);
-    m_encoder.setPositionConversionFactor(360);
-    m_encoder.setVelocityConversionFactor(60);
+    m_encoder.setPositionConversionFactor(2*Math.PI);
+    m_encoder.setVelocityConversionFactor(2*Math.PI/60);  
     m_pid = new PIDController(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD);
     m_pid.setSetpoint(ArmConstants.initialPosition);
     m_pid.setTolerance(ArmConstants.kTolerance);
-    MathUtil.clamp(m_pid.calculate(m_encoder.getPosition()), ArmConstants.minMotorPower, ArmConstants.maxMotorPower);
   }
 
   public void setArmSetpoint(double setpoint) {
@@ -37,7 +35,7 @@ public class FourBarArm extends SubsystemBase {
 
   @Override
   public void periodic() {
-    m_motor.set(m_pid.calculate(m_encoder.getPosition()));
+    m_motor.set(MathUtil.clamp(m_pid.calculate(m_encoder.getPosition()), ArmConstants.minMotorPower, ArmConstants.maxMotorPower));
   }
 
   public boolean isFinished() {
@@ -46,8 +44,5 @@ public class FourBarArm extends SubsystemBase {
 
   public void end() {
     m_motor.set(0);
-    if (m_armSetpoint == ArmConstants.initialPosition) {
-      m_encoder.setPosition(0);
-    }
   }
 }
