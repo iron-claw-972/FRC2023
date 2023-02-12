@@ -14,7 +14,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.commands.test.*;
+import frc.robot.commands.test.CircleDrive;
+import frc.robot.commands.test.DriveFeedForwardCharacterization;
+import frc.robot.commands.test.DriveVoltage;
+import frc.robot.commands.test.OdometryTestCommand;
+import frc.robot.commands.test.SteerFeedForwardCharacterizationSingle;
+import frc.robot.commands.test.SteerVoltage;
+import frc.robot.commands.test.TestDriveVelocity;
+import frc.robot.commands.test.TestHeadingPID;
+import frc.robot.commands.test.TestSteerAngle;
 import frc.robot.controls.BaseDriverConfig;
 import frc.robot.controls.GameControllerDriverConfig;
 import frc.robot.controls.Operator;
@@ -90,8 +98,8 @@ public class RobotContainer {
   public void addTestCommands() {
     GenericEntry testEntry = m_testTab.add("Test Results", false).getEntry();
     m_testTab.add("Circle Drive", new CircleDrive(m_drive));
-    m_testTab.add("Drive FeedForawrd", new DriveFeedForwardCharacterzation(m_drive));
-    m_testTab.add("Steer Single FeedForawrd", new SteerFeedForwardCharacterzationSingle(m_drive));
+    m_testTab.add("Drive FeedForward", new DriveFeedForwardCharacterization(m_drive));
+    m_testTab.add("Steer Single FeedForward", new SteerFeedForwardCharacterizationSingle(m_drive));
     m_testTab.add("Drive Voltage", new DriveVoltage(m_drive));
     m_testTab.add("Drive Steer", new SteerVoltage(m_drive));
     m_testTab.add("Test Drive Velocity", new TestDriveVelocity(m_drive, testEntry));

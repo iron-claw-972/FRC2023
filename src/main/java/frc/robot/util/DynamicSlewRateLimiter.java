@@ -45,13 +45,13 @@ public class DynamicSlewRateLimiter {
    * -rateLimit and initial value.
    *
    * @param rateLimit The rate-of-change limit, in units per second.
-   * @param initalValue The initial value of the input.
+   * @param initialValue The initial value of the input.
    * @deprecated Use SlewRateLimiter(double positiveRateLimit, double negativeRateLimit, double
-   *     initalValue) instead.
+   *     initialValue) instead.
    */
   @Deprecated(since = "2023", forRemoval = true)
-  public DynamicSlewRateLimiter(double rateLimit, double initalValue) {
-    this(rateLimit, -rateLimit, initalValue);
+  public DynamicSlewRateLimiter(double rateLimit, double initialValue) {
+    this(rateLimit, -rateLimit, initialValue);
   }
 
   /**
@@ -80,9 +80,9 @@ public class DynamicSlewRateLimiter {
       m_negativeRateLimit * elapsedTime,
       m_positiveRateLimit * elapsedTime);
 
-    // TODO: make continous work properly with + and - slewrates
+    // TODO: make continuous work properly with + and - slew rates
     if (m_continuous) {
-      // convert value to be inbetween limits
+      // convert value to be in between limits
       // input = MathUtil.inputModulus(input, m_lowerContinuousLimit, m_upperContinuousLimit);
       //input %= m_upperCycleLimit - m_lowerCycleLimit;
       while (input < m_lowerContinuousLimit || input > m_upperContinuousLimit) {
@@ -90,13 +90,13 @@ public class DynamicSlewRateLimiter {
         if (input > m_upperContinuousLimit) input -= m_upperContinuousLimit - m_lowerContinuousLimit;
       }
       
-      // if change is larger than hald the total distance than it is closer on the other side so it can be fliped on other direciton
+      // if change is larger than half the total distance than it is closer on the other side so it can be flipped on other direction
       if (Math.abs(input-m_prevVal) > (m_upperContinuousLimit - m_lowerContinuousLimit) / 2 ) {
         change = m_upperContinuousLimit - m_lowerContinuousLimit - change;
       }
       m_prevVal += change;
 
-      //converting vlaue to be in limits
+      //converting value to be in limits
       // m_prevVal = MathUtil.inputModulus(m_prevVal, m_lowerContinuousLimit, m_upperContinuousLimit);
       while (m_prevVal < m_lowerContinuousLimit || m_prevVal > m_upperContinuousLimit) {
         if (m_prevVal < m_lowerContinuousLimit) m_prevVal += m_upperContinuousLimit - m_lowerContinuousLimit;
@@ -122,7 +122,7 @@ public class DynamicSlewRateLimiter {
   }
 
   /**
-   * Sets new slewrates and filters the input to limit its slew rate.
+   * Sets new slew rates and filters the input to limit its slew rate.
    *
    * @param input The input value whose slew rate is to be limited.
    * @param positiveRateLimit The rate-of-change limit in the positive direction, in units per

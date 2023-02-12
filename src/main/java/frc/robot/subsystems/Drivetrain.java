@@ -62,14 +62,14 @@ public class Drivetrain extends SubsystemBase {
   // PID Controllers
   private PIDController m_xController = new PIDController(0.1, 0, 0);
   private PIDController m_yController = new PIDController(0.1, 0, 0);
-  private PIDController m_rotationController = new PIDController(DriveConstants.KheadingP, DriveConstants.KheadingI, DriveConstants.KheadingD);
+  private PIDController m_rotationController = new PIDController(DriveConstants.kHeadingP, DriveConstants.kHeadingI, DriveConstants.kHeadingD);
 
   //Shuffleboard
   GenericEntry 
     m_driveVelocity,
     m_steerVelocity, 
     m_steerAngle, 
-    m_drivetrainvolts, 
+    m_drivetrainVolts, 
     m_driveStaticFeedforward, 
     m_driveVelocityFeedforward, 
     m_steerStaticFeedforward,
@@ -352,7 +352,7 @@ public class Drivetrain extends SubsystemBase {
     // inputs
     m_heading = m_drivetrainTab.add("Set Heading (-pi to pi)", 0).getEntry();
     
-    // add PID controlers
+    // add PID controllers
     m_drivetrainTab.add("xController", getXController());
     m_drivetrainTab.add("yController", getYController());
     m_drivetrainTab.add("rotationController", getRotationController());
@@ -380,7 +380,7 @@ public class Drivetrain extends SubsystemBase {
     m_driveVelocity = m_swerveModulesTab.add("Set Drive Velocity", 0).getEntry();
     m_steerVelocity = m_swerveModulesTab.add("Set Steer Velocity", 0).getEntry();
     m_steerAngle = m_swerveModulesTab.add("Set Steer Angle", 0).getEntry();
-    m_drivetrainvolts = m_swerveModulesTab.add("Set Volts", 0).getEntry();
+    m_drivetrainVolts = m_swerveModulesTab.add("Set Volts", 0).getEntry();
     m_driveStaticFeedforward = m_swerveModulesTab.add("Drive kS FF", m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()]).getEntry();
     m_driveVelocityFeedforward = m_swerveModulesTab.add("Drive kV FF", m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()]).getEntry();
     m_steerStaticFeedforward = m_swerveModulesTab.add("Steer kS FF", m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()]).getEntry();
@@ -432,7 +432,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public GenericEntry getRequestedVoltsEntry() {
-    return m_drivetrainvolts;
+    return m_drivetrainVolts;
   }
 
   public GenericEntry getRequestedSteerAngleEntry() {
@@ -478,7 +478,7 @@ public class Drivetrain extends SubsystemBase {
     m_moduleChooser.getSelected().setDriveFeedForwardValues(m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()],m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()]);
   }
 
-  public void updateSteerModuleFeedforwardSuffleboard() {
+  public void updateSteerModuleFeedforwardShuffleboard() {
     
     //revert to previous saved feed forward data if changed
     if (m_prevModule != m_moduleChooser.getSelected()) {

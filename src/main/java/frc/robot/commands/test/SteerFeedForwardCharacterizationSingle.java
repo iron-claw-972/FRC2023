@@ -9,7 +9,7 @@ import frc.robot.util.FeedForwardCharacterizationData;
 
 
 /** Add your docs here. */
-public class SteerFeedForwardCharacterzationSingle extends CommandBase {
+public class SteerFeedForwardCharacterizationSingle extends CommandBase {
   double m_voltage = 0;
   FeedForwardCharacterizationData m_feedForwardCharacterizationData;
   Module m_module;
@@ -18,7 +18,7 @@ public class SteerFeedForwardCharacterzationSingle extends CommandBase {
   Drivetrain m_drive;
   SendableChooser<Module> m_moduleChooser;
 
-  public SteerFeedForwardCharacterzationSingle(Drivetrain drive) {
+  public SteerFeedForwardCharacterizationSingle(Drivetrain drive) {
     m_drive = drive;
     addRequirements(drive);
   }

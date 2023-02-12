@@ -7,14 +7,14 @@ import frc.robot.util.FeedForwardCharacterizationData;
 
 
 /** Add your docs here. */
-public class DriveFeedForwardCharacterzation extends CommandBase {
+public class DriveFeedForwardCharacterization extends CommandBase {
   double m_voltage = 0;
   FeedForwardCharacterizationData[] m_feedForwardCharacterizationData;
   
   Timer m_timer = new Timer();
   Drivetrain m_drive;
   
-  public DriveFeedForwardCharacterzation(Drivetrain drive) {
+  public DriveFeedForwardCharacterization(Drivetrain drive) {
     m_drive = drive;
     addRequirements(drive);
   }

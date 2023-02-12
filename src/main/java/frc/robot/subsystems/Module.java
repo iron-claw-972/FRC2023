@@ -102,7 +102,7 @@ public class Module {
   private double m_steerFeedForwardOutput = 0.0;
   private double m_steerPIDOutput = 0.0;
 
-  private SwerveModuleState m_desieredState = new SwerveModuleState();
+  private SwerveModuleState m_desiredState = new SwerveModuleState();
   ShuffleboardTab m_moduleTab;
 
   private MedianFilter m_driveVelocityMedianFilter = new MedianFilter(80);
@@ -239,7 +239,7 @@ public class Module {
       desiredState = SwerveModuleState.optimize(desiredState, new Rotation2d(getSteerAngle()));
     }
 
-    //no need to set the desisier stae directly as the angle and velocity set desierd values
+    //no need to set the desired state directly as the angle and velocity set desired values
     setDriveVelocity(desiredState.speedMetersPerSecond);
     setSteerAngle(desiredState.angle);
   }
@@ -249,7 +249,7 @@ public class Module {
    * @param speedMetersPerSecond the drive velocity in m/s
    */
   public void setDriveVelocity(double speedMetersPerSecond) {
-    m_desieredState.speedMetersPerSecond = speedMetersPerSecond;
+    m_desiredState.speedMetersPerSecond = speedMetersPerSecond;
     m_drivePIDOutput = m_drivePIDController.calculate(m_driveEncoder.getRate(), speedMetersPerSecond);
     m_driveFeedforwardOutput = m_driveFeedforward.calculate(speedMetersPerSecond);
     setDriveVoltage(m_drivePIDOutput + m_driveFeedforwardOutput);
@@ -260,7 +260,7 @@ public class Module {
    * @param angle a Rotation2d object representing the angle the steer of the module should go to.
    */
   public void setSteerAngle(Rotation2d angle) {
-    m_desieredState.angle = angle;
+    m_desiredState.angle = angle;
     // Calculate the steer motor output from the steer PID controller.
     m_steerPIDOutput = m_steerPIDController.calculate(getSteerAngle(), MathUtil.angleModulus(angle.getRadians()));
     m_steerFeedForwardOutput = m_steerFeedForward.calculate(m_steerPIDController.getSetpoint().velocity);
@@ -330,7 +330,7 @@ public class Module {
    * @return the error in radians, from -pi to pi
    */
   public double getSteerAngleError() {
-    return MathUtil.angleModulus(getSteerAngle() - m_desieredState.speedMetersPerSecond);
+    return MathUtil.angleModulus(getSteerAngle() - m_desiredState.speedMetersPerSecond);
   }
 
   /**
@@ -350,10 +350,10 @@ public class Module {
   }
 
   public double getDriveVelocityError() {
-    return m_desieredState.speedMetersPerSecond - getDriveVelocity();
+    return m_desiredState.speedMetersPerSecond - getDriveVelocity();
   }
 
-  public double selfFeedforwardCharacterazation() {
+  public double selfFeedforwardCharacterization() {
     return m_driveEncoder.getRate();
   }
 
@@ -454,12 +454,12 @@ public class Module {
     return m_moduleType;
   }
 
-  public double getDesieredVelocity() {
-    return m_desieredState.speedMetersPerSecond;
+  public double getDesiredVelocity() {
+    return m_desiredState.speedMetersPerSecond;
   }
 
-  public Rotation2d getDesieredAngle() {
-    return m_desieredState.angle;
+  public Rotation2d getDesiredAngle() {
+    return m_desiredState.angle;
   }
 
   public double getDriveFeedForwardKS() {
@@ -479,17 +479,17 @@ public class Module {
   }
   
   public void setupModulesShuffleboard() {
-    m_moduleTab.addNumber(m_moduleType.getAbbreviation() + " desired speed", () -> getDesieredVelocity());
+    m_moduleTab.addNumber(m_moduleType.getAbbreviation() + " desired speed", () -> getDesiredVelocity());
     // Drive PID output
     m_moduleTab.addNumber(m_moduleType.getAbbreviation() +" PID Output", () -> getDrivePIDOutput());
     // get drive velocity
     m_moduleTab.addNumber("Vel " + m_moduleType.getAbbreviation() + " Raw", () -> getDriveVelocity());
-    // drivePIDS
+    // drivePIDs
     m_moduleTab.add("Drive PID " + m_moduleType.getAbbreviation(), getDrivePID());
-    // Median Filltered Velocity Values
+    // Median Filtered Velocity Values
     m_moduleTab.addNumber("Vel " + m_moduleType.getAbbreviation() + " Filtered", () -> getDriveVelocityFiltered());
     // Desired Steer angles
-    m_moduleTab.addNumber( m_moduleType.getAbbreviation() + "desired angle", () -> getDesieredAngle().getRadians());
+    m_moduleTab.addNumber( m_moduleType.getAbbreviation() + "desired angle", () -> getDesiredAngle().getRadians());
     // Steer angles
     m_moduleTab.addNumber("Angle " + m_moduleType.getAbbreviation(), () -> getSteerAngle());
     // Steer Velocity

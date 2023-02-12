@@ -24,7 +24,7 @@ public class DefaultDriveCommand extends CommandBase {
     double ySpeed = m_driver.getSideTranslation();
     double rot = m_driver.getRotation();
     
-    // TODO: move heading drive to seperate command
+    // TODO: move heading drive to separate command
     // if (Robot.shuffleboard.getTestModeType() == TestType.HEADING_DRIVE) {
     //   rot = m_driveConfig.getHeading();
     //   m_drive.driveHeading(xSpeed, ySpeed, rot); 
