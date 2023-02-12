@@ -24,7 +24,7 @@ public class Robot extends TimedRobot {
   public static final String kRobotId = "RobotId";
   public enum RobotId {
     Default, SwerveCompetition, SwerveTest,
-    ClassBot1, ClassBot2, ClassBot3, ClassBot4, ClassBot5
+    ClassBot1, ClassBot2, ClassBot3, ClassBot4
   };
   private static RobotId robotId = RobotId.Default;
 
