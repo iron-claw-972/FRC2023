@@ -1,18 +1,17 @@
 package frc.robot.controls;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.ElevatorCalibrationAbsoluteEncoder;
 import frc.robot.commands.ElevatorCalibrationLimitSwitch;
 import frc.robot.commands.MoveToHeight;
 import frc.robot.constants.Constants;
+import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.Elevator;
 import lib.controllers.GameController;
 import lib.controllers.GameController.Axis;
-import lib.controllers.GameController.Button;
 import lib.controllers.GameController.DPad;
 
 public class Operator {
-  private static GameController operator = new GameController(Constants.oi.kOperatorJoy);
+  private static GameController operator = new GameController(OIConstants.kOperatorJoy);
 
   public static void configureControls(Elevator elevator) {
 
