@@ -16,7 +16,7 @@ public class FeedForwardCharacterizationData {
     }
   }
   
-  public void print() {
+  public void process() {
     m_regression = new PolynomialRegression(
       velocityData.stream().mapToDouble(Double::doubleValue).toArray(),
       voltageData.stream().mapToDouble(Double::doubleValue).toArray(),

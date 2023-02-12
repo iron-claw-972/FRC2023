@@ -99,7 +99,7 @@ public class RobotContainer {
     m_testTab.add("Drive FeedForward", new DriveFeedForwardCharacterization(m_drive));
     m_testTab.add("Steer Single FeedForward", new SteerFeedForwardCharacterizationSingle(m_drive));
     m_testTab.add("Test Drive Velocity", new TestDriveVelocity(m_drive, testEntry));
-    m_testTab.add("Heading PID", new TestHeadingPID(m_drive));
+    m_testTab.add("Heading PID", new TestHeadingPID(m_drive, testEntry));
     m_testTab.add("Steer angle", new TestSteerAngle(m_drive, testEntry));
     m_testTab.add("Odometry Test", new OdometryTestCommand(m_drive, new Transform2d(new Translation2d(1,1), new Rotation2d(Math.PI))));
   }

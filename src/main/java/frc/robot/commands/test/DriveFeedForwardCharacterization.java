@@ -31,7 +31,7 @@ public class DriveFeedForwardCharacterization extends CommandBase {
   }
   
   public void execute() {
-    runCharacterizationVolts();
+    m_drive.driveVoltsTest(m_voltage);
     if (m_timer.get() > 0.5) {
       for (int i=0; i<4; i++) {
         m_feedForwardCharacterizationData[i].add(m_drive.getDriveVelocities()[i], m_voltage); 
@@ -46,14 +46,10 @@ public class DriveFeedForwardCharacterization extends CommandBase {
     }
   }
   
-  private void runCharacterizationVolts() {
-    m_drive.driveVoltsTest(m_voltage);
-  }
-  
   public void end(boolean interrupted) {
     System.out.println("FINISHED");
     for (int i = 0; i < 4; i++) {
-      m_feedForwardCharacterizationData[i].print();
+      m_feedForwardCharacterizationData[i].process();
     }
     
     for (int i = 0; i < 4; i++) {

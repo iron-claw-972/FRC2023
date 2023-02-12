@@ -31,7 +31,9 @@ public class SteerFeedForwardCharacterizationSingle extends CommandBase {
   }
   
   public void execute() {
-    runCharacterizationVolts();
+    m_module.setDriveVoltage(0);
+    m_module.setSteerVoltage(m_voltage);
+    
     if (m_timer.get() > 0.5) {
       m_feedForwardCharacterizationData.add(m_module.getSteerVelocity(), m_voltage);
     }
@@ -43,16 +45,10 @@ public class SteerFeedForwardCharacterizationSingle extends CommandBase {
     }
   }
   
-  private void runCharacterizationVolts() {
-    m_module.setDriveVoltage(0);
-    m_module.setSteerVoltage(m_voltage);
-    
-  }
-  
   public void end(boolean interrupted) {
     System.out.println("FINISHED");
     
-    m_feedForwardCharacterizationData.print();
+    m_feedForwardCharacterizationData.process();
     
     m_drive.getSteerStaticFeedforwardArray()[m_module.getModuleType().getID()] = m_feedForwardCharacterizationData.getStatic();
     m_drive.getSteerVelocityFeedforwardArray()[m_module.getModuleType().getID()] = m_feedForwardCharacterizationData.getVelocity();
