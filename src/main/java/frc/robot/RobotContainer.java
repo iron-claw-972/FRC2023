@@ -60,11 +60,11 @@ public class RobotContainer {
     LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
     LiveWindow.setEnabled(false);
     
+    m_drive.setupModulesShuffleboard();
     addTestCommands();
     autoChooserUpdate();
     loadCommandSchedulerShuffleboard();
     m_drive.setupDrivetrainShuffleboard();
-    m_drive.setupModulesShuffleboard();
     m_driver.setupShuffleboard();
 
     m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive,m_driver));

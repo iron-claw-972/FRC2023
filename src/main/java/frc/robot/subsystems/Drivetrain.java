@@ -115,7 +115,7 @@ public class Drivetrain extends SubsystemBase {
 
     m_fieldDisplay.setRobotPose(getPose());
     SmartDashboard.putData("Field", m_fieldDisplay);
-    
+    setUpModuleChooser();
     LiveWindow.disableAllTelemetry();
     m_swerveModulesTab.add("Module Chooser", m_moduleChooser);
     m_drivetrainTab = drivetrainTab;
@@ -487,6 +487,14 @@ public class Drivetrain extends SubsystemBase {
     
     //set selected module
     m_moduleChooser.getSelected().setDriveFeedForwardValues(m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()],m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()]);
+  }
+  public void setUpModuleChooser(){
+    
+      m_moduleChooser.setDefaultOption("Front Left", m_modules[0]);
+      m_moduleChooser.addOption("Front Right", m_modules[1]);
+      m_moduleChooser.addOption("Back Left", m_modules[2]);
+      m_moduleChooser.addOption("Back Right", m_modules[3]);
+
   }
   public Double[] getDriveStaticFeedforwardArray(){
     return m_driveStaticFeedForwardSaver;
