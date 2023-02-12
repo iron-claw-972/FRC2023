@@ -13,24 +13,31 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
+import frc.robot.constants.DeployingBarConstants;
+
 import frc.robot.util.MotorFactory;
 
 public class DeployingBar extends SubsystemBase {
 
   private final TalonFX m_motor1;
+  private final TalonFX m_motor2;
+
   private double setpoint;
   private PIDController m_pid;
   private boolean isEnabled;
 
   public DeployingBar() {
-    m_motor1 = MotorFactory.createTalonFX(Constants.deploybar.kmotorId, getName());
-    m_pid = new PIDController(Constants.deploybar.kp, Constants.deploybar.ki, Constants.deploybar.kd);
+    m_motor1 = MotorFactory.createTalonFX(DeployingBarConstants.kLeftMotor, getName());
+    m_motor2 = MotorFactory.createTalonFX(DeployingBarConstants.kRightMotor, getName());
+    m_pid = new PIDController(DeployingBarConstants.kP, DeployingBarConstants.kI, DeployingBarConstants.kD);
     m_motor1.setNeutralMode(NeutralMode.Brake);
+    m_motor2.setNeutralMode(NeutralMode.Brake);
   }
   @Override
   public void periodic() {
     if(isEnabled){
       m_motor1.set(ControlMode.PercentOutput, m_pid.calculate(getEncoderValue(), setpoint));
+      m_motor2.set(ControlMode.PercentOutput, m_pid.calculate(getEncoderValue(), setpoint));
     }
   }
 
@@ -43,7 +50,7 @@ public class DeployingBar extends SubsystemBase {
   }
   
   public double getEncoderValue(){
-    return m_motor1.getSelectedSensorPosition();
+    return (m_motor1.getSelectedSensorPosition() + m_motor2.getSelectedSensorPosition())/2;
   }
 
   public void setEnableStatus(boolean enableStatus){
@@ -55,6 +62,7 @@ public class DeployingBar extends SubsystemBase {
 
   public void zeroEncoders(){
     m_motor1.setSelectedSensorPosition(0);
+    m_motor2.setSelectedSensorPosition(0);
   }
 
   public void resetPID(){

@@ -1,8 +1,9 @@
 package frc.robot.constants;
 
 public class DeployingBarConstants {
-    //Constants TBD
-    public final int kmotorId = 0;
-    public final int kmaxExtension = 0, kminExtension = 0;
-    public int kp = 0, ki = 0, kd = 0;
+  public static final int kLeftMotor = 0;
+  public static final int kRightMotor = 0;
+  public static final int kmaxExtension = 0, kminExtension = 0;
+  public static final int kP = 0, kI = 0, kD = 0;
+
 }
