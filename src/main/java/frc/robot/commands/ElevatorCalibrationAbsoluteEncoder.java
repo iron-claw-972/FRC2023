@@ -21,7 +21,8 @@ public class ElevatorCalibrationAbsoluteEncoder extends CommandBase {
     m_elevator.stopMotor();
     m_elevator.calibrationZeroAbsEncoder();;
   }
-
+  
+  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     if(m_elevator.returnBottomLimSwitchCondition() == true){

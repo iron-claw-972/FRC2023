@@ -1,11 +1,11 @@
 package frc.robot.commands;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Elevator;
 
 public class MoveToHeight extends CommandBase {
   Elevator m_elevator; 
   double m_elevatorHeight; 
+
   public MoveToHeight(Elevator elevator, double elevatorHeight) {
     m_elevator = elevator; 
     m_elevatorHeight = elevatorHeight; 
@@ -17,9 +17,7 @@ public class MoveToHeight extends CommandBase {
     System.out.println(m_elevator.returnHeightError(m_elevatorHeight)); 
     m_elevator.set(m_elevator.returnClampedElevatorPID(m_elevatorHeight)); 
     m_elevator.stopMotorsIfLimitSwitchesTripped(m_elevator.returnClampedElevatorPID(m_elevatorHeight));
-
   }
-
-  //this command will never stop running, the motor needs to constantly output power to maintain the elevator's height
-  
 }
+
+//Note: this command will never stop running, the motor needs to constantly output power to maintain the elevator's height

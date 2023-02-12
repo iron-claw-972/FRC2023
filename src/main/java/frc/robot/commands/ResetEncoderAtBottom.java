@@ -13,19 +13,15 @@ public class ResetEncoderAtBottom extends CommandBase {
 
   @Override
   public void initialize() {
-
-    m_elevator.set(ElevatorConstants.kElevatorMotorEncoderZeroingPower);
-    
+    m_elevator.set(ElevatorConstants.kElevatorMotorEncoderZeroingPower); 
   }
 
   @Override
   public void end(boolean interrupted) {
     m_elevator.stopMotor();
-    m_elevator.resetMotorEncoder();
-    
+    m_elevator.resetMotorEncoder(); 
   }
 
-  
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
@@ -34,5 +30,4 @@ public class ResetEncoderAtBottom extends CommandBase {
     }
     return false;
   }
-
 }

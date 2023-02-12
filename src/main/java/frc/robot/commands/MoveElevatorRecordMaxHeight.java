@@ -13,19 +13,15 @@ public class MoveElevatorRecordMaxHeight extends CommandBase {
 
   @Override
   public void initialize() {
-
     m_elevator.set(ElevatorConstants.kElevatorMotorEncoderZeroingPower);
-    
   }
 
   @Override
   public void end(boolean interrupted) {
     m_elevator.stopMotor();
     ElevatorConstants.kElevatorTopHeightMeters = m_elevator.getElevatorHeightMeters();
-    
   }
 
-  
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
@@ -34,5 +30,4 @@ public class MoveElevatorRecordMaxHeight extends CommandBase {
     }
     return false;
   }
-
 }
