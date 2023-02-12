@@ -9,11 +9,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -26,7 +22,6 @@ import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.constants.DriveConstants;
 import frc.robot.constants.ModuleConstants;
-import frc.robot.constants.TestConstants;
 import frc.robot.util.LogManager;
 
 /** Represents a swerve drive style drivetrain.
@@ -38,9 +33,10 @@ import frc.robot.util.LogManager;
 */
 public class Drivetrain extends SubsystemBase {
 
-  private final Module[] m_modules;
+  // This is intentetionaly public
+  public final Module[] m_modules;
   
-  public final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
+  private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
     new Translation2d(DriveConstants.kTrackWidth / 2, DriveConstants.kTrackWidth / 2),
     new Translation2d(DriveConstants.kTrackWidth / 2, -DriveConstants.kTrackWidth / 2),
     new Translation2d(-DriveConstants.kTrackWidth / 2, DriveConstants.kTrackWidth / 2),
@@ -51,7 +47,7 @@ public class Drivetrain extends SubsystemBase {
   private final WPI_Pigeon2 m_pigeon = new WPI_Pigeon2(DriveConstants.kPigeon, Constants.kCanivoreCAN);
   private boolean m_hasResetYaw = false; // the initial yaw has been set 
 
-  public double m_headingPIDOutput = 0;
+  private double m_headingPIDOutput = 0;
 
   // Odometry
   private final SwerveDriveOdometry m_odometry;
@@ -66,7 +62,7 @@ public class Drivetrain extends SubsystemBase {
   private PIDController m_rotationController = new PIDController(DriveConstants.kHeadingP, DriveConstants.kHeadingI, DriveConstants.kHeadingD);
 
   //Shuffleboard
-  GenericEntry 
+  private GenericEntry 
     m_driveVelocity,
     m_steerVelocity, 
     m_steerAngle, 
@@ -76,17 +72,16 @@ public class Drivetrain extends SubsystemBase {
     m_steerStaticFeedforward,
     m_steerVelocityFeedforward,
     m_heading;
-  ShuffleboardTab m_swerveModulesTab, m_drivetrainTab;
+  private ShuffleboardTab m_swerveModulesTab, m_drivetrainTab;
 
-  public Double[] m_driveVelFeedForwardSaver = new Double[4];
-  public Double[] m_driveStaticFeedForwardSaver = new Double[4];
-  public Double[] m_steerVelFeedForwardSaver = new Double[4];
-  public Double[] m_steerStaticFeedForwardSaver = new Double[4];
+  private Double[] m_driveVelFeedForwardSaver = new Double[4];
+  private Double[] m_driveStaticFeedForwardSaver = new Double[4];
+  private Double[] m_steerVelFeedForwardSaver = new Double[4];
+  private Double[] m_steerStaticFeedForwardSaver = new Double[4];
   
+  private SendableChooser<Module> m_moduleChooser = new SendableChooser<>();
   // modules needed to distinguish in chooser
-  Module m_prevModule;
-  
-  SendableChooser<Module> m_moduleChooser = new SendableChooser<>();
+  private Module m_prevModule;
 
   public Drivetrain(ShuffleboardTab drivetrainTab, ShuffleboardTab swerveModulesTab) {
     LiveWindow.disableAllTelemetry();
@@ -124,14 +119,6 @@ public class Drivetrain extends SubsystemBase {
     updateOdometry();
     
     m_fieldDisplay.setRobotPose(getPose());
-  }
-  
-  public void runChassisPID(double x, double y, double rot) {
-    double xSpeed = m_xController.calculate(m_odometry.getPoseMeters().getX(), x);
-    double ySpeed = m_yController.calculate(m_odometry.getPoseMeters().getY(), y);
-    double rotRadians = m_rotationController.calculate(getAngleHeading(), rot);
-    // System.out.println(rotRadians);
-    driveRot(xSpeed, ySpeed, rotRadians, true);
   }
   
   public void setPigeonYaw(double degrees) {
@@ -178,6 +165,13 @@ public class Drivetrain extends SubsystemBase {
     SwerveModuleState[] swerveModuleStates = m_kinematics.toSwerveModuleStates(chassisSpeeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kMaxSpeed);
     setModuleStates(swerveModuleStates);
+  }
+  public void runChassisPID(double x, double y, double rot) {
+    double xSpeed = m_xController.calculate(m_odometry.getPoseMeters().getX(), x);
+    double ySpeed = m_yController.calculate(m_odometry.getPoseMeters().getY(), y);
+    double rotRadians = m_rotationController.calculate(getAngleHeading(), rot);
+    // System.out.println(rotRadians);
+    driveRot(xSpeed, ySpeed, rotRadians, true);
   }
   
   /** Updates the field relative position of the robot. */
@@ -263,77 +257,18 @@ public class Drivetrain extends SubsystemBase {
       m_modules[i].enableStateDeadband(stateDeadBand);
     }
   }
-  
-  public void stop() {
-    for (int i = 0; i < 4; i++) {
-      m_modules[i].stop();
-    }
-  }
-  
-  public void driveVoltsTest(double volts) {
-    // setAllOptimize(false);
-    for (int i = 0; i < 4; i++) {
-      m_modules[i].setDriveVoltage(volts);
-    }
-    m_modules[0].setSteerAngle(new Rotation2d(Units.degreesToRadians(135)));
-    m_modules[1].setSteerAngle(new Rotation2d(Units.degreesToRadians(45)));
-    m_modules[2].setSteerAngle(new Rotation2d(Units.degreesToRadians(225)));
-    m_modules[3].setSteerAngle(new Rotation2d(Units.degreesToRadians(315)));
-  }
-  public void steerVoltsTest(double volts) {
-    // setAllOptimize(false);
-    for (int i = 0; i < 4; i++) {
-      m_modules[i].setDriveVoltage(0);
-      m_modules[i].setSteerVoltage(volts);
-    }
-  }
-  public boolean isDriveVelocityAccurate() {
-    return 
-    Math.abs(m_modules[0].getDriveVelocityError()) < TestConstants.kDriveVelocityError &&
-    Math.abs(m_modules[1].getDriveVelocityError()) < TestConstants.kDriveVelocityError &&
-    Math.abs(m_modules[2].getDriveVelocityError()) < TestConstants.kDriveVelocityError &&
-    Math.abs(m_modules[3].getDriveVelocityError()) < TestConstants.kDriveVelocityError;
-  }
-  public boolean isSteerAngleAccurate() {
-    return 
-    Math.abs(m_modules[0].getSteerAngleError()) < TestConstants.kSteerAngleError &&
-    Math.abs(m_modules[1].getSteerAngleError()) < TestConstants.kSteerAngleError &&
-    Math.abs(m_modules[2].getSteerAngleError()) < TestConstants.kSteerAngleError &&
-    Math.abs(m_modules[3].getSteerAngleError()) < TestConstants.kSteerAngleError;
-  }
-  public double[] getDriveVelocities() {
-    return new double[] {
-      m_modules[0].getDriveVelocity(),
-      m_modules[1].getDriveVelocity(),
-      m_modules[2].getDriveVelocity(),
-      m_modules[3].getDriveVelocity()
-    };
-  }
-  public double[] getSteerVelocities() {
-    return new double[] {
-      m_modules[0].getSteerVelocity(),
-      m_modules[1].getSteerVelocity(),
-      m_modules[2].getSteerVelocity(),
-      m_modules[3].getSteerVelocity()
-    };
-  }
-  public void setSingleModuleSteerVolts(int module, double voltage) {
-    for (int i = 0; i < 4; i++) {
-      m_modules[i].setDriveVoltage(0);
-      if (module == i) {
-        m_modules[i].setSteerVoltage(voltage);
-      } else {
-        m_modules[i].setSteerVoltage(0);
-      }
-    }
-  }
   public void setAllOptimize(Boolean optimizeSate) {
     for (int i = 0; i < 4; i++) {
       m_modules[i].setOptimize(optimizeSate);
     }
   }
   
-  
+  public void stop() {
+    for (int i = 0; i < 4; i++) {
+      m_modules[i].stop();
+    }
+  }
+
   public PIDController getXController() {
     return m_xController;
   }
