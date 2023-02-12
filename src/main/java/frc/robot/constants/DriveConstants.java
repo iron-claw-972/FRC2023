@@ -149,30 +149,8 @@ public class DriveConstants {
     
   }
   
-  // PID
-  // Drive
-  public static final double kDriveP = 0;
-  public static final double kDriveI = 0;
-  public static final double kDriveD = 0;
-  
-  // Steer
-  public static final double kSteerP = 12; //SDS: 0.2
-  public static final double kSteerI = 0;
-  public static final double kSteerD = 0; //SDS: 0.1
-  
-  
-  
-  public static final double kDriveKSAll = 0.63107;
-  public static final double kDriveKVAll = 2.1592;
-  
-  // Steer
-  public static final double kSteerKS = 1;
-  public static final double kSteerKV = 0.5;
   // heading PID
   public static final double kHeadingP = 4.6;
   public static final double kHeadingI = 0;
   public static final double kHeadingD = 0.4;
-  
-  public static Double kSteerKSAll = 0.69;
-  public static Double kSteerKVAll = 0.37;
 }
