@@ -20,7 +20,6 @@ import frc.robot.controls.BaseDriverConfig;
 import frc.robot.controls.GameControllerDriverConfig;
 import frc.robot.controls.Operator;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.util.PathGroupLoader;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -34,42 +33,26 @@ public class RobotContainer {
   SendableChooser<Command> m_autoCommand = new SendableChooser<>();
 
   //shuffleboard tabs
-  private ShuffleboardTab m_mainTab;
-  private ShuffleboardTab m_drivetrainTab;
-  private ShuffleboardTab m_swerveModulesTab;
-  private ShuffleboardTab m_autoTab;
-  private ShuffleboardTab m_controllerTab;
-  private ShuffleboardTab m_testTab;
+  private ShuffleboardTab m_mainTab = Shuffleboard.getTab("Main");
+  private ShuffleboardTab m_drivetrainTab = Shuffleboard.getTab("Drive");
+  private ShuffleboardTab m_swerveModulesTab = Shuffleboard.getTab("Swerve Modules");
+  private ShuffleboardTab m_autoTab = Shuffleboard.getTab("Auto");
+  private ShuffleboardTab m_controllerTab = Shuffleboard.getTab("Controller");
+  private ShuffleboardTab m_testTab = Shuffleboard.getTab("Test");
 
   // The robot's subsystems are defined here...
-  private final Drivetrain m_drive;
+  private final Drivetrain m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab);
 
 
   // Controllers are defined here
-  private final BaseDriverConfig m_driver;
-  private final Operator m_operator;
+  private final BaseDriverConfig m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
+  private final Operator m_operator = new Operator();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-    m_mainTab = Shuffleboard.getTab("Main");
-    m_drivetrainTab = Shuffleboard.getTab("Drive");
-    m_swerveModulesTab = Shuffleboard.getTab("Swerve Modules");
-    m_autoTab = Shuffleboard.getTab("Auto");
-    m_controllerTab = Shuffleboard.getTab("Controller");
-    m_testTab = Shuffleboard.getTab("Test");
-    
-
-    m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab);
-
-    m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
-    m_operator = new Operator();
-
     // This is really annoying so it's disabled
     DriverStation.silenceJoystickConnectionWarning(true);
-
-    // load paths before auto starts
-    PathGroupLoader.loadPathGroups();
 
     m_driver.configureControls();
     m_operator.configureControls();
