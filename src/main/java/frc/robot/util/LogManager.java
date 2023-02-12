@@ -13,6 +13,10 @@ import edu.wpi.first.util.datalog.IntegerLogEntry;
 import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 
+/**
+ * Utilty class for logging data to the DataLogManager.
+ * View logs using MechanicalAdvantage's advantage scope (https://github.com/Mechanical-Advantage/AdvantageScope)
+ */
 public class LogManager {
 
   private static DataLog log = DataLogManager.getLog();

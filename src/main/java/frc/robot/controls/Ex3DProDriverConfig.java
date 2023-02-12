@@ -10,6 +10,9 @@ import lib.controllers.Ex3DProController;
 import lib.controllers.Ex3DProController.Ex3DProAxis;
 import lib.controllers.Ex3DProController.Ex3DProButton;
 
+/**
+ * Driver controls for the Ex3D Pro controller.
+ */
 public class Ex3DProDriverConfig extends BaseDriverConfig {
   
   private Ex3DProController driverEPC = new Ex3DProController(OIConstants.kDriverJoy);

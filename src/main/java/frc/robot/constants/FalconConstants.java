@@ -1,5 +1,8 @@
 package frc.robot.constants;
 
+/**
+ * Container class for falcon constants.
+ */
 public class FalconConstants {
 
   public static final int kFirmwareVersion = 5633; // version 22.1.1.0

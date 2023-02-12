@@ -4,10 +4,18 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.controls.BaseDriverConfig;
 import frc.robot.subsystems.Drivetrain;
 
+/**
+ * Default drive command. Drives robot using driver controls.
+ */
 public class DefaultDriveCommand extends CommandBase {
   private final Drivetrain m_drive;
   private final BaseDriverConfig m_driver;
   
+  /**
+   * Creates a new command.
+   * @param drive the drivetrain instance
+   * @param driver the driver controls instance
+   */
   public DefaultDriveCommand(Drivetrain drive, BaseDriverConfig driver) {
     m_drive = drive;
     m_driver = driver;
@@ -23,16 +31,7 @@ public class DefaultDriveCommand extends CommandBase {
     double xSpeed = m_driver.getForwardTranslation();
     double ySpeed = m_driver.getSideTranslation();
     double rot = m_driver.getRotation();
-    
-    // TODO: move heading drive to separate command
-    // if (Robot.shuffleboard.getTestModeType() == TestType.HEADING_DRIVE) {
-    //   rot = m_driveConfig.getHeading();
-    //   m_drive.driveHeading(xSpeed, ySpeed, rot); 
-    //   return;
-    // }
-    /*  System.out.println("driving: " + xSpeed + "," + ySpeed + "," + rot +
-    "," + m_driveConfig.getRawForwardTranslation() + "," + m_driveConfig.getRawSideTranslation() +","+ m_driveConfig.getRawRotation());
-    */
+
     m_drive.driveRot(xSpeed, ySpeed, rot, true);
   }
   

@@ -7,15 +7,22 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 
-
+/**
+ * Tests the odometry of the robot by driving a certain distance and calculating the error.
+ */
 public class OdometryTestCommand extends CommandBase {
-  Drivetrain m_drive; 
-  Pose2d m_startPose;
-  double m_startTime;
-  Pose2d m_finalPose;
-  Transform2d m_distanceToMove;
-  Pose2d m_error;
+
+  private Drivetrain m_drive; 
+  private Pose2d m_startPose;
+  private double m_startTime;
+  private Pose2d m_finalPose;
+  private Transform2d m_distanceToMove;
+  private Pose2d m_error;
   
+  /**
+   * Creates a new command.
+   * @param drive the drivetrain instance
+   */
   public OdometryTestCommand(Drivetrain drive, Transform2d distanceToMove) {
     m_drive = drive; 
     // finalPose is position after robot moves from current position-- startPose-- by the values that are inputted-- distanceToMove

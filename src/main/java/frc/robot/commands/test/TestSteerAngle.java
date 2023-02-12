@@ -8,12 +8,19 @@ import frc.robot.constants.TestConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.util.TimeAccuracyTest;
 
+/**
+ * Attempts to set all four modules to a constant angle. Determines if the modules are able to reach the angle requested in a certain time.
+ */
 public class TestSteerAngle extends CommandBase{
   
   private Drivetrain m_drive;
   private GenericEntry m_testEntry;
   private TimeAccuracyTest m_timeAccuracyTest;
 
+  /**
+   * Creates a new command.
+   * @param drive the drivetrain instance
+   */
   public TestSteerAngle(Drivetrain drive, GenericEntry testEntry) {
     m_drive = drive;
     m_testEntry = testEntry;

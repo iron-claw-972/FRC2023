@@ -8,16 +8,19 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.util.DynamicSlewRateLimiter;
 import frc.robot.util.Functions;
 
+/**
+ * Abstract class for different controller types.
+ */
 public abstract class BaseDriverConfig {
 
   private Drivetrain m_drive;
 
-  boolean m_shuffleboardUpdates = false;
+  private boolean m_shuffleboardUpdates = false;
 
-  ShuffleboardTab m_controllerTab;
-  GenericEntry m_translationalSenseitivityEntry, m_translationalExpoEntry, m_translationalDeadbandEntry, m_translationalSlewrateEntry;
-  GenericEntry m_rotationSenseitiviyEntry, m_rotationExpoEntry, m_rotationDeadbandEntry, m_rotationSlewrateEntry;
-  GenericEntry m_headingSenseitiviyEntry, m_headingExpoEntry, m_headingDeadbandEntry;
+  private ShuffleboardTab m_controllerTab;
+  private GenericEntry m_translationalSenseitivityEntry, m_translationalExpoEntry, m_translationalDeadbandEntry, m_translationalSlewrateEntry;
+  private GenericEntry m_rotationSenseitiviyEntry, m_rotationExpoEntry, m_rotationDeadbandEntry, m_rotationSlewrateEntry;
+  private GenericEntry m_headingSenseitiviyEntry, m_headingExpoEntry, m_headingDeadbandEntry;
 
   private double m_translationalSenseitivity = OIConstants.kTranslationalSensitivity;
   private double m_translationalExpo = OIConstants.kTranslationalExpo;
@@ -39,6 +42,11 @@ public abstract class BaseDriverConfig {
   private DynamicSlewRateLimiter m_rotLimiter = new DynamicSlewRateLimiter(m_rotationSlewrate);
   private DynamicSlewRateLimiter m_headingLimiter = new DynamicSlewRateLimiter(m_headingSenseitiviy);
 
+  /**
+   * @param drive the drivetrain instance
+   * @param controllerTab the shuffleboard controller tab
+   * @param shuffleboardUpdates whether or not to update the shuffleboard
+   */
   public BaseDriverConfig(Drivetrain drive, ShuffleboardTab controllerTab, boolean shuffleboardUpdates) {
     m_headingLimiter.setContinuousLimits(-Math.PI,Math.PI);
     m_headingLimiter.enableContinuous(true);
@@ -67,6 +75,9 @@ public abstract class BaseDriverConfig {
     return m_drive;
   }
 
+  /**
+   * Sets up shuffleboard values for the controller.
+   */
   public void setupShuffleboard() {
     if (!m_shuffleboardUpdates) return;
     
@@ -83,6 +94,9 @@ public abstract class BaseDriverConfig {
     m_headingDeadbandEntry = m_controllerTab.add("headingDeadband",OIConstants.kHeadingDeadband).getEntry();
   }
 
+  /**
+   * Updates the controller settings from shuffleboard.
+   */
   public void updateSettings() { //updates the shuffleboard data
     if (!m_shuffleboardUpdates) return;
 
@@ -101,6 +115,9 @@ public abstract class BaseDriverConfig {
     m_headingDeadband = m_headingDeadbandEntry.getDouble(OIConstants.kHeadingDeadband);
   }
 
+  /**
+   * Configures the controls for the controller.
+   */
   public abstract void configureControls();
   public abstract double getRawSideTranslation();
   public abstract double getRawForwardTranslation();

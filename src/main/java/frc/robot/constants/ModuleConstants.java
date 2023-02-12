@@ -3,6 +3,10 @@ package frc.robot.constants;
 import frc.robot.constants.DriveConstants.CompDriveConstants;
 import frc.robot.constants.DriveConstants.TestDriveConstants;
 
+/**
+ * Container class for module constants, defined using constants from {@link DriveConstants}.
+ * @see DriveConstants
+ */
 public enum ModuleConstants {
   
   TEST_FL(

@@ -7,11 +7,18 @@ import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 
+/**
+ * Drives robot in a circle. There is often drift due to inaccuracy.
+ */
 public class CircleDrive extends CommandBase {
   
   private Drivetrain m_drive;
   private double m_steerPosition = 0, m_prevTime;
   
+  /**
+   * Creates a new command.
+   * @param drive the drivetrain instance
+   */
   public CircleDrive(Drivetrain drive) {
     m_drive = drive;
     addRequirements(m_drive);
