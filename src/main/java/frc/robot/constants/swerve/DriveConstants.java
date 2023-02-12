@@ -109,7 +109,7 @@ public abstract class DriveConstants {
     public static String kEncoderCAN = "CANivore";
 
     static {
-        if (Constants.kRobotType == RobotType.COMP) {
+        if (Constants.kRobotType == RobotType.TEST) {
             kWheelRadius = Units.inchesToMeters(2);
 
             kTrackWidth = Units.inchesToMeters(22.75);//22.75 swerve bot, 20.75 comp bot
