@@ -4,12 +4,15 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.constants.TestConstants;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.util.TimeAccuracyTest;
 
 public class TestSteerAngle extends CommandBase{
   
-  Drivetrain m_drive;
-  GenericEntry m_testEntry;
+  private Drivetrain m_drive;
+  private GenericEntry m_testEntry;
+  private TimeAccuracyTest m_timeAccuracyTest;
 
   public TestSteerAngle(Drivetrain drive, GenericEntry testEntry) {
     m_drive = drive;
@@ -21,6 +24,11 @@ public class TestSteerAngle extends CommandBase{
   public void initialize() {
     m_drive.setAllOptimize(false);
     m_drive.enableStateDeadband(false);
+    m_timeAccuracyTest = new TimeAccuracyTest(
+      () -> m_drive.isDriveVelocityAccurate(),
+      () -> m_drive.getRequestedSteerVelocityEntry().getDouble(0),
+      TestConstants.kSteerAngleTimeError
+    );
   }
   
   @Override
@@ -31,7 +39,7 @@ public class TestSteerAngle extends CommandBase{
       new SwerveModuleState(0, new Rotation2d(m_drive.getRequestedSteerVelocityEntry().getDouble(0))),
       new SwerveModuleState(0, new Rotation2d(m_drive.getRequestedSteerVelocityEntry().getDouble(0)))
     });
-    m_testEntry.setBoolean(m_drive.isSteerAngleAccurate());
+    m_testEntry.setBoolean(m_timeAccuracyTest.calculate());
   }
   
   @Override

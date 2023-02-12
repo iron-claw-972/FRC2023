@@ -5,12 +5,15 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.constants.TestConstants;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.util.TimeAccuracyTest;
 
 public class TestDriveVelocity extends CommandBase{
   
   private Drivetrain m_drive;
   private GenericEntry m_testEntry;
+  private TimeAccuracyTest m_timeAccuracyTest;
   
   public TestDriveVelocity(Drivetrain drive, GenericEntry testEntry) {
     m_drive = drive;
@@ -21,6 +24,11 @@ public class TestDriveVelocity extends CommandBase{
   @Override
   public void initialize() {
     m_drive.setAllOptimize(false);
+    m_timeAccuracyTest = new TimeAccuracyTest(
+      () -> m_drive.isDriveVelocityAccurate(), 
+      () -> m_drive.getRequestedDriveVelocityEntry().getDouble(0), 
+      TestConstants.kDriveVelocityTimeError
+    );
     
   }
   
@@ -32,7 +40,7 @@ public class TestDriveVelocity extends CommandBase{
       new SwerveModuleState(m_drive.getRequestedDriveVelocityEntry().getDouble(0), new Rotation2d(Units.degreesToRadians(225))),
       new SwerveModuleState(m_drive.getRequestedDriveVelocityEntry().getDouble(0), new Rotation2d(Units.degreesToRadians(315)))
     });
-    m_testEntry.setBoolean(m_drive.isDriveVelocityAccurate());
+    m_testEntry.setBoolean(m_timeAccuracyTest.calculate());
   }
   
   @Override

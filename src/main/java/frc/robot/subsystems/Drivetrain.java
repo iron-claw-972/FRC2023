@@ -26,6 +26,7 @@ import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.constants.DriveConstants;
 import frc.robot.constants.ModuleConstants;
+import frc.robot.constants.TestConstants;
 import frc.robot.util.LogManager;
 
 /** Represents a swerve drive style drivetrain.
@@ -287,18 +288,18 @@ public class Drivetrain extends SubsystemBase {
   }
   public boolean isDriveVelocityAccurate() {
     return 
-    Math.abs(m_modules[0].getDriveVelocityError()) < 0.1 &&
-    Math.abs(m_modules[1].getDriveVelocityError()) < 0.1 &&
-    Math.abs(m_modules[2].getDriveVelocityError()) < 0.1 &&
-    Math.abs(m_modules[3].getDriveVelocityError()) < 0.1;
+    Math.abs(m_modules[0].getDriveVelocityError()) < TestConstants.kDriveVelocityError &&
+    Math.abs(m_modules[1].getDriveVelocityError()) < TestConstants.kDriveVelocityError &&
+    Math.abs(m_modules[2].getDriveVelocityError()) < TestConstants.kDriveVelocityError &&
+    Math.abs(m_modules[3].getDriveVelocityError()) < TestConstants.kDriveVelocityError;
   }
   
   public boolean isSteerAngleAccurate() {
     return 
-    Math.abs(m_modules[0].getSteerAngleError()) < Units.degreesToRadians(1) &&
-    Math.abs(m_modules[1].getSteerAngleError()) < Units.degreesToRadians(1) &&
-    Math.abs(m_modules[2].getSteerAngleError()) < Units.degreesToRadians(1) &&
-    Math.abs(m_modules[3].getSteerAngleError()) < Units.degreesToRadians(1);
+    Math.abs(m_modules[0].getSteerAngleError()) < TestConstants.kSteerAngleError &&
+    Math.abs(m_modules[1].getSteerAngleError()) < TestConstants.kSteerAngleError &&
+    Math.abs(m_modules[2].getSteerAngleError()) < TestConstants.kSteerAngleError &&
+    Math.abs(m_modules[3].getSteerAngleError()) < TestConstants.kSteerAngleError;
   }
   
   public double[] getDriveVelocities() {

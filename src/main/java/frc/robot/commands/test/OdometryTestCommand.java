@@ -40,7 +40,7 @@ public class OdometryTestCommand extends CommandBase {
   public boolean isFinished() {
     // TODO: the current PID values don't allow the command to finish
     double errorMarginMeters = 0.1;
-    double errorMarginRadians = Units.degreesToRadians(10); 
+    double errorMarginRadians = Units.degreesToRadians(10);
     m_error = m_drive.getPose().relativeTo(m_finalPose);
     // if robot thinks its precision is < 0.1 to the target we inputted, it will stop, so then we can see how off it is
     return Math.abs(m_error.getX()) < errorMarginMeters && Math.abs(m_error.getY()) < errorMarginMeters && Math.abs(m_error.getRotation().getRadians()) < errorMarginRadians;

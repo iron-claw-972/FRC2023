@@ -2,6 +2,7 @@ package frc.robot.commands.test;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.constants.TestConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.util.FeedForwardCharacterizationData;
 
@@ -32,14 +33,14 @@ public class DriveFeedForwardCharacterization extends CommandBase {
   
   public void execute() {
     m_drive.driveVoltsTest(m_voltage);
-    if (m_timer.get() > 0.5) {
+    if (m_timer.get() > TestConstants.kDriveFeedForwardAccelerationTimeBuffer) {
       for (int i=0; i<4; i++) {
         m_feedForwardCharacterizationData[i].add(m_drive.getDriveVelocities()[i], m_voltage); 
       }
     }
 
-    if (m_timer.get() >= 2.0) {
-      m_voltage += 0.2;
+    if (m_timer.get() >= TestConstants.kDriveFeedForwardAccelerationTimeBuffer + TestConstants.kDriveFeedForwardRecordingTime) {
+      m_voltage += TestConstants.kDriveFeedForwardVoltageStep;
       m_timer.reset();
       m_timer.start();
       System.out.println(m_voltage);
@@ -69,6 +70,6 @@ public class DriveFeedForwardCharacterization extends CommandBase {
   public boolean isFinished() {
     m_drive.setAllOptimize(true);
     //System.out.println(value > 11);
-    return m_voltage > 11;
+    return m_voltage > TestConstants.kDriveFeedForwardMaxVoltage;
   }
 }

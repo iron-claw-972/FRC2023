@@ -3,6 +3,7 @@ package frc.robot.commands.test;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.constants.TestConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Module;
 import frc.robot.util.FeedForwardCharacterizationData;
@@ -34,11 +35,11 @@ public class SteerFeedForwardCharacterizationSingle extends CommandBase {
     m_module.setDriveVoltage(0);
     m_module.setSteerVoltage(m_voltage);
     
-    if (m_timer.get() > 0.5) {
+    if (m_timer.get() > TestConstants.kSteerFeedForwardAccelerationTimeBuffer) {
       m_feedForwardCharacterizationData.add(m_module.getSteerVelocity(), m_voltage);
     }
-    if (m_timer.get() > 2.5) {
-      m_voltage += 0.2;
+    if (m_timer.get() > TestConstants.kSteerFeedForwardAccelerationTimeBuffer + TestConstants.kSteerFeedForwardRecordingTime) {
+      m_voltage += TestConstants.kSteerFeedForwardVoltageStep;
       m_timer.reset();
       m_timer.start();
       System.out.println(m_voltage);
@@ -66,6 +67,6 @@ public class SteerFeedForwardCharacterizationSingle extends CommandBase {
   public boolean isFinished() {
     m_drive.setAllOptimize(true);
     //System.out.println(value > 11);
-    return m_voltage > 6;
+    return m_voltage > TestConstants.kSteerFeedForwardMaxVoltage;
   }
 }
