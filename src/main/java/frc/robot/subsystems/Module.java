@@ -100,6 +100,10 @@ public class Module {
 
   private SimpleMotorFeedforward m_driveFeedforward;
   private SimpleMotorFeedforward m_steerFeedForward;
+  private double m_driveFeedForwardKS;
+  private double m_driveFeedForwardKV;
+  private double m_steerFeedForwardKS;
+  private double m_steerFeedForwardKV;
       
   private double m_offset = 0.0;
   
@@ -210,8 +214,13 @@ public class Module {
 
     m_steerPIDController.reset(getSteerAngle()); // reset the PID, and the Trapezoid motion profile needs to know the starting state
 
-    m_driveFeedforward = new SimpleMotorFeedforward(driveFeedForwardKS, driveFeedForwardKV);
-    m_steerFeedForward = new SimpleMotorFeedforward(steerFeedForwardKS, steerFeedForwardKV);
+    m_driveFeedForwardKS = driveFeedForwardKS;
+    m_driveFeedForwardKV = driveFeedForwardKV;
+    m_steerFeedForwardKS = steerFeedForwardKS;
+    m_steerFeedForwardKV = steerFeedForwardKV;
+
+    m_driveFeedforward = new SimpleMotorFeedforward(m_driveFeedForwardKS, m_driveFeedForwardKV);
+    m_steerFeedForward = new SimpleMotorFeedforward(m_steerFeedForwardKS, m_steerFeedForwardKV);
   
     LogManager.addDouble(m_steerMotor.getDescription() + " Steer Absolute Position", () -> m_encoder.getAbsolutePosition());
     LogManager.addDouble(m_steerMotor.getDescription() + " Steer Velocity", () -> getSteerVelocity());
@@ -372,10 +381,14 @@ public class Module {
    * @param velocityFeedForward velocity feedforward value from Shuffleboard
    */
   public void setDriveFeedForwardValues(double staticFeedforward, double velocityFeedForward) {
+    m_steerFeedForwardKS = staticFeedforward;
+    m_steerFeedForwardKV = velocityFeedForward;
     m_driveFeedforward = new SimpleMotorFeedforward(staticFeedforward, velocityFeedForward);
   }
 
   public void setSteerFeedForwardValues(double staticFeedforward, double velocityFeedForward) {
+    m_steerFeedForwardKS = staticFeedforward;
+    m_steerFeedForwardKV = velocityFeedForward;
     m_steerFeedForward= new SimpleMotorFeedforward(staticFeedforward, velocityFeedForward);
   }
   
@@ -457,6 +470,19 @@ public class Module {
 
   public Rotation2d getDesieredAngle(){
     return m_desieredState.angle;
+  }
+
+  public double getDriveFeedForwardKS(){
+    return m_driveFeedForwardKS;
+  }
+  public double getDriveFeedForwardKV(){
+    return m_driveFeedForwardKV;
+  }
+  public double getSteerFeedForwardKS(){
+    return m_steerFeedForwardKS;
+  }
+  public double getSteerFeedForwardKV(){
+    return m_steerFeedForwardKV;
   }
   
   public void setupModulesShuffleboard(){

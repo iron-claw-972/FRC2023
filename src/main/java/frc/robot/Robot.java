@@ -48,6 +48,8 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
 
     LogManager.log();
+
+    m_robotContainer.shuffleboardUpdates();
   }
 
   /**

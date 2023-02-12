@@ -1,4 +1,4 @@
-package frc.robot.commands.auto;
+package frc.robot.commands.test;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -10,11 +10,11 @@ import frc.robot.subsystems.Drivetrain;
 
 public class OdometryTestCommand extends CommandBase{
   Drivetrain m_drive; 
-  Pose2d startPose;
-  double startTime;
+  Pose2d m_startPose;
+  double m_startTime;
   Pose2d m_finalPose;
   Transform2d m_distanceToMove;
-  Pose2d error;
+  Pose2d m_error;
     
     public OdometryTestCommand(Drivetrain drive, Transform2d distanceToMove) {
       m_drive = drive; 
@@ -27,9 +27,9 @@ public class OdometryTestCommand extends CommandBase{
     @Override
     public void initialize() {
        
-        startTime = Timer.getFPGATimestamp();
-        startPose = m_drive.getPose();
-        m_finalPose = startPose.transformBy(m_distanceToMove);
+        m_startTime = Timer.getFPGATimestamp();
+        m_startPose = m_drive.getPose();
+        m_finalPose = m_startPose.transformBy(m_distanceToMove);
     }
     @Override
     public void execute() {
@@ -39,19 +39,20 @@ public class OdometryTestCommand extends CommandBase{
     }
     @Override
     public boolean isFinished() {
+        // TODO: the current PID values don't allow the command to finish
         double errorMarginMeters = 0.1;
-        double errorMarginRadians = Units.degreesToRadians(2); 
-        Pose2d error = m_drive.getPose().relativeTo(m_finalPose);
+        double errorMarginRadians = Units.degreesToRadians(10); 
+        m_error = m_drive.getPose().relativeTo(m_finalPose);
         // if robot thinks its precision is < 0.1 to the target we inputted, it will stop, so then we can see how off it is
-        return Math.abs(error.getX()) < errorMarginMeters && Math.abs(error.getY()) < errorMarginMeters && Math.abs(error.getRotation().getRadians()) < errorMarginRadians;
+        return Math.abs(m_error.getX()) < errorMarginMeters && Math.abs(m_error.getY()) < errorMarginMeters && Math.abs(m_error.getRotation().getRadians()) < errorMarginRadians;
     }
     @Override
   public void end(boolean interrupted) {
-    m_drive.driveRot(0.0,0.0,0.0,false);
-    System.out.println(Timer.getFPGATimestamp() - startTime);
-    System.out.println(error.getX());
-    System.out.println(error.getY());
-    System.out.println(error.getRotation().getRadians());
+    m_drive.stop();
+    System.out.println(Timer.getFPGATimestamp() - m_startTime);
+    System.out.println(m_error.getX());
+    System.out.println(m_error.getY());
+    System.out.println(m_error.getRotation().getRadians());
   
   }
 

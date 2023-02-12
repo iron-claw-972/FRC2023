@@ -88,6 +88,8 @@ public class SteerFeedForwardCharacterzationAll extends CommandBase {
       System.out.println("Static " + i + ": " + m_feedForwardCharacterizationData[i].getStatic());
       System.out.println("Velocity " + i + ": " + m_feedForwardCharacterizationData[i].getVelocity());
     }
+    m_drive.getSteerStaticFeedforwardEntry().setDouble(m_drive.getSteerStaticFeedforwardArray()[m_drive.getModuleChooser().getSelected().getModuleType().getID()]);
+    m_drive.getSteerVelocityFeedforwardEntry().setDouble(m_drive.getSteerVelocityFeedforwardArray()[m_drive.getModuleChooser().getSelected().getModuleType().getID()]);
     
     m_drive.stop();
     

@@ -14,6 +14,8 @@ public class TestDriveVelocity extends CommandBase{
 
     public TestDriveVelocity(Drivetrain drive, GenericEntry driveVelocityEntry, GenericEntry testEntry){
         m_drive = drive;
+        m_driveVelocityEntry = driveVelocityEntry;
+        m_testEntry = testEntry;
         addRequirements(m_drive);
     }
 

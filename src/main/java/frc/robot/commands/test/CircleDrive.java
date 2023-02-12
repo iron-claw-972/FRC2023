@@ -25,6 +25,7 @@ public class CircleDrive extends CommandBase{
     @Override
     public void initialize() {
         m_prevTime = WPIUtilJNI.now() * 1e-6;
+        m_steerPosition = 0;
     }
 
     @Override

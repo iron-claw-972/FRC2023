@@ -60,15 +60,18 @@ public class SteerFeedForwardCharacterzationSingle extends CommandBase {
   public void end(boolean interrupted) {
     System.out.println("FINISHED");
  
-      m_feedForwardCharacterizationData.print();
-    
-      m_drive.getSteerStaticFeedforwardArray()[m_module.getModuleType().getID()] = m_feedForwardCharacterizationData.getStatic();
-      m_drive.getSteerVelocityFeedforwardArray()[m_module.getModuleType().getID()] = m_feedForwardCharacterizationData.getVelocity();
-      System.out.println("Static " + ": " + m_feedForwardCharacterizationData.getStatic());
-      System.out.println("Velocity " + ": " + m_feedForwardCharacterizationData.getVelocity());
+    m_feedForwardCharacterizationData.print();
+  
+    m_drive.getSteerStaticFeedforwardArray()[m_module.getModuleType().getID()] = m_feedForwardCharacterizationData.getStatic();
+    m_drive.getSteerVelocityFeedforwardArray()[m_module.getModuleType().getID()] = m_feedForwardCharacterizationData.getVelocity();
+    System.out.println("Static " + ": " + m_feedForwardCharacterizationData.getStatic());
+    System.out.println("Velocity " + ": " + m_feedForwardCharacterizationData.getVelocity());
 
-      m_module.setDriveVoltage(0);
-      m_module.setSteerVoltage(0);
+    m_module.setDriveVoltage(0);
+    m_module.setSteerVoltage(0);
+    
+    m_drive.getSteerStaticFeedforwardEntry().setDouble(m_drive.getSteerStaticFeedforwardArray()[m_moduleChooser.getSelected().getModuleType().getID()]);
+    m_drive.getSteerVelocityFeedforwardEntry().setDouble(m_drive.getSteerVelocityFeedforwardArray()[m_moduleChooser.getSelected().getModuleType().getID()]);
   }
 
   public boolean isFinished() {

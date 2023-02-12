@@ -1,5 +1,8 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -114,6 +117,7 @@ public class RobotContainer {
     m_testTab.add("Test Drive Velocity", new TestDriveVelocity(m_drive, m_drive.getRequestedDriveVelocityEntry(), testEntry));
     m_testTab.add("Heading PID", new TestHeadingPID(m_drive, m_drive.getRequestedHeadingEntry()));
     m_testTab.add("Steer angle", new TestSteerAngle(m_drive, m_drive.getRequestedSteerAngleEntry(), testEntry));
+    m_testTab.add("Odometry Test", new OdometryTestCommand(m_drive, new Transform2d(new Translation2d(1,1), new Rotation2d(Math.PI))));
   }
 
   /**
@@ -136,5 +140,10 @@ public class RobotContainer {
     CommandScheduler.getInstance().onCommandInitialize(command -> Shuffleboard.addEventMarker("Command initialized", command.getName(), EventImportance.kNormal));
     CommandScheduler.getInstance().onCommandInterrupt(command -> Shuffleboard.addEventMarker("Command interrupted", command.getName(), EventImportance.kNormal));
     CommandScheduler.getInstance().onCommandFinish(command -> Shuffleboard.addEventMarker("Command finished", command.getName(), EventImportance.kNormal));
+  }
+
+  public void shuffleboardUpdates(){
+    m_drive.updateDriveModuleFeedforwardShuffleboard();
+    m_drive.updateDriveModuleFeedforwardShuffleboard();
   }
 }
