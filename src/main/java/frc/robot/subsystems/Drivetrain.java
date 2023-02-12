@@ -33,7 +33,7 @@ import frc.robot.util.LogManager;
 */
 public class Drivetrain extends SubsystemBase {
 
-  // This is intentetionaly public
+  // This is intentionally public
   public final Module[] m_modules;
   
   private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
