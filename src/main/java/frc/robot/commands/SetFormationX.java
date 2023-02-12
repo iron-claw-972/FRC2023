@@ -10,12 +10,12 @@ import frc.robot.subsystems.Drivetrain;
 public class SetFormationX extends CommandBase {
   Drivetrain m_drive;
 
-  public SetFormationX(Drivetrain drive){
+  public SetFormationX(Drivetrain drive) {
     this.m_drive=drive;
     addRequirements(drive);
   }
 
-  public void execute(){
+  public void execute() {
     m_drive.setModuleStates(new SwerveModuleState[] {
       new SwerveModuleState(0.01, new Rotation2d(Units.degreesToRadians(-45))),
       new SwerveModuleState(0.01, new Rotation2d(Units.degreesToRadians(45))),

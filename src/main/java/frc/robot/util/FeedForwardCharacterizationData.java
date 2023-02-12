@@ -24,15 +24,15 @@ public class FeedForwardCharacterizationData {
     );
   }
 
-  public double getStatic(){
+  public double getStatic() {
     return m_regression.beta(0);
   }
 
-  public double getVelocity(){
+  public double getVelocity() {
     return m_regression.beta(1);
   }
   
-  public double getVariance(){
+  public double getVariance() {
     return m_regression.R2();
   }
 }

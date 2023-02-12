@@ -11,7 +11,7 @@ public class TestSteerAngle extends CommandBase{
   Drivetrain m_drive;
   GenericEntry m_testEntry;
 
-  public TestSteerAngle(Drivetrain drive, GenericEntry testEntry){
+  public TestSteerAngle(Drivetrain drive, GenericEntry testEntry) {
     m_drive = drive;
     m_testEntry = testEntry;
     addRequirements(m_drive);
