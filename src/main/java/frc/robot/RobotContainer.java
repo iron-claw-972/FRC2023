@@ -35,15 +35,15 @@ import frc.robot.subsystems.Drivetrain;
 public class RobotContainer {
 
   // Shuffleboard auto chooser
-  SendableChooser<Command> m_autoCommand = new SendableChooser<>();
+  private final SendableChooser<Command> m_autoCommand = new SendableChooser<>();
 
   //shuffleboard tabs
-  private ShuffleboardTab m_mainTab = Shuffleboard.getTab("Main");
-  private ShuffleboardTab m_drivetrainTab = Shuffleboard.getTab("Drive");
-  private ShuffleboardTab m_swerveModulesTab = Shuffleboard.getTab("Swerve Modules");
-  private ShuffleboardTab m_autoTab = Shuffleboard.getTab("Auto");
-  private ShuffleboardTab m_controllerTab = Shuffleboard.getTab("Controller");
-  private ShuffleboardTab m_testTab = Shuffleboard.getTab("Test");
+  private final ShuffleboardTab m_mainTab = Shuffleboard.getTab("Main");
+  private final ShuffleboardTab m_drivetrainTab = Shuffleboard.getTab("Drive");
+  private final ShuffleboardTab m_swerveModulesTab = Shuffleboard.getTab("Swerve Modules");
+  private final ShuffleboardTab m_autoTab = Shuffleboard.getTab("Auto");
+  private final ShuffleboardTab m_controllerTab = Shuffleboard.getTab("Controller");
+  private final ShuffleboardTab m_testTab = Shuffleboard.getTab("Test");
 
   // The robot's subsystems are defined here...
   private final Drivetrain m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab);
