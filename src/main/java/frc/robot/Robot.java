@@ -47,7 +47,7 @@ public class Robot extends TimedRobot {
     // match the string to an RobotId
     for (RobotId rid : RobotId.values()) {
       // does it match the preference string?
-      if (0 == strId.compareTo(rid.toString())) {
+      if (strId.equals(rid.toString())) {
         // yes, so it is the RobotId
         robotId = rid;
       }
