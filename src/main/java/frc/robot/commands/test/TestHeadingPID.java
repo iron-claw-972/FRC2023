@@ -3,7 +3,6 @@ package frc.robot.commands.test;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.DriveConstants;
 import frc.robot.subsystems.Drivetrain;
@@ -11,19 +10,17 @@ import frc.robot.subsystems.Drivetrain;
 public class TestHeadingPID extends CommandBase {
   
   Drivetrain m_drive;
-  GenericEntry m_headingAngleEntry;
   
   // TODO: return if in error bound
-  public TestHeadingPID(Drivetrain drive, GenericEntry headingAngleEntry) {
+  public TestHeadingPID(Drivetrain drive){
     m_drive = drive;
-    m_headingAngleEntry = headingAngleEntry;
     addRequirements(m_drive);
   }
   
   @Override
   public void execute() {
     m_drive.setAllOptimize(false);
-    m_drive.m_headingPIDOutput = m_drive.getRotationController().calculate(m_drive.getAngleHeading(), m_headingAngleEntry.getDouble(0));
+    m_drive.m_headingPIDOutput = m_drive.getRotationController().calculate(m_drive.getAngleHeading(), m_drive.getRequestedHeadingEntry().getDouble(0));
     
     // headingOutput is in rad/s. Need to convert to m/s by multiplying by radius
     m_drive.m_headingPIDOutput *= Math.sqrt(0.5) * DriveConstants.kTrackWidth;

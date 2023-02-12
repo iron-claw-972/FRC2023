@@ -8,8 +8,7 @@ import frc.robot.util.FeedForwardCharacterizationData;
 
 /** Add your docs here. */
 public class DriveFeedForwardCharacterzation extends CommandBase {
-
-  double value = 0;
+  double m_voltage = 0;
   FeedForwardCharacterizationData[] m_feedForwardCharacterizationData;
   
   Timer m_timer = new Timer();
@@ -34,22 +33,21 @@ public class DriveFeedForwardCharacterzation extends CommandBase {
   public void execute() {
     runCharacterizationVolts();
     if (m_timer.get() > 0.5) {
-      for (int i = 0; i < 4; i++) {
-        m_feedForwardCharacterizationData[i].add(m_drive.getDriveVelocities()[i], value); 
+      for (int i=0; i<4; i++){
+        m_feedForwardCharacterizationData[i].add(m_drive.getDriveVelocities()[i], m_voltage); 
       }
     }
 
     if (m_timer.get() >= 2.0) {
-      value += 0.2;
+      m_voltage += 0.2;
       m_timer.reset();
       m_timer.start();
-      System.out.println(value);
+      System.out.println(m_voltage);
     }
-    
   }
   
   private void runCharacterizationVolts() {
-    m_drive.driveVoltsTest(value);
+    m_drive.driveVoltsTest(m_voltage);
   }
   
   public void end(boolean interrupted) {
@@ -63,6 +61,7 @@ public class DriveFeedForwardCharacterzation extends CommandBase {
       m_drive.getDriveVelocityFeedforwardArray()[i] = m_feedForwardCharacterizationData[i].getVelocity();
       System.out.println("Static " + i + ": " + m_feedForwardCharacterizationData[i].getStatic());
       System.out.println("Velocity " + i + ": " + m_feedForwardCharacterizationData[i].getVelocity());
+      System.out.println("Variance " + i + ": " + m_feedForwardCharacterizationData[i].getVariance());
     }
     
     m_drive.getDriveStaticFeedforwardEntry().setDouble(m_drive.getDriveStaticFeedforwardArray()[m_drive.getModuleChooser().getSelected().getModuleType().getID()]);
@@ -73,8 +72,6 @@ public class DriveFeedForwardCharacterzation extends CommandBase {
   
   public boolean isFinished() {
     //System.out.println(value > 11);
-    return value > 11;
+    return m_voltage > 11;
   }
-  
-  
 }

@@ -26,7 +26,6 @@ import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.constants.DriveConstants;
 import frc.robot.constants.ModuleConstants;
-import frc.robot.constants.DriveConstants.TestDriveConstants;
 import frc.robot.util.LogManager;
 
 /** Represents a swerve drive style drivetrain.
@@ -37,18 +36,9 @@ import frc.robot.util.LogManager;
 * 4: Back right
 */
 public class Drivetrain extends SubsystemBase {
-  
-  // Swerve modules and other
-  public SwerveModuleState[] m_swerveModuleStates = new SwerveModuleState[] {
-    new SwerveModuleState(),
-    new SwerveModuleState(),
-    new SwerveModuleState(),
-    new SwerveModuleState()
-  };
 
   private final Module[] m_modules;
-
-  // TODO: Should this be public?
+  
   public final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
     new Translation2d(DriveConstants.kTrackWidth / 2, DriveConstants.kTrackWidth / 2),
     new Translation2d(DriveConstants.kTrackWidth / 2, -DriveConstants.kTrackWidth / 2),
@@ -85,13 +75,14 @@ public class Drivetrain extends SubsystemBase {
     m_steerStaticFeedforward,
     m_steerVelocityFeedforward,
     m_heading;
-  ShuffleboardTab m_swerveModulesTab,m_drivetrainTab;
+  ShuffleboardTab m_swerveModulesTab, m_drivetrainTab;
 
   public Double[] m_driveVelFeedForwardSaver = new Double[4];
   public Double[] m_driveStaticFeedForwardSaver = new Double[4];
   public Double[] m_steerVelFeedForwardSaver = new Double[4];
   public Double[] m_steerStaticFeedForwardSaver = new Double[4];
-  // modules needed to distigue in chooser
+  
+  // modules needed to distinguish in chooser
   Module m_prevModule;
   
   SendableChooser<Module> m_moduleChooser = new SendableChooser<>();
@@ -110,7 +101,7 @@ public class Drivetrain extends SubsystemBase {
     m_prevModule = m_modules[0];
     
     m_odometry = new SwerveDriveOdometry(m_kinematics, m_pigeon.getRotation2d(), getModulePositions(), m_robotPose);
-    m_rotationController.enableContinuousInput(-Math.PI,Math.PI);
+    m_rotationController.enableContinuousInput(-Math.PI, Math.PI);
     DoubleSupplier[] poseSupplier = {() -> getPose().getX(), () -> getPose().getY(), () -> getPose().getRotation().getRadians()};
     LogManager.addDoubleArray("Pose2d", poseSupplier);
     
@@ -126,6 +117,10 @@ public class Drivetrain extends SubsystemBase {
         m_modules[i].periodic();
       }
     }
+
+    updateDriveModuleFeedforwardShuffleboard();
+    updateDriveModuleFeedforwardShuffleboard();
+
     updateOdometry();
     
     m_fieldDisplay.setRobotPose(getPose());
@@ -162,28 +157,26 @@ public class Drivetrain extends SubsystemBase {
   * @param fieldRelative whether the provided x and y speeds are relative to the field
   */
   public void driveRot(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
-    
-    
-    m_swerveModuleStates =
-    m_kinematics.toSwerveModuleStates(
-    fieldRelative
-    ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_pigeon.getRotation2d())
-    : new ChassisSpeeds(xSpeed, ySpeed, rot));
-    SwerveDriveKinematics.desaturateWheelSpeeds(m_swerveModuleStates, DriveConstants.kMaxSpeed);
-    setModuleStates(m_swerveModuleStates);
+    SwerveModuleState[] swerveModuleStates =
+        m_kinematics.toSwerveModuleStates(
+            fieldRelative
+                ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_pigeon.getRotation2d())
+                : new ChassisSpeeds(xSpeed, ySpeed, rot));
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kMaxSpeed);
+    setModuleStates(swerveModuleStates);
   }
   
   public void driveHeading(double xSpeed, double ySpeed, double heading, boolean fieldRelative) {
     m_headingPIDOutput = m_rotationController.calculate(getAngleHeading(),heading);
     double rot = m_headingPIDOutput;
-    
-    m_swerveModuleStates =
-    m_kinematics.toSwerveModuleStates(
-    fieldRelative
-    ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_pigeon.getRotation2d())
-    : new ChassisSpeeds(xSpeed, ySpeed, rot));
-    SwerveDriveKinematics.desaturateWheelSpeeds(m_swerveModuleStates, DriveConstants.kMaxSpeed);
-    setModuleStates(m_swerveModuleStates);
+
+    SwerveModuleState[] swerveModuleStates =
+        m_kinematics.toSwerveModuleStates(
+            fieldRelative
+                ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_pigeon.getRotation2d())
+                : new ChassisSpeeds(xSpeed, ySpeed, rot));
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kMaxSpeed);
+    setModuleStates(swerveModuleStates);
   }
   
   /** Updates the field relative position of the robot. */
@@ -332,9 +325,9 @@ public class Drivetrain extends SubsystemBase {
   }
   
   public void setChassisSpeeds(ChassisSpeeds chassisSpeeds) {
-    m_swerveModuleStates = m_kinematics.toSwerveModuleStates(chassisSpeeds);
-    SwerveDriveKinematics.desaturateWheelSpeeds(m_swerveModuleStates, DriveConstants.kMaxSpeed);
-    setModuleStates(m_swerveModuleStates);
+    SwerveModuleState[] swerveModuleStates = m_kinematics.toSwerveModuleStates(chassisSpeeds);
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kMaxSpeed);
+    setModuleStates(swerveModuleStates);
   }
   
   public PIDController getXController() {
@@ -397,7 +390,7 @@ public class Drivetrain extends SubsystemBase {
       m_modules[i].setupModulesShuffleboard();
     }
   }
-  
+
   private void setUpFeedforwardSavers() {
     m_driveStaticFeedForwardSaver = new Double[]{
       m_modules[0].getDriveFeedForwardKS(),
