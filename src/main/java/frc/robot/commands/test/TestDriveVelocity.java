@@ -10,12 +10,19 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Module;
 import frc.robot.util.TimeAccuracyTest;
 
+/**
+ * Attempts to run all four modules at constant velocity. Determines if the modules are able to reach the velocity requested in a certain time.
+ */
 public class TestDriveVelocity extends CommandBase{
   
   private Drivetrain m_drive;
   private GenericEntry m_testEntry;
   private TimeAccuracyTest[] m_timeAccuracyTests = new TimeAccuracyTest[4];
   
+  /**
+   * Creates a new command.
+   * @param drive the drivetrain instance
+   */
   public TestDriveVelocity(Drivetrain drive, GenericEntry testEntry) {
     m_drive = drive;
     m_testEntry = testEntry;

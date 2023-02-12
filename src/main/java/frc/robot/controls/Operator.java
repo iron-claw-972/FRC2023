@@ -5,6 +5,7 @@ import frc.robot.constants.OIConstants;
 import lib.controllers.GameController;
 import lib.controllers.GameController.GCButton;
 
+// TODO
 public class Operator {
   private GameController operator = new GameController(OIConstants.kOperatorJoy);
 

@@ -2,6 +2,9 @@ package frc.robot.constants;
 
 import edu.wpi.first.math.util.Units;
 
+/**
+ * Container class for testing constants.
+ */
 public class TestConstants {
   
   public static double kTranslationError = 0.05;

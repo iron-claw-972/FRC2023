@@ -8,17 +8,23 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Module;
 import frc.robot.util.FeedForwardCharacterizationData;
 
-
-/** Add your docs here. */
+/**
+ * Gathers feedforward data for the drivetrain's steer motors.
+ */
 public class SteerFeedForwardCharacterizationSingle extends CommandBase {
-  double m_voltage = 0;
-  FeedForwardCharacterizationData m_feedForwardCharacterizationData;
-  Module m_module;
-  
-  Timer m_timer = new Timer();
-  Drivetrain m_drive;
-  SendableChooser<Module> m_moduleChooser;
 
+  private double m_voltage = 0;
+  private FeedForwardCharacterizationData m_feedForwardCharacterizationData;
+  private Module m_module;
+  
+  private Timer m_timer = new Timer();
+  private Drivetrain m_drive;
+  private SendableChooser<Module> m_moduleChooser;
+
+  /**
+   * Creates a new command.
+   * @param drive the drivetrain instance
+   */
   public SteerFeedForwardCharacterizationSingle(Drivetrain drive) {
     m_drive = drive;
     addRequirements(drive);

@@ -8,15 +8,21 @@ import frc.robot.constants.TestConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.util.FeedForwardCharacterizationData;
 
-
-/** Add your docs here. */
+/**
+ * Gathers feedforward data for the drivetrain's drive motors.
+ */
 public class DriveFeedForwardCharacterization extends CommandBase {
-  double m_voltage = 0;
-  FeedForwardCharacterizationData[] m_feedForwardCharacterizationData;
+
+  private double m_voltage = 0;
+  private FeedForwardCharacterizationData[] m_feedForwardCharacterizationData;
   
-  Timer m_timer = new Timer();
-  Drivetrain m_drive;
+  private Timer m_timer = new Timer();
+  private Drivetrain m_drive;
   
+  /**
+   * Creates a new command.
+   * @param drive the drivetrain instance
+   */
   public DriveFeedForwardCharacterization(Drivetrain drive) {
     m_drive = drive;
     addRequirements(drive);

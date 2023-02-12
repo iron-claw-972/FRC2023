@@ -13,21 +13,25 @@ import edu.wpi.first.util.datalog.IntegerLogEntry;
 import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 
+/**
+ * Utilty class for logging data to the DataLogManager.
+ * View logs using MechanicalAdvantage's advantage scope (https://github.com/Mechanical-Advantage/AdvantageScope)
+ */
 public class LogManager {
 
   private static DataLog log = DataLogManager.getLog();
 
   // These are array lists of log entry classes from WPI. appending to a log entry automatically adds to the log file.
-  static ArrayList<DoubleLogEntry> doubleLogs = new ArrayList<DoubleLogEntry>();
-  static ArrayList<DoubleArrayLogEntry> doubleArrayLogs = new ArrayList<DoubleArrayLogEntry>();
-  static ArrayList<BooleanLogEntry> boolLogs = new ArrayList<BooleanLogEntry>();
-  static ArrayList<IntegerLogEntry> intLogs = new ArrayList<IntegerLogEntry>();
+  private static ArrayList<DoubleLogEntry> doubleLogs = new ArrayList<DoubleLogEntry>();
+  private static ArrayList<DoubleArrayLogEntry> doubleArrayLogs = new ArrayList<DoubleArrayLogEntry>();
+  private static ArrayList<BooleanLogEntry> boolLogs = new ArrayList<BooleanLogEntry>();
+  private static ArrayList<IntegerLogEntry> intLogs = new ArrayList<IntegerLogEntry>();
 
   // These are the suppliers, or functions that return values. This is how the values are accessed.
-  static ArrayList<DoubleSupplier> doubleValues = new ArrayList<DoubleSupplier>();
-  static ArrayList<DoubleSupplier[]> doubleArrayValues = new ArrayList<DoubleSupplier[]>();
-  static ArrayList<BooleanSupplier> boolValues = new ArrayList<BooleanSupplier>();
-  static ArrayList<IntSupplier> intValues = new ArrayList<IntSupplier>();
+  private static ArrayList<DoubleSupplier> doubleValues = new ArrayList<DoubleSupplier>();
+  private static ArrayList<DoubleSupplier[]> doubleArrayValues = new ArrayList<DoubleSupplier[]>();
+  private static ArrayList<BooleanSupplier> boolValues = new ArrayList<BooleanSupplier>();
+  private static ArrayList<IntSupplier> intValues = new ArrayList<IntSupplier>();
 
   /**
    * Records the metadata supplied by gversion (https://github.com/lessthanoptimal/gversion-plugin) in BuildData.java.

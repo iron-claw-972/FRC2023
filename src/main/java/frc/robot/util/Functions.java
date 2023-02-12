@@ -2,6 +2,9 @@ package frc.robot.util;
 
 import frc.robot.constants.OIConstants;
 
+/**
+ * Utility class for useful functions.
+ */
 public class Functions {
 
   /**

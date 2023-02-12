@@ -10,6 +10,9 @@ import lib.controllers.MadCatzController;
 import lib.controllers.MadCatzController.MadCatzAxis;
 import lib.controllers.MadCatzController.MadCatzButton;
 
+/**
+ * Driver controls for the MadCatz controller.
+ */
 public class MadCatzDriverConfig extends BaseDriverConfig {
   
   private MadCatzController driverMCC = new MadCatzController(OIConstants.kDriverJoy);

@@ -2,6 +2,9 @@ package frc.robot.constants;
 
 import edu.wpi.first.math.util.Units;
 
+/**
+ * Container class for drive constants.
+ */
 public class DriveConstants {
   
   public static final double kWheelRadius = Units.inchesToMeters(2);

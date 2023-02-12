@@ -11,6 +11,9 @@ import lib.controllers.GameController;
 import lib.controllers.GameController.GCAxis;
 import lib.controllers.GameController.GCButton;
 
+/**
+ * Driver controls for the generic game controller.
+ */
 public class GameControllerDriverConfig extends BaseDriverConfig {
   
   private GameController driverGC = new GameController(OIConstants.kDriverJoy);

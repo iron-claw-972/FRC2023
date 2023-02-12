@@ -1,6 +1,8 @@
 package frc.robot.constants;
 
-// OI stands for Operator Input
+/**
+ * Container class for operator input constants.
+ */
 public class OIConstants {
   public static final int kDriverJoy = 0;
   public static final int kOperatorJoy = 1;

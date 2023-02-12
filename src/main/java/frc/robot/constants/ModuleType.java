@@ -1,35 +1,38 @@
 package frc.robot.constants;
 
+/**
+ * Represents the type for a module on the robot.
+ */
 public enum ModuleType {
   FRONT_LEFT, FRONT_RIGHT, BACK_LEFT, BACK_RIGHT, NONE;
   
   public String getAbbreviation() {
     switch (this) {
       case FRONT_LEFT:
-      return "FL";
+        return "FL";
       case FRONT_RIGHT:
-      return "FR";
+        return "FR";
       case BACK_LEFT:
-      return "BL";
+        return "BL";
       case BACK_RIGHT:
-      return "BR";
+        return "BR";
       default:
-      return this.toString();
+        return this.toString();
     }
   }
   
   public int getID() {
     switch (this) {
       case FRONT_LEFT:
-      return 0;
+        return 0;
       case FRONT_RIGHT:
-      return 1;
+        return 1;
       case BACK_LEFT:
-      return 2;
+        return 2;
       case BACK_RIGHT:
-      return 3;
+        return 3;
       default:
-      return -1;
+        return -1;
     }
   }
 }
