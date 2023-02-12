@@ -16,7 +16,7 @@ import frc.robot.util.FeedForwardCharacterizationData;
 
 /** Add your docs here. */
 public class SteerFeedForwardCharacterzationSingle extends CommandBase {
-  double value = 0;
+  double m_voltage = 0;
   FeedForwardCharacterizationData m_feedForwardCharacterizationData;
   Module m_module;
 
@@ -24,9 +24,8 @@ public class SteerFeedForwardCharacterzationSingle extends CommandBase {
   Drivetrain m_drive;
   SendableChooser<Module> m_moduleChooser;
 
-  public SteerFeedForwardCharacterzationSingle(Drivetrain drive, SendableChooser<Module> moduleChooser) {
+  public SteerFeedForwardCharacterzationSingle(Drivetrain drive) {
     m_drive = drive;
-    m_moduleChooser = moduleChooser;
     addRequirements(drive);
   }
 
@@ -34,26 +33,26 @@ public class SteerFeedForwardCharacterzationSingle extends CommandBase {
     m_timer.start();
     m_drive.setAllOptimize(false);
     m_feedForwardCharacterizationData = new FeedForwardCharacterizationData();
-    this.m_module = m_moduleChooser.getSelected();
+    this.m_module = m_drive.getModuleChooser().getSelected();
   }
 
   public void execute() {
     runCharacterizationVolts();
     if (m_timer.get() > 0.5) {
-      m_feedForwardCharacterizationData.add(m_module.getSteerVelocity(), value);
+      m_feedForwardCharacterizationData.add(m_module.getSteerVelocity(), m_voltage);
     }
     if (m_timer.get() > 2.5) {
-      value += 0.2;
+      m_voltage += 0.2;
       m_timer.reset();
       m_timer.start();
-      System.out.println(value);
+      System.out.println(m_voltage);
     }
   }
 
   private void runCharacterizationVolts() {
 
     m_module.setDriveVoltage(0);
-    m_module.setSteerVoltage(value);
+    m_module.setSteerVoltage(m_voltage);
     
   }
 
@@ -64,8 +63,9 @@ public class SteerFeedForwardCharacterzationSingle extends CommandBase {
   
     m_drive.getSteerStaticFeedforwardArray()[m_module.getModuleType().getID()] = m_feedForwardCharacterizationData.getStatic();
     m_drive.getSteerVelocityFeedforwardArray()[m_module.getModuleType().getID()] = m_feedForwardCharacterizationData.getVelocity();
-    System.out.println("Static " + ": " + m_feedForwardCharacterizationData.getStatic());
-    System.out.println("Velocity " + ": " + m_feedForwardCharacterizationData.getVelocity());
+    System.out.println("Static : " + m_feedForwardCharacterizationData.getStatic());
+    System.out.println("Velocity : " + m_feedForwardCharacterizationData.getVelocity());
+    System.out.println("Variance : " + m_feedForwardCharacterizationData.getVariance());
 
     m_module.setDriveVoltage(0);
     m_module.setSteerVoltage(0);
@@ -76,6 +76,6 @@ public class SteerFeedForwardCharacterzationSingle extends CommandBase {
 
   public boolean isFinished() {
     //System.out.println(value > 11);
-    return value>6;
+    return m_voltage>6;
   }
 }

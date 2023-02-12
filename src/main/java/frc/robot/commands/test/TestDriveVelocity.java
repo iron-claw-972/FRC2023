@@ -10,11 +10,10 @@ import frc.robot.subsystems.Drivetrain;
 public class TestDriveVelocity extends CommandBase{
 
     private Drivetrain m_drive;;
-    private GenericEntry m_driveVelocityEntry, m_testEntry;
+    private GenericEntry m_testEntry;
 
-    public TestDriveVelocity(Drivetrain drive, GenericEntry driveVelocityEntry, GenericEntry testEntry){
+    public TestDriveVelocity(Drivetrain drive, GenericEntry testEntry){
         m_drive = drive;
-        m_driveVelocityEntry = driveVelocityEntry;
         m_testEntry = testEntry;
         addRequirements(m_drive);
     }
@@ -23,10 +22,10 @@ public class TestDriveVelocity extends CommandBase{
     public void execute() {
         m_drive.setAllOptimize(false);
     m_drive.setModuleStates(new SwerveModuleState[] {
-      new SwerveModuleState(m_driveVelocityEntry.getDouble(0), new Rotation2d(Units.degreesToRadians(135))),
-      new SwerveModuleState(m_driveVelocityEntry.getDouble(0), new Rotation2d(Units.degreesToRadians(45))),
-      new SwerveModuleState(m_driveVelocityEntry.getDouble(0), new Rotation2d(Units.degreesToRadians(225))),
-      new SwerveModuleState(m_driveVelocityEntry.getDouble(0), new Rotation2d(Units.degreesToRadians(315)))
+      new SwerveModuleState(m_drive.getRequestedDriveVelocityEntry().getDouble(0), new Rotation2d(Units.degreesToRadians(135))),
+      new SwerveModuleState(m_drive.getRequestedDriveVelocityEntry().getDouble(0), new Rotation2d(Units.degreesToRadians(45))),
+      new SwerveModuleState(m_drive.getRequestedDriveVelocityEntry().getDouble(0), new Rotation2d(Units.degreesToRadians(225))),
+      new SwerveModuleState(m_drive.getRequestedDriveVelocityEntry().getDouble(0), new Rotation2d(Units.degreesToRadians(315)))
     });
     m_testEntry.setBoolean(m_drive.isDriveVelocityAcurate());
     }

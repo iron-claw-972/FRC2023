@@ -17,13 +17,12 @@ public class SetFormationX extends CommandBase {
         addRequirements(drive);
     }
     public void execute(){
-        m_drive.m_swerveModuleStates = new SwerveModuleState[] {
+          m_drive.setModuleStates(new SwerveModuleState[] {
             new SwerveModuleState(0.01, new Rotation2d(Units.degreesToRadians(-45))),
             new SwerveModuleState(0.01, new Rotation2d(Units.degreesToRadians(45))),
             new SwerveModuleState(0.01, new Rotation2d(Units.degreesToRadians(-45))),
             new SwerveModuleState(0.01, new Rotation2d(Units.degreesToRadians(45)))
-          };
-          m_drive.setModuleStates(m_drive.m_swerveModuleStates);
+          });
     }
     
 }

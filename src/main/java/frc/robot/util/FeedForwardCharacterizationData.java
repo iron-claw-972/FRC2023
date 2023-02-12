@@ -9,7 +9,7 @@ import java.util.List;
 
 /** Add your docs here. */
 public class FeedForwardCharacterizationData {
-  PolynomialRegression regression;
+  PolynomialRegression m_regression;
   private final List<Double> velocityData = new LinkedList<>();
   private final List<Double> voltageData = new LinkedList<>();
 
@@ -23,7 +23,7 @@ public class FeedForwardCharacterizationData {
   }
 
   public void print() {
-    regression = new PolynomialRegression(
+    m_regression = new PolynomialRegression(
         velocityData.stream().mapToDouble(Double::doubleValue).toArray(),
         voltageData.stream().mapToDouble(Double::doubleValue).toArray(),
         1);
@@ -31,10 +31,13 @@ public class FeedForwardCharacterizationData {
     
   }
   public double getStatic(){
-      return regression.beta(0);
+      return m_regression.beta(0);
   }
   public double getVelocity(){
-      return regression.beta(1);
+      return m_regression.beta(1);
+  }
+  public double getVariance(){
+    return m_regression.R2();
   }
 }
 

@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.commands.DoNothing;
 import frc.robot.commands.test.*;
 import frc.robot.controls.BaseDriverConfig;
 import frc.robot.controls.GameControllerDriverConfig;
@@ -91,14 +90,14 @@ public class RobotContainer {
   public void addTestCommands() {
 
     GenericEntry testEntry = m_testTab.add("Test Results", false).getEntry();
-    m_testTab.add("Circle Drive", new CircleDrive(m_drive, m_drive.getRequestedDriveVelocityEntry(), m_drive.getRequestedSteerVelocityEntry()));
+    m_testTab.add("Circle Drive", new CircleDrive(m_drive));
     m_testTab.add("Drive FeedForawrd", new DriveFeedForwardCharacterzation(m_drive));
-    m_testTab.add("Steer Single FeedForawrd", new SteerFeedForwardCharacterzationSingle(m_drive, m_drive.getModuleChooser()));
-    m_testTab.add("Drive Voltage", new DriveVoltage(m_drive, m_drive.getRequestedVoltsEntry()));
-    m_testTab.add("Drive Steer", new SteerVoltage(m_drive, m_drive.getRequestedVoltsEntry()));
-    m_testTab.add("Test Drive Velocity", new TestDriveVelocity(m_drive, m_drive.getRequestedDriveVelocityEntry(), testEntry));
-    m_testTab.add("Heading PID", new TestHeadingPID(m_drive, m_drive.getRequestedHeadingEntry()));
-    m_testTab.add("Steer angle", new TestSteerAngle(m_drive, m_drive.getRequestedSteerAngleEntry(), testEntry));
+    m_testTab.add("Steer Single FeedForawrd", new SteerFeedForwardCharacterzationSingle(m_drive));
+    m_testTab.add("Drive Voltage", new DriveVoltage(m_drive));
+    m_testTab.add("Drive Steer", new SteerVoltage(m_drive));
+    m_testTab.add("Test Drive Velocity", new TestDriveVelocity(m_drive, testEntry));
+    m_testTab.add("Heading PID", new TestHeadingPID(m_drive));
+    m_testTab.add("Steer angle", new TestSteerAngle(m_drive, testEntry));
     m_testTab.add("Odometry Test", new OdometryTestCommand(m_drive, new Transform2d(new Translation2d(1,1), new Rotation2d(Math.PI))));
   }
 
@@ -122,10 +121,5 @@ public class RobotContainer {
     CommandScheduler.getInstance().onCommandInitialize(command -> Shuffleboard.addEventMarker("Command initialized", command.getName(), EventImportance.kNormal));
     CommandScheduler.getInstance().onCommandInterrupt(command -> Shuffleboard.addEventMarker("Command interrupted", command.getName(), EventImportance.kNormal));
     CommandScheduler.getInstance().onCommandFinish(command -> Shuffleboard.addEventMarker("Command finished", command.getName(), EventImportance.kNormal));
-  }
-
-  public void shuffleboardUpdates(){
-    m_drive.updateDriveModuleFeedforwardShuffleboard();
-    m_drive.updateDriveModuleFeedforwardShuffleboard();
   }
 }

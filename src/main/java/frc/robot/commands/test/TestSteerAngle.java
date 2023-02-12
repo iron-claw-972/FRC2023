@@ -9,12 +9,10 @@ import frc.robot.subsystems.Drivetrain;
 public class TestSteerAngle extends CommandBase{
 
   Drivetrain m_drive;
-  GenericEntry m_angleEntry;
   GenericEntry m_testEntry;
 
-  public TestSteerAngle(Drivetrain drive, GenericEntry angleEntry, GenericEntry testEntry){
+  public TestSteerAngle(Drivetrain drive, GenericEntry testEntry){
     m_drive = drive;
-    m_angleEntry = angleEntry;
     m_testEntry = testEntry;
     addRequirements(m_drive);
   }
@@ -23,10 +21,10 @@ public class TestSteerAngle extends CommandBase{
   public void execute() {
     m_drive.setAllOptimize(false);
     m_drive.setModuleStates(new SwerveModuleState[] {
-      new SwerveModuleState(0.01, new Rotation2d(m_angleEntry.getDouble(0))),
-      new SwerveModuleState(0.01, new Rotation2d(m_angleEntry.getDouble(0))),
-      new SwerveModuleState(0.01, new Rotation2d(m_angleEntry.getDouble(0))),
-      new SwerveModuleState(0.01, new Rotation2d(m_angleEntry.getDouble(0)))
+      new SwerveModuleState(0.01, new Rotation2d(m_drive.getRequestedSteerVelocityEntry().getDouble(0))),
+      new SwerveModuleState(0.01, new Rotation2d(m_drive.getRequestedSteerVelocityEntry().getDouble(0))),
+      new SwerveModuleState(0.01, new Rotation2d(m_drive.getRequestedSteerVelocityEntry().getDouble(0))),
+      new SwerveModuleState(0.01, new Rotation2d(m_drive.getRequestedSteerVelocityEntry().getDouble(0)))
     });
     m_testEntry.setBoolean(m_drive.isSteerAngleAcurate());
   }
