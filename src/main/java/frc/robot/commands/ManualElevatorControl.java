@@ -13,9 +13,6 @@ public class ManualElevatorControl extends CommandBase {
   }
 
   @Override
-  public void initialize() {}
-
-  @Override
   public void execute() {
     
     m_elevator.setElevatorMotorSpeed(Operator.getRawThrottleValue()); // rename throttlevalue function to somehting else
@@ -24,13 +21,15 @@ public class ManualElevatorControl extends CommandBase {
   }
 
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    m_elevator.stopMotor();
+  }
 
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-        //TODO: configure isFinished to get command to end
-
+    if(m_elevator.returnBottomLimSwitchCondition() == true || m_elevator.returnTopLimSwitchCondition() == true){
+      return true; 
+    }
     return false;
   }
 
