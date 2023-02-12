@@ -7,18 +7,18 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 
 public class TestSteerAngle extends CommandBase{
-
+  
   Drivetrain m_drive;
   GenericEntry m_angleEntry;
   GenericEntry m_testEntry;
-
-  public TestSteerAngle(Drivetrain drive, GenericEntry angleEntry, GenericEntry testEntry){
+  
+  public TestSteerAngle(Drivetrain drive, GenericEntry angleEntry, GenericEntry testEntry) {
     m_drive = drive;
     m_angleEntry = angleEntry;
     m_testEntry = testEntry;
     addRequirements(m_drive);
   }
-
+  
   @Override
   public void execute() {
     m_drive.setAllOptimize(false);
@@ -28,9 +28,9 @@ public class TestSteerAngle extends CommandBase{
       new SwerveModuleState(0.01, new Rotation2d(m_angleEntry.getDouble(0))),
       new SwerveModuleState(0.01, new Rotation2d(m_angleEntry.getDouble(0)))
     });
-    m_testEntry.setBoolean(m_drive.isSteerAngleAcurate());
+    m_testEntry.setBoolean(m_drive.isSteerAngleAccurate());
   }
-
+  
   @Override
   public void end(boolean interrupted) {
     m_drive.stop();

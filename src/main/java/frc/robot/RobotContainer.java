@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.commands.DoNothing;
 import frc.robot.commands.test.*;
 import frc.robot.controls.BaseDriverConfig;
 import frc.robot.controls.GameControllerDriverConfig;
@@ -89,7 +88,6 @@ public class RobotContainer {
    * Adds the test commands to shuffleboard so they can be run that way.
    */
   public void addTestCommands() {
-
     GenericEntry testEntry = m_testTab.add("Test Results", false).getEntry();
     m_testTab.add("Circle Drive", new CircleDrive(m_drive, m_drive.getRequestedDriveVelocityEntry(), m_drive.getRequestedSteerVelocityEntry()));
     m_testTab.add("Drive FeedForawrd", new DriveFeedForwardCharacterzation(m_drive));
@@ -124,7 +122,7 @@ public class RobotContainer {
     CommandScheduler.getInstance().onCommandFinish(command -> Shuffleboard.addEventMarker("Command finished", command.getName(), EventImportance.kNormal));
   }
 
-  public void shuffleboardUpdates(){
+  public void shuffleboardUpdates() {
     m_drive.updateDriveModuleFeedforwardShuffleboard();
     m_drive.updateDriveModuleFeedforwardShuffleboard();
   }

@@ -39,7 +39,7 @@ public abstract class BaseDriverConfig {
   private DynamicSlewRateLimiter m_rotLimiter = new DynamicSlewRateLimiter(m_rotationSlewrate);
   private DynamicSlewRateLimiter m_headingLimiter = new DynamicSlewRateLimiter(m_headingSenseitiviy);
 
-  public BaseDriverConfig(Drivetrain drive, ShuffleboardTab controllerTab, boolean shuffleboardUpdates){
+  public BaseDriverConfig(Drivetrain drive, ShuffleboardTab controllerTab, boolean shuffleboardUpdates) {
     m_headingLimiter.setContinuousLimits(-Math.PI,Math.PI);
     m_headingLimiter.enableContinuous(true);
     m_controllerTab = controllerTab;
@@ -57,17 +57,17 @@ public abstract class BaseDriverConfig {
     return m_rotLimiter.calculate(-Functions.expoMS(Functions.deadband(getRawRotation(), m_rotationDeadband), m_rotationExpo) * DriveConstants.kMaxAngularSpeed * m_rotationSenseitiviy, m_rotationSlewrate);
   }
 
-  public double getHeading(){
+  public double getHeading() {
     if (getRawHeadingMagnitude() <= m_headingDeadband) return m_headingLimiter.calculate(m_previousHeading,1e-6);
     m_previousHeading = m_headingLimiter.calculate(getRawHeadingAngle(), Functions.expoMS(getRawHeadingMagnitude(), m_headingExpo) * m_headingSenseitiviy);
     return m_previousHeading;
   }
 
-  public Drivetrain getDrivetrain(){
+  public Drivetrain getDrivetrain() {
     return m_drive;
   }
 
-  public void setupShuffleboard(){
+  public void setupShuffleboard() {
     if (!m_shuffleboardUpdates) return;
     
     m_translationalSenseitivityEntry = m_controllerTab.add("translationalSenseitivity",OIConstants.kTranslationalSenseitivity).getEntry();
@@ -83,7 +83,7 @@ public abstract class BaseDriverConfig {
     m_headingDeadbandEntry = m_controllerTab.add("headingDeadband",OIConstants.kHeadingDeadband).getEntry();
   }
 
-  public void updateSettings(){ //updates the shuffleboard data
+  public void updateSettings() { //updates the shuffleboard data
     if (!m_shuffleboardUpdates) return;
 
     m_translationalSenseitivity = m_translationalSenseitivityEntry.getDouble(OIConstants.kTranslationalSenseitivity);

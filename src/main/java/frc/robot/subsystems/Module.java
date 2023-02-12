@@ -15,7 +15,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
@@ -40,6 +39,7 @@ public class Module {
   public static Module create(ModuleConstants moduleConstants, ShuffleboardTab moduleTab) {
     return new Module(moduleConstants, moduleTab);
   }
+
   public static Module create(
       int driveMotorPort,
       int steerMotorPort,
@@ -59,23 +59,23 @@ public class Module {
       ShuffleboardTab moduleTab
     ) {
     return new Module(
-        driveMotorPort,
-        steerMotorPort,
-        encoderPort,
-        encoderOffset,
-        driveFeedForwardKS,
-        driveFeedForwardKV,
-        driveP,
-        driveI,
-        driveD,
-        steerFeedForwardKS,
-        steerFeedForwardKV,
-        steerP,
-        steerI,
-        steerD,
-        moduleType,
-        moduleTab
-      );
+      driveMotorPort,
+      steerMotorPort,
+      encoderPort,
+      encoderOffset,
+      driveFeedForwardKS,
+      driveFeedForwardKV,
+      driveP,
+      driveI,
+      driveD,
+      steerFeedForwardKS,
+      steerFeedForwardKV,
+      steerP,
+      steerI,
+      steerD,
+      moduleType,
+      moduleTab
+    );
   }
 
   private final WPI_TalonFX m_driveMotor;
@@ -379,7 +379,7 @@ public class Module {
   public void setSteerFeedForwardValues(double staticFeedforward, double velocityFeedForward) {
     m_steerFeedForwardKS = staticFeedforward;
     m_steerFeedForwardKV = velocityFeedForward;
-    m_steerFeedForward= new SimpleMotorFeedforward(staticFeedforward, velocityFeedForward);
+    m_steerFeedForward = new SimpleMotorFeedforward(staticFeedforward, velocityFeedForward);
   }
   
   // Getter Methods
@@ -450,32 +450,35 @@ public class Module {
     // This method will be called once per scheduler run, mainly only used for simulation
   }
 
-  public ModuleType getModuleType(){
+  public ModuleType getModuleType() {
     return m_moduleType;
   }
 
-  public double getDesieredVelocity(){
+  public double getDesieredVelocity() {
     return m_desieredState.speedMetersPerSecond;
   }
 
-  public Rotation2d getDesieredAngle(){
+  public Rotation2d getDesieredAngle() {
     return m_desieredState.angle;
   }
 
-  public double getDriveFeedForwardKS(){
+  public double getDriveFeedForwardKS() {
     return m_driveFeedForwardKS;
   }
-  public double getDriveFeedForwardKV(){
+
+  public double getDriveFeedForwardKV() {
     return m_driveFeedForwardKV;
   }
-  public double getSteerFeedForwardKS(){
+
+  public double getSteerFeedForwardKS() {
     return m_steerFeedForwardKS;
   }
-  public double getSteerFeedForwardKV(){
+  
+  public double getSteerFeedForwardKV() {
     return m_steerFeedForwardKV;
   }
   
-  public void setupModulesShuffleboard(){
+  public void setupModulesShuffleboard() {
     m_moduleTab.addNumber(m_moduleType.getAbbreviation() + " desired speed", () -> getDesieredVelocity());
     // Drive PID output
     m_moduleTab.addNumber(m_moduleType.getAbbreviation() +" PID Output", () -> getDrivePIDOutput());

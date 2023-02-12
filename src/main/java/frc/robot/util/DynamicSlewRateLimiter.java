@@ -80,25 +80,25 @@ public class DynamicSlewRateLimiter {
       m_negativeRateLimit * elapsedTime,
       m_positiveRateLimit * elapsedTime);
 
-    // TODO: make continuse work proporly with + and - slewrates
-    if (m_continuous){
+    // TODO: make continous work properly with + and - slewrates
+    if (m_continuous) {
       // convert value to be inbetween limits
       // input = MathUtil.inputModulus(input, m_lowerContinuousLimit, m_upperContinuousLimit);
       //input %= m_upperCycleLimit - m_lowerCycleLimit;
-      while (input < m_lowerContinuousLimit || input > m_upperContinuousLimit){
+      while (input < m_lowerContinuousLimit || input > m_upperContinuousLimit) {
         if (input < m_lowerContinuousLimit) input += m_upperContinuousLimit - m_lowerContinuousLimit;
         if (input > m_upperContinuousLimit) input -= m_upperContinuousLimit - m_lowerContinuousLimit;
       }
       
       // if change is larger than hald the total distance than it is closer on the other side so it can be fliped on other direciton
-      if (Math.abs(input-m_prevVal) > (m_upperContinuousLimit - m_lowerContinuousLimit) / 2 ){
+      if (Math.abs(input-m_prevVal) > (m_upperContinuousLimit - m_lowerContinuousLimit) / 2 ) {
         change = m_upperContinuousLimit - m_lowerContinuousLimit - change;
       }
       m_prevVal += change;
 
       //converting vlaue to be in limits
       // m_prevVal = MathUtil.inputModulus(m_prevVal, m_lowerContinuousLimit, m_upperContinuousLimit);
-      while (m_prevVal < m_lowerContinuousLimit || m_prevVal > m_upperContinuousLimit){
+      while (m_prevVal < m_lowerContinuousLimit || m_prevVal > m_upperContinuousLimit) {
         if (m_prevVal < m_lowerContinuousLimit) m_prevVal += m_upperContinuousLimit - m_lowerContinuousLimit;
         if (m_prevVal > m_upperContinuousLimit) m_prevVal -= m_upperContinuousLimit - m_lowerContinuousLimit;
       }
@@ -164,12 +164,12 @@ public class DynamicSlewRateLimiter {
     m_negativeRateLimit = negativeRateLimit;
   }
 
-  public void setContinuousLimits(double lowerContinuousLimit, double upperContinuousLimit){
+  public void setContinuousLimits(double lowerContinuousLimit, double upperContinuousLimit) {
     m_lowerContinuousLimit = lowerContinuousLimit;
     m_upperContinuousLimit = upperContinuousLimit;
   }
 
-  public void enableContinuous(boolean continuous){
+  public void enableContinuous(boolean continuous) {
     m_continuous = continuous;
   }
 }

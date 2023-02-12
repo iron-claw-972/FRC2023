@@ -33,7 +33,7 @@ public class Functions {
     return deadband(input, OIConstants.kDeadband);
   }
 
-  public static double simpleDeadband(double input, double deadband){
+  public static double simpleDeadband(double input, double deadband) {
     if (Math.abs(input) <= deadband) {
       return 0;
     } else {
@@ -56,13 +56,13 @@ public class Functions {
     return finVal;
   }
   
-  public static double calculateAngle(double x, double y){
+  public static double calculateAngle(double x, double y) {
     if (x > 0) return Math.atan(y/x);
     if (x < 0) return Math.atan(y/x) + Math.PI;
     return Math.signum(y)* Math.PI/2;
   }
 
-  public static double calculateHypotenuse(double x, double y){
+  public static double calculateHypotenuse(double x, double y) {
     return Math.pow(Math.pow(x,2)+Math.pow(y,2), 0.5);
   }
   
