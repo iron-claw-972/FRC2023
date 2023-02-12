@@ -1,5 +1,7 @@
 package frc.robot.commands.test;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.TestConstants;
@@ -32,10 +34,17 @@ public class DriveFeedForwardCharacterization extends CommandBase {
   }
   
   public void execute() {
-    m_drive.driveVoltsTest(m_voltage);
+    for (int i = 0; i < 4; i++) {
+      m_drive.m_modules[i].setDriveVoltage(m_voltage);
+    }
+    m_drive.m_modules[0].setSteerAngle(new Rotation2d(Units.degreesToRadians(135)));
+    m_drive.m_modules[1].setSteerAngle(new Rotation2d(Units.degreesToRadians(45)));
+    m_drive.m_modules[2].setSteerAngle(new Rotation2d(Units.degreesToRadians(225)));
+    m_drive.m_modules[3].setSteerAngle(new Rotation2d(Units.degreesToRadians(315)));
+
     if (m_timer.get() > TestConstants.kDriveFeedForwardAccelerationTimeBuffer) {
       for (int i=0; i<4; i++) {
-        m_feedForwardCharacterizationData[i].add(m_drive.getDriveVelocities()[i], m_voltage); 
+        m_feedForwardCharacterizationData[i].add(m_drive.m_modules[i].getDriveVelocity(), m_voltage); 
       }
     }
 

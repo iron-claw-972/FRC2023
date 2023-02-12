@@ -7,13 +7,14 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.TestConstants;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Module;
 import frc.robot.util.TimeAccuracyTest;
 
 public class TestDriveVelocity extends CommandBase{
   
   private Drivetrain m_drive;
   private GenericEntry m_testEntry;
-  private TimeAccuracyTest m_timeAccuracyTest;
+  private TimeAccuracyTest[] m_timeAccuracyTests = new TimeAccuracyTest[4];
   
   public TestDriveVelocity(Drivetrain drive, GenericEntry testEntry) {
     m_drive = drive;
@@ -24,12 +25,15 @@ public class TestDriveVelocity extends CommandBase{
   @Override
   public void initialize() {
     m_drive.setAllOptimize(false);
-    m_timeAccuracyTest = new TimeAccuracyTest(
-      () -> m_drive.isDriveVelocityAccurate(), 
-      () -> m_drive.getRequestedDriveVelocityEntry().getDouble(0), 
-      TestConstants.kDriveVelocityTimeError
-    );
-    
+    for (int i = 0; i < 4; i++){
+      Module module = m_drive.m_modules[i];
+      m_timeAccuracyTests[i] = new TimeAccuracyTest(
+        () -> module.getDriveVelocityError(),
+        () -> m_drive.getRequestedSteerVelocityEntry().getDouble(0),
+        TestConstants.kDriveVelocityError,
+        TestConstants.kDriveVelocityTimeError
+      );
+    }
   }
   
   @Override
@@ -40,7 +44,12 @@ public class TestDriveVelocity extends CommandBase{
       new SwerveModuleState(m_drive.getRequestedDriveVelocityEntry().getDouble(0), new Rotation2d(Units.degreesToRadians(225))),
       new SwerveModuleState(m_drive.getRequestedDriveVelocityEntry().getDouble(0), new Rotation2d(Units.degreesToRadians(315)))
     });
-    m_testEntry.setBoolean(m_timeAccuracyTest.calculate());
+    m_testEntry.setBoolean(
+      m_timeAccuracyTests[0].calculate() &&
+      m_timeAccuracyTests[1].calculate() &&
+      m_timeAccuracyTests[2].calculate() &&
+      m_timeAccuracyTests[3].calculate()
+    );
   }
   
   @Override
