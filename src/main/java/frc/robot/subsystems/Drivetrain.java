@@ -9,11 +9,14 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.*;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -24,16 +27,18 @@ import frc.robot.constants.DriveConstants;
 import frc.robot.constants.ModuleConstants;
 import frc.robot.util.LogManager;
 
-/** Represents a swerve drive style drivetrain.
-* Module IDs are:
-* 1: Front left
-* 2: Front right
-* 3: Back left
-* 4: Back right
-*/
+/** 
+ * Represents a swerve drive style drivetrain.
+ * 
+ * Module IDs are:
+ * 1: Front left
+ * 2: Front right
+ * 3: Back left
+ * 4: Back right
+ */
 public class Drivetrain extends SubsystemBase {
 
-  // This is intentionally public
+  // This is left intentionally public
   public final Module[] m_modules;
   
   private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
@@ -57,9 +62,9 @@ public class Drivetrain extends SubsystemBase {
   private final Field2d m_fieldDisplay = new Field2d();
   
   // PID Controllers
-  private PIDController m_xController = new PIDController(0.1, 0, 0);
-  private PIDController m_yController = new PIDController(0.1, 0, 0);
-  private PIDController m_rotationController = new PIDController(DriveConstants.kHeadingP, DriveConstants.kHeadingI, DriveConstants.kHeadingD);
+  private final PIDController m_xController = new PIDController(0.1, 0, 0);
+  private final PIDController m_yController = new PIDController(0.1, 0, 0);
+  private final PIDController m_rotationController = new PIDController(DriveConstants.kHeadingP, DriveConstants.kHeadingI, DriveConstants.kHeadingD);
 
   //Shuffleboard
   private GenericEntry 
@@ -83,7 +88,13 @@ public class Drivetrain extends SubsystemBase {
   // modules needed to distinguish in chooser
   private Module m_prevModule;
 
+  /**
+   * Creates a new Swerve Style Drivetrain.
+   * @param drivetrainTab the shuffleboard tab to display drivetrain data on
+   * @param swerveModulesTab the shuffleboard tab to display module data on
+   */
   public Drivetrain(ShuffleboardTab drivetrainTab, ShuffleboardTab swerveModulesTab) {
+
     LiveWindow.disableAllTelemetry();
     m_drivetrainTab = drivetrainTab;
     m_swerveModulesTab = swerveModulesTab;
@@ -104,7 +115,7 @@ public class Drivetrain extends SubsystemBase {
     m_fieldDisplay.setRobotPose(getPose());
     SmartDashboard.putData("Field", m_fieldDisplay);
   }
-  
+
   @Override
   public void periodic() {
     if (!Robot.isReal()) {
@@ -151,6 +162,15 @@ public class Drivetrain extends SubsystemBase {
       )
     );
   }  
+
+  /**
+   * Drives the robot using the provided x speed, y speed, and  heading.
+   * 
+   * @param xSpeed speed of the robot in the x direction (forward)
+   * @param ySpeed speed of the robot in the y direction (sideways)
+   * @param heading target heading of the robot
+   * @param fieldRelative whether the provided x and y speeds are relative to the field
+   */
   public void driveHeading(double xSpeed, double ySpeed, double heading, boolean fieldRelative) {
     m_headingPIDOutput = m_rotationController.calculate(getAngleHeading(), heading);
     double rot = m_headingPIDOutput;
@@ -161,11 +181,25 @@ public class Drivetrain extends SubsystemBase {
       )
     );
   }
+
+  /**
+   * Sets the chassis speeds of the robot.
+   * 
+   * @param chassisSpeeds the target chassis speeds
+   */
   public void setChassisSpeeds(ChassisSpeeds chassisSpeeds) {
     SwerveModuleState[] swerveModuleStates = m_kinematics.toSwerveModuleStates(chassisSpeeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kMaxSpeed);
     setModuleStates(swerveModuleStates);
   }
+
+  /**
+   * Runs the PID controllers with the provided x, y, and rot values. Then, calls {@link #driveRot(double, double, double, boolean)} using the PID outputs.
+   * 
+   * @param xSpeed speed of the robot in the x direction (forward)
+   * @param ySpeed speed of the robot in the y direction (sideways)
+   * @param heading target heading of the robot
+   */
   public void runChassisPID(double x, double y, double rot) {
     double xSpeed = m_xController.calculate(m_odometry.getPoseMeters().getX(), x);
     double ySpeed = m_yController.calculate(m_odometry.getPoseMeters().getY(), y);
@@ -252,17 +286,27 @@ public class Drivetrain extends SubsystemBase {
     }
   }
   
+  /**
+   * Enables or disables the state deadband for all swerve modules.
+   */
   public void enableStateDeadband(boolean stateDeadBand){
     for (int i = 0; i < 4; i++) {
       m_modules[i].enableStateDeadband(stateDeadBand);
     }
   }
+
+  /**
+   * Sets the optimize state for all swerve modules.
+   */
   public void setAllOptimize(Boolean optimizeSate) {
     for (int i = 0; i < 4; i++) {
       m_modules[i].setOptimize(optimizeSate);
     }
   }
   
+  /**
+   * Stops all swerve modules.
+   */
   public void stop() {
     for (int i = 0; i < 4; i++) {
       m_modules[i].stop();
@@ -279,6 +323,9 @@ public class Drivetrain extends SubsystemBase {
     return m_rotationController;
   }
 
+  /**
+   * Sets up the shuffleboard tab for the drivetrain.
+   */
   public void setupDrivetrainShuffleboard() {
     // inputs
     m_heading = m_drivetrainTab.add("Set Heading (-pi to pi)", 0).getEntry();
@@ -301,6 +348,10 @@ public class Drivetrain extends SubsystemBase {
     m_drivetrainTab.add(getYController());
     m_drivetrainTab.add(getRotationController());
   }
+
+  /**
+   * Sets up the shuffleboard tab for the swerve modules.
+   */
   public void setupModulesShuffleboard() {
     setUpModuleChooser();
     setUpFeedforwardSavers();
@@ -349,6 +400,9 @@ public class Drivetrain extends SubsystemBase {
     return m_steerVelocityFeedforward;
   }
 
+  /**
+   * Updates the drive module feedforward values on shuffleboard.
+   */
   public void updateDriveModuleFeedforwardShuffleboard() {
     // revert to previous saved feed forward data if changed
     if (m_prevModule != m_moduleChooser.getSelected()) {
@@ -371,6 +425,10 @@ public class Drivetrain extends SubsystemBase {
     //set selected module
     m_moduleChooser.getSelected().setDriveFeedForwardValues(m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()],m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()]);
   }
+
+  /**
+   * Updates the steer module feedforward values on shuffleboard.
+   */
   public void updateSteerModuleFeedforwardShuffleboard() {
     
     //revert to previous saved feed forward data if changed
@@ -395,6 +453,9 @@ public class Drivetrain extends SubsystemBase {
     m_moduleChooser.getSelected().setDriveFeedForwardValues(m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()],m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()]);
   }
   
+  /**
+   * Sets up feedforward savers.
+   */
   private void setUpFeedforwardSavers() {
     m_driveStaticFeedForwardSaver = new Double[] {
       m_modules[0].getDriveFeedForwardKS(),
@@ -438,6 +499,9 @@ public class Drivetrain extends SubsystemBase {
     return m_moduleChooser;
   }
 
+  /**
+   * Sets up module chooser.
+   */
   public void setUpModuleChooser() {
     m_moduleChooser.setDefaultOption("Front Left", m_modules[0]);
     m_moduleChooser.addOption("Front Right", m_modules[1]);

@@ -25,6 +25,9 @@ import frc.robot.util.LogManager;
 import frc.robot.util.MotorFactory;
 import lib.ctre_shims.TalonEncoder;
 
+/**
+ * Represents a swerve module for a swerve drivetrain.
+ */
 public class Module {
 
   /**
@@ -112,7 +115,7 @@ public class Module {
 
   private ModuleType m_moduleType;
   
-  public Module(ModuleConstants moduleConstants, ShuffleboardTab moduleTab) {
+  private Module(ModuleConstants moduleConstants, ShuffleboardTab moduleTab) {
     this(
       moduleConstants.getDrivePort(),
       moduleConstants.getSteerPort(),
@@ -354,18 +357,26 @@ public class Module {
     return m_driveEncoder.getRate();
   }
 
+  /**
+   * Gets the difference between the last set goal of the drive velocity and the current velocity.
+   * @return the error in m/s
+   */
   public double getDriveVelocityError() {
     return m_desiredState.speedMetersPerSecond - getDriveVelocity();
   }
 
-  public double selfFeedforwardCharacterization() {
-    return m_driveEncoder.getRate();
-  }
-
+  /**
+   * Gets the drive velocity of the module, filtered by a median filter.
+   * @return the rate of the drive encoder, filtered by a median filter
+   */
   public double getDriveVelocityFiltered() {
     return m_driveVelocityMedianFilter.calculate(getDriveVelocity());
   }
 
+  /**
+   * Gets the steer velocity of the module.
+   * @return the velocity of the steer encoder
+   */
   public double getSteerVelocity() {
     return m_encoder.getVelocity();
   }
@@ -381,6 +392,11 @@ public class Module {
     m_driveFeedforward = new SimpleMotorFeedforward(staticFeedforward, velocityFeedForward);
   }
 
+  /**
+   * Update the steerFeedforward values from Shuffleboard.
+   * @param staticFeedforward static feedforward value from Shuffleboard
+   * @param velocityFeedForward velocity feedforward value from Shuffleboard
+   */
   public void setSteerFeedForwardValues(double staticFeedforward, double velocityFeedForward) {
     m_steerFeedForwardKS = staticFeedforward;
     m_steerFeedForwardKV = velocityFeedForward;
@@ -483,6 +499,9 @@ public class Module {
     return m_steerFeedForwardKV;
   }
   
+  /**
+   * Sets up the Shuffleboard tab for the module.
+   */
   public void setupModulesShuffleboard() {
     m_moduleTab.addNumber(m_moduleType.getAbbreviation() + " desired speed", () -> getDesiredVelocity());
     // Drive PID output
