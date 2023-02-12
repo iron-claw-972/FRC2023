@@ -13,7 +13,7 @@ public class ElevatorCalibrationAbsoluteEncoder extends CommandBase {
 
   @Override
   public void initialize() {
-    m_elevator.setElevatorMotorSpeed(ElevatorConstants.kElevatorMotorEncoderZeroingPower); 
+    m_elevator.set(ElevatorConstants.kElevatorMotorEncoderZeroingPower); 
   }
 
   @Override

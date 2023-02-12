@@ -13,29 +13,13 @@ public class MoveToHeight extends CommandBase {
   }
 
   @Override
-  public void initialize() {
-      
-  }
-
-  @Override
   public void execute() {
-    
     System.out.println(m_elevator.returnHeightError(m_elevatorHeight)); 
-
-    m_elevator.setElevatorMotorSpeed(m_elevator.returnClampedElevatorPID(m_elevatorHeight)); 
-    m_elevator.stopMotorsIfLimitSwitchesTripped();
+    m_elevator.set(m_elevator.returnClampedElevatorPID(m_elevatorHeight)); 
+    m_elevator.stopMotorsIfLimitSwitchesTripped(m_elevator.returnClampedElevatorPID(m_elevatorHeight));
 
   }
 
-  @Override
-  public void end(boolean interrupted) {}
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-        //TODO: configure isFinished to get command to end
-
-    return false;
-  }
-
+  //this command will never stop running, the motor needs to constantly output power to maintain the elevator's height
+  
 }

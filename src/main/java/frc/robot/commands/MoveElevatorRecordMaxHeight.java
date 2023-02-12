@@ -3,10 +3,10 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.subsystems.Elevator;
 
-public class RecordMaxHeight extends CommandBase {
+public class MoveElevatorRecordMaxHeight extends CommandBase {
   Elevator m_elevator; 
 
-  public RecordMaxHeight(Elevator elevator) {
+  public MoveElevatorRecordMaxHeight(Elevator elevator) {
     m_elevator = elevator; 
     addRequirements(m_elevator);
   }
@@ -14,7 +14,7 @@ public class RecordMaxHeight extends CommandBase {
   @Override
   public void initialize() {
 
-    m_elevator.setElevatorMotorSpeed(ElevatorConstants.kElevatorMotorEncoderZeroingPower);
+    m_elevator.set(ElevatorConstants.kElevatorMotorEncoderZeroingPower);
     
   }
 
