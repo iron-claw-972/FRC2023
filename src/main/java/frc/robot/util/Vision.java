@@ -40,6 +40,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
+import frc.robot.constants.FieldConstants;
 import frc.robot.constants.VisionConstants;
 
 
@@ -92,10 +93,10 @@ public class Vision {
     // AprilTagFields.loadAprilTagLayoutField();
     try {
       //TODO: Fix this
-      aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
-      // aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2022RapidReact.m_resourceFile);
+      // aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
+      aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2022RapidReact.m_resourceFile);
     } catch (IOException ex) {
-      aprilTagFieldLayout = new AprilTagFieldLayout(VisionConstants.kTagPoses, Constants.field.kFieldLength, Constants.field.kFieldWidth);
+      aprilTagFieldLayout = new AprilTagFieldLayout(VisionConstants.kTagPoses, FieldConstants.kFieldLength, FieldConstants.kFieldWidth);
       System.out.println("Vision setup IOException: "+ex.getMessage());
     }
 
