@@ -16,21 +16,28 @@ public class TestSteerAngle extends CommandBase{
     m_testEntry = testEntry;
     addRequirements(m_drive);
   }
+
+  @Override
+  public void initialize() {
+    m_drive.setAllOptimize(false);
+    m_drive.enableStateDeadband(false);
+  }
   
   @Override
   public void execute() {
-    m_drive.setAllOptimize(false);
     m_drive.setModuleStates(new SwerveModuleState[] {
-      new SwerveModuleState(0.01, new Rotation2d(m_drive.getRequestedSteerVelocityEntry().getDouble(0))),
-      new SwerveModuleState(0.01, new Rotation2d(m_drive.getRequestedSteerVelocityEntry().getDouble(0))),
-      new SwerveModuleState(0.01, new Rotation2d(m_drive.getRequestedSteerVelocityEntry().getDouble(0))),
-      new SwerveModuleState(0.01, new Rotation2d(m_drive.getRequestedSteerVelocityEntry().getDouble(0)))
+      new SwerveModuleState(0, new Rotation2d(m_drive.getRequestedSteerVelocityEntry().getDouble(0))),
+      new SwerveModuleState(0, new Rotation2d(m_drive.getRequestedSteerVelocityEntry().getDouble(0))),
+      new SwerveModuleState(0, new Rotation2d(m_drive.getRequestedSteerVelocityEntry().getDouble(0))),
+      new SwerveModuleState(0, new Rotation2d(m_drive.getRequestedSteerVelocityEntry().getDouble(0)))
     });
     m_testEntry.setBoolean(m_drive.isSteerAngleAccurate());
   }
   
   @Override
   public void end(boolean interrupted) {
+    m_drive.setAllOptimize(true);
+    m_drive.enableStateDeadband(true);
     m_drive.stop();
   }
   

@@ -16,10 +16,14 @@ public class TestHeadingPID extends CommandBase {
     m_drive = drive;
     addRequirements(m_drive);
   }
+
+  @Override
+  public void initialize() {
+    m_drive.setAllOptimize(false);
+  }
   
   @Override
   public void execute() {
-    m_drive.setAllOptimize(false);
     m_drive.m_headingPIDOutput = m_drive.getRotationController().calculate(m_drive.getAngleHeading(), m_drive.getRequestedHeadingEntry().getDouble(0));
     
     // headingOutput is in rad/s. Need to convert to m/s by multiplying by radius
@@ -35,6 +39,7 @@ public class TestHeadingPID extends CommandBase {
   
   @Override
   public void end(boolean interrupted) {
+    m_drive.setAllOptimize(true);
     m_drive.stop();
   }
 }

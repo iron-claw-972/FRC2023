@@ -256,6 +256,12 @@ public class Drivetrain extends SubsystemBase {
     }
   }
   
+  public void enableStateDeadband(boolean stateDeadDand){
+    for (int i = 0; i < 4; i++) {
+      m_modules[i].enableStateDeadband(stateDeadDand);
+    }
+  }
+  
   public void stop() {
     for (int i = 0; i < 4; i++) {
       m_modules[i].stop();
@@ -311,11 +317,11 @@ public class Drivetrain extends SubsystemBase {
       m_modules[3].getSteerVelocity()
     };
   }
-  public void runCharacterizationVolts(int module, double value) {
+  public void setSingleModuleSteerVolts(int module, double voltage) {
     for (int i = 0; i < 4; i++) {
       m_modules[i].setDriveVoltage(0);
       if (module == i) {
-        m_modules[i].setSteerVoltage(value);
+        m_modules[i].setSteerVoltage(voltage);
       } else {
         m_modules[i].setSteerVoltage(0);
       }

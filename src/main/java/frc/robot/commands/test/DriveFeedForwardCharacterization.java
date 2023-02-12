@@ -71,6 +71,7 @@ public class DriveFeedForwardCharacterization extends CommandBase {
   }
   
   public boolean isFinished() {
+    m_drive.setAllOptimize(true);
     //System.out.println(value > 11);
     return m_voltage > 11;
   }

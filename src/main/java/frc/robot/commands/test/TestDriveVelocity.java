@@ -19,8 +19,13 @@ public class TestDriveVelocity extends CommandBase{
   }
   
   @Override
-  public void execute() {
+  public void initialize() {
     m_drive.setAllOptimize(false);
+    
+  }
+  
+  @Override
+  public void execute() {
     m_drive.setModuleStates(new SwerveModuleState[] {
       new SwerveModuleState(m_drive.getRequestedDriveVelocityEntry().getDouble(0), new Rotation2d(Units.degreesToRadians(135))),
       new SwerveModuleState(m_drive.getRequestedDriveVelocityEntry().getDouble(0), new Rotation2d(Units.degreesToRadians(45))),
@@ -32,6 +37,7 @@ public class TestDriveVelocity extends CommandBase{
   
   @Override
   public void end(boolean interrupted) {
+    m_drive.setAllOptimize(true);
     m_drive.stop();
   }
   

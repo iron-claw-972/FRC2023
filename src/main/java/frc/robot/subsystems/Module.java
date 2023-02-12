@@ -108,6 +108,7 @@ public class Module {
   private MedianFilter m_driveVelocityMedianFilter = new MedianFilter(80);
 
   private boolean m_optimizeStates = false;
+  private boolean m_stateDeadDand = true;
 
   private ModuleType m_moduleType;
   
@@ -229,7 +230,7 @@ public class Module {
    * @param desiredState Desired state with speed and angle.
    */
   public void setDesiredState(SwerveModuleState desiredState) {
-    if (Math.abs(desiredState.speedMetersPerSecond) < 0.001) {
+    if (Math.abs(desiredState.speedMetersPerSecond) < 0.001 && m_stateDeadDand) {
       stop();
       return;
     }
@@ -281,6 +282,10 @@ public class Module {
    */
   public void setSteerVoltage(double voltage) {
     m_steerMotor.setVoltage(voltage);
+  }
+
+  public void enableStateDeadband(boolean stateDeadDand){
+    m_stateDeadDand = stateDeadDand;
   }
   
   /**
