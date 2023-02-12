@@ -1,6 +1,9 @@
 package frc.robot.controls;
 
 import frc.robot.constants.OIConstants;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.arm.ExtendToPosition;
+import frc.robot.constants.ArmConstants;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.Intake;
 import lib.controllers.GameController;
@@ -18,8 +21,8 @@ public class Operator {
   /**
    * Configures all of the operator controls.
    */
-  public void configureControls() {
-
+  public static void configureControls(FourBarArm arm) {
+    
   }
 
 }

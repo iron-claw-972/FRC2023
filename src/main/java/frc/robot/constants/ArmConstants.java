@@ -25,4 +25,11 @@ public class ArmConstants {
   public static final double kIntakePosition = 0.3;
   public static final double kMiddlePosition = 0.4;
   public static final double kTopPosition = 0.5;
+
+  // simulation constants
+  public static final DCMotor armSimMotor = DCMotor.getNEO(1);
+  public static final double armReduction = 45;
+  public static final double armMass = 2.05;
+  public static final double armLength = .24;
+  public static final double armMOI = .1194;
 }
