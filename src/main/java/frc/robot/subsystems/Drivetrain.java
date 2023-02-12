@@ -166,11 +166,6 @@ public class Drivetrain extends SubsystemBase {
    */
   public void driveRot(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
 
-    // TODO: Fix Swerve drive sim
-    if (!Robot.isReal()) {
-      m_pigeon.getSimCollection().addHeading(
-        Units.radiansToDegrees(rot * Constants.kLoopTime));
-    }
 
     m_swerveModuleStates =
         m_kinematics.toSwerveModuleStates(
@@ -184,14 +179,6 @@ public class Drivetrain extends SubsystemBase {
   public void driveHeading(double xSpeed, double ySpeed, double heading, boolean fieldRelative) {
     m_headingPIDOutput = m_rotationController.calculate(getAngleHeading(),heading);
     double rot = m_headingPIDOutput;
-
-    // TODO: Fix Swerve drive sim
-    // TODO: Check which lines were sapouse to be commented
-    if (!Robot.isReal()) {
-      // System.out.println(xSpeed + " " + ySpeed + " " + rot);
-      // m_pigeon.getSimCollection().addHeading(rot / (2 * Math.PI));
-      m_pigeon.getSimCollection().addHeading(Units.radiansToDegrees(rot * Constants.kLoopTime));
-    }
 
     m_swerveModuleStates =
         m_kinematics.toSwerveModuleStates(
@@ -352,11 +339,6 @@ public class Drivetrain extends SubsystemBase {
     m_swerveModuleStates = m_kinematics.toSwerveModuleStates(chassisSpeeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(m_swerveModuleStates, DriveConstants.kMaxSpeed);
     setModuleStates(m_swerveModuleStates);
-    
-    if (!Robot.isReal()) {
-      m_pigeon.getSimCollection().addHeading(
-        Units.radiansToDegrees(chassisSpeeds.omegaRadiansPerSecond * Constants.kLoopTime));
-    }
   }
 
   public PIDController getXController() {

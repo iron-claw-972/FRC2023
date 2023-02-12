@@ -110,7 +110,6 @@ public class RobotContainer {
     GenericEntry testEntry = m_testTab.add("Test Results", false).getEntry();
     m_testTab.add("Circle Drive", new CircleDrive(m_drive, m_drive.getRequestedDriveVelocityEntry(), m_drive.getRequestedSteerVelocityEntry()));
     m_testTab.add("Drive FeedForawrd", new DriveFeedForwardCharacterzation(m_drive));
-    m_testTab.add("Steer All FeedForawrd", new SteerFeedForwardCharacterzationAll(m_drive));
     m_testTab.add("Steer Single FeedForawrd", new SteerFeedForwardCharacterzationSingle(m_drive, m_drive.getModuleChooser()));
     m_testTab.add("Drive Voltage", new DriveVoltage(m_drive, m_drive.getRequestedVoltsEntry()));
     m_testTab.add("Drive Steer", new SteerVoltage(m_drive, m_drive.getRequestedVoltsEntry()));

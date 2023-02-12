@@ -29,8 +29,6 @@ import lib.ctre_shims.TalonEncoder;
 public class Module {
 
   /**
-   * Creates a swerve module, or a simulated one if running on the simulator.
-   * 
    * @param driveMotorID the ID of the drive motor
    * @param steerMotorID the ID of the steer motor
    * @param encoderID the id of the CANcoder for measuring the module's angle
@@ -40,11 +38,7 @@ public class Module {
    * @return
    */
   public static Module create(ModuleConstants moduleConstants, ShuffleboardTab moduleTab) {
-    if (Robot.isReal()) {
-      return new Module(moduleConstants, moduleTab);
-    } else {
-      return new ModuleSim(moduleConstants, moduleTab);
-    }
+    return new Module(moduleConstants, moduleTab);
   }
   public static Module create(
       int driveMotorPort,
@@ -64,28 +58,24 @@ public class Module {
       ModuleType moduleType,
       ShuffleboardTab moduleTab
     ) {
-    if (Robot.isReal()) { 
-      return new Module(
-          driveMotorPort,
-          steerMotorPort,
-          encoderPort,
-          encoderOffset,
-          driveFeedForwardKS,
-          driveFeedForwardKV,
-          driveP,
-          driveI,
-          driveD,
-          steerFeedForwardKS,
-          steerFeedForwardKV,
-          steerP,
-          steerI,
-          steerD,
-          moduleType,
-          moduleTab
-        );
-    } else {
-      return new ModuleSim(driveMotorPort, steerMotorPort, encoderPort, encoderOffset, driveFeedForwardKS, driveFeedForwardKV, moduleTab);
-    }
+    return new Module(
+        driveMotorPort,
+        steerMotorPort,
+        encoderPort,
+        encoderOffset,
+        driveFeedForwardKS,
+        driveFeedForwardKV,
+        driveP,
+        driveI,
+        driveD,
+        steerFeedForwardKS,
+        steerFeedForwardKV,
+        steerP,
+        steerI,
+        steerD,
+        moduleType,
+        moduleTab
+      );
   }
 
   private final WPI_TalonFX m_driveMotor;
