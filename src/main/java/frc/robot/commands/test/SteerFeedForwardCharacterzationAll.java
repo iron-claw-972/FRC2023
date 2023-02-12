@@ -23,7 +23,6 @@ public class SteerFeedForwardCharacterzationAll extends CommandBase {
   int m_module;
 
   public SteerFeedForwardCharacterzationAll(Drivetrain drive) {
-    
     m_drive = drive;
     addRequirements(drive);
   }
@@ -44,7 +43,7 @@ public class SteerFeedForwardCharacterzationAll extends CommandBase {
   public void execute() {
     if (m_module > 3) return;
 
-    runCharacterizationVolts();
+    m_drive.runCharacterizationVolts(m_module, value);
     if (m_timer.get() > 0.5) {
         m_feedForwardCharacterizationData[m_module].add(m_drive.getDriveVelocities()[m_module], value);
       
@@ -61,19 +60,6 @@ public class SteerFeedForwardCharacterzationAll extends CommandBase {
       value = 0;
     }
 
-  }
-
-
-  //remove static module refrence
-  private void runCharacterizationVolts() {
-    for (int i = 0; i < 4; i++) {
-      m_drive.m_modules[i].setDriveVoltage(0);
-      if (m_module == i){
-        m_drive.m_modules[i].setSteerVoltage(value);
-      } else {
-        m_drive.m_modules[i].setSteerVoltage(0);
-      }
-    }
   }
 
   public void end(boolean interrupted) {
