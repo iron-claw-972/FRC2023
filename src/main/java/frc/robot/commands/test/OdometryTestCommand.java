@@ -1,4 +1,4 @@
-package frc.robot.commands.auto;
+package frc.robot.commands.test;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.math.geometry.Pose2d;

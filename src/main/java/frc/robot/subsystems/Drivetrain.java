@@ -46,9 +46,9 @@ public class Drivetrain extends SubsystemBase {
     new SwerveModuleState()
   };
 
-  //TODO: not m_ if it is public. Also should this be public?
-  public final Module[] m_modules;
+  private final Module[] m_modules;
 
+  // TODO: Should this be public?
   public final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
     new Translation2d(DriveConstants.kTrackWidth / 2, DriveConstants.kTrackWidth / 2),
     new Translation2d(DriveConstants.kTrackWidth / 2, -DriveConstants.kTrackWidth / 2),
@@ -106,10 +106,10 @@ public class Drivetrain extends SubsystemBase {
     m_swerveModulesTab.add("Module Chooser", m_moduleChooser);
     
     m_modules = new Module[]{
-        Module.create(ModuleConstants.TEST_FL, m_swerveModulesTab),
-        Module.create(ModuleConstants.TEST_FR, m_swerveModulesTab),
-        Module.create(ModuleConstants.TEST_BL, m_swerveModulesTab),
-        Module.create(ModuleConstants.TEST_BR, m_swerveModulesTab)
+        Module.create(ModuleConstants.COMP_FL, m_swerveModulesTab),
+        Module.create(ModuleConstants.COMP_FR, m_swerveModulesTab),
+        Module.create(ModuleConstants.COMP_BL, m_swerveModulesTab),
+        Module.create(ModuleConstants.COMP_BR, m_swerveModulesTab)
       };
     m_prevModule = m_modules[0];
 
@@ -336,6 +336,16 @@ public class Drivetrain extends SubsystemBase {
       m_modules[2].getSteerVelocity(),
       m_modules[3].getSteerVelocity()
     };
+  }
+  public void runCharacterizationVolts(int module, double value) {
+    for (int i = 0; i < 4; i++) {
+      m_modules[i].setDriveVoltage(0);
+      if (module == i){
+        m_modules[i].setSteerVoltage(value);
+      } else {
+        m_modules[i].setSteerVoltage(0);
+      }
+    }
   }
   
 
