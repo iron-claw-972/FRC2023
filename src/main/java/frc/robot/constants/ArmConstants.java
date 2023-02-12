@@ -7,19 +7,19 @@ public class ArmConstants {
   public static final int motorID = -1;
 
   // pid values - TBD
-  public static final double kP = -1;
-  public static final double kI = -1;
-  public static final double kD = -1;
-  public static final double kTolerance = -1;
+  public static final double kP = 1;
+  public static final double kI = 0;
+  public static final double kD = 0;
+  public static final double kTolerance = 0.1;
   public static final double minMotorPower = -1;
-  public static final double maxMotorPower = -1;
+  public static final double maxMotorPower = 1;
 
   // distance values - TBD
   public static final double initialPosition = 0;
-  public static final double shelfPosition = -1;
-  public static final double intakePosition = -1;
-  public static final double middlePosiiton = -1;
-  public static final double topPosition = -1;
+  public static final double shelfPosition = Math.PI/4;
+  public static final double intakePosition = Math.PI/2;
+  public static final double middlePosiiton = 3*Math.PI/4;
+  public static final double topPosition = Math.PI;
 
   // simulation constants
   public static final DCMotor armSimMotor = DCMotor.getNEO(1);

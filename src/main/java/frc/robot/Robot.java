@@ -4,23 +4,9 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.simulation.BatterySim;
-import edu.wpi.first.wpilibj.simulation.EncoderSim;
-import edu.wpi.first.wpilibj.simulation.RoboRioSim;
-import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
-import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
-import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
-import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.constants.ArmConstants;
 import frc.robot.util.LogManager;
 
 /**
@@ -33,50 +19,12 @@ public class Robot extends TimedRobot {
   private Command m_autoCommand;
   private RobotContainer m_robotContainer;
 
-  private final SingleJointedArmSim armSim = 
-  new SingleJointedArmSim(
-    ArmConstants.armSimMotor, 
-    ArmConstants.armReduction, 
-    ArmConstants.armMOI, 
-    ArmConstants.armLength, 
-    Units.degreesToRadians(0), 
-    Units.degreesToRadians(180), 
-    ArmConstants.armMass, 
-    true
-    );
-  private double armPositionDeg = 0;
-  private double kArmEncoderDistPerPulse = 2.0*Math.PI/8192;
-  private final Encoder dummyEncoder = new Encoder(0, 1);
-  private final EncoderSim encoderSim = new EncoderSim(dummyEncoder);
-
-  public static final String kArmPositionKey = "ArmPosition";
-  public static final String kArmPKey = "ArmP";
-
-  // constructor arguments TBD
-  private final Mechanism2d mech2d = new Mechanism2d(60, 60);
-  private final MechanismRoot2d armPivot = mech2d.getRoot("ArmPivot", 30, 30);
-  private final MechanismLigament2d armTower =
-    armPivot.append(new MechanismLigament2d("ArmTower", 30, -90));
-  private final MechanismLigament2d armDiagram =
-      armPivot.append(
-          new MechanismLigament2d(
-              "Arm",
-              30,
-              Units.radiansToDegrees(armSim.getAngleRads()),
-              6,
-              new Color8Bit(Color.kYellow)));
-
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
   @Override
   public void robotInit() {
-    dummyEncoder.setDistancePerPulse(kArmEncoderDistPerPulse);
-
-    SmartDashboard.putData("Arm Sim", mech2d);
-    armTower.setColor(new Color8Bit(Color.kBlue));
-
     m_robotContainer = new RobotContainer();
   }
 
@@ -98,12 +46,6 @@ public class Robot extends TimedRobot {
     LogManager.log();
   }
 
-  /** This function is called once each time the robot enters Disabled mode. */
-  @Override
-  public void disabledInit() {
-    CommandScheduler.getInstance().cancelAll();
-  }
-
   /** This function is called periodically when the robot is disabled */
   @Override
   public void disabledPeriodic() {
@@ -122,18 +64,6 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {}
 
-  /** This function is called once each time the robot enters Teleop mode. */
-  @Override
-  public void teleopInit() {
-    // This makes sure that the autonomous stops running when
-    // teleop starts running. If you want the autonomous to
-    // continue until interrupted by another command, remove
-    // this line or comment it out.
-    if (m_autoCommand != null) {
-      m_autoCommand.cancel();
-    }
-  }
-
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {}
@@ -151,11 +81,18 @@ public class Robot extends TimedRobot {
 
   @Override
   public void simulationPeriodic() {
-    armSim.setInput(m_robotContainer.m_arm.getMotorPower()*RobotController.getBatteryVoltage());
-    armSim.update(0.020);
-    encoderSim.setDistance(armSim.getAngleRads());
-    RoboRioSim.setVInVoltage(
-        BatterySim.calculateDefaultBatteryLoadedVoltage(armSim.getCurrentDrawAmps()));
-    armDiagram.setAngle(Units.radiansToDegrees(armSim.getAngleRads()));
+    m_robotContainer.m_arm.simulationPeriodic();
+  }
+
+  @Override
+  public void close() {
+    m_robotContainer.m_arm.close();
+    super.close();
+  }
+
+  @Override
+  public void disabledInit() {
+    // This just makes sure that our simulation code knows that the motor's off.
+    m_robotContainer.m_arm.end();
   }
 }
