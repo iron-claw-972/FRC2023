@@ -17,7 +17,6 @@ public class SteerFeedForwardCharacterzationAll extends CommandBase {
   double value = 0;
   FeedForwardCharacterizationData[] m_feedForwardCharacterizationData;
   
-
   Timer m_timer = new Timer();
   Drivetrain m_drive;
   int m_module;
@@ -62,7 +61,6 @@ public class SteerFeedForwardCharacterzationAll extends CommandBase {
     }
 
   }
-
 
   //remove static module refrence
   private void runCharacterizationVolts() {
