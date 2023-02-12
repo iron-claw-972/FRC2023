@@ -33,7 +33,7 @@ public class DriveFeedForwardCharacterization extends CommandBase {
   public void execute() {
     runCharacterizationVolts();
     if (m_timer.get() > 0.5) {
-      for (int i=0; i<4; i++){
+      for (int i=0; i<4; i++) {
         m_feedForwardCharacterizationData[i].add(m_drive.getDriveVelocities()[i], m_voltage); 
       }
     }

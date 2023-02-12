@@ -92,7 +92,7 @@ public class Drivetrain extends SubsystemBase {
     m_drivetrainTab = drivetrainTab;
     m_swerveModulesTab = swerveModulesTab;
     
-    m_modules = new Module[]{
+    m_modules = new Module[] {
       Module.create(ModuleConstants.COMP_FL, m_swerveModulesTab),
       Module.create(ModuleConstants.COMP_FR, m_swerveModulesTab),
       Module.create(ModuleConstants.COMP_BL, m_swerveModulesTab),
@@ -107,7 +107,6 @@ public class Drivetrain extends SubsystemBase {
     
     m_fieldDisplay.setRobotPose(getPose());
     SmartDashboard.putData("Field", m_fieldDisplay);
-    
   }
   
   @Override
@@ -167,7 +166,7 @@ public class Drivetrain extends SubsystemBase {
   }
   
   public void driveHeading(double xSpeed, double ySpeed, double heading, boolean fieldRelative) {
-    m_headingPIDOutput = m_rotationController.calculate(getAngleHeading(),heading);
+    m_headingPIDOutput = m_rotationController.calculate(getAngleHeading(), heading);
     double rot = m_headingPIDOutput;
 
     SwerveModuleState[] swerveModuleStates =
@@ -228,8 +227,7 @@ public class Drivetrain extends SubsystemBase {
   * @return the heading angle in radians, from -pi to pi
   */
   public double getAngleHeading() {
-    double angle = m_pigeon.getRotation2d().getRadians();
-    return MathUtil.angleModulus(angle);
+    return MathUtil.angleModulus(m_pigeon.getRotation2d().getRadians());
   }
   
   /**
@@ -238,7 +236,7 @@ public class Drivetrain extends SubsystemBase {
   * @return an array of all swerve module positions
   */
   public SwerveModulePosition[] getModulePositions() {
-    SwerveModulePosition[] positions = new SwerveModulePosition[]{
+    SwerveModulePosition[] positions = new SwerveModulePosition[] {
       m_modules[0].getPosition(),
       m_modules[1].getPosition(),
       m_modules[2].getPosition(),
@@ -392,25 +390,25 @@ public class Drivetrain extends SubsystemBase {
   }
 
   private void setUpFeedforwardSavers() {
-    m_driveStaticFeedForwardSaver = new Double[]{
+    m_driveStaticFeedForwardSaver = new Double[] {
       m_modules[0].getDriveFeedForwardKS(),
       m_modules[1].getDriveFeedForwardKS(),
       m_modules[2].getDriveFeedForwardKS(),
       m_modules[3].getDriveFeedForwardKS()
     };
-    m_driveVelFeedForwardSaver = new Double[]{
+    m_driveVelFeedForwardSaver = new Double[] {
       m_modules[0].getDriveFeedForwardKV(),
       m_modules[1].getDriveFeedForwardKV(),
       m_modules[2].getDriveFeedForwardKV(),
       m_modules[3].getDriveFeedForwardKV()
     };
-    m_steerStaticFeedForwardSaver = new Double[]{
+    m_steerStaticFeedForwardSaver = new Double[] {
       m_modules[0].getSteerFeedForwardKS(),
       m_modules[1].getSteerFeedForwardKS(),
       m_modules[2].getSteerFeedForwardKS(),
       m_modules[3].getSteerFeedForwardKS()
     };
-    m_steerVelFeedForwardSaver = new Double[]{
+    m_steerVelFeedForwardSaver = new Double[] {
       m_modules[0].getSteerFeedForwardKV(),
       m_modules[1].getSteerFeedForwardKV(),
       m_modules[2].getSteerFeedForwardKV(),

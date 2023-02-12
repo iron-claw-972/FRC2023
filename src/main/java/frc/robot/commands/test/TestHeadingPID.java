@@ -12,7 +12,7 @@ public class TestHeadingPID extends CommandBase {
   Drivetrain m_drive;
   
   // TODO: return if in error bound
-  public TestHeadingPID(Drivetrain drive){
+  public TestHeadingPID(Drivetrain drive) {
     m_drive = drive;
     addRequirements(m_drive);
   }

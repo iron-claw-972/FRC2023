@@ -7,13 +7,13 @@ public class DriveVoltage extends CommandBase {
   
   Drivetrain m_drive;
   
-  public DriveVoltage(Drivetrain drive){
+  public DriveVoltage(Drivetrain drive) {
     m_drive = drive; 
     addRequirements(m_drive);
   }
   
   @Override
-  public void execute(){
+  public void execute() {
     m_drive.driveVoltsTest(m_drive.getRequestedVoltsEntry().getDouble(0));
   }
   

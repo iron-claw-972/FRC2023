@@ -12,7 +12,7 @@ public class TestDriveVelocity extends CommandBase{
   private Drivetrain m_drive;
   private GenericEntry m_testEntry;
   
-  public TestDriveVelocity(Drivetrain drive, GenericEntry testEntry){
+  public TestDriveVelocity(Drivetrain drive, GenericEntry testEntry) {
     m_drive = drive;
     m_testEntry = testEntry;
     addRequirements(m_drive);
