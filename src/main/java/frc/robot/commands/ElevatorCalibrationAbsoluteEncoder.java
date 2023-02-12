@@ -17,6 +17,8 @@ public class ElevatorCalibrationAbsoluteEncoder extends CommandBase {
 
   @Override
   public void execute() {
+
+    m_elevator.calibrationZeroAbsEncoder();
     
 
   }

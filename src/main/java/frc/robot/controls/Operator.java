@@ -17,10 +17,10 @@ public class Operator {
   public static void configureControls(Elevator elevator) {
 
     //Move to max height
-    operator.get(operator.LEFT_TRIGGER_BUTTON).onTrue(new MoveToHeight(elevator, Constants.elevator.kElevatorTopHeightInches)); 
+    operator.get(operator.LEFT_TRIGGER_BUTTON).onTrue(new MoveToHeight(elevator, Constants.elevator.kElevatorTopHeightMeters)); 
 
     //Move to min height
-    operator.get(operator.RIGHT_TRIGGER_BUTTON).onTrue(new MoveToHeight(elevator, Constants.elevator.kElevatorBottomHeightInches)); 
+    operator.get(operator.RIGHT_TRIGGER_BUTTON).onTrue(new MoveToHeight(elevator, Constants.elevator.kElevatorBottomHeightMeters)); 
 
     //Calibrate Elevator using limit switches
     operator.get(DPad.UP).onTrue(new ElevatorCalibrationLimitSwitch(elevator));

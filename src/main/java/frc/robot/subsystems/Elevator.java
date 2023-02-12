@@ -25,7 +25,7 @@ public class Elevator extends SubsystemBase {
   private final DigitalInput m_bottomLimitSwitch;
   private final DigitalInput m_topLimitSwitch; 
   private final PIDController m_elevatorPID; 
-  private final DutyCycleEncoder m_absolutespoolEncoder; 
+  private final DutyCycleEncoder m_absoluteSpoolEncoder; 
 
   
 
@@ -43,7 +43,7 @@ public class Elevator extends SubsystemBase {
     m_elevatorMotor = motor; 
     m_bottomLimitSwitch = bottomSwitch; 
     m_topLimitSwitch = topSwitch;
-    m_absolutespoolEncoder = absoluteSpoolEncoder; 
+    m_absoluteSpoolEncoder = absoluteSpoolEncoder; 
 
     m_elevatorPID = new PIDController(Constants.elevator.kElevatorP, Constants.elevator.kElevatorI, Constants.elevator.kElevatorD);  
   }
@@ -69,11 +69,10 @@ public class Elevator extends SubsystemBase {
     }
   }
 
-
   public void calibrationSetMaxElevatorHeight(){
     if(m_topLimitSwitch.get()){
-
-      Constants.elevator.kElevatorTopHeightInches = getElevatorHeightInches(); //TODO: Put this value on shuffleboard 
+      Constants.elevator.kElevatorTopHeightMeters = getElevatorHeightMeters(); 
+    
     }
   }
 
@@ -88,29 +87,31 @@ public class Elevator extends SubsystemBase {
   }
 
   public double returnHeightError(double elevatorHeightDesired){
-    double error = elevatorHeightDesired-getElevatorHeightInches(); 
+    double error = elevatorHeightDesired-getElevatorHeightMeters(); 
     return error; 
   }
 
   public double returnClampedElevatorPID(double elevatorHeightDesired){
-    double pidValue = MathUtil.clamp(m_elevatorPID.calculate(getElevatorHeightInches(), elevatorHeightDesired ),-0.25,0.25);
+    double pidValue = MathUtil.clamp(m_elevatorPID.calculate(getElevatorHeightMeters(), elevatorHeightDesired ),-0.25,0.25);
        //TODO: Increase clamping range to make motor go faster if needed
 
     return pidValue; 
   }
 
-
-
-
-
-
-  public double getElevatorHeightInches() {
+  public double getElevatorHeightMeters() {
     
-    double elevatorHeight = m_elevatorMotor.getSelectedSensorPosition()*Constants.elevator.kElevatorDistPerMotorEncoderTick;
+    double elevatorHeight = m_elevatorMotor.getSelectedSensorPosition()*Constants.elevator.kElevatorDistPerMotorEncoderTickMeters;
     return elevatorHeight;  
       
   }
 
+  public void calibrationZeroAbsEncoder() {
+    while(m_bottomLimitSwitch.get() == false){
+      m_elevatorMotor.set(-0.25);
+    }
+    Constants.elevator.kElevatorAbsEncoderZeroPositionMeters = m_absoluteSpoolEncoder.getAbsolutePosition()*Constants.elevator.kSpoolAbsEncoderDistancePerTickMeters; //TODO: CHECK IF THIS IS IN TICKS
+  }
 
+ 
 }
 
