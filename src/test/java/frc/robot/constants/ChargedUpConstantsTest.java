@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -95,10 +96,17 @@ public class ChargedUpConstantsTest {
                 Pose3d poseDefault = oposeDefault.get();
                 Pose3d poseConstant = oposeConstant.get();
 
-                // check that the coordinates match to within a millimeter
+                // check that the translation coordinates match to within a millimeter
                 assertEquals(poseDefault.getX(), poseConstant.getX(), 0.001);
                 assertEquals(poseDefault.getY(), poseConstant.getY(), 0.001);
                 assertEquals(poseDefault.getZ(), poseConstant.getZ(), 0.001);
+
+                Rotation3d rotationDefault = poseDefault.getRotation();
+                Rotation3d rotationConstant = poseConstant.getRotation();
+
+                assertEquals(rotationDefault.getX(), rotationConstant.getX(), 0.00001);
+                assertEquals(rotationDefault.getY(), rotationConstant.getY(), 0.00001);
+                assertEquals(rotationDefault.getZ(), rotationConstant.getZ(), 0.00001);
             }
         }
     }
