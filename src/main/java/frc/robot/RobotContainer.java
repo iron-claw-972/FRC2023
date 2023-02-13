@@ -48,7 +48,6 @@ public class RobotContainer {
   // The robot's subsystems are defined here...
   private final Drivetrain m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab);
 
-
   // Controllers are defined here
   private final BaseDriverConfig m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
   private final Operator m_operator = new Operator();
