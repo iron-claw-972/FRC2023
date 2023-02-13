@@ -1,15 +1,20 @@
 package frc.robot.commands;
 
+import com.fasterxml.jackson.databind.JsonSerializable.Base;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.Constants;
+import frc.robot.controls.BaseControllerConfig;
+import frc.robot.controls.GameControllerConfig;
 import frc.robot.constants.DriveConstants;
-import frc.robot.controls.Driver;
 import frc.robot.subsystems.Drivetrain;
 
 public class DefaultDriveCommand extends CommandBase {
+
+  private final GameControllerConfig m_config = new GameControllerConfig();
   private final Drivetrain m_drive;
 
   public DefaultDriveCommand(Drivetrain drive) {
@@ -47,10 +52,10 @@ public class DefaultDriveCommand extends CommandBase {
     // }
 
     m_drive.setAllOptimize(true);
-    double xSpeed = Driver.getForwardTranslation();
-    double ySpeed = Driver.getSideTranslation();
-    double rot = Driver.getRotation();
-    boolean fieldRelative = Driver.getFieldRelative();
+    double xSpeed = m_config.getForwardTranslation();
+    double ySpeed = m_config.getSideTranslation();
+    double rot = m_config.getRotation();
+    boolean fieldRelative = m_config.getFieldRelative();
 
     // System.out.println("driving: " + xSpeed + "," + ySpeed + "," + rot +
     // "," + Driver.getRawForwardTranslation() + "," + Driver.getRawSideTranslation() +","+ Driver.getRawRotation());

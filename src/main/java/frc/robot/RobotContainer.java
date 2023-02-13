@@ -15,9 +15,7 @@ import frc.robot.commands.DoNothing;
 import frc.robot.commands.test.TestDriveVelocity;
 import frc.robot.constants.OIConstants;
 import frc.robot.controls.BaseControllerConfig;
-import frc.robot.controls.Driver;
 import frc.robot.controls.GameControllerConfig;
-import frc.robot.controls.Operator;
 import frc.robot.controls.TestControls;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.util.PathGroupLoader;
@@ -65,7 +63,7 @@ public class RobotContainer {
     LiveWindow.setEnabled(false);
 
     m_config.configureControls();
-    
+
 
     addTestCommands();
     autoChooserUpdate();
