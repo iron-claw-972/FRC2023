@@ -78,13 +78,34 @@ public class ChargedUpConstantsTest {
         // load the default resource file
         AprilTagFieldLayout aprilTagFieldLayoutDefault = AprilTagFieldLayout.loadFromResource(AprilTagFields.kDefaultField.m_resourceFile);
 
+        // check against known values
         testForTag3(aprilTagFieldLayoutDefault);
         testForTag7(aprilTagFieldLayoutDefault);
+
+        // check that the file matches the values in ChargedUpConstants.
+        for (int i = 1; i <= 8; i++) {
+            Optional<Pose3d> oposeDefault = aprilTagFieldLayoutDefault.getTagPose(i);
+            Optional<Pose3d> oposeConstant = ChargedUpConstants.aprilTagFieldLayout.getTagPose(i);
+
+            assertTrue(oposeDefault.isPresent());
+            assertTrue(oposeConstant.isPresent());
+
+            // if both poses are present
+            if (oposeDefault.isPresent() && oposeConstant.isPresent()) {
+                Pose3d poseDefault = oposeDefault.get();
+                Pose3d poseConstant = oposeConstant.get();
+
+                // check that the coordinates match to within a millimeter
+                assertEquals(poseDefault.getX(), poseConstant.getX(), 0.001);
+                assertEquals(poseDefault.getY(), poseConstant.getY(), 0.001);
+                assertEquals(poseDefault.getZ(), poseConstant.getZ(), 0.001);
+            }
+        }
     }
 
     @Test
     public void testLoadResourceChargedUp() throws IOException {
-        // load the default resource file
+        // load the ChargedUp resource file
         AprilTagFieldLayout aprilTagFieldLayoutDefault = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
 
         testForTag3(aprilTagFieldLayoutDefault);
