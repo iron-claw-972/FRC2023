@@ -1,6 +1,8 @@
 package frc.robot.constants.swerve;
 
 import edu.wpi.first.math.util.Units;
+import frc.robot.Robot;
+import frc.robot.Robot.RobotId;
 import frc.robot.constants.Constants;
 import frc.robot.constants.FalconConstants;
 import frc.robot.util.RobotType;
@@ -109,7 +111,7 @@ public abstract class DriveConstants {
     public static String kEncoderCAN = "CANivore";
 
     static {
-        if (Constants.kRobotType == RobotType.TEST) {
+        if (Robot.kRobotId == RobotId.SwerveTest) {
             kWheelRadius = Units.inchesToMeters(2);
 
             kTrackWidth = Units.inchesToMeters(22.75);//22.75 swerve bot, 20.75 comp bot
