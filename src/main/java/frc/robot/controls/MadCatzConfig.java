@@ -12,28 +12,29 @@ public class MadCatzConfig extends BaseControllerConfig {
   private static MadCatzController driverMCC = new MadCatzController(OIConstants.kDriverJoy);
   private final Drivetrain m_drive = new Drivetrain();
 
-      public void configureControls() { 
-        driverMCC.get(MadCatzButton.B1).whileTrue(new SetFormationX(m_drive));
-      }
+  public void configureControls() { 
+    driverMCC.get(MadCatzButton.B1).whileTrue(new SetFormationX(m_drive));
+  }
 
-      public double getRawSideTranslation() { 
-        return driverMCC.get(MadCatzAxis.X);
-      }
+  public double getRawSideTranslation() { 
+    return driverMCC.get(MadCatzAxis.X);
+  }
 
-      public double getRawForwardTranslation() {
-        return -driverMCC.get(MadCatzAxis.Y);
-      }
-      public double getRawRotation() { 
-        return driverMCC.get(MadCatzAxis.ZROTATE);
-      }
+  public double getRawForwardTranslation() {
+    return -driverMCC.get(MadCatzAxis.Y);
+  }
+  
+  public double getRawRotation() { 
+    return driverMCC.get(MadCatzAxis.ZROTATE);
+  }
 
-      public double getRawHeadingAngle() { 
-        return driverMCC.get(MadCatzAxis.ZROTATE) * Math.PI;
-      }
+  public double getRawHeadingAngle() { 
+    return driverMCC.get(MadCatzAxis.ZROTATE) * Math.PI;
+  }
 
-      public double getRawHeadingMagnitude() { 
-        return driverMCC.get(MadCatzAxis.SLIDER);
-      }
+  public double getRawHeadingMagnitude() { 
+    return driverMCC.get(MadCatzAxis.SLIDER);
+  }
       
 }
 

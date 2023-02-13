@@ -11,10 +11,6 @@ public class Ex3DProControllerConfig extends BaseControllerConfig {
 
   private static Ex3DProController driverEPC = new Ex3DProController(OIConstants.kDriverJoy);
   private final Drivetrain m_drive = new Drivetrain();
-  
-  public Ex3DProControllerConfig(){
-    super();
-  }
 
   public void configureControls() { 
   driverEPC.get(Ex3DProButton.B1).whileTrue(new SetFormationX(m_drive));

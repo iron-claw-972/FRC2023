@@ -34,6 +34,8 @@ public class RobotContainer {
   private final Drivetrain m_drive = new Drivetrain();
 
   private final BaseControllerConfig m_config = new GameControllerConfig();
+
+  private final GameController controller = new GameController(OIConstants.kDriverJoy);
   
 
   // Shuffleboard auto chooser
@@ -63,6 +65,7 @@ public class RobotContainer {
     LiveWindow.setEnabled(false);
 
     m_config.configureControls();
+    
 
     addTestCommands();
     autoChooserUpdate();
