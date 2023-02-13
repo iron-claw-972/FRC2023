@@ -19,10 +19,6 @@ public class TestDriveVelocity extends CommandBase{
   private GenericEntry m_testEntry;
   private TimeAccuracyTest[] m_timeAccuracyTests = new TimeAccuracyTest[4];
   
-  /**
-   * Creates a new command.
-   * @param drive the drivetrain instance
-   */
   public TestDriveVelocity(Drivetrain drive, GenericEntry testEntry) {
     m_drive = drive;
     m_testEntry = testEntry;

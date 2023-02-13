@@ -19,10 +19,6 @@ public class TestHeadingPID extends CommandBase {
   private GenericEntry m_testEntry;
   private TimeAccuracyTest m_timeAccuracyTest;
   
-  /**
-   * Creates a new command.
-   * @param drive the drivetrain instance
-   */
   public TestHeadingPID(Drivetrain drive, GenericEntry testEntry) {
     m_drive = drive;
     m_testEntry = testEntry;

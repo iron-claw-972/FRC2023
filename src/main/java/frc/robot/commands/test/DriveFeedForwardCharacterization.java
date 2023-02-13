@@ -19,10 +19,6 @@ public class DriveFeedForwardCharacterization extends CommandBase {
   private Timer m_timer = new Timer();
   private Drivetrain m_drive;
   
-  /**
-   * Creates a new command.
-   * @param drive the drivetrain instance
-   */
   public DriveFeedForwardCharacterization(Drivetrain drive) {
     m_drive = drive;
     addRequirements(drive);

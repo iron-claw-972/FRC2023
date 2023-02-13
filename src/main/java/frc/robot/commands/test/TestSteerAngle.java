@@ -18,10 +18,6 @@ public class TestSteerAngle extends CommandBase{
   private GenericEntry m_testEntry;
   private TimeAccuracyTest m_timeAccuracyTests[]  = new TimeAccuracyTest[4];
 
-  /**
-   * Creates a new command.
-   * @param drive the drivetrain instance
-   */
   public TestSteerAngle(Drivetrain drive, GenericEntry testEntry) {
     m_drive = drive;
     m_testEntry = testEntry;

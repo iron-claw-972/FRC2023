@@ -21,10 +21,6 @@ public class SteerFeedForwardCharacterizationSingle extends CommandBase {
   private Drivetrain m_drive;
   private SendableChooser<Module> m_moduleChooser;
 
-  /**
-   * Creates a new command.
-   * @param drive the drivetrain instance
-   */
   public SteerFeedForwardCharacterizationSingle(Drivetrain drive) {
     m_drive = drive;
     addRequirements(drive);

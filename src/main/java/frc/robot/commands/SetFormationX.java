@@ -12,10 +12,6 @@ import frc.robot.subsystems.Drivetrain;
 public class SetFormationX extends CommandBase {
   Drivetrain m_drive;
 
-  /**
-   * Creates a new command.
-   * @param drive the drivetrain instance
-   */
   public SetFormationX(Drivetrain drive) {
     this.m_drive=drive;
     addRequirements(drive);

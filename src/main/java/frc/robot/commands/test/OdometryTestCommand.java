@@ -19,10 +19,6 @@ public class OdometryTestCommand extends CommandBase {
   private Transform2d m_distanceToMove;
   private Pose2d m_error;
   
-  /**
-   * Creates a new command.
-   * @param drive the drivetrain instance
-   */
   public OdometryTestCommand(Drivetrain drive, Transform2d distanceToMove) {
     m_drive = drive; 
     // finalPose is position after robot moves from current position-- startPose-- by the values that are inputted-- distanceToMove
