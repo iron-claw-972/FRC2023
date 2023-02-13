@@ -23,8 +23,4 @@ public class ElevatorConstants {
 
   //GR: 12.8571429:1
   //1.375 = radius of spool(drum radius); 
-
-  
-
-
 }

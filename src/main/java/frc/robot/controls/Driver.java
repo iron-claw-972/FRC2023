@@ -6,7 +6,6 @@ import frc.robot.subsystems.Drivetrain;
 import lib.controllers.GameController;
 import lib.controllers.GameController.Button;
 
-
 public class Driver {
   private static GameController driver = new GameController(OIConstants.kDriverJoy);
 
@@ -17,7 +16,5 @@ public class Driver {
     
     // example button binding implementation
     driver.get(Button.A).onTrue(new DoNothing());
-  }
-
- 
+  } 
 }
