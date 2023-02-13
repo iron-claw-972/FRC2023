@@ -6,7 +6,10 @@ import frc.robot.subsystems.FourBarArm;
 public class ExtendToPosition extends CommandBase {
   FourBarArm m_arm;
   double m_armSetpoint;
-
+  
+  /**
+   * extends four-bar-arm to a radian position using PID
+   */
   public ExtendToPosition(FourBarArm arm, double setpoint) {
     addRequirements(arm);
     m_arm = arm;
