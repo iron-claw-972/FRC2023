@@ -21,7 +21,6 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.constants.DriveConstants;
 import frc.robot.constants.ModuleConstants;
@@ -118,12 +117,6 @@ public class Drivetrain extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (!Robot.isReal()) {
-      for (int i = 0; i < m_modules.length; i++) {
-        m_modules[i].periodic();
-      }
-    }
-
     updateDriveModuleFeedforwardShuffleboard();
     updateDriveModuleFeedforwardShuffleboard();
 
@@ -204,15 +197,14 @@ public class Drivetrain extends SubsystemBase {
     double xSpeed = m_xController.calculate(m_odometry.getPoseMeters().getX(), x);
     double ySpeed = m_yController.calculate(m_odometry.getPoseMeters().getY(), y);
     double rotRadians = m_rotationController.calculate(getAngleHeading(), rot);
-    // System.out.println(rotRadians);
     driveRot(xSpeed, ySpeed, rotRadians, true);
   }
   
   /** Updates the field relative position of the robot. */
   public void updateOdometry() {
     m_robotPose = m_odometry.update(
-    m_pigeon.getRotation2d(),
-    getModulePositions()
+      m_pigeon.getRotation2d(),
+      getModulePositions()
     );
   }
   
