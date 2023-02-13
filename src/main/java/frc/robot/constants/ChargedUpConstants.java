@@ -10,11 +10,11 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
 
 /**
- * Constants related to the PowerPlay game.
+ * Constants related to the ChargedUp game.
  * <p>
  * For example, the dimensions of the field and the location of field elements.
  */
-public class PowerPlayConstants {
+public class ChargedUpConstants {
     // The field dimensions
     /** FRC Field Length (in meters) */
     public static final double fieldLength = Units.feetToMeters(54);
@@ -58,7 +58,7 @@ public class PowerPlayConstants {
     // i.e. aprilTagFieldLayoutX.setOrigin(OriginPosition.) kBlueAllianceWallRightSide kRedAllianceWallRightSide
 
     /**
-     * Location of the April Tags for the FRC PowerPlay game.
+     * Location of the April Tags for the FRC ChargedUp game.
      * <p>
      * The field dimensions come into play when the Alliance origin is shifted?
      * i.e. aprilTagFieldLayout.setOrigin(OriginPosition.) kBlueAllianceWallRightSide kRedAllianceWallRightSide
