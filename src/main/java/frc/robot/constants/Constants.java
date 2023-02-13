@@ -11,9 +11,32 @@ public final class Constants {
   // public static final String kCanivoreCAN = ""; // replace this if using Canivore
   public static final String kRioCAN = "rio";
 
+  /**
+   * Operator Input Constants
+   * @deprecated Instead of frc.robot.constants.Constants.oi use frc.robot.constants.OIConstants
+   */
+  @Deprecated
   public static final OIConstants oi = new OIConstants();
+
+  /**
+   * Drive Constants
+   * @deprecated Instead of frc.robot.constants.Constants.drive use frc.robot.constants.DriveConstants
+   */
+  @Deprecated
   public static final DriveConstants drive = new DriveConstants();
+
+  /**
+   * Autonomous Constants
+   * @deprecated Instead of frc.robot.constants.Constants.auto use frc.robot.constants.AutoConstants
+   */
+  @Deprecated
   public static final AutoConstants auto = new AutoConstants();
+
+  /**
+   * Falcon Constants
+   * @deprecated Instead of frc.robot.constants.Constants.falcon use frc.robot.constants.FalconConstants
+   */
+  @Deprecated
   public static final FalconConstants falcon = new FalconConstants();
   public static final DeployingBarConstants deploybar = new DeployingBarConstants();
 }

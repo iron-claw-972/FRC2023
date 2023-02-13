@@ -12,6 +12,7 @@ import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
+import frc.robot.constants.DriveConstants;
 import frc.robot.util.MotorFactory;
 
 public class Drivetrain extends SubsystemBase {
@@ -23,10 +24,10 @@ public class Drivetrain extends SubsystemBase {
 
   public Drivetrain() {
 
-    m_leftMotor1 = MotorFactory.createTalonFX(Constants.drive.kLeftMotor1, Constants.kRioCAN);
-    m_leftMotor2 = MotorFactory.createTalonFX(Constants.drive.kLeftMotor2, Constants.kRioCAN);
-    m_rightMotor1 = MotorFactory.createTalonFX(Constants.drive.kRightMotor1, Constants.kRioCAN);
-    m_rightMotor2 = MotorFactory.createTalonFX(Constants.drive.kRightMotor2, Constants.kRioCAN);
+    m_leftMotor1 = MotorFactory.createTalonFX(DriveConstants.kLeftMotor1, Constants.kRioCAN);
+    m_leftMotor2 = MotorFactory.createTalonFX(DriveConstants.kLeftMotor2, Constants.kRioCAN);
+    m_rightMotor1 = MotorFactory.createTalonFX(DriveConstants.kRightMotor1, Constants.kRioCAN);
+    m_rightMotor2 = MotorFactory.createTalonFX(DriveConstants.kRightMotor2, Constants.kRioCAN);
 
     SupplyCurrentLimitConfiguration supplyCurrentLimit = new SupplyCurrentLimitConfiguration(true, 40, 45, 1);
 
