@@ -112,6 +112,12 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link Robot} class. */
   @Override
   public void autonomousInit() {
+    // Get the autonomous command.
+    // This access is fast (about 14 microseconds) because the value is already resident in the Network Tables.
+    // There was a problem last year because the operation also installed about over a dozen items (taking more than 20 ms).
+    m_autoCommand = m_robotContainer.getAutonomousCommand();
+
+    // If there is an autonomous command, then schedule it
     if (m_autoCommand != null) {
       m_autoCommand.schedule();
     }
