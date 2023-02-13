@@ -9,8 +9,6 @@ public final class Constants {
   
   public static final double kCancoderResolution = 4096;
 
-  public static final RobotType kRobotType = RobotType.COMP;
-
   // CAN bus names
   // Replaced for DriveConstants.xxxxCAN constants
   @Deprecated
@@ -18,10 +16,24 @@ public final class Constants {
   @Deprecated
   public static final String kRioCAN = "rio";
 
+  /**
+   * Operator Input Constants
+   * @deprecated Instead of frc.robot.constants.Constants.oi use frc.robot.constants.OIConstants
+   */
   @Deprecated
   public static final OIConstants oi = new OIConstants();
+
+  /**
+   * Autonomous Constants
+   * @deprecated Instead of frc.robot.constants.Constants.auto use frc.robot.constants.AutoConstants
+   */
   @Deprecated
   public static final AutoConstants auto = new AutoConstants();
+
+  /**
+   * Falcon Constants
+   * @deprecated Instead of frc.robot.constants.Constants.falcon use frc.robot.constants.FalconConstants
+   */
   @Deprecated
   public static final FalconConstants falcon = new FalconConstants();
 }

@@ -4,7 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.util.LogManager;
@@ -21,15 +23,44 @@ public class Robot extends TimedRobot {
 
   private Command m_autoCommand;
   private RobotContainer m_robotContainer;
- 
+
+  public enum RobotId {
+    Default, SwerveCompetition, SwerveTest,
+    ClassBot1, ClassBot2, ClassBot3, ClassBot4
+  };
+  public static RobotId kRobotId = RobotId.Default;
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
   @Override
   public void robotInit() {
-    m_robotContainer = new RobotContainer();
+    // Determine the Robot Identity from Preferences
+    // To Set the Robot Name
+    //   SimGUI: Persistent Values, Preferences, RobotId, then restart Simulation
+    //     changes networktables.json, networktables.json.bck (both Untracked)
+    // set the default preference to something safe
+    if (!Preferences.containsKey(kRobotId.name())) {
+      Preferences.setString(kRobotId.name(), RobotId.Default.toString());
+    }
+    // get the RobotId from Preferences
+    String strId = Preferences.getString(kRobotId.name(), RobotId.Default.toString());
+    // match the string to an RobotId
+    for (RobotId rid : RobotId.values()) {
+      // does it match the preference rid
+      if (rid.name().equals(strId)) {
+        // set the RobotId
+        kRobotId = rid;
+        break;
+      }
+      
+    }
+    // report the RobotId to the SmartDashboard
+    SmartDashboard.putString("Robot Identity", kRobotId.name());
 
+    // build the RobotContainer
+    m_robotContainer = new RobotContainer();
   }
  
   /**
