@@ -1,7 +1,5 @@
 package frc.robot.constants;
 
-import frc.robot.util.RobotType;
-
 public final class Constants {
   public static final double kGravitationalAccel = 9.8;
   public static final double kMaxVoltage = 12.0;
