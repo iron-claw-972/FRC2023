@@ -20,11 +20,6 @@ public class ExtendToPosition extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return m_arm.atSetpoint();
-  }
-
-  @Override
-  public void end(boolean interrupted) {
-    m_arm.end();
+    return m_arm.reachedSetpoint();
   }
 }

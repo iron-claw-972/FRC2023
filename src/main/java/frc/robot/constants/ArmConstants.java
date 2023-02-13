@@ -4,7 +4,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 
 public class ArmConstants {
   // arm ids - TBD
-  public static final int motorID = -1;
+  public static final int motorID = 1;
 
   // pid values - TBD
   public static final double kP = -1;
