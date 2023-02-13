@@ -16,5 +16,5 @@ public class Driver {
     
     // example button binding implementation
     driver.get(Button.A).onTrue(new DoNothing());
-  } 
+  }
 }
