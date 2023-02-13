@@ -6,11 +6,13 @@ import frc.robot.subsystems.FourBarArm;
 public class ExtendToPosition extends CommandBase {
   FourBarArm m_arm;
   double m_armSetpoint;
+
   public ExtendToPosition(FourBarArm arm, double setpoint) {
     addRequirements(arm);
     m_arm = arm;
     m_armSetpoint = setpoint;
   }
+
   @Override
   public void initialize() {
     m_arm.setArmSetpoint(m_armSetpoint);
@@ -18,7 +20,7 @@ public class ExtendToPosition extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return m_arm.isFinished();
+    return m_arm.atSetpoint();
   }
 
   @Override

@@ -38,7 +38,7 @@ public class FourBarArm extends SubsystemBase {
     m_motor.set(MathUtil.clamp(m_pid.calculate(m_encoder.getPosition()), ArmConstants.minMotorPower, ArmConstants.maxMotorPower));
   }
 
-  public boolean isFinished() {
+  public boolean atSetpoint() {
     return m_pid.atSetpoint();
   }
 
