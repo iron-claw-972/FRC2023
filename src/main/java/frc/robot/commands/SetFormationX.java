@@ -13,7 +13,7 @@ public class SetFormationX extends CommandBase {
   Drivetrain m_drive;
 
   public SetFormationX(Drivetrain drive) {
-    this.m_drive=drive;
+    this.m_drive = drive;
     addRequirements(drive);
   }
 
