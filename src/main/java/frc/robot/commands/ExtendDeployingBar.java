@@ -1,8 +1,7 @@
 package frc.robot.commands;
 
-import frc.robot.subsystems.DeployingBar;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.DeployingBar;
 
 public class ExtendDeployingBar extends CommandBase {
   private final DeployingBar m_deployingbar;

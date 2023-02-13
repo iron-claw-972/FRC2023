@@ -1,11 +1,9 @@
 package frc.robot.controls;
 
 import frc.robot.commands.ExtendDeployingBar;
-import frc.robot.constants.Constants;
 import frc.robot.constants.DeployingBarConstants;
-import frc.robot.subsystems.DeployingBar;
-import frc.robot.commands.DoNothing;
 import frc.robot.constants.OIConstants;
+import frc.robot.subsystems.DeployingBar;
 import lib.controllers.GameController;
 import lib.controllers.GameController.Button;
 

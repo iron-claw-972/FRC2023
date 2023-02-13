@@ -1,8 +1,4 @@
 package frc.robot.controls;
-import frc.robot.Robot;
-import frc.robot.constants.Constants;
-import frc.robot.util.TestType;
-
 import frc.robot.commands.DoNothing;
 import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.Drivetrain;
