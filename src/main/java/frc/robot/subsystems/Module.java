@@ -16,7 +16,6 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.constants.DriveConstants;
 import frc.robot.constants.ModuleConstants;
@@ -31,52 +30,27 @@ import lib.ctre_shims.TalonEncoder;
 public class Module {
 
   /**
-   * @param driveMotorID the ID of the drive motor
-   * @param steerMotorID the ID of the steer motor
-   * @param encoderID the id of the CANcoder for measuring the module's angle
-   * @param steerOffset the offset of the CANcoder's angle
-   * @param feedforwardKS the static feedforward of the drive motor
-   * @param feedforwardKV the velocity feedforward of the drive motor
-   * @return
+   * @param moduleConstants the constants for the module, found in {@link ModuleConstants}
+   * @param moduleTab the shuffleboard tab for the module
+   * @see ModuleConstants
    */
   public static Module create(ModuleConstants moduleConstants, ShuffleboardTab moduleTab) {
-    return new Module(moduleConstants, moduleTab);
-  }
-
-  public static Module create(
-      int driveMotorPort,
-      int steerMotorPort,
-      int encoderPort,
-      double encoderOffset,
-      double driveFeedForwardKS,
-      double driveFeedForwardKV,
-      double driveP,
-      double driveI,
-      double driveD,
-      double steerFeedForwardKS,
-      double steerFeedForwardKV,
-      double steerP,
-      double steerI,
-      double steerD,
-      ModuleType moduleType,
-      ShuffleboardTab moduleTab
-    ) {
     return new Module(
-      driveMotorPort,
-      steerMotorPort,
-      encoderPort,
-      encoderOffset,
-      driveFeedForwardKS,
-      driveFeedForwardKV,
-      driveP,
-      driveI,
-      driveD,
-      steerFeedForwardKS,
-      steerFeedForwardKV,
-      steerP,
-      steerI,
-      steerD,
-      moduleType,
+      moduleConstants.getDrivePort(),
+      moduleConstants.getSteerPort(),
+      moduleConstants.getEncoderPort(),
+      moduleConstants.getSteerOffset(),
+      moduleConstants.getDriveKS(),
+      moduleConstants.getDriveKV(),
+      moduleConstants.getDriveP(),
+      moduleConstants.getDriveI(),
+      moduleConstants.getDriveD(),
+      moduleConstants.getSteerKS(),
+      moduleConstants.getSteerKV(),
+      moduleConstants.getSteerP(),
+      moduleConstants.getSteerI(),
+      moduleConstants.getSteerD(),
+      moduleConstants.getType(),
       moduleTab
     );
   }
@@ -106,7 +80,7 @@ public class Module {
   private double m_steerPIDOutput = 0.0;
 
   private SwerveModuleState m_desiredState = new SwerveModuleState();
-  ShuffleboardTab m_moduleTab;
+  private ShuffleboardTab m_moduleTab;
 
   private MedianFilter m_driveVelocityMedianFilter = new MedianFilter(80);
 
@@ -114,29 +88,8 @@ public class Module {
   private boolean m_stateDeadband = true;
 
   private ModuleType m_moduleType;
-  
-  private Module(ModuleConstants moduleConstants, ShuffleboardTab moduleTab) {
-    this(
-      moduleConstants.getDrivePort(),
-      moduleConstants.getSteerPort(),
-      moduleConstants.getEncoderPort(),
-      moduleConstants.getSteerOffset(),
-      moduleConstants.getDriveKS(),
-      moduleConstants.getDriveKV(),
-      moduleConstants.getDriveP(),
-      moduleConstants.getDriveI(),
-      moduleConstants.getDriveD(),
-      moduleConstants.getSteerKS(),
-      moduleConstants.getSteerKV(),
-      moduleConstants.getSteerP(),
-      moduleConstants.getSteerI(),
-      moduleConstants.getSteerD(),
-      moduleConstants.getType(),
-      moduleTab
-    );
-  }
 
-  public Module(
+  private Module(
     int driveMotorPort,
     int steerMotorPort,
     int encoderPort,
@@ -155,14 +108,9 @@ public class Module {
     ShuffleboardTab moduleTab
   ) {
     
-    if (Robot.isReal()) {
-      // TODO: The CANBus needs to be a constant because on the new 2023 bot, drive motors use Canivore, not rio
-      m_driveMotor = MotorFactory.createTalonFX(driveMotorPort, Constants.kCanivoreCAN);
-      m_steerMotor = MotorFactory.createTalonFX(steerMotorPort, Constants.kCanivoreCAN);
-    } else {
-      m_driveMotor = new WPI_TalonFX(driveMotorPort);
-      m_steerMotor = new WPI_TalonFX(steerMotorPort);
-    }
+    // TODO: The CANBus needs to be a constant because on the new 2023 bot, drive motors use Canivore, not rio
+    m_driveMotor = MotorFactory.createTalonFX(driveMotorPort, Constants.kCanivoreCAN);
+    m_steerMotor = MotorFactory.createTalonFX(steerMotorPort, Constants.kCanivoreCAN);
 
     m_moduleTab = moduleTab;
     m_moduleType = moduleType;
@@ -465,10 +413,6 @@ public class Module {
 
   public double getSteerOutputVoltage() {
     return m_steerMotor.getMotorOutputVoltage();
-  }
-
-  public void periodic() {
-    // This method will be called once per scheduler run, mainly only used for simulation
   }
 
   public ModuleType getModuleType() {
