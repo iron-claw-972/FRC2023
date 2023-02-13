@@ -15,7 +15,7 @@ public class DriveConstants {
   
   public static final double kMaxSpeed = FalconConstants.kMaxRpm / 60.0 / kDriveGearRatio * kWheelRadius * 2 * Math.PI;
   
-  public static final double kMaxAngularSpeed = FalconConstants.kMaxRpm / 60.0 / kSteerGearRatio * 2 * Math.PI; // 8.3 rot/s
+  public static final double kMaxAngularSpeed = kMaxSpeed / kWheelRadius;
   public static final double kMaxAngularAccel = 8 * 2 * Math.PI; // 8 rotations per second per second
   
   public static final int kPigeon = 0;// TestSwerveBot=13 , CompBot=0?
