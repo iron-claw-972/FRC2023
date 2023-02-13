@@ -42,6 +42,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 import frc.robot.constants.FieldConstants;
 import frc.robot.constants.VisionConstants;
+import frc.robot.subsystems.Drivetrain;
 
 
 
@@ -49,21 +50,25 @@ public class Vision {
   private static RobotPoseEstimator robotPoseEstimator;
   // private static RobotPoseEstimator robotPoseEstimator2;
   private static AprilTagFieldLayout aprilTagFieldLayout;
+  private static Drivetrain drive;
  
 
   /**
-   * Calls the other setup function
+   * Sets up the cameras and pose estimator
+   * @param drive The drivetrain
    */
-  public static void setup() {
-    setup(new PhotonCamera(VisionConstants.kCameraName1), new PhotonCamera(VisionConstants.kCameraName2));
+  public static void setup(Drivetrain drive) {
+    setup(drive, new PhotonCamera(VisionConstants.kCameraName1), new PhotonCamera(VisionConstants.kCameraName2));
   }
 
   /**
    * Sets up the cameras and pose estimator
+   * @param drive The drivetrain
    * @param camera1 The first camera
    * @param camera2 The second camera
    */
-  public static void setup(PhotonCamera camera1, PhotonCamera camera2) {
+  public static void setup(Drivetrain drive, PhotonCamera camera1, PhotonCamera camera2) {
+    Vision.drive=drive;
     ArrayList<Pair<PhotonCamera, Transform3d>> camList;
     if(VisionConstants.k2Cameras){
       camList = new ArrayList<Pair<PhotonCamera, Transform3d>>(List.of(
@@ -145,6 +150,14 @@ public class Vision {
     // } else {
     //     return new Pair<Pose2d, Double>(null, 0.0);
     // }
+}
+
+public static Pose2d getPose2d(Pose2d referencePose){
+  Optional<Pair<Pose3d, Double>> p = getEstimatedGlobalPose(referencePose==null?drive.getPose():referencePose);
+  if(p.isPresent() && p.get().getFirst() != null && p.get().getSecond() != null && p.get().getFirst().getX() > -10000 && p.get().getSecond() >= 0){
+    return p.get().getFirst().toPose2d();
+  }
+  return null;
 }
 
 /**

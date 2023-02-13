@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -36,19 +37,10 @@ public class RobotContainer {
 
   // Shuffleboard stuff
   SendableChooser<Command> m_autoCommand = new SendableChooser<>();
-  SendableChooser<Teams> m_teamChooser = new SendableChooser<>();
+  SendableChooser<Alliance> m_allianceChooser = new SendableChooser<>();
 
-  // Vision stuff 
+  // Where the robot will score.
   public static Node selectedNode = null;
-
-  /// Selection values (grid, row, spot)
-  public static int[] selectValues = {0,0,0};
-
-  // Timer for clearing array
-  public static double selectTime;
-
-  // How much time it should take (in frames)
-  public final static double selectTimeAmount=100;
 
   // Array of april tags. The index of the april tag in the array is equal to its id, and aprilTags[0] is null.
   public final static Pose3d[] aprilTags = new Pose3d[9];
@@ -58,10 +50,8 @@ public class RobotContainer {
   public final static Node[][] redNodes = new Node[4][];
 
 
-
-  // Possible teams
-  public static enum Teams {BLUE, RED};
-  public static Teams team;
+  // The robot's alliance
+  public static Alliance alliance;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -76,7 +66,7 @@ public class RobotContainer {
     Operator.configureControls(m_drive);
     TestControls.configureControls(m_drive);
 
-    Vision.setup();
+    Vision.setup(m_drive);
 
     // Puts April tags in array
     for(int i = 1; i <= 8; i++){
@@ -88,8 +78,8 @@ public class RobotContainer {
       blueNodes[i] = new Node[10];
       redNodes[i] = new Node[10];
       for(int j = 1; j <= 9; j++){
-        blueNodes[i][j] = new Node(Teams.BLUE, i, j);
-        redNodes[i][j] = new Node(Teams.RED, i, j);
+        blueNodes[i][j] = new Node(Alliance.Blue, i, j);
+        redNodes[i][j] = new Node(Alliance.Red, i, j);
       }
     }
 
@@ -113,8 +103,10 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return m_autoCommand.getSelected();
   }
-  public Teams getTeam() {
-    return m_teamChooser.getSelected();
+  public void allianceChooserUpdate() {
+    alliance = DriverStation.getAlliance();
+    // alliance = m_allianceChooser.getSelected();
+    // Shuffleboard.getTab("Main").add("Alliance Chooser", m_allianceChooser);
   }
 
   /**

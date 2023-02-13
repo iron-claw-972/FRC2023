@@ -47,7 +47,7 @@ public class Drivetrain extends SubsystemBase {
 
   private final DifferentialDrivePoseEstimator m_poseEstimator;
 
-  private final DifferentialDriveKinematics m_kinematics = new DifferentialDriveKinematics(Constants.drive.kTrackWidth);
+  private final DifferentialDriveKinematics m_kinematics = new DifferentialDriveKinematics(DriveConstants.kTrackWidth);
   private final AHRS m_gyro;
 
 

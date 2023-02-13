@@ -17,8 +17,8 @@ import frc.robot.util.Vision;
 
 public class Align extends CommandBase{
   private Drivetrain m_drive;
-  private double setpoint;
-  private double angle;
+  private double m_setpoint;
+  private double m_angle;
   // private PIDController m_pid = new PIDController(1, 0.01, 0.1);
 
   /**
@@ -28,7 +28,7 @@ public class Align extends CommandBase{
    */
   public Align(double angle, Drivetrain drive){
     addRequirements(drive);
-    setpoint=angle;
+    m_setpoint=angle;
     m_drive=drive;
   }
 
@@ -37,7 +37,7 @@ public class Align extends CommandBase{
     if(p.isPresent() && p.get().getFirst() != null && p.get().getSecond() != null && p.get().getFirst().getX() > -10000 && p.get().getSecond() >= 0){
       return p.get().getFirst().toPose2d().getRotation().getRadians();
     }
-    return angle;
+    return m_angle;
   }
 
   /**
@@ -45,8 +45,8 @@ public class Align extends CommandBase{
    */
   @Override
   public void initialize(){
-    angle=setpoint-2*Math.PI;
-    angle=getAngle();
+    m_angle=m_setpoint-2*Math.PI;
+    m_angle=getAngle();
   }
 
   /**
@@ -55,14 +55,14 @@ public class Align extends CommandBase{
    */
   @Override
   public void execute(){
-    angle=getAngle();
-    double a = angle;
-    if(a<0&&setpoint>0){
+    m_angle=getAngle();
+    double a = m_angle;
+    if(a<0&&m_setpoint>0){
       a+=2*Math.PI;
-    }else if(a>0&&setpoint<0){
+    }else if(a>0&&m_setpoint<0){
       a-=2*Math.PI;
     }
-    double speed = a>setpoint?-0.1:0.1;
+    double speed = a>m_setpoint?-0.1:0.1;
     m_drive.arcadeDrive(0, -speed);
   }
 
@@ -83,9 +83,9 @@ public class Align extends CommandBase{
   @Override
   public boolean isFinished(){
     double a = getAngle();
-    if(a<0&&setpoint>0){
+    if(a<0&&m_setpoint>0){
       a += 2*Math.PI;
     }
-    return Math.abs(a-setpoint)<Units.degreesToRadians(1);
+    return Math.abs(a-m_setpoint)<Units.degreesToRadians(1);
   }
 }

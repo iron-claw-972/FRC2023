@@ -30,19 +30,19 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
-import frc.robot.RobotContainer.Teams;
 
 /**Class to store data about scoring locations*/
 public class Node {
     // Possible node types
     public enum Types {CONE, CUBE, HYBRID};
 
-    public final Teams team;
+    public final Alliance alliance;
     public final int row;
     public final int x;
     public final Pose3d pose;
@@ -56,35 +56,41 @@ public class Node {
      * @param row
      *  Which row it's in (1 = bottom, 2 = middle, 3 = top)
      * @param x
-     *  X position of the node from the alliance area (1-9)
+     *  Grid column from left to right (1-9)
      */
-    public Node(Teams team, int row, int x){
-        this.team=team;
+    public Node(Alliance alliance, int row, int x){
+        this.alliance=alliance;
         this.row=row;
         this.x=x;
         type = row==1?Types.HYBRID:x%3==2?Types.CUBE:Types.CONE;
 
-        Pose3d tag = RobotContainer.aprilTags[(x-1)/3+(team==Teams.RED?1:6)];
+        // Which April tag this node is closest to
+        Pose3d tag = RobotContainer.aprilTags[(x-1)/3+(alliance==Alliance.Red?1:6)];
+        // The x coordinate in meters (x2 because x is already used)
         double x2;
+        // Vertical distance in meters
         double z;
         switch(row){
             case(1):
-            x2 = tag.getX()+Units.inchesToMeters(14.25/2)*(team==Teams.RED?-1:1);
+            x2 = tag.getX()+Units.inchesToMeters(14.25/2)*(alliance==Alliance.Red?-1:1);
             z = 0;
             break;
             case(2):
-            x2 = tag.getX()-Units.inchesToMeters((31.625-14.25)/2)*(team==Teams.RED?-1:1);
+            x2 = tag.getX()-Units.inchesToMeters((31.625-14.25)/2)*(alliance==Alliance.Red?-1:1);
             z = Units.inchesToMeters(type==Types.CUBE?23.5:34);
             break;
             case(3):
-            x2 = tag.getX()-Units.inchesToMeters(39.75-14.25)*(team==Teams.RED?-1:1);
+            x2 = tag.getX()-Units.inchesToMeters(39.75-14.25)*(alliance==Alliance.Red?-1:1);
             z = Units.inchesToMeters(type==Types.CUBE?35.5:46);
             break;
             default:
             throw(new IllegalArgumentException("Row had to be 1, 2, or 3"));
         }
-        double y = tag.getY()+(x%3==2?0:Units.inchesToMeters(22))*((x%3==0)^(team==Teams.RED)?-1:1);
+        // Y coordinate in meters
+        double y = tag.getY()+(x%3==2?0:Units.inchesToMeters(22))*((x%3==0)^(alliance==Alliance.Red)?-1:1);
+        // The pose of the node
         pose=new Pose3d(x2, y, z, tag.getRotation());
-        scorePose=new Pose2d(tag.getX()+(15.25+26/2)*(team==Teams.RED?-1:1), y, new Rotation2d(team==Teams.RED?0:Math.PI));
+        // The pose the robot goes to to score
+        scorePose=new Pose2d(tag.getX()+(15.25+26/2)*(alliance==Alliance.Red?-1:1), y, new Rotation2d(alliance==Alliance.Red?0:Math.PI));
     }
 }

@@ -15,19 +15,19 @@ import frc.robot.util.Vision;
 
 public class TestVision2 extends CommandBase{
   private Drivetrain m_drive;
-  private double encoderStart;
-  private Pose2d startPose;
-  private double encoderPosition;
-  private Pose2d currentPose = null;
-  private int endCounter = 0;
+  private double m_encoderStart;
+  private Pose2d m_startPose;
+  private double m_encoderPosition;
+  private Pose2d m_currentPose = null;
+  private int m_endCounter = 0;
   private double m_speed;
-  private int direction = 1;
-  private boolean turned = false;
-  private double distanceToMove;
-  private double closest;
+  private int m_direction = 1;
+  private boolean m_turned = false;
+  private double m_distanceToMove;
+  private double m_closest;
 
   //How many frames it has to not see anything to end the command
-  private final int endDelay = 5;
+  private static final int endDelay = 5;
 
   /**
    * Moves the robot a certain distance and then moves it back
@@ -39,7 +39,7 @@ public class TestVision2 extends CommandBase{
     addRequirements(drive);
     m_drive=drive;
     m_speed=speed;
-    distanceToMove=distance;
+    m_distanceToMove=distance;
   }
 
   private double getDist(){
@@ -47,25 +47,17 @@ public class TestVision2 extends CommandBase{
     return m_drive.getLeftDistance()/2+m_drive.getRightDistance()/2;
   }
 
-  private Pose2d getPose(){
-    Optional<Pair<Pose3d, Double>> p = Vision.getEstimatedGlobalPose(currentPose==null?m_drive.getPose():currentPose);
-    if(p.isPresent() && p.get().getFirst() != null && p.get().getSecond() != null && p.get().getFirst().getX() > -10000 && p.get().getSecond() >= 0){
-      return p.get().getFirst().toPose2d();
-    }
-    return null;
-  }
-
   /**
    * Initializes the command
    */
   @Override
   public void initialize(){
-    encoderStart=getDist();
-    startPose=getPose();
-    direction=1;
-    turned=false;
-    endCounter=0;
-    closest=100;
+    m_encoderStart=getDist();
+    m_startPose=Vision.getPose2d(m_currentPose);
+    m_direction=1;
+    m_turned=false;
+    m_endCounter=0;
+    m_closest=100;
   }
 
   /**
@@ -75,27 +67,27 @@ public class TestVision2 extends CommandBase{
    */
   @Override
   public void execute(){
-    m_drive.arcadeDrive(direction*m_speed, 0);
-    if(getPose()==null){
-      endCounter++;
+    m_drive.arcadeDrive(m_direction*m_speed, 0);
+    if(Vision.getPose2d(m_currentPose)==null){
+      m_endCounter++;
     }else{
-      endCounter = Math.max(0, endCounter-1);
-      currentPose = getPose();
-      encoderPosition = getDist();
-      double dist1 = Math.abs(encoderPosition-encoderStart);
-      double dist2 = Math.sqrt(Math.pow(currentPose.getX()-startPose.getX(), 2) + Math.pow(currentPose.getY()-startPose.getY(), 2));
-      if(dist2>=distanceToMove&&direction==1){
+      m_endCounter = Math.max(0, m_endCounter-1);
+      m_currentPose = Vision.getPose2d(m_currentPose);
+      m_encoderPosition = getDist();
+      double dist1 = Math.abs(m_encoderPosition-m_encoderStart);
+      double dist2 = Math.sqrt(Math.pow(m_currentPose.getX()-m_startPose.getX(), 2) + Math.pow(m_currentPose.getY()-m_startPose.getY(), 2));
+      if(dist2>=m_distanceToMove&&m_direction==1){
         System.out.printf("Encoder distance: %.4f\n", dist1);
-        direction=-1;
-        turned=true;
-        // endCounter=1000;
+        m_direction=-1;
+        m_turned=true;
+        // m_endCounter=1000;
       }
-      if(turned){
-        closest=Math.min(dist2, closest);
-        if(dist2-closest>0.05){
+      if(m_turned){
+        m_closest=Math.min(dist2, m_closest);
+        if(dist2-m_closest>0.05){
           System.out.println(dist2);
-          System.out.println(closest);
-          endCounter+=2;
+          System.out.println(m_closest);
+          m_endCounter+=2;
           m_drive.arcadeDrive(0, 0);
         }
       }
@@ -108,16 +100,16 @@ public class TestVision2 extends CommandBase{
    */
   @Override
   public void end(boolean interrupted){
-    System.out.printf("\nVision distance: %.4f\nEncoder distance: %.4f\n", Math.sqrt(Math.pow(currentPose.getX()-startPose.getX(), 2) + Math.pow(currentPose.getY()-startPose.getY(), 2)), Math.abs(encoderPosition-encoderStart));
+    System.out.printf("\nVision distance: %.4f\nEncoder distance: %.4f\n", Math.sqrt(Math.pow(m_currentPose.getX()-m_startPose.getX(), 2) + Math.pow(m_currentPose.getY()-m_startPose.getY(), 2)), Math.abs(m_encoderPosition-m_encoderStart));
     m_drive.arcadeDrive(0, 0);
   }
 
   /**
    * Returns if the command is finished
-   * @return If endCounter is greater than endDelay
+   * @return If m_endCounter is greater than endDelay
    */
   @Override
   public boolean isFinished(){
-    return endCounter>=endDelay;
+    return m_endCounter>=endDelay;
   }
 }
