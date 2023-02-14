@@ -10,6 +10,8 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
@@ -20,7 +22,7 @@ import lib.ctre_shims.TalonEncoder;
 
 public class DeployingBar extends SubsystemBase {
 
-  private final TalonFX m_motor;
+  private final WPI_TalonFX m_motor;
   private final PIDController m_pid;
   private final TalonEncoder m_encoder;
   private boolean isEnabled;
@@ -28,6 +30,7 @@ public class DeployingBar extends SubsystemBase {
   public DeployingBar() {
     m_motor = MotorFactory.createTalonFX(DeployingBarConstants.kLeftMotor, Constants.kRioCAN);
     m_motor.setNeutralMode(NeutralMode.Brake);
+    m_motor.setSafetyEnabled(true);
     m_encoder = new TalonEncoder(m_motor);
     m_encoder.setDistancePerPulse(DeployingBarConstants.kDistancePerPulse);
     m_pid = new PIDController(DeployingBarConstants.kP, DeployingBarConstants.kI, DeployingBarConstants.kD);
@@ -38,6 +41,9 @@ public class DeployingBar extends SubsystemBase {
   public void periodic() {
     if(isEnabled){
       m_motor.set(ControlMode.PercentOutput, m_pid.calculate(m_encoder.getDistance()));
+    }
+    else{
+      m_motor.set(ControlMode.PercentOutput, 0);
     }
   }
 
