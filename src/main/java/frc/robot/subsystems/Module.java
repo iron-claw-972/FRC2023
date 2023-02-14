@@ -459,7 +459,7 @@ public class Module {
   public void setupModulesShuffleboard() {
     m_moduleTab.addNumber(m_moduleType.getAbbreviation() + " desired speed", () -> getDesiredVelocity());
     // Drive PID output
-    m_moduleTab.addNumber(m_moduleType.getAbbreviation() +" PID Output", () -> getDrivePIDOutput());
+    m_moduleTab.addNumber(m_moduleType.getAbbreviation() + " PID Output", () -> getDrivePIDOutput());
     // get drive velocity
     m_moduleTab.addNumber("Vel " + m_moduleType.getAbbreviation() + " Raw", () -> getDriveVelocity());
     // drivePIDs
@@ -467,7 +467,7 @@ public class Module {
     // Median Filtered Velocity Values
     m_moduleTab.addNumber("Vel " + m_moduleType.getAbbreviation() + " Filtered", () -> getDriveVelocityFiltered());
     // Desired Steer angles
-    m_moduleTab.addNumber( m_moduleType.getAbbreviation() + "desired angle", () -> getDesiredAngle().getRadians());
+    m_moduleTab.addNumber(m_moduleType.getAbbreviation() + " desired angle", () -> getDesiredAngle().getRadians());
     // Steer angles
     m_moduleTab.addNumber("Angle " + m_moduleType.getAbbreviation(), () -> getSteerAngle());
     // Steer Velocity
