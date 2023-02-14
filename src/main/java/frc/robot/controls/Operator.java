@@ -8,6 +8,10 @@ import frc.robot.commands.DoNothing;
 import frc.robot.constants.Constants;
 import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.commands.arm.ExtendToPosition;
+import frc.robot.constants.ArmConstants;
+import frc.robot.constants.OIConstants;
+import frc.robot.subsystems.FourBarArm;
 import lib.controllers.GameController;
 import lib.controllers.GameController.Button;
 import lib.controllers.GameController.DPad;
@@ -25,12 +29,16 @@ public class Operator {
 
   private static GameController operator = new GameController(OIConstants.kOperatorJoy);
 
-  public static void configureControls(Drivetrain drive) {
+  public static void configureControls(Drivetrain drive, FourBarArm arm) {
     // operator.get(Button.A).whenPressed(new DoNothing());
     operator.get(DPad.LEFT).onTrue(new InstantCommand(()->DPadPress(DPad.LEFT)));
     operator.get(DPad.UP).onTrue(new InstantCommand(()->DPadPress(DPad.UP)));
     operator.get(DPad.RIGHT).onTrue(new InstantCommand(()->DPadPress(DPad.RIGHT)));
     operator.get(DPad.DOWN).onTrue(new InstantCommand(()->DPadPress(DPad.DOWN)));
+    operator.get(Button.Y).onTrue(new ExtendToPosition(arm, ArmConstants.topPosition));
+    operator.get(Button.X).onTrue(new ExtendToPosition(arm, ArmConstants.middlePosiiton));
+    operator.get(Button.A).onTrue(new ExtendToPosition(arm, ArmConstants.intakePosition));
+    operator.get(Button.Y).onTrue(new ExtendToPosition(arm, ArmConstants.shelfPosition));
   }
 
     /**
