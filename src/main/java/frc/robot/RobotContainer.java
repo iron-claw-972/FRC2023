@@ -78,6 +78,11 @@ public class RobotContainer {
     m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive,m_driver));
   }
 
+  /**
+   * Resets the yaw of the pigeon, unless it has already been reset. Or use force to reset it no matter what.
+   * 
+   * @param force if the yaw should be reset even if it already has been reset since robot enable.
+   */
   public void initDriveYaw(boolean force) {
     m_drive.initializePigeonYaw(force);
   }

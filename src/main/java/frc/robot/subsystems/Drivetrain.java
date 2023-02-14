@@ -125,16 +125,25 @@ public class Drivetrain extends SubsystemBase {
     m_fieldDisplay.setRobotPose(getPose());
   }
   
+  /**
+   * 
+   * Resets the pigeon IMU's yaw.
+   * 
+   * @param degrees the new yaw angle, in degrees.
+   */
   public void setPigeonYaw(double degrees) {
     m_pigeon.setYaw(degrees);
   }
   
   /**
   * Resets the pigeon yaw, but only if it hasn't already been reset. Will reset it to {@link DriveConstants.kStartingHeadingDegrees}
+  *
+  * @param force Will reset the yaw no matter what
   */
   public void initializePigeonYaw(boolean force) {
     if (!m_hasResetYaw || force) {
       m_hasResetYaw = true;
+      // TODO: reset the yaw to different angles depending on auto start position
       setPigeonYaw(DriveConstants.kStartingHeadingDegrees);
     }
   }
@@ -228,12 +237,11 @@ public class Drivetrain extends SubsystemBase {
   }
   
   /**
-  * Resets the odometry to the given pose and gyro angle.
+  * Resets the odometry to the given pose.
   * @param pose current robot pose
-  * @param gyroAngle current robot gyro angle
   */
-  public void resetOdometry(Pose2d pose, Rotation2d gyroAngle) {
-    m_odometry.resetPosition(gyroAngle, getModulePositions(), pose);
+  public void resetOdometry(Pose2d pose) {
+    m_odometry.resetPosition(getRotation2d(), getModulePositions(), pose);
   }
   
   /**
@@ -279,7 +287,9 @@ public class Drivetrain extends SubsystemBase {
   }
   
   /**
-   * Enables or disables the state deadband for all swerve modules.
+   * Enables or disables the state deadband for all swerve modules. 
+   * The state deadband determines if the robot will stop drive and steer motors when inputted drive velocity is low. 
+   * It should be enabled for all regular driving, to prevent releasing the controls from setting the angles.
    */
   public void enableStateDeadband(boolean stateDeadBand){
     for (int i = 0; i < 4; i++) {
@@ -289,6 +299,7 @@ public class Drivetrain extends SubsystemBase {
 
   /**
    * Sets the optimize state for all swerve modules.
+   * Optimizing the state means the modules will not turn the steer motors more than 90 degrees for any one movement.
    */
   public void setAllOptimize(Boolean optimizeSate) {
     for (int i = 0; i < 4; i++) {
@@ -327,6 +338,7 @@ public class Drivetrain extends SubsystemBase {
     m_drivetrainTab.add("yController", getYController());
     m_drivetrainTab.add("rotationController", getRotationController());
     
+    // add angles
     m_drivetrainTab.addNumber("getAngle", () -> getAngleHeading());
     m_drivetrainTab.addNumber("heading PID output", () -> m_headingPIDOutput);
     
@@ -336,6 +348,7 @@ public class Drivetrain extends SubsystemBase {
     
     // m_drivetrainTab.add("odometry", m_odometry);
     
+    // add the controllers to shuffleboard for tuning
     m_drivetrainTab.add(getXController());
     m_drivetrainTab.add(getYController());
     m_drivetrainTab.add(getRotationController());

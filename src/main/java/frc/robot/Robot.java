@@ -95,6 +95,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+
+    // When auto starts, we know the start position, so we should always reset the yaw to face the right way.
     m_robotContainer.initDriveYaw(true);
 
     // Get the autonomous command.
@@ -120,6 +122,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
 
+    // If we enable teleop for the first time, we should reset the drive yaw. Mainly for testing.
     m_robotContainer.initDriveYaw(false);
 
     // This makes sure that the autonomous stops running when

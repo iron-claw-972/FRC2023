@@ -235,6 +235,11 @@ public class Module {
     m_steerMotor.setVoltage(voltage);
   }
 
+  /**
+   * Enables or disables the state deadband for this swerve module. 
+   * The state deadband determines if this module will stop drive and steer motors when inputted drive velocity is low. 
+   * It should be enabled for all regular driving, to prevent releasing the controls from setting the angles.
+   */
   public void enableStateDeadband(boolean stateDeadband){
     m_stateDeadband = stateDeadband;
   }
@@ -395,6 +400,11 @@ public class Module {
   public double getSteerOutput() {
     return m_steerPIDOutput;
   }
+
+  /**
+   * Sets the optimize state for this swerve module.
+   * Optimizing the state means the module will not turn the steer motors more than 90 degrees for any one movement.
+   */
   public void setOptimize(Boolean setOptimize) {
     this.m_optimizeStates = setOptimize;
   }
