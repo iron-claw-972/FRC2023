@@ -43,7 +43,8 @@ public class DeployingBar extends SubsystemBase {
       m_motor.set(ControlMode.PercentOutput, m_pid.calculate(m_encoder.getDistance()));
     }
     else{
-      m_motor.set(ControlMode.PercentOutput, 0);
+      //m_motor.set(ControlMode.PercentOutput, 0);
+      m_motor.feed();
     }
   }
 
