@@ -16,6 +16,7 @@ public class ArmConstants {
   public static final double initialPosition = 0;
   public static final double shelfPosition = -1;
   public static final double intakePosition = -1;
+  public static final double lowPosiiton = -1;
   public static final double middlePosiiton = -1;
   public static final double topPosition = -1;
 }
