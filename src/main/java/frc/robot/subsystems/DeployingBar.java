@@ -10,62 +10,48 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constants.Constants;
 import frc.robot.constants.DeployingBarConstants;
+import frc.robot.constants.FalconConstants;
 import frc.robot.util.MotorFactory;
+import lib.ctre_shims.TalonEncoder;
 
 public class DeployingBar extends SubsystemBase {
 
-  private final TalonFX m_motor1;
-  private final TalonFX m_motor2;
-
-  private double setpoint;
-  private PIDController m_pid;
+  private final TalonFX m_motor;
+  private final PIDController m_pid;
+  private final TalonEncoder m_encoder;
   private boolean isEnabled;
 
   public DeployingBar() {
-    m_motor1 = MotorFactory.createTalonFX(DeployingBarConstants.kLeftMotor, getName());
-    m_motor2 = MotorFactory.createTalonFX(DeployingBarConstants.kRightMotor, getName());
+    m_motor = MotorFactory.createTalonFX(DeployingBarConstants.kLeftMotor, Constants.kRioCAN);
+    m_motor.setNeutralMode(NeutralMode.Brake);
+    m_encoder = new TalonEncoder(m_motor);
+    m_encoder.setDistancePerPulse(DeployingBarConstants.kDistancePerPulse);
     m_pid = new PIDController(DeployingBarConstants.kP, DeployingBarConstants.kI, DeployingBarConstants.kD);
-    m_motor1.setNeutralMode(NeutralMode.Brake);
-    m_motor2.setNeutralMode(NeutralMode.Brake);
+    m_pid.setTolerance(DeployingBarConstants.kTolerance);
+    isEnabled = false;
   }
   @Override
   public void periodic() {
     if(isEnabled){
-      m_motor1.set(ControlMode.PercentOutput, m_pid.calculate(getEncoderValue(), setpoint));
-      m_motor2.set(ControlMode.PercentOutput, m_pid.calculate(getEncoderValue(), setpoint));
+      m_motor.set(ControlMode.PercentOutput, m_pid.calculate(m_encoder.getDistance()));
     }
   }
 
-  public void setSetpoint(double target){
-    setpoint = target;
+  public void setSetpoint(double setpoint){
+    m_pid.reset();
+    m_pid.setSetpoint(setpoint);
+  }
+
+  public void setEnable(boolean enableStatus){
+    isEnabled = enableStatus;
   }
 
   public boolean atSetpoint(){
     return m_pid.atSetpoint();
-  }
-  
-  public double getEncoderValue(){
-    return (m_motor1.getSelectedSensorPosition() + m_motor2.getSelectedSensorPosition())/2;
-  }
-
-  public void setEnableStatus(boolean enableStatus){
-    if(enableStatus)
-      isEnabled = true;
-    else
-      isEnabled = false;
-  }
-
-  public void zeroEncoders(){
-    m_motor1.setSelectedSensorPosition(0);
-    m_motor2.setSelectedSensorPosition(0);
-  }
-
-  public void resetPID(){
-    m_pid.reset();
   }
 
 }
