@@ -5,7 +5,7 @@ public class ArmConstants {
   public static final int motorID = 5;
 
   // TODO: PID values - TBD (fake values for now)
-  public static final double kP = -1;
+  public static final double kP = 1.0;
   public static final double kI = 0.0;
   public static final double kD = 0.0;
   public static final double kTolerance = 0.02;
