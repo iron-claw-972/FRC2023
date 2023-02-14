@@ -25,6 +25,7 @@ import frc.robot.controls.BaseDriverConfig;
 import frc.robot.controls.GameControllerDriverConfig;
 import frc.robot.controls.Operator;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.FourBarArm;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -46,6 +47,7 @@ public class RobotContainer {
   private final ShuffleboardTab m_testTab = Shuffleboard.getTab("Test");
 
   // The robot's subsystems are defined here...
+  private final FourBarArm m_arm = new FourBarArm();
   private final Drivetrain m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab);
 
   // Controllers are defined here
@@ -59,7 +61,7 @@ public class RobotContainer {
     DriverStation.silenceJoystickConnectionWarning(true);
 
     m_driver.configureControls();
-    m_operator.configureControls();
+    m_operator.configureControls(m_arm);
 
     LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
     LiveWindow.setEnabled(false);
