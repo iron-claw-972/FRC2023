@@ -9,8 +9,8 @@ public class ArmConstants {
   public static final double kI = 0.0;
   public static final double kD = 0.0;
   public static final double kTolerance = 0.02;
-  public static final double minMotorPower = -1.0;
-  public static final double maxMotorPower = +1.0;
+  public static final double minMotorPower = -0.05;
+  public static final double maxMotorPower = +0.05;
 
   // TODO: distance values - TBD (fake values for now)
   public static final double initialPosition = 0.0;
