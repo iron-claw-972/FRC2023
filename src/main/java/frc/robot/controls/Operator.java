@@ -14,7 +14,7 @@ public class Operator {
    * Configures all of the operator controls.
    */
   public static void configureControls(FourBarArm arm) {
-    operator.get(Button.Y).onTrue(new ExtendToPosition(arm, ArmConstants.topPosition));
+    operator.get(Button.B).onTrue(new ExtendToPosition(arm, ArmConstants.topPosition));
     operator.get(Button.X).onTrue(new ExtendToPosition(arm, ArmConstants.middlePosiiton));
     operator.get(Button.A).onTrue(new ExtendToPosition(arm, ArmConstants.intakePosition));
     operator.get(Button.Y).onTrue(new ExtendToPosition(arm, ArmConstants.shelfPosition));
