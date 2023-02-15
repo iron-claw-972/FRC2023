@@ -5,13 +5,6 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "java",
-      "name": "Launch PolynomialRegressionTest",
-      "request": "launch",
-      "mainClass": "frc.robot.util.PolynomialRegressionTest",
-      "projectName": "FRC2023"
-    },
-    {
       "type": "wpilib",
       "name": "WPILib Desktop Debug",
       "request": "launch",
