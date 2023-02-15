@@ -33,6 +33,7 @@ public class ScoreCommand extends SequentialCommandGroup{
               new MoveToPose(RobotContainer.selectedNode.scorePose, drive),
               new ExtendToPosition(arm, RobotContainer.selectedNode.row==1?ArmConstants.lowPosiiton:RobotContainer.selectedNode.row==2?ArmConstants.middlePosiiton:ArmConstants.topPosition)
           ),
+          // Let go of game piece
           new ParallelCommandGroup(
             // Add move elevater here
             new ExtendToPosition(arm, ArmConstants.initialPosition)

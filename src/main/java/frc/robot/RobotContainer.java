@@ -64,7 +64,7 @@ public class RobotContainer {
     // load paths before auto starts
     PathGroupLoader.loadPathGroups();
 
-    Driver.configureControls(m_drive);
+    Driver.configureControls(m_drive, m_arm);
     Operator.configureControls(m_drive, m_arm);
     TestControls.configureControls(m_drive);
 
