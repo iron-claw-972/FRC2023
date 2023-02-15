@@ -1,14 +1,14 @@
 package frc.robot.controls;
 
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.ElevatorCalibrationAbsoluteEncoder;
 import frc.robot.commands.MoveToHeight;
-import frc.robot.commands.ResetEncoderAtBottom;
+import frc.robot.commands.arm.ExtendToPosition;
+import frc.robot.constants.ArmConstants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.FourBarArm;
 import lib.controllers.GameController;
-import lib.controllers.GameController.Axis;
 import lib.controllers.GameController.Button;
 import lib.controllers.GameController.DPad;
 
@@ -38,5 +38,13 @@ public class Operator {
 
   public static double getRawThrottleValue() {
     return operator.get(Axis.LEFT_Y);
+  /**
+   * Configures all of the operator controls.
+   */
+  public static void configureControls(FourBarArm arm) {
+    operator.get(Button.Y).onTrue(new ExtendToPosition(arm, ArmConstants.topPosition));
+    operator.get(Button.X).onTrue(new ExtendToPosition(arm, ArmConstants.middlePosiiton));
+    operator.get(Button.A).onTrue(new ExtendToPosition(arm, ArmConstants.intakePosition));
+    operator.get(Button.Y).onTrue(new ExtendToPosition(arm, ArmConstants.shelfPosition));
   }
 }

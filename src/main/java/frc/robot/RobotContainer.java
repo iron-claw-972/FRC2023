@@ -15,6 +15,7 @@ import frc.robot.controls.Operator;
 import frc.robot.controls.TestControls;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.FourBarArm;
 import frc.robot.util.PathGroupLoader;
 
 /**
@@ -27,6 +28,7 @@ public class RobotContainer {
   // The robot's subsystems are defined here...
   private final Drivetrain m_drive = new Drivetrain();
   private final Elevator m_elevator = new Elevator(); 
+  private final FourBarArm m_arm = new FourBarArm();
 
   // Shuffleboard stuff
   SendableChooser<Command> m_autoCommand = new SendableChooser<>();
@@ -42,6 +44,7 @@ public class RobotContainer {
 
     Driver.configureControls(m_drive);
     Operator.configureControls(m_elevator);
+    Operator.configureControls(m_arm);
     TestControls.configureControls(m_drive);
 
     LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
