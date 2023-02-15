@@ -53,7 +53,7 @@ public class RobotContainer {
 
   // The robot's subsystems are defined here...
   private final Drivetrain m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab);
-  private final FourBarArm m_arm = new FourBarArm(m_armTab);
+  public final FourBarArm m_arm = new FourBarArm(m_armTab);
   private final Intake m_intake = new Intake();
 
   // Controllers are defined here

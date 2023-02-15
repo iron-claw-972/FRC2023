@@ -157,5 +157,12 @@ public class Robot extends TimedRobot {
 
   @Override
   public void simulationPeriodic() {
+    m_robotContainer.m_arm.simulationPeriodic();
+  }
+
+  @Override
+  public void close() {
+    m_robotContainer.m_arm.close();
+    super.close();
   }
 }
