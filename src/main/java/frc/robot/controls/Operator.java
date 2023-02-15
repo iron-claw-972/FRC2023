@@ -1,6 +1,5 @@
 package frc.robot.controls;
 
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.arm.ExtendToPosition;
 import frc.robot.constants.ArmConstants;
 import frc.robot.subsystems.FourBarArm;
@@ -14,6 +13,9 @@ public class Operator {
    * Configures all of the operator controls.
    */
   public static void configureControls(FourBarArm arm) {
-    
+    operator.get(Button.Y).onTrue(new ExtendToPosition(arm, ArmConstants.topPosition));
+    operator.get(Button.X).onTrue(new ExtendToPosition(arm, ArmConstants.middlePosiiton));
+    operator.get(Button.A).onTrue(new ExtendToPosition(arm, ArmConstants.intakePosition));
+    operator.get(Button.Y).onTrue(new ExtendToPosition(arm, ArmConstants.shelfPosition));
   }
 }

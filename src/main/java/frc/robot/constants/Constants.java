@@ -38,6 +38,4 @@ public final class Constants {
    */
   @Deprecated
   public static final FalconConstants falcon = new FalconConstants();
-  @Deprecated
-  public static final ArmConstants arm = new ArmConstants();
 }

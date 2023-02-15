@@ -162,6 +162,8 @@ bin/
 *-window.json
 *simgui.json
 simgui-ds.json
+networktables.json
+networktables.json.bck
 
 # Simulation puts log files in root of repo
 *.wpilog

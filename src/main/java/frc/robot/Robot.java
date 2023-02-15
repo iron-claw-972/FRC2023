@@ -4,7 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.util.LogManager;
@@ -19,12 +21,41 @@ public class Robot extends TimedRobot {
   private Command m_autoCommand;
   private RobotContainer m_robotContainer;
 
+  public static final String kRobotId = "RobotId";
+  public enum RobotId {
+    Default, SwerveCompetition, SwerveTest,
+    ClassBot1, ClassBot2, ClassBot3, ClassBot4
+  };
+  private static RobotId robotId = RobotId.Default;
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
   @Override
   public void robotInit() {
+    // Determine the Robot Identity from Preferences
+    // To Set the Robot Name
+    //   SimGUI: Persistent Values, Preferences, RobotId, then restart Simulation
+    //     changes networktables.json, networktables.json.bck (both Untracked)
+    // set the default preference to something safe
+    if (!Preferences.containsKey(kRobotId)) {
+      Preferences.setString(kRobotId, RobotId.Default.toString());
+    }
+    // get the RobotId from Preferences
+    String strId = Preferences.getString(kRobotId, RobotId.Default.toString());
+    // match the string to an RobotId
+    for (RobotId rid : RobotId.values()) {
+      // does it match the preference string?
+      if (strId.equals(rid.toString())) {
+        // yes, so it is the RobotId
+        robotId = rid;
+      }
+    }
+    // report the RobotId to the SmartDashboard
+    SmartDashboard.putString("Robot Identity", robotId.toString());
+
+    // build the RobotContainer
     m_robotContainer = new RobotContainer();
   }
 
@@ -48,13 +79,17 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically when the robot is disabled */
   @Override
-  public void disabledPeriodic() {
-    m_autoCommand = m_robotContainer.getAutonomousCommand(); // update the auto command before auto starts
-  }
+  public void disabledPeriodic() {}
 
   /** This autonomous runs the autonomous command selected by your {@link Robot} class. */
   @Override
   public void autonomousInit() {
+    // Get the autonomous command.
+    // This access is fast (about 14 microseconds) because the value is already resident in the Network Tables.
+    // There was a problem last year because the operation also installed about over a dozen items (taking more than 20 ms).
+    m_autoCommand = m_robotContainer.getAutonomousCommand();
+
+    // If there is an autonomous command, then schedule it
     if (m_autoCommand != null) {
       m_autoCommand.schedule();
     }

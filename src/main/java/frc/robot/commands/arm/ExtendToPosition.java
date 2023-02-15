@@ -6,11 +6,16 @@ import frc.robot.subsystems.FourBarArm;
 public class ExtendToPosition extends CommandBase {
   FourBarArm m_arm;
   double m_armSetpoint;
+  
+  /**
+   * extends four-bar-arm to a radian position using PID
+   */
   public ExtendToPosition(FourBarArm arm, double setpoint) {
     addRequirements(arm);
     m_arm = arm;
     m_armSetpoint = setpoint;
   }
+
   @Override
   public void initialize() {
     m_arm.setArmSetpoint(m_armSetpoint);
@@ -18,11 +23,6 @@ public class ExtendToPosition extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return m_arm.isFinished();
-  }
-
-  @Override
-  public void end(boolean interrupted) {
-    m_arm.end();
+    return m_arm.reachedSetpoint();
   }
 }
