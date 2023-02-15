@@ -26,6 +26,7 @@ import frc.robot.controls.GameControllerDriverConfig;
 import frc.robot.controls.Operator;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.FourBarArm;
+import frc.robot.util.PathGroupLoader;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -59,6 +60,9 @@ public class RobotContainer {
 
     // This is really annoying so it's disabled
     DriverStation.silenceJoystickConnectionWarning(true);
+
+    // load paths before auto starts
+    PathGroupLoader.loadPathGroups();
 
     m_driver.configureControls();
     m_operator.configureControls(m_arm);
