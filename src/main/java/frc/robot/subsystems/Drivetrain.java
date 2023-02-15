@@ -61,6 +61,7 @@ public class Drivetrain extends SubsystemBase {
   private final Field2d m_fieldDisplay = new Field2d();
   
   // PID Controllers
+  // translation controllers have dummy constants that are just good enough to run the odometry test
   private final PIDController m_xController = new PIDController(0.1, 0, 0);
   private final PIDController m_yController = new PIDController(0.1, 0, 0);
   private final PIDController m_rotationController = new PIDController(DriveConstants.kHeadingP, DriveConstants.kHeadingI, DriveConstants.kHeadingD);
