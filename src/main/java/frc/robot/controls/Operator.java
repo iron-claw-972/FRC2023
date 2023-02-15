@@ -1,6 +1,6 @@
 package frc.robot.controls;
 
-import frc.robot.commands.ExtendDeployingBar;
+import frc.robot.commands.RotateDeployingBar;
 import frc.robot.constants.DeployingBarConstants;
 import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.DeployingBar;
@@ -13,8 +13,8 @@ public class Operator {
    * Configures all of the operator controls.
    */
   public static void configureControls(DeployingBar deployingBar) {
-    operator.get(Button.A).onTrue(new ExtendDeployingBar(deployingBar, DeployingBarConstants.kMaxExtension));
-    operator.get(Button.B).onTrue(new ExtendDeployingBar(deployingBar, DeployingBarConstants.kMinExtension));
+    operator.get(Button.A).onTrue(new RotateDeployingBar(deployingBar, DeployingBarConstants.kMaxRotation));
+    operator.get(Button.B).onTrue(new RotateDeployingBar(deployingBar, DeployingBarConstants.kMinRotation));
    
   }
 }
