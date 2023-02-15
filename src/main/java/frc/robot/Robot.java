@@ -124,10 +124,4 @@ public class Robot extends TimedRobot {
     m_robotContainer.m_arm.close();
     super.close();
   }
-
-  @Override
-  public void disabledInit() {
-    // This just makes sure that our simulation code knows that the motor's off.
-    m_robotContainer.m_arm.end();
-  }
 }
