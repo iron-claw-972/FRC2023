@@ -26,7 +26,6 @@ public class DriveFeedForwardCharacterization extends CommandBase {
   
   public void initialize() {
     m_timer.start();
-    m_drive.setAllOptimize(false);
     m_feedForwardCharacterizationData = new FeedForwardCharacterizationData[] {
       new FeedForwardCharacterizationData(),
       new FeedForwardCharacterizationData(),
@@ -79,7 +78,6 @@ public class DriveFeedForwardCharacterization extends CommandBase {
   }
   
   public boolean isFinished() {
-    m_drive.setAllOptimize(true);
     //System.out.println(value > 11);
     return m_voltage > TestConstants.kDriveFeedForwardMaxVoltage;
   }
