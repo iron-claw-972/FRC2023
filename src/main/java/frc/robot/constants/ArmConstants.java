@@ -1,5 +1,7 @@
 package frc.robot.constants;
 
+import edu.wpi.first.math.util.Units;
+
 public class ArmConstants {
   // TODO: arm ids - TBD (fake using 5 -- 1-4 have been taken)
   public static final int motorID = 5;
@@ -8,7 +10,7 @@ public class ArmConstants {
   public static final double kP = 1.0;
   public static final double kI = 0.0;
   public static final double kD = 0.0;
-  public static final double kTolerance = 0.02;
+  public static final double kTolerance = Units.degreesToRadians(1);
   public static final double minMotorPower = -0.05;
   public static final double maxMotorPower = +0.05;
 

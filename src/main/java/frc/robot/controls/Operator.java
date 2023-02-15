@@ -17,6 +17,6 @@ public class Operator {
     operator.get(Button.Y).onTrue(new ExtendToPosition(arm, ArmConstants.topPosition));
     operator.get(Button.X).onTrue(new ExtendToPosition(arm, ArmConstants.middlePosition));
     operator.get(Button.A).onTrue(new ExtendToPosition(arm, ArmConstants.intakePosition));
-    operator.get(Button.Y).onTrue(new ExtendToPosition(arm, ArmConstants.shelfPosition));
+    operator.get(Button.B).onTrue(new ExtendToPosition(arm, ArmConstants.shelfPosition));
   }
 }
