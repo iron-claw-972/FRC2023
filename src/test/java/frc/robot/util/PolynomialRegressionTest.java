@@ -8,8 +8,6 @@ public class PolynomialRegressionTest {
 
   /**
   * Unit tests the {@code PolynomialRegression} data type.
-  *
-  * @param args the command-line arguments
   */
   @Test
   public void testRegression() {
