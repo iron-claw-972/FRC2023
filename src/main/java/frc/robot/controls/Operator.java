@@ -7,7 +7,6 @@ import frc.robot.subsystems.FourBarArm;
 import lib.controllers.GameController;
 import lib.controllers.GameController.Button;
 
-// TODO
 public class Operator {
   private GameController operator = new GameController(OIConstants.kOperatorJoy);
 
