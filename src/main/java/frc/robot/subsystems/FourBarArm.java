@@ -16,7 +16,6 @@ public class FourBarArm extends SubsystemBase {
   private final PIDController m_pid;
   private final RelativeEncoder m_encoder;
   private final ArmFeedforward m_feedforward;
-  private double m_armSetpoint;
 
   public FourBarArm() {
     // configure the motor
@@ -61,7 +60,7 @@ public class FourBarArm extends SubsystemBase {
     // calculate the PID power level
     double pidPower = m_pid.calculate(m_encoder.getPosition());
     // calculate the feedforward power (nothing for now)
-    double feedforwardPower = 0.0;
+    double feedforwardPower = m_feedforward.calculate(m_encoder.getPosition(), m_encoder.getVelocity());
 
     // set the motor power
     m_motor.set(MathUtil.clamp(pidPower + feedforwardPower, ArmConstants.minMotorPower, ArmConstants.maxMotorPower));
