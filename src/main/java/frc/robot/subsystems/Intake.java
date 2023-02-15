@@ -38,11 +38,6 @@ public class Intake extends SubsystemBase {
     rightMotor.set(speed);
   }
 
-  public void outtake(double speed) {
-    leftMotor.set(speed);
-    rightMotor.set(-speed);
-  }
-
   public void stop() {
     leftMotor.set(0);
     rightMotor.set(0);
@@ -51,20 +46,5 @@ public class Intake extends SubsystemBase {
   public void rotate(double speed) {
     leftMotor.set(speed);
     rightMotor.set(speed);
-  }
-
-  public void spin(double speed) {
-    leftMotor.set(-speed);
-    rightMotor.set(-speed);
-  }
-
-  public void intakeContinuously(double speed) {
-    leftMotor.set(-speed);
-    rightMotor.set(speed);
-  }
-
-  public void outtakeContinuously(double speed) {
-    leftMotor.set(speed); 
-    rightMotor.set(-speed);
   }
 } 
