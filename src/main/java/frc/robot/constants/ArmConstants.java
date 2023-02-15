@@ -11,14 +11,14 @@ public class ArmConstants {
   public static final double kI = 0.0;
   public static final double kD = 0.0;
   public static final double kTolerance = Units.degreesToRadians(1);
-  public static final double minMotorPower = -0.05;
-  public static final double maxMotorPower = +0.05;
+  public static final double kminMotorPower = -0.05;
+  public static final double kmaxMotorPower = +0.05;
 
   // TODO: distance values - TBD (fake values for now)
-  public static final double initialPosition = 0.0;
-  public static final double shelfPosition = 0.4;
-  public static final double intakePosition = 0.3;
-  public static final double middlePosition = 0.4;
-  public static final double topPosition = 0.5;
-  public static final double lowPosition = intakePosition;
+  public static final double kinitialPosition = 0.0;
+  public static final double kshelfPosition = 0.4;
+  public static final double kintakePosition = 0.3;
+  public static final double kmiddlePosition = 0.4;
+  public static final double ktopPosition = 0.5;
+  public static final double klowPosition = kintakePosition;
 }
