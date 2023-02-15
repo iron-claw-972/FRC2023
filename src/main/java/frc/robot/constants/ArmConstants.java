@@ -1,21 +1,23 @@
 package frc.robot.constants;
 
+import edu.wpi.first.math.util.Units;
+
 public class ArmConstants {
-  // arm ids - TBD
-  public static final int motorID = 1;
+  // TODO: arm ids - TBD (fake using 5 -- 1-4 have been taken)
+  public static final int motorID = 5;
 
-  // pid values - TBD
-  public static final double kP = -1;
-  public static final double kI = -1;
-  public static final double kD = -1;
-  public static final double kTolerance = -1;
-  public static final double minMotorPower = -1;
-  public static final double maxMotorPower = -1;
+  // TODO: PID values - TBD (fake values for now)
+  public static final double kP = 1.0;
+  public static final double kI = 0.0;
+  public static final double kD = 0.0;
+  public static final double kTolerance = Units.degreesToRadians(1);
+  public static final double minMotorPower = -0.05;
+  public static final double maxMotorPower = +0.05;
 
-  // distance values - TBD
-  public static final double initialPosition = 0;
-  public static final double shelfPosition = -1;
-  public static final double intakePosition = -1;
-  public static final double middlePosiiton = -1;
-  public static final double topPosition = -1;
+  // TODO: distance values - TBD (fake values for now)
+  public static final double initialPosition = 0.0;
+  public static final double shelfPosition = 0.4;
+  public static final double intakePosition = 0.3;
+  public static final double middlePosition = 0.4;
+  public static final double topPosition = 0.5;
 }
