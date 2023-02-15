@@ -9,6 +9,8 @@ import lib.controllers.GameController.Button;
 
 public class Operator {
   private static GameController operator = new GameController(OIConstants.kOperatorJoy);
+  
+  private static double speed = 0.1;
 
   /**
    * Configures all of the operator controls.
@@ -19,4 +21,8 @@ public class Operator {
     operator.get(Button.A).onTrue(new ExtendToPosition(arm, ArmConstants.intakePosition));
     operator.get(Button.Y).onTrue(new ExtendToPosition(arm, ArmConstants.shelfPosition));
   }
+
+  
+
+  
 }
