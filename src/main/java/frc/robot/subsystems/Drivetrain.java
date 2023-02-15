@@ -61,7 +61,4 @@ public class Drivetrain extends SubsystemBase {
     m_rightMotor1.set(ControlMode.PercentOutput, throttle - turn);
   }
 
-  public void drive() {
-    arcadeDrive(Driver.controller.get(Axis.LEFT_Y), Driver.controller.get(Axis.RIGHT_X));
-  }
 }
