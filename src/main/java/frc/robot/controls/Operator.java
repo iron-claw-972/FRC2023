@@ -36,9 +36,9 @@ public class Operator {
     operator.get(DPad.RIGHT).onTrue(new InstantCommand(()->DPadPress(DPad.RIGHT)));
     operator.get(DPad.DOWN).onTrue(new InstantCommand(()->DPadPress(DPad.DOWN)));
     operator.get(Button.Y).onTrue(new ExtendToPosition(arm, ArmConstants.topPosition));
-    operator.get(Button.X).onTrue(new ExtendToPosition(arm, ArmConstants.middlePosiiton));
+    operator.get(Button.X).onTrue(new ExtendToPosition(arm, ArmConstants.middlePosition));
     operator.get(Button.A).onTrue(new ExtendToPosition(arm, ArmConstants.intakePosition));
-    operator.get(Button.Y).onTrue(new ExtendToPosition(arm, ArmConstants.shelfPosition));
+    operator.get(Button.B).onTrue(new ExtendToPosition(arm, ArmConstants.shelfPosition));
   }
 
     /**
