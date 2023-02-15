@@ -20,12 +20,19 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import frc.robot.commands.BalanceCommand;
 import frc.robot.constants.Constants;
 import frc.robot.constants.DriveConstants;
 import frc.robot.constants.ModuleConstants;
+import frc.robot.constants.OIConstants;
+import frc.robot.controls.BaseDriverConfig;
+import frc.robot.controls.GameControllerDriverConfig;
 import frc.robot.util.LogManager;
+import lib.controllers.GameController;
+import lib.controllers.GameController.GCButton;
 
 /** 
  * Represents a swerve drive style drivetrain.
@@ -53,6 +60,8 @@ public class Drivetrain extends SubsystemBase {
   private boolean m_hasResetYaw = false; // the initial yaw has been set 
 
   private double m_headingPIDOutput = 0;
+
+  
 
   // Odometry
   private final SwerveDriveOdometry m_odometry;
@@ -88,12 +97,20 @@ public class Drivetrain extends SubsystemBase {
   // modules needed to distinguish in chooser
   private Module m_prevModule;
 
+  GameControllerDriverConfig m_config = new GameControllerDriverConfig(null, m_drivetrainTab, m_hasResetYaw);
+
+  GameController m_Controller = new GameController(OIConstants.kDriverJoy);
+
   /**
    * Creates a new Swerve Style Drivetrain.
    * @param drivetrainTab the shuffleboard tab to display drivetrain data on
    * @param swerveModulesTab the shuffleboard tab to display module data on
    */
   public Drivetrain(ShuffleboardTab drivetrainTab, ShuffleboardTab swerveModulesTab) {
+
+    
+    
+    m_config.configureControls();
 
     LiveWindow.disableAllTelemetry();
     m_drivetrainTab = drivetrainTab;
@@ -122,6 +139,8 @@ public class Drivetrain extends SubsystemBase {
       for (int i = 0; i < m_modules.length; i++) {
         m_modules[i].periodic();
       }
+
+      m_Controller.get(GCButton.B).toggleOnTrue((Command) new BalanceCommand());
     }
 
     updateDriveModuleFeedforwardShuffleboard();
@@ -130,6 +149,16 @@ public class Drivetrain extends SubsystemBase {
     updateOdometry();
     
     m_fieldDisplay.setRobotPose(getPose());
+  }
+
+  public GameControllerDriverConfig getGameControllerDriverConfig()
+  {
+    return m_config;
+  }
+
+  public GameController getGameController()
+  {
+    return m_Controller;
   }
   
   public void setPigeonYaw(double degrees) {
@@ -250,7 +279,7 @@ public class Drivetrain extends SubsystemBase {
   public Rotation2d getRotation2d() {
     return m_pigeon.getRotation2d(); 
   }
-  
+
   /**
   * Gets the angle heading from the pigeon.
   * 
