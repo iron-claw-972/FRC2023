@@ -3,15 +3,15 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DeployingBar;
 
-public class ExtendDeployingBar extends CommandBase {
+public class RotateDeployingBar extends CommandBase {
   private final DeployingBar m_deployingBar;
   private double m_setpoint;
   /**
-   * Creates a new ExtendDeployingBar
+   * Creates a new RotateDeployingBar
    *
    * @param subsystem The subsystem used by this command.
    */
-  public ExtendDeployingBar(DeployingBar deployingBar, double setpoint) {
+  public RotateDeployingBar(DeployingBar deployingBar, double setpoint) {
     m_deployingBar = deployingBar;
     this.m_setpoint = setpoint;
     // Use addRequirements() here to declare subsystem dependencies.
