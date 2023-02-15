@@ -28,11 +28,12 @@ public class DeployingBar extends SubsystemBase {
   private boolean isEnabled;
 
   public DeployingBar() {
-    m_motor = MotorFactory.createTalonFX(DeployingBarConstants.kLeftMotor, Constants.kRioCAN);
+    m_motor = MotorFactory.createTalonFX(DeployingBarConstants.kMotor, Constants.kRioCAN);
     m_motor.setNeutralMode(NeutralMode.Brake);
     m_motor.setSafetyEnabled(true);
     m_encoder = new TalonEncoder(m_motor);
     m_encoder.setDistancePerPulse(DeployingBarConstants.kDistancePerPulse);
+    m_encoder.reset();
     m_pid = new PIDController(DeployingBarConstants.kP, DeployingBarConstants.kI, DeployingBarConstants.kD);
     m_pid.setTolerance(DeployingBarConstants.kTolerance);
     isEnabled = false;

@@ -9,7 +9,6 @@ import lib.controllers.GameController.Button;
 
 public class Operator {
   private static GameController operator = new GameController(OIConstants.kOperatorJoy);
-
    /**
    * Configures all of the operator controls.
    */
