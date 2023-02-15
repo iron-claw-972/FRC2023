@@ -13,22 +13,19 @@ public class ElevatorCalibrationAbsoluteEncoder extends CommandBase {
 
   @Override
   public void initialize() {
-    m_elevator.set(ElevatorConstants.kElevatorMotorEncoderZeroingPower); 
+    m_elevator.set(ElevatorConstants.kMotorEncoderZeroingPower); 
   }
 
   @Override
   public void end(boolean interrupted) {
     m_elevator.stopMotor();
-    m_elevator.calibrationZeroAbsEncoder();;
+    m_elevator.setAbsEncoderZeroPos();;
   }
-  
+
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(m_elevator.returnBottomLimSwitchCondition() == true){
-      return true; 
-    }
-    return false;
+    return m_elevator.getBottomLimitSwitch(); 
   }
 
 }

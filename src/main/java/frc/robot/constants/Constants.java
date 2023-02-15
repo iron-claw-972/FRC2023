@@ -38,5 +38,4 @@ public final class Constants {
    */
   @Deprecated
   public static final FalconConstants falcon = new FalconConstants();
-  public static final ElevatorConstants elevator = new ElevatorConstants(); 
 }

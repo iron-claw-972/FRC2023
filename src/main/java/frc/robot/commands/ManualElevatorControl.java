@@ -26,9 +26,6 @@ public class ManualElevatorControl extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(m_elevator.returnBottomLimSwitchCondition() == true || m_elevator.returnTopLimSwitchCondition() == true){
-      return true; 
-    }
     return false;
   }
 }

@@ -14,9 +14,9 @@ public class MoveToHeight extends CommandBase {
 
   @Override
   public void execute() {
-    System.out.println(m_elevator.returnHeightError(m_elevatorHeight)); 
-    m_elevator.set(m_elevator.returnClampedElevatorPID(m_elevatorHeight)); 
-    m_elevator.stopMotorsIfLimitSwitchesTripped(m_elevator.returnClampedElevatorPID(m_elevatorHeight));
+    System.out.println(m_elevator.getHeightError(m_elevatorHeight)); 
+    m_elevator.set(m_elevator.getClampedElevatorPID(m_elevatorHeight)); 
+    m_elevator.stopMotorsIfLimitSwitchesTripped(m_elevator.getClampedElevatorPID(m_elevatorHeight));
   }
 }
 

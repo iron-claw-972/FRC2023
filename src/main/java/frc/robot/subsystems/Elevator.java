@@ -15,65 +15,67 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 import frc.robot.constants.ElevatorConstants;
-import frc.robot.controls.Operator;
 import frc.robot.util.MotorFactory;
+import lib.ctre_shims.TalonEncoder;
 
 public class Elevator extends SubsystemBase {
 
-  private final WPI_TalonFX m_elevatorMotor; //do I define these are private final? 
+  private final WPI_TalonFX m_motor;
   private final DigitalInput m_bottomLimitSwitch;
-  private final DigitalInput m_topLimitSwitch; 
-  private final PIDController m_elevatorPID; 
-  private final DutyCycleEncoder m_absoluteSpoolEncoder; 
+  private final DigitalInput m_topLimitSwitch;
+  private final PIDController m_elevatorPID;
+  private final DutyCycleEncoder m_absoluteSpoolEncoder;     
+  private final TalonEncoder m_elevatorMotorEncoder; 
+  private double m_absEncoderZeroPositionTicks;
 
   public Elevator() {
-    this(
-      MotorFactory.createTalonFX(ElevatorConstants.kElevatorMotor, Constants.kRioCAN),
-      new DigitalInput(-1),
-      new DigitalInput(-1),
-      new DutyCycleEncoder(-1)
-    );
+    m_motor = MotorFactory.createTalonFX(ElevatorConstants.kMotorPort, Constants.kRioCAN);
+    m_bottomLimitSwitch = new DigitalInput(ElevatorConstants.kBottomLimitSwitchPort); 
+    m_topLimitSwitch = new DigitalInput(ElevatorConstants.kTopLimitSwitchPort);
+    m_absoluteSpoolEncoder = new DutyCycleEncoder(ElevatorConstants.kAbsEncoderPort); 
+    m_elevatorMotorEncoder = new TalonEncoder(m_motor); 
+    m_elevatorMotorEncoder.setDistancePerPulse(ElevatorConstants.kDistPerMotorEncoderTickMeters);
+    m_elevatorPID = new PIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD);  
   }
 
-  public Elevator(WPI_TalonFX motor, DigitalInput bottomSwitch, DigitalInput topSwitch, DutyCycleEncoder absoluteSpoolEncoder) {
-    m_elevatorMotor = motor; 
-    m_bottomLimitSwitch = bottomSwitch; 
-    m_topLimitSwitch = topSwitch;
-    m_absoluteSpoolEncoder = absoluteSpoolEncoder; 
-
-    m_elevatorPID = new PIDController(ElevatorConstants.kElevatorP, ElevatorConstants.kElevatorI, ElevatorConstants.kElevatorD);  
+  public void close() {
+    // close the ports
+    m_bottomLimitSwitch.close();
+    m_topLimitSwitch.close();
+    m_absoluteSpoolEncoder.close();
   }
 
   public void set(double power){
-    m_elevatorMotor.set(power); 
+    m_motor.set(power); 
   }
+
 
   public void stopMotor(){
-    m_elevatorMotor.set(0); 
+    m_motor.set(0); 
   }
 
-  public boolean returnBottomLimSwitchCondition(){
+  public boolean getBottomLimitSwitch(){
     return m_bottomLimitSwitch.get(); 
   }
 
-  public boolean returnTopLimSwitchCondition(){
+  public boolean getTopLimitSwitch(){
     return m_topLimitSwitch.get(); 
   }
 
   public void resetMotorEncoder(){
-    m_elevatorMotor.setSelectedSensorPosition(0); 
+    m_elevatorMotorEncoder.reset(); 
   }
 
   public void stopMotorsIfLimitSwitchesTripped(double power){
     if (m_topLimitSwitch.get() && power>0){
-      m_elevatorMotor.set(0); 
+      m_motor.set(0); 
     }
     if (m_topLimitSwitch.get() && power <0){
       //the semicolon makes the if statement do nothing
       ;//TODO: Maybe remove this if unncesary 
     }
     if (m_bottomLimitSwitch.get() && power<0){
-      m_elevatorMotor.set(0); 
+      m_motor.set(0); 
     }
     if (m_bottomLimitSwitch.get() && power>0){
       //the semicolon makes the if statement do nothing
@@ -82,25 +84,25 @@ public class Elevator extends SubsystemBase {
   }
  
 
-  public double returnHeightError(double elevatorHeightDesired){
+  public double getHeightError(double elevatorHeightDesired){
     double error = elevatorHeightDesired-getElevatorHeightMeters(); 
     return error; 
   }
 
-  public double returnClampedElevatorPID(double elevatorHeightDesired){
+  public double getClampedElevatorPID(double elevatorHeightDesired){
     double pidValue = MathUtil.clamp(m_elevatorPID.calculate(getElevatorHeightMeters(), elevatorHeightDesired ),-0.25,0.25);
-       //TODO: Increase clamping range to make motor go faster if needed
-
+    //TODO: Increase clamping range to make motor go faster if needed
     return pidValue; 
   }
 
   public double getElevatorHeightMeters() {
-    double elevatorHeight = m_elevatorMotor.getSelectedSensorPosition()*ElevatorConstants.kElevatorDistPerMotorEncoderTickMeters;
+    double elevatorHeight =m_elevatorMotorEncoder.getDistance();
     return elevatorHeight;  
   }
 
-  public void calibrationZeroAbsEncoder() {
-    ElevatorConstants.kElevatorAbsEncoderZeroPositionMeters = m_absoluteSpoolEncoder.getAbsolutePosition()*ElevatorConstants.kSpoolAbsEncoderDistancePerTickMeters; //TODO: CHECK IF THIS IS IN TICKS
+  public double setAbsEncoderZeroPos(){
+    m_absEncoderZeroPositionTicks = m_absoluteSpoolEncoder.getAbsolutePosition();
+    return m_absEncoderZeroPositionTicks; 
   }
 
 }

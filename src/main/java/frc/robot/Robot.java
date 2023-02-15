@@ -18,7 +18,6 @@ import frc.robot.util.LogManager;
  * project.
  */
 public class Robot extends TimedRobot {
-  //TODO: Figure out how to execute commands
   private Command m_autoCommand;
   private RobotContainer m_robotContainer;
 
