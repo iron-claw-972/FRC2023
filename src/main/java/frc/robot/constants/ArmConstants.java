@@ -12,6 +12,11 @@ public class ArmConstants {
   public static final double minMotorPower = -1;
   public static final double maxMotorPower = -1;
 
+  // feedforward values - TBD
+  public static final double kS = -1;
+  public static final double kG = -1;
+  public static final double kV = -1;
+
   // distance values - TBD
   public static final double initialPosition = 0;
   public static final double shelfPosition = -1;

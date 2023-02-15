@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -14,6 +15,7 @@ public class FourBarArm extends SubsystemBase {
   private final CANSparkMax m_motor;
   private final PIDController m_pid;
   private final RelativeEncoder m_encoder;
+  private final ArmFeedforward m_feedforward;
   private double m_armSetpoint;
 
   public FourBarArm() {
@@ -27,6 +29,8 @@ public class FourBarArm extends SubsystemBase {
     m_pid = new PIDController(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD);
     m_pid.setSetpoint(ArmConstants.initialPosition);
     m_pid.setTolerance(ArmConstants.kTolerance);
+
+    m_feedforward = new ArmFeedforward(ArmConstants.kS, ArmConstants.kG, ArmConstants.kV);
   }
 
   public void setArmSetpoint(double setpoint) {
