@@ -6,6 +6,7 @@
 /*----------------------------------------------------------------------------*/
 
 package frc.robot.subsystems;
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.math.MathUtil;
@@ -30,12 +31,19 @@ public class Elevator extends SubsystemBase {
 
   public Elevator() {
     m_motor = MotorFactory.createTalonFX(ElevatorConstants.kMotorPort, Constants.kRioCAN);
+    m_motor.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
+    m_motor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
     m_bottomLimitSwitch = new DigitalInput(ElevatorConstants.kBottomLimitSwitchPort); 
     m_topLimitSwitch = new DigitalInput(ElevatorConstants.kTopLimitSwitchPort);
     m_absoluteSpoolEncoder = new DutyCycleEncoder(ElevatorConstants.kAbsEncoderPort); 
     m_elevatorMotorEncoder = new TalonEncoder(m_motor); 
     m_elevatorMotorEncoder.setDistancePerPulse(ElevatorConstants.kDistPerMotorEncoderTickMeters);
     m_elevatorPID = new PIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD);  
+  }
+
+  @Override
+  public void periodic() {
+    m_motor.set(ControlMode.PercentOutput, m_elevatorPID.calculate(getElevatorHeightMeters())); 
   }
 
   public void close() {
@@ -47,6 +55,10 @@ public class Elevator extends SubsystemBase {
 
   public void set(double power){
     m_motor.set(power); 
+  }
+
+  public void setSepointMeters(double setPointMeters){
+    m_elevatorPID.setSetpoint(setPointMeters);
   }
 
 
@@ -84,15 +96,9 @@ public class Elevator extends SubsystemBase {
   }
  
 
-  public double getHeightError(double elevatorHeightDesired){
-    double error = elevatorHeightDesired-getElevatorHeightMeters(); 
+  public double getHeightError(double setpointMeters){
+    double error = setpointMeters-getElevatorHeightMeters(); 
     return error; 
-  }
-
-  public double getClampedElevatorPID(double elevatorHeightDesired){
-    double pidValue = MathUtil.clamp(m_elevatorPID.calculate(getElevatorHeightMeters(), elevatorHeightDesired ),-0.25,0.25);
-    //TODO: Increase clamping range to make motor go faster if needed
-    return pidValue; 
   }
 
   public double getElevatorHeightMeters() {

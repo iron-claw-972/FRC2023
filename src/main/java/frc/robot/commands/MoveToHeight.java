@@ -4,19 +4,19 @@ import frc.robot.subsystems.Elevator;
 
 public class MoveToHeight extends CommandBase {
   Elevator m_elevator; 
-  double m_elevatorHeight; 
+  double m_elevatorSetpoint; 
 
   public MoveToHeight(Elevator elevator, double elevatorHeight) {
     m_elevator = elevator; 
-    m_elevatorHeight = elevatorHeight; 
+    m_elevatorSetpoint = elevatorHeight; 
     addRequirements(m_elevator);
   }
 
   @Override
   public void execute() {
-    System.out.println(m_elevator.getHeightError(m_elevatorHeight)); 
-    m_elevator.set(m_elevator.getClampedElevatorPID(m_elevatorHeight)); 
-    m_elevator.stopMotorsIfLimitSwitchesTripped(m_elevator.getClampedElevatorPID(m_elevatorHeight));
+    System.out.println(m_elevator.getHeightError(m_elevatorSetpoint));
+    m_elevator.setSepointMeters(m_elevatorSetpoint); 
+
   }
 }
 
