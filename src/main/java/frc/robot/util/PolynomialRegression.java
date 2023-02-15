@@ -163,9 +163,9 @@ public class PolynomialRegression implements Comparable<PolynomialRegression> {
 
     // create remaining terms
     while (j >= 0) {
-      if (j == 0) s.append(String.format("%.10f ", beta(j)));
-      else if (j == 1) s.append(String.format("%.10f %s + ", beta(j), variableName));
-      else s.append(String.format("%.10f %s^%d + ", beta(j), variableName, j));
+      if (j == 0) s.append(String.format("%.4f ", beta(j)));
+      else if (j == 1) s.append(String.format("%.4f %s + ", beta(j), variableName));
+      else s.append(String.format("%.4f %s^%d + ", beta(j), variableName, j));
       j--;
     }
     s = s.append("  (R^2 = " + String.format("%.3f", R2()) + ")");
@@ -189,18 +189,5 @@ public class PolynomialRegression implements Comparable<PolynomialRegression> {
       else if (term1 > term2) return +1;
     }
     return 0;
-  }
-
-  /**
-   * Unit tests the {@code PolynomialRegression} data type.
-   *
-   * @param args the command-line arguments
-   */
-  public static void main(String[] args) {
-    double[] x = {10, 20, 40, 80, 160, 200};
-    double[] y = {100, 350, 1500, 6700, 20160, 40000};
-    PolynomialRegression regression = new PolynomialRegression(x, y, 3);
-
-    System.out.println(regression);
   }
 }
