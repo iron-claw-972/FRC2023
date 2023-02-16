@@ -187,7 +187,7 @@ public class Module {
       return;
     }
 
-    if (m_optimizeStates == true) {
+    if (m_optimizeStates) {
       // Optimize the reference state to avoid spinning further than 90 degrees
       desiredState = SwerveModuleState.optimize(desiredState, new Rotation2d(getSteerAngle()));
     }
@@ -199,7 +199,7 @@ public class Module {
 
   /**
    * Sets the drive velocity of the module using PIDF once. Should be called repeatedly to be effective.
-   * @param speedMetersPerSecond the drive velocity in m/s
+   * @param speedMetersPerSecond the drive velocity in m/s.
    */
   public void setDriveVelocity(double speedMetersPerSecond) {
     m_desiredState.speedMetersPerSecond = speedMetersPerSecond;
@@ -251,7 +251,7 @@ public class Module {
    * @return module drive position in meters.
    */
   public double getDrivePosition() {
-      return m_driveEncoder.getDistance() * DriveConstants.kDriveGearRatio * 2 * Math.PI * DriveConstants.kWheelRadius;
+      return m_driveEncoder.getDistance();
   }
 
   /**
