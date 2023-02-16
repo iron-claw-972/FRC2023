@@ -2,7 +2,7 @@ package frc.robot.constants;
 
 public class ArmConstants {
   // arm ids - TBD
-  public static final int motorID = 1;
+  public static final int motorID = 3;
 
   // pid values - TBD
   public static final double kP = -1;

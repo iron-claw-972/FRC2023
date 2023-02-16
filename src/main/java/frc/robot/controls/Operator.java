@@ -12,22 +12,18 @@ import lib.controllers.GameController.Button;
 
 public class Operator {
   private static GameController operator = new GameController(OIConstants.kOperatorJoy);
-  
-  private static double spin = IntakeConstants.kIntakeSpeed;
 
   /**
    * Configures all of the operator controls.
    */
   public static void configureControls(FourBarArm arm, Intake intake) {
-    operator.get(Button.Y).onTrue(new ExtendToPosition(arm, ArmConstants.topPosition));
-    operator.get(Button.X).onTrue(new ExtendToPosition(arm, ArmConstants.middlePosiiton));
-    operator.get(Button.A).onTrue(new ExtendToPosition(arm, ArmConstants.intakePosition));
-    operator.get(Button.Y).onTrue(new ExtendToPosition(arm, ArmConstants.shelfPosition));
-    
-    double speed;
-
+    // operator.get(Button.Y).onTrue(new ExtendToPosition(arm, ArmConstants.topPosition));
+    // operator.get(Button.X).onTrue(new ExtendToPosition(arm, ArmConstants.middlePosiiton));
+    // operator.get(Button.A).onTrue(new ExtendToPosition(arm, ArmConstants.intakePosition));
+    // operator.get(Button.Y).onTrue(new ExtendToPosition(arm, ArmConstants.shelfPosition));
     operator.get(Button.X).onTrue(new InstantCommand(() -> {
-      intake.intake(speed);
+      intake.intake(IntakeConstants.kIntakeSpeed);
+    System.out.println("X");
     },intake));
 
     operator.get(Button.B).onTrue(new InstantCommand(
