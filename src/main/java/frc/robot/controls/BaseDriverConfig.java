@@ -81,17 +81,17 @@ public abstract class BaseDriverConfig {
   public void setupShuffleboard() {
     if (!m_shuffleboardUpdates) return;
     
-    m_translationalSensitivityEntry = m_controllerTab.add("translationalSensitivity",OIConstants.kTranslationalSensitivity).getEntry();
-    m_translationalExpoEntry = m_controllerTab.add("translationalExpo",OIConstants.kTranslationalExpo).getEntry();
-    m_translationalDeadbandEntry = m_controllerTab.add("translationalDeadband",OIConstants.kTranslationalDeadband).getEntry();
-    m_translationalSlewrateEntry = m_controllerTab.add("translationalSlewrate",OIConstants.kTranslationalSlewrate).getEntry();
-    m_rotationSensitivityEntry = m_controllerTab.add("rotationSensitivity",OIConstants.kRotationSensitivity).getEntry();
-    m_rotationExpoEntry = m_controllerTab.add("rotationExpo",OIConstants.kRotationExpo).getEntry();
-    m_rotationDeadbandEntry = m_controllerTab.add("rotationDeadband",OIConstants.kRotationDeadband).getEntry();
-    m_rotationSlewrateEntry = m_controllerTab.add("rotationSlewrate",OIConstants.kRotationSlewrate).getEntry();
-    m_headingSensitivityEntry = m_controllerTab.add("headingSensitivity",OIConstants.kHeadingSensitivity).getEntry();
-    m_headingExpoEntry = m_controllerTab.add("headingExpo",OIConstants.kHeadingExpo).getEntry();
-    m_headingDeadbandEntry = m_controllerTab.add("headingDeadband",OIConstants.kHeadingDeadband).getEntry();
+    m_translationalSensitivityEntry = m_controllerTab.add("translationalSensitivity", OIConstants.kTranslationalSensitivity).getEntry();
+    m_translationalExpoEntry = m_controllerTab.add("translationalExpo", OIConstants.kTranslationalExpo).getEntry();
+    m_translationalDeadbandEntry = m_controllerTab.add("translationalDeadband", OIConstants.kTranslationalDeadband).getEntry();
+    m_translationalSlewrateEntry = m_controllerTab.add("translationalSlewrate", OIConstants.kTranslationalSlewrate).getEntry();
+    m_rotationSensitivityEntry = m_controllerTab.add("rotationSensitivity", OIConstants.kRotationSensitivity).getEntry();
+    m_rotationExpoEntry = m_controllerTab.add("rotationExpo", OIConstants.kRotationExpo).getEntry();
+    m_rotationDeadbandEntry = m_controllerTab.add("rotationDeadband", OIConstants.kRotationDeadband).getEntry();
+    m_rotationSlewrateEntry = m_controllerTab.add("rotationSlewrate", OIConstants.kRotationSlewrate).getEntry();
+    m_headingSensitivityEntry = m_controllerTab.add("headingSensitivity", OIConstants.kHeadingSensitivity).getEntry();
+    m_headingExpoEntry = m_controllerTab.add("headingExpo", OIConstants.kHeadingExpo).getEntry();
+    m_headingDeadbandEntry = m_controllerTab.add("headingDeadband", OIConstants.kHeadingDeadband).getEntry();
   }
 
   /**
