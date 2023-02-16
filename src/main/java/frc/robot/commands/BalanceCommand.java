@@ -8,26 +8,29 @@ import frc.robot.util.Functions;
 
 public class BalanceCommand extends CommandBase {
 
-    Drivetrain m_drive = new Drivetrain(null, null);
+    private Drivetrain m_drive;
+
+    public BalanceCommand(Drivetrain drive) {
+        m_drive = drive;
+    }
 
     private double kBalanceP, kBalanceI, kBalanceD, startAngle, endAngle;
 
-    PIDController m_pid = new PIDController(kBalanceP, kBalanceI, kBalanceD);
+    
 
 
-    public void initialize()
-    {
+    public void initialize()  {
         endAngle = 0;
         startAngle = Functions.calculateHypotenuse(m_drive.getAngleHeading(), Functions.calculateHypotenuse(m_drive.getPigeon().getPitch(), m_drive.getPigeon().getRoll()));
     }
 
     public void execute()
     {
-      m_pid.calculate(startAngle, endAngle);
-      //ySpeed and heading are zero for now. 
-      m_drive.driveHeading(m_pid.calculate(startAngle, endAngle), 0, 0, true);
+      m_drive.m_balanceController.calculate(startAngle, endAngle);
+      //ySpeed and heading are zero for now, will add yaw at later pull request. 
+      m_drive.driveHeading(m_drive.m_balanceController.calculate(startAngle, endAngle), 0, 0, true);
 
-      m_pid.setTolerance(0.1);
+      m_drive.m_balanceController.setTolerance(0.1);
     }
 
     public boolean isFinished() 
