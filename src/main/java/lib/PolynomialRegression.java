@@ -1,4 +1,4 @@
-package frc.robot.util;
+package lib;
 
 import Jama.Matrix;
 import Jama.QRDecomposition;
@@ -31,7 +31,7 @@ public class PolynomialRegression implements Comparable<PolynomialRegression> {
   private double sst; // total sum of squares
 
   /**
-   * Performs a polynomial reggression on the data points {@code (y[i], x[i])}. Uses n as the name
+   * Performs a polynomial regression on the data points {@code (y[i], x[i])}. Uses n as the name
    * of the predictor variable.
    *
    * @param x the values of the predictor variable
@@ -44,7 +44,7 @@ public class PolynomialRegression implements Comparable<PolynomialRegression> {
   }
 
   /**
-   * Performs a polynomial reggression on the data points {@code (y[i], x[i])}.
+   * Performs a polynomial regression on the data points {@code (y[i], x[i])}.
    *
    * @param x the values of the predictor variable
    * @param y the corresponding values of the response variable

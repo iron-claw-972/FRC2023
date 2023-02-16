@@ -3,6 +3,8 @@ package frc.robot.util;
 import java.util.LinkedList;
 import java.util.List;
 
+import lib.PolynomialRegression;
+
 /**
  * A class for storing and processing feedforward characterization data. Used in automatic feedforward characterization.
  * @see frc.robot.commands.test.DriveFeedForwardCharacterization
