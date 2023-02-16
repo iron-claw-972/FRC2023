@@ -2,19 +2,11 @@ package frc.robot.constants;
 
 public final class IntakeConstants {
   
-  public static final int left_MOTOR_ID = -1;
+  public static final int kLeftMotorport = -1;
 
-  public static final int right_MOTOR_ID = -1;
+  public static final int kRightMotorport= -1;
 
-  public static final double intake_SPEED = 0.5;
+  public static final double kIntakeSpeed = 0.5;
 
-  public static final double outtake_SPEED = 0.5;
-
-  public static final double rotate_SPEED = 0.5;
-
-  public static final double spin_SPEED = 0.5;
-
-  public static final double intake_CONTINUOUS_SPEED = 0.5;
-
-  public static final double outtake_CONTINUOUS_SPEED = 0.5;
+  public static final double kOuttakeSpeed = -0.5;
 }
