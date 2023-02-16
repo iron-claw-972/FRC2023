@@ -12,6 +12,8 @@ import edu.wpi.first.util.WPIUtilJNI;
  * setpoint, and/or output ramps. A slew-rate limit is most appropriate when the quantity being
  * controlled is a velocity or a voltage; when controlling a position, consider using a {@link
  * edu.wpi.first.math.trajectory.TrapezoidProfile} instead.
+ * Edited by 972 to be "dynamic", that is, the slew rate can be modified on the fly. 
+ * Additionally, it can be set to be continuous on a range, useful for angles.
  */
 public class DynamicSlewRateLimiter {
   private double m_positiveRateLimit;
