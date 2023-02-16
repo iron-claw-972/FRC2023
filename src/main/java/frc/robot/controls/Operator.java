@@ -2,15 +2,11 @@ package frc.robot.controls;
 
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.Robot;
 import frc.robot.RobotContainer;
-import frc.robot.commands.DoNothing;
-import frc.robot.constants.Constants;
 import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.commands.arm.ExtendToPosition;
 import frc.robot.constants.ArmConstants;
-import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.FourBarArm;
 import lib.controllers.GameController;
 import lib.controllers.GameController.Button;

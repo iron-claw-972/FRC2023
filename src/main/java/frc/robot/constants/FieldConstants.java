@@ -1,10 +1,5 @@
 package frc.robot.constants;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.pathplanner.lib.PathPoint;
-
 import edu.wpi.first.math.util.Units;
 
 public class FieldConstants {

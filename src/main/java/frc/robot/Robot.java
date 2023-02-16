@@ -4,22 +4,13 @@
 
 package frc.robot;
 
-import com.kauailabs.navx.frc.AHRS;
-
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.controls.Operator;
 import frc.robot.util.LogManager;
-import frc.robot.util.Node;
-import frc.robot.util.PathGroupLoader;
-import frc.robot.util.Vision;
-import lib.controllers.GameController.DPad;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
