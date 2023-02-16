@@ -4,7 +4,8 @@ import frc.robot.constants.DriveConstants.CompDriveConstants;
 import frc.robot.constants.DriveConstants.TestDriveConstants;
 
 /**
- * Container class for module constants, defined using constants from {@link DriveConstants}.
+ * Container class for module constants, defined using constants from {@link DriveConstants}
+ * .
  * @see DriveConstants
  */
 public enum ModuleConstants {
@@ -146,23 +147,24 @@ public enum ModuleConstants {
     CompDriveConstants.kSteerDBackRight,
     ModuleType.BACK_RIGHT
   ),
-  NONE(0,0,0,0.0,0.0,0.0,0.0,0.0,0.0,0,0,0,0,0, ModuleType.NONE);
+
+  NONE(0, 0, 0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, ModuleType.NONE);
   
-  private int m_drivePort;
-  private int m_steerPort;
-  private int m_encoderPort;
-  private double m_steerOffset;
-  private double m_driveKS;
-  private double m_driveKV;
-  private double m_driveP;
-  private double m_driveI;
-  private double m_driveD;
-  private double m_steerKS;
-  private double m_steerKV;
-  private double m_steerP;
-  private double m_steerI;
-  private double m_steerD;
-  private ModuleType m_type;
+  private final int m_drivePort;
+  private final int m_steerPort;
+  private final int m_encoderPort;
+  private final double m_steerOffset;
+  private final double m_driveKS;
+  private final double m_driveKV;
+  private final double m_driveP;
+  private final double m_driveI;
+  private final double m_driveD;
+  private final double m_steerKS;
+  private final double m_steerKV;
+  private final double m_steerP;
+  private final double m_steerI;
+  private final double m_steerD;
+  private final ModuleType m_type;
   
   ModuleConstants(
     int drivePort,
@@ -201,46 +203,61 @@ public enum ModuleConstants {
   public int getDrivePort() {
     return m_drivePort;
   }
+
   public int getSteerPort() {
     return m_steerPort;
   }
+
   public int getEncoderPort() {
     return m_encoderPort;
   }
+
   public double getSteerOffset() {
     return m_steerOffset;
   }
+
   public double getDriveKS() {
     return m_driveKS;
   }
+
   public double getDriveKV() {
     return m_driveKV;
   }
+
   public double getDriveP() {
     return m_driveP;
   }
+
   public double getDriveI() {
     return m_driveI;
   }
+
   public double getDriveD() {
     return m_driveD;
   }
+
   public double getSteerKS() {
     return m_steerKS;
   }
+
   public double getSteerKV() {
     return m_steerKV;
   }
+
   public double getSteerP() {
     return m_steerP;
   }
+
   public double getSteerI() {
     return m_steerI;
   }
+
   public double getSteerD() {
     return m_steerD;
   }
+
   public ModuleType getType() {
     return m_type;
   }
+
 }

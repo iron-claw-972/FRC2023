@@ -16,34 +16,41 @@ import lib.controllers.GameController.Button;
  */
 public class GameControllerDriverConfig extends BaseDriverConfig {
   
-  private GameController driverGC = new GameController(OIConstants.kDriverJoy);
+  private final GameController kDriver = new GameController(OIConstants.kDriverJoy);
   
   public GameControllerDriverConfig(Drivetrain drive, ShuffleboardTab controllerTab, boolean shuffleboardUpdates) {
-    super(drive, controllerTab,shuffleboardUpdates);
+    super(drive, controllerTab, shuffleboardUpdates);
   }
   
+  @Override
   public void configureControls() { 
-    driverGC.get(Button.START).onTrue(new InstantCommand(() -> super.getDrivetrain().setPigeonYaw(DriveConstants.kStartingHeadingDegrees)));
-    driverGC.get(Button.A).whileTrue(new SetFormationX(super.getDrivetrain()));
+    kDriver.get(Button.START).onTrue(new InstantCommand(() -> super.getDrivetrain().setPigeonYaw(DriveConstants.kStartingHeadingDegrees)));
+    kDriver.get(Button.A).whileTrue(new SetFormationX(super.getDrivetrain()));
   }
   
+  @Override
   public double getRawSideTranslation() { 
-    return driverGC.get(Axis.LEFT_X);
+    return kDriver.get(Axis.LEFT_X);
   }
   
+  @Override
   public double getRawForwardTranslation() {
-    return driverGC.get(Axis.LEFT_Y);
+    return kDriver.get(Axis.LEFT_Y);
   }
+  
+  @Override
   public double getRawRotation() { 
-    return driverGC.get(Axis.RIGHT_X);
+    return kDriver.get(Axis.RIGHT_X);
   }
   
+  @Override
   public double getRawHeadingAngle() { 
-    return Functions.calculateAngle(driverGC.get(Axis.RIGHT_X),-driverGC.get(Axis.RIGHT_Y))-Math.PI/2;
+    return Functions.calculateAngle(kDriver.get(Axis.RIGHT_X), -kDriver.get(Axis.RIGHT_Y)) - Math.PI/2;
   }
   
+  @Override
   public double getRawHeadingMagnitude() { 
-    return Functions.calculateHypotenuse(driverGC.get(Axis.RIGHT_X),driverGC.get(Axis.RIGHT_Y));
+    return Functions.calculateHypotenuse(kDriver.get(Axis.RIGHT_X), kDriver.get(Axis.RIGHT_Y));
   }
   
 }

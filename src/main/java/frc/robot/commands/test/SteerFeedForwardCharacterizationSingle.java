@@ -17,8 +17,8 @@ public class SteerFeedForwardCharacterizationSingle extends CommandBase {
   private FeedForwardCharacterizationData m_feedForwardCharacterizationData;
   private Module m_module;
   
-  private Timer m_timer = new Timer();
-  private Drivetrain m_drive;
+  private final Timer m_timer = new Timer();
+  private final Drivetrain m_drive;
   private SendableChooser<Module> m_moduleChooser;
 
   public SteerFeedForwardCharacterizationSingle(Drivetrain drive) {
@@ -26,12 +26,14 @@ public class SteerFeedForwardCharacterizationSingle extends CommandBase {
     addRequirements(drive);
   }
   
+  @Override
   public void initialize() {
     m_timer.start();
     m_feedForwardCharacterizationData = new FeedForwardCharacterizationData();
-    this.m_module = m_drive.getModuleChooser().getSelected();
+    m_module = m_drive.getModuleChooser().getSelected();
   }
   
+  @Override
   public void execute() {
     //set voltages
     m_module.setDriveVoltage(0);
@@ -50,6 +52,7 @@ public class SteerFeedForwardCharacterizationSingle extends CommandBase {
     }
   }
   
+  @Override
   public void end(boolean interrupted) {
     System.out.println("FINISHED");
     
@@ -77,8 +80,8 @@ public class SteerFeedForwardCharacterizationSingle extends CommandBase {
       );
   }
   
+  @Override
   public boolean isFinished() {
-    //System.out.println(value > 11);
     return m_voltage > TestConstants.kSteerFeedForwardMaxVoltage;
   }
 }

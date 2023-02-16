@@ -16,14 +16,15 @@ public class DriveFeedForwardCharacterization extends CommandBase {
   private double m_voltage = 0;
   private FeedForwardCharacterizationData[] m_feedForwardCharacterizationData;
   
-  private Timer m_timer = new Timer();
-  private Drivetrain m_drive;
+  private final Timer m_timer = new Timer();
+  private final Drivetrain m_drive;
   
   public DriveFeedForwardCharacterization(Drivetrain drive) {
     m_drive = drive;
     addRequirements(drive);
   }
   
+  @Override
   public void initialize() {
     m_timer.start();
     m_feedForwardCharacterizationData = new FeedForwardCharacterizationData[] {
@@ -34,6 +35,7 @@ public class DriveFeedForwardCharacterization extends CommandBase {
     };
   }
   
+  @Override
   public void execute() {
     for (int i = 0; i < 4; i++) {
       m_drive.m_modules[i].setDriveVoltage(m_voltage);
@@ -57,6 +59,7 @@ public class DriveFeedForwardCharacterization extends CommandBase {
     }
   }
   
+  @Override
   public void end(boolean interrupted) {
     System.out.println("FINISHED");
     for (int i = 0; i < 4; i++) {
@@ -77,8 +80,8 @@ public class DriveFeedForwardCharacterization extends CommandBase {
     m_drive.stop();
   }
   
+  @Override
   public boolean isFinished() {
-    //System.out.println(value > 11);
     return m_voltage > TestConstants.kDriveFeedForwardMaxVoltage;
   }
 }

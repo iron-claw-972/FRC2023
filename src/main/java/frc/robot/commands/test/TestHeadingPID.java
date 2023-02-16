@@ -15,8 +15,8 @@ import frc.robot.util.TimeAccuracyTest;
  */
 public class TestHeadingPID extends CommandBase {
   
-  private Drivetrain m_drive;
-  private GenericEntry m_testEntry;
+  private final Drivetrain m_drive;
+  private final GenericEntry m_testEntry;
   private TimeAccuracyTest m_timeAccuracyTest;
   
   public TestHeadingPID(Drivetrain drive, GenericEntry testEntry) {

@@ -14,8 +14,8 @@ import frc.robot.util.TimeAccuracyTest;
  */
 public class TestSteerAngle extends CommandBase{
   
-  private Drivetrain m_drive;
-  private GenericEntry m_testEntry;
+  private final Drivetrain m_drive;
+  private final GenericEntry m_testEntry;
   private TimeAccuracyTest m_timeAccuracyTests[]  = new TimeAccuracyTest[4];
 
   public TestSteerAngle(Drivetrain drive, GenericEntry testEntry) {

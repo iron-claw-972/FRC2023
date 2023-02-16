@@ -27,4 +27,5 @@ public class OIConstants {
   public static final boolean kConstantHeadingMagnitude = false;
 
   public static final boolean kInvert = false;
+  
 }

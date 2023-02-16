@@ -12,7 +12,8 @@ import frc.robot.subsystems.Drivetrain;
  */
 public class OdometryTestCommand extends CommandBase {
 
-  private Drivetrain m_drive; 
+  private final Drivetrain m_drive; 
+  
   private Pose2d m_startPose;
   private double m_startTime;
   private Pose2d m_finalPose;

@@ -13,11 +13,11 @@ import frc.robot.util.Functions;
  */
 public abstract class BaseDriverConfig {
 
-  private Drivetrain m_drive;
+  private final Drivetrain m_drive;
 
   private boolean m_shuffleboardUpdates = false;
 
-  private ShuffleboardTab m_controllerTab;
+  private final ShuffleboardTab m_controllerTab;
   private GenericEntry m_translationalSensitivityEntry, m_translationalExpoEntry, m_translationalDeadbandEntry, m_translationalSlewrateEntry;
   private GenericEntry m_rotationSensitivityEntry, m_rotationExpoEntry, m_rotationDeadbandEntry, m_rotationSlewrateEntry;
   private GenericEntry m_headingSensitivityEntry, m_headingExpoEntry, m_headingDeadbandEntry;
@@ -37,10 +37,10 @@ public abstract class BaseDriverConfig {
   private double m_headingDeadband = OIConstants.kHeadingDeadband;
   private double m_previousHeading = 0;
 
-  private DynamicSlewRateLimiter m_xSpeedLimiter = new DynamicSlewRateLimiter(m_translationalSlewrate);
-  private DynamicSlewRateLimiter m_ySpeedLimiter = new DynamicSlewRateLimiter(m_translationalSlewrate);
-  private DynamicSlewRateLimiter m_rotLimiter = new DynamicSlewRateLimiter(m_rotationSlewrate);
-  private DynamicSlewRateLimiter m_headingLimiter = new DynamicSlewRateLimiter(m_headingSensitivity);
+  private final DynamicSlewRateLimiter m_xSpeedLimiter = new DynamicSlewRateLimiter(m_translationalSlewrate);
+  private final DynamicSlewRateLimiter m_ySpeedLimiter = new DynamicSlewRateLimiter(m_translationalSlewrate);
+  private final DynamicSlewRateLimiter m_rotLimiter = new DynamicSlewRateLimiter(m_rotationSlewrate);
+  private final DynamicSlewRateLimiter m_headingLimiter = new DynamicSlewRateLimiter(m_headingSensitivity);
 
   /**
    * @param drive the drivetrain instance
@@ -58,9 +58,11 @@ public abstract class BaseDriverConfig {
   public double getForwardTranslation() {
     return m_ySpeedLimiter.calculate(-Functions.expoMS(Functions.deadband(getRawForwardTranslation(), m_translationalDeadband), m_translationalExpo) * DriveConstants.kMaxSpeed * m_translationalSensitivity, m_translationalSlewrate);
   }
+
   public double getSideTranslation() {
     return m_xSpeedLimiter.calculate(-Functions.expoMS(Functions.deadband(getRawSideTranslation(), m_translationalDeadband), m_translationalExpo) * DriveConstants.kMaxSpeed * m_translationalSensitivity, m_translationalSlewrate);
   }
+  
   public double getRotation() {
     return m_rotLimiter.calculate(-Functions.expoMS(Functions.deadband(getRawRotation(), m_rotationDeadband), m_rotationExpo) * DriveConstants.kMaxAngularSpeed * m_rotationSensitivity, m_rotationSlewrate);
   }
@@ -119,6 +121,7 @@ public abstract class BaseDriverConfig {
    * Configures the controls for the controller.
    */
   public abstract void configureControls();
+
   public abstract double getRawSideTranslation();
   public abstract double getRawForwardTranslation();
   public abstract double getRawRotation();
