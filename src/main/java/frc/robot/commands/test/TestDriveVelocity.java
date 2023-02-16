@@ -31,7 +31,7 @@ public class TestDriveVelocity extends CommandBase{
     for (int i = 0; i < 4; i++){
       Module module = m_drive.m_modules[i];
       m_timeAccuracyTests[i] = new TimeAccuracyTest(
-        () -> module.getDriveVelocityError(),
+        () -> module.getDriveVelocity(),
         () -> m_drive.getRequestedSteerVelocityEntry().getDouble(0),
         TestConstants.kDriveVelocityError,
         TestConstants.kDriveVelocityTimeError
