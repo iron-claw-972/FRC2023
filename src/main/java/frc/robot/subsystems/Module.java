@@ -18,6 +18,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.constants.Constants;
 import frc.robot.constants.DriveConstants;
+import frc.robot.constants.FalconConstants;
 import frc.robot.constants.ModuleConstants;
 import frc.robot.constants.ModuleType;
 import frc.robot.util.LogManager;
@@ -146,7 +147,7 @@ public class Module {
     // distance traveled for one rotation of the wheel divided by the encoder
     // resolution.
     m_driveEncoder.setDistancePerPulse(
-        2 * Math.PI * DriveConstants.kWheelRadius / DriveConstants.kDriveGearRatio / Constants.kCancoderResolution);
+        2 * Math.PI * DriveConstants.kWheelRadius / DriveConstants.kDriveGearRatio / FalconConstants.kResolution);
 
     // Limit the PID Controller's input range between -pi and pi and set the input
     // to be continuous. Factor in the offset amount.
