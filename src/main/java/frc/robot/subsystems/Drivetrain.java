@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import java.util.function.DoubleSupplier;
 
+import com.ctre.phoenix.sensors.Pigeon2;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
 import edu.wpi.first.math.MathUtil;
@@ -288,6 +289,11 @@ public class Drivetrain extends SubsystemBase {
   public double getAngleHeading() {
     return MathUtil.angleModulus(m_pigeon.getRotation2d().getRadians());
   }
+
+  public Pigeon2 getPigeon()
+  {
+    return m_pigeon;
+  }
   
   /**
   * Gets an array of all the swerve module positions.
@@ -451,7 +457,7 @@ public class Drivetrain extends SubsystemBase {
     //   }
     // }
         
-    //set selected module
+    //set selected module 
     m_moduleChooser.getSelected().setDriveFeedForwardValues(m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()],m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()]);
   }
 
