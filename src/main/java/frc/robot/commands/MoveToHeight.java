@@ -13,11 +13,24 @@ public class MoveToHeight extends CommandBase {
   }
 
   @Override
+  public void initialize(){
+    //set the elevator PID speed to be clamped within the correct range to get it to move faster
+    //This should be done already in ResetEncoderAtBottom() but just in case something happens it's here too. 
+    m_elevator.setMotorLimit();
+
+    m_elevator.setSepointMeters(m_elevatorSetpoint);
+
+  }
+
+  @Override
   public void execute() {
     System.out.println(m_elevatorSetpoint-m_elevator.getElevatorHeightMeters());
     m_elevator.setSepointMeters(m_elevatorSetpoint); 
 
   }
-}
 
-//Note: this command will never stop running, the motor needs to constantly output power to maintain the elevator's height
+  public void end(){
+    
+
+  }
+}

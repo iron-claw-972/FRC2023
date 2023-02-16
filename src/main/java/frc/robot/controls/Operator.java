@@ -1,7 +1,7 @@
 package frc.robot.controls;
 
-import frc.robot.commands.ElevatorCalibrationAbsoluteEncoder;
 import frc.robot.commands.MoveToHeight;
+import frc.robot.commands.ResetEncoderAtBottom;
 import frc.robot.commands.arm.ExtendToPosition;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.ElevatorConstants;
@@ -24,8 +24,11 @@ public class Operator {
     //Move to min height
     operator.get(operator.RIGHT_TRIGGER_BUTTON).onTrue(new MoveToHeight(elevator, ElevatorConstants.kBottomHeight)); 
     
-    //Calibrate elevator using absolute encoders
-    operator.get(DPad.DOWN).onTrue(new ElevatorCalibrationAbsoluteEncoder(elevator));
+    //Calibrate elevator using inbuilt motor encoders
+    operator.get(DPad.DOWN).onTrue(new ResetEncoderAtBottom(elevator));
+
+    //TODO: calibrate elevator using absolute encoders(probably will not work yet as of 2/15/2023);
+
 
     //move to bottom node height
     operator.get(Button.A).onTrue(new MoveToHeight(elevator, ElevatorConstants.kHeightBottomNode));

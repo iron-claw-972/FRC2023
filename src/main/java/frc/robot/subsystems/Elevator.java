@@ -7,8 +7,6 @@
 
 package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
-import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.math.MathUtil;
@@ -32,6 +30,7 @@ public class Elevator extends SubsystemBase {
   private double m_absEncoderZeroPositionTicks;
   private double clampLow = -ElevatorConstants.kMotorLimit; 
   private double clampHigh = ElevatorConstants.kMotorLimit;
+  private boolean m_enabled; 
 
   public Elevator() {
     m_motor = MotorFactory.createTalonFX(ElevatorConstants.kMotorPort, Constants.kRioCAN);
@@ -39,9 +38,12 @@ public class Elevator extends SubsystemBase {
     //m_motor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
     m_bottomLimitSwitch = new DigitalInput(ElevatorConstants.kBottomLimitSwitchPort); 
     m_topLimitSwitch = new DigitalInput(ElevatorConstants.kTopLimitSwitchPort);
+    
     m_absoluteSpoolEncoder = new DutyCycleEncoder(ElevatorConstants.kAbsEncoderPort); 
+    
     m_elevatorMotorEncoder = new TalonEncoder(m_motor); 
     m_elevatorMotorEncoder.setDistancePerPulse(ElevatorConstants.kDistPerMotorEncoderTick);
+
     m_elevatorPID = new PIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD);  
   }
 
@@ -56,9 +58,24 @@ public class Elevator extends SubsystemBase {
 
   @Override
   public void periodic() {
-    double pid = m_elevatorPID.calculate(getElevatorHeightMeters());
-    double pidClamped = MathUtil.clamp(pid, clampLow, clampHigh);
-    m_motor.set(ControlMode.PercentOutput, pidClamped); 
+    /**
+     * If we hit the bottom limit switch, then we must be at the zero position.
+     * Thus set the setpoint to 0, then atSetpoint() will be triggered, causing the 
+     * ResetEncoderAtBottom() command to end
+     */
+    if(getBottomLimitSwitch()){
+      m_motor.set(0);
+    }
+
+    if (getTopLimitSwitch()){
+      //TODO: Add functionality to stop elevator after it hits the top limit switch and still be able to go down
+    } 
+
+    if(m_enabled == true){
+      double pid = m_elevatorPID.calculate(getElevatorHeightMeters());
+      double pidClamped = MathUtil.clamp(pid, clampLow, clampHigh);
+      m_motor.set(ControlMode.PercentOutput, pidClamped);   
+    }
   }
 
   public void close() {
@@ -71,14 +88,15 @@ public class Elevator extends SubsystemBase {
   public void set(double power){
     m_motor.set(power); 
   }
+  public void enablePID(){
+    m_enabled = true; 
+  }
+  public void disablePID(){
+    m_enabled = false; 
+  }
 
   public void setSepointMeters(double setPointMeters){
     m_elevatorPID.setSetpoint(setPointMeters);
-  }
-
-
-  public void stopMotor(){
-    m_motor.set(0); 
   }
 
   public boolean getBottomLimitSwitch(){
@@ -110,14 +128,28 @@ public class Elevator extends SubsystemBase {
     }
   }
  
+  /**
+   * Determine the elevator height from the motor encoder.
+   * @return return height in meters
+   */
   public double getElevatorHeightMeters() {
-    double elevatorHeight =m_elevatorMotorEncoder.getDistance();
-    return elevatorHeight;  
+    return m_elevatorMotorEncoder.getDistance(); 
   }
 
+  /**
+   * 
+   * Zero position is the value of the absolute encoder after the elevator
+   * hits the bottom limit switch. 
+   * @return return the absolute encoder's zero position in ticks. 
+   * 
+   */
   public double setAbsEncoderZeroPos(){
     m_absEncoderZeroPositionTicks = m_absoluteSpoolEncoder.getAbsolutePosition();
     return m_absEncoderZeroPositionTicks; 
+  }
+
+  public boolean atSetpoint() {
+    return m_elevatorPID.atSetpoint();
   }
 
 }
