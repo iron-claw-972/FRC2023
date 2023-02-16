@@ -19,6 +19,7 @@ public class DriveConstants {
   // To do so, divide by the radius. The radius is the diagonal of the square chassis, diagonal = sqrt(2) * side_length.
   public static final double kMaxAngularSpeed = kMaxSpeed / ((kTrackWidth/2) * Math.sqrt(2));
 
+  // TODO: tune this better.
   public static final double kMaxAngularAccel = 8 * 2 * Math.PI; // 8 rotations per second per second
   
   public static final int kPigeon = 0;// TestSwerveBot=13 , CompBot=0?
@@ -88,7 +89,7 @@ public class DriveConstants {
     public static final double kSteerDBackRight = 0;
   }
   
-  // OLD OFFSEASON BOT
+  // OFFSEASON BOT
   public static class TestDriveConstants {
     public static final int kDriveFrontLeft = 1;
     public static final int kSteerFrontLeft = 2;
