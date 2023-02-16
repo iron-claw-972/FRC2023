@@ -18,29 +18,29 @@ public abstract class BaseDriverConfig {
   private boolean m_shuffleboardUpdates = false;
 
   private ShuffleboardTab m_controllerTab;
-  private GenericEntry m_translationalSenseitivityEntry, m_translationalExpoEntry, m_translationalDeadbandEntry, m_translationalSlewrateEntry;
-  private GenericEntry m_rotationSenseitiviyEntry, m_rotationExpoEntry, m_rotationDeadbandEntry, m_rotationSlewrateEntry;
-  private GenericEntry m_headingSenseitiviyEntry, m_headingExpoEntry, m_headingDeadbandEntry;
+  private GenericEntry m_translationalSensitivityEntry, m_translationalExpoEntry, m_translationalDeadbandEntry, m_translationalSlewrateEntry;
+  private GenericEntry m_rotationSensitivityEntry, m_rotationExpoEntry, m_rotationDeadbandEntry, m_rotationSlewrateEntry;
+  private GenericEntry m_headingSensitivityEntry, m_headingExpoEntry, m_headingDeadbandEntry;
 
-  private double m_translationalSenseitivity = OIConstants.kTranslationalSensitivity;
+  private double m_translationalSensitivity = OIConstants.kTranslationalSensitivity;
   private double m_translationalExpo = OIConstants.kTranslationalExpo;
   private double m_translationalDeadband = OIConstants.kTranslationalDeadband;
   private double m_translationalSlewrate = OIConstants.kTranslationalSlewrate;
 
-  private double m_rotationSenseitiviy = OIConstants.kRotationSensitivity;
+  private double m_rotationSensitivity = OIConstants.kRotationSensitivity;
   private double m_rotationExpo = OIConstants.kRotationExpo;
   private double m_rotationDeadband = OIConstants.kRotationDeadband;
   private double m_rotationSlewrate = OIConstants.kRotationSlewrate;
 
-  private double m_headingSenseitiviy = OIConstants.kHeadingSensitivity;
+  private double m_headingSensitivity = OIConstants.kHeadingSensitivity;
   private double m_headingExpo = OIConstants.kHeadingExpo;
   private double m_headingDeadband = OIConstants.kHeadingDeadband;
   private double m_previousHeading = 0;
 
-  private DynamicSlewRateLimiter m_xspeedLimiter = new DynamicSlewRateLimiter(m_translationalSlewrate);
-  private DynamicSlewRateLimiter m_yspeedLimiter = new DynamicSlewRateLimiter(m_translationalSlewrate);
+  private DynamicSlewRateLimiter m_xSpeedLimiter = new DynamicSlewRateLimiter(m_translationalSlewrate);
+  private DynamicSlewRateLimiter m_ySpeedLimiter = new DynamicSlewRateLimiter(m_translationalSlewrate);
   private DynamicSlewRateLimiter m_rotLimiter = new DynamicSlewRateLimiter(m_rotationSlewrate);
-  private DynamicSlewRateLimiter m_headingLimiter = new DynamicSlewRateLimiter(m_headingSenseitiviy);
+  private DynamicSlewRateLimiter m_headingLimiter = new DynamicSlewRateLimiter(m_headingSensitivity);
 
   /**
    * @param drive the drivetrain instance
@@ -56,18 +56,18 @@ public abstract class BaseDriverConfig {
   }
 
   public double getForwardTranslation() {
-    return m_yspeedLimiter.calculate(-Functions.expoMS(Functions.deadband(getRawForwardTranslation(), m_translationalDeadband), m_translationalExpo) * DriveConstants.kMaxSpeed * m_translationalSenseitivity, m_translationalSlewrate);
+    return m_ySpeedLimiter.calculate(-Functions.expoMS(Functions.deadband(getRawForwardTranslation(), m_translationalDeadband), m_translationalExpo) * DriveConstants.kMaxSpeed * m_translationalSensitivity, m_translationalSlewrate);
   }
   public double getSideTranslation() {
-    return m_xspeedLimiter.calculate(-Functions.expoMS(Functions.deadband(getRawSideTranslation(), m_translationalDeadband), m_translationalExpo) * DriveConstants.kMaxSpeed * m_translationalSenseitivity, m_translationalSlewrate);
+    return m_xSpeedLimiter.calculate(-Functions.expoMS(Functions.deadband(getRawSideTranslation(), m_translationalDeadband), m_translationalExpo) * DriveConstants.kMaxSpeed * m_translationalSensitivity, m_translationalSlewrate);
   }
   public double getRotation() {
-    return m_rotLimiter.calculate(-Functions.expoMS(Functions.deadband(getRawRotation(), m_rotationDeadband), m_rotationExpo) * DriveConstants.kMaxAngularSpeed * m_rotationSenseitiviy, m_rotationSlewrate);
+    return m_rotLimiter.calculate(-Functions.expoMS(Functions.deadband(getRawRotation(), m_rotationDeadband), m_rotationExpo) * DriveConstants.kMaxAngularSpeed * m_rotationSensitivity, m_rotationSlewrate);
   }
 
   public double getHeading() {
     if (getRawHeadingMagnitude() <= m_headingDeadband) return m_headingLimiter.calculate(m_previousHeading,1e-6);
-    m_previousHeading = m_headingLimiter.calculate(getRawHeadingAngle(), Functions.expoMS(getRawHeadingMagnitude(), m_headingExpo) * m_headingSenseitiviy);
+    m_previousHeading = m_headingLimiter.calculate(getRawHeadingAngle(), Functions.expoMS(getRawHeadingMagnitude(), m_headingExpo) * m_headingSensitivity);
     return m_previousHeading;
   }
 
@@ -81,15 +81,15 @@ public abstract class BaseDriverConfig {
   public void setupShuffleboard() {
     if (!m_shuffleboardUpdates) return;
     
-    m_translationalSenseitivityEntry = m_controllerTab.add("translationalSenseitivity",OIConstants.kTranslationalSensitivity).getEntry();
+    m_translationalSensitivityEntry = m_controllerTab.add("translationalSensitivity",OIConstants.kTranslationalSensitivity).getEntry();
     m_translationalExpoEntry = m_controllerTab.add("translationalExpo",OIConstants.kTranslationalExpo).getEntry();
     m_translationalDeadbandEntry = m_controllerTab.add("translationalDeadband",OIConstants.kTranslationalDeadband).getEntry();
     m_translationalSlewrateEntry = m_controllerTab.add("translationalSlewrate",OIConstants.kTranslationalSlewrate).getEntry();
-    m_rotationSenseitiviyEntry = m_controllerTab.add("rotationSenseitiviy",OIConstants.kRotationSensitivity).getEntry();
+    m_rotationSensitivityEntry = m_controllerTab.add("rotationSensitivity",OIConstants.kRotationSensitivity).getEntry();
     m_rotationExpoEntry = m_controllerTab.add("rotationExpo",OIConstants.kRotationExpo).getEntry();
     m_rotationDeadbandEntry = m_controllerTab.add("rotationDeadband",OIConstants.kRotationDeadband).getEntry();
     m_rotationSlewrateEntry = m_controllerTab.add("rotationSlewrate",OIConstants.kRotationSlewrate).getEntry();
-    m_headingSenseitiviyEntry = m_controllerTab.add("headingSenseitiviy",OIConstants.kHeadingSensitivity).getEntry();
+    m_headingSensitivityEntry = m_controllerTab.add("headingSensitivity",OIConstants.kHeadingSensitivity).getEntry();
     m_headingExpoEntry = m_controllerTab.add("headingExpo",OIConstants.kHeadingExpo).getEntry();
     m_headingDeadbandEntry = m_controllerTab.add("headingDeadband",OIConstants.kHeadingDeadband).getEntry();
   }
@@ -100,17 +100,17 @@ public abstract class BaseDriverConfig {
   public void updateSettings() { //updates the shuffleboard data
     if (!m_shuffleboardUpdates) return;
 
-    m_translationalSenseitivity = m_translationalSenseitivityEntry.getDouble(OIConstants.kTranslationalSensitivity);
+    m_translationalSensitivity = m_translationalSensitivityEntry.getDouble(OIConstants.kTranslationalSensitivity);
     m_translationalExpo = m_translationalExpoEntry.getDouble(OIConstants.kTranslationalExpo);
     m_translationalDeadband = m_translationalDeadbandEntry.getDouble(OIConstants.kTranslationalDeadband);
     m_translationalSlewrate = m_translationalSlewrateEntry.getDouble(OIConstants.kTranslationalSlewrate);
 
-    m_rotationSenseitiviy = m_rotationSenseitiviyEntry.getDouble(OIConstants.kRotationSensitivity);
+    m_rotationSensitivity = m_rotationSensitivityEntry.getDouble(OIConstants.kRotationSensitivity);
     m_rotationExpo = m_rotationExpoEntry.getDouble(OIConstants.kRotationExpo);
     m_rotationDeadband = m_rotationDeadbandEntry.getDouble(OIConstants.kRotationDeadband);
     m_rotationSlewrate = m_rotationSlewrateEntry.getDouble(OIConstants.kRotationSlewrate);
 
-    m_headingSenseitiviy = m_headingSenseitiviyEntry.getDouble(OIConstants.kHeadingSensitivity);
+    m_headingSensitivity = m_headingSensitivityEntry.getDouble(OIConstants.kHeadingSensitivity);
     m_headingExpo = m_headingExpoEntry.getDouble(OIConstants.kHeadingExpo);
     m_headingDeadband = m_headingDeadbandEntry.getDouble(OIConstants.kHeadingDeadband);
   }
