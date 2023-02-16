@@ -10,20 +10,24 @@ public class BalanceCommand extends CommandBase {
 
     private Drivetrain m_drive;
 
+    private double kBalanceP, kBalanceI, kBalanceD, startAngle, endAngle, tolerance;
+
     public BalanceCommand(Drivetrain drive) {
         m_drive = drive;
+        tolerance = 0.05;
     }
 
-    private double kBalanceP, kBalanceI, kBalanceD, startAngle, endAngle;
-
-    
-
-
+    /*
+     * Determines the values of the vectors of pitch, yaw, and roll. 
+     */
     public void initialize()  {
         endAngle = 0;
         startAngle = Functions.calculateHypotenuse(m_drive.getAngleHeading(), Functions.calculateHypotenuse(m_drive.getPigeon().getPitch(), m_drive.getPigeon().getRoll()));
     }
 
+    /**
+     * Makes the robot wiggle around PID like until charge station is balanced. 
+     */
     public void execute()
     {
       m_drive.m_balanceController.calculate(startAngle, endAngle);
@@ -33,9 +37,13 @@ public class BalanceCommand extends CommandBase {
       m_drive.m_balanceController.setTolerance(0.1);
     }
 
-    public boolean isFinished() 
-    {
-        if(m_drive.getAngleHeading() + 0.05 >= 0 && m_drive.getAngleHeading() - 0.05 <= 0)
+    /**
+    * Checks to see if robot is within acceptable range to determine if it is balanced. 
+    * @return True if the robot is within range, false if it is not.
+    */
+    public boolean isFinished() {
+    
+        if(m_drive.getAngleHeading() + tolerance >= 0 && m_drive.getAngleHeading() - tolerance <= 0)
         {
             return true;
         }
@@ -43,7 +51,10 @@ public class BalanceCommand extends CommandBase {
         return false;
     }
 
-    public void end()    {
+    /**
+     * If the robot is within the acceptable range, it stops it. 
+    */
+    public void end()  {
         m_drive.stop();
     }
 }
