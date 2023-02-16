@@ -14,7 +14,7 @@ public class MoveToHeight extends CommandBase {
 
   @Override
   public void execute() {
-    System.out.println(m_elevator.getHeightError(m_elevatorSetpoint));
+    System.out.println(m_elevatorSetpoint-m_elevator.getElevatorHeightMeters());
     m_elevator.setSepointMeters(m_elevatorSetpoint); 
 
   }

@@ -7,6 +7,8 @@
 
 package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.math.MathUtil;
@@ -28,22 +30,35 @@ public class Elevator extends SubsystemBase {
   private final DutyCycleEncoder m_absoluteSpoolEncoder;     
   private final TalonEncoder m_elevatorMotorEncoder; 
   private double m_absEncoderZeroPositionTicks;
+  private double clampLow = -ElevatorConstants.kMotorLimit; 
+  private double clampHigh = ElevatorConstants.kMotorLimit;
 
   public Elevator() {
     m_motor = MotorFactory.createTalonFX(ElevatorConstants.kMotorPort, Constants.kRioCAN);
-    m_motor.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
-    m_motor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
+    //m_motor.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
+    //m_motor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
     m_bottomLimitSwitch = new DigitalInput(ElevatorConstants.kBottomLimitSwitchPort); 
     m_topLimitSwitch = new DigitalInput(ElevatorConstants.kTopLimitSwitchPort);
     m_absoluteSpoolEncoder = new DutyCycleEncoder(ElevatorConstants.kAbsEncoderPort); 
     m_elevatorMotorEncoder = new TalonEncoder(m_motor); 
-    m_elevatorMotorEncoder.setDistancePerPulse(ElevatorConstants.kDistPerMotorEncoderTickMeters);
+    m_elevatorMotorEncoder.setDistancePerPulse(ElevatorConstants.kDistPerMotorEncoderTick);
     m_elevatorPID = new PIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD);  
+  }
+
+  public void setMotorLimit(double powerLevel){
+    clampLow = -powerLevel; 
+    clampHigh = powerLevel; 
+  }
+
+  public void setMotorLimit(){
+    setMotorLimit(ElevatorConstants.kMotorLimit);
   }
 
   @Override
   public void periodic() {
-    m_motor.set(ControlMode.PercentOutput, m_elevatorPID.calculate(getElevatorHeightMeters())); 
+    double pid = m_elevatorPID.calculate(getElevatorHeightMeters());
+    double pidClamped = MathUtil.clamp(pid, clampLow, clampHigh);
+    m_motor.set(ControlMode.PercentOutput, pidClamped); 
   }
 
   public void close() {
@@ -95,12 +110,6 @@ public class Elevator extends SubsystemBase {
     }
   }
  
-
-  public double getHeightError(double setpointMeters){
-    double error = setpointMeters-getElevatorHeightMeters(); 
-    return error; 
-  }
-
   public double getElevatorHeightMeters() {
     double elevatorHeight =m_elevatorMotorEncoder.getDistance();
     return elevatorHeight;  
