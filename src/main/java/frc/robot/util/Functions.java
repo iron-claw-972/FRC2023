@@ -37,21 +37,6 @@ public class Functions {
   }
 
   /**
-   * returns 0 if input is in [ -deadband , deadband ] other wise it returns the input
-   * 
-   * @param input The input value to rescale
-   * @param deadband The deadband
-   * @return the input with simple deadband applied
-   */
-  public static double simpleDeadband(double input, double deadband) {
-    if (Math.abs(input) <= deadband) {
-      return 0;
-    } else {
-      return input;
-    }
-  }
-
-  /**
    * An exponential function that maintains positive or negative sign.
    * @param exponent the power to raise the base to
    * @param base the base which will be raised to the power
