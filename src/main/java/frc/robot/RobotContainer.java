@@ -26,6 +26,7 @@ import frc.robot.controls.GameControllerDriverConfig;
 import frc.robot.controls.Operator;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.FourBarArm;
+import frc.robot.subsystems.Intake;
 import frc.robot.util.PathGroupLoader;
 
 /**
@@ -50,10 +51,15 @@ public class RobotContainer {
   // The robot's subsystems are defined here...
   // private final FourBarArm m_arm = new FourBarArm();
   private final Drivetrain m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab);
+  private final FourBarArm m_arm = new FourBarArm();
+  private final Intake m_intake = new Intake();
 
   // Controllers are defined here
   private final BaseDriverConfig m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
-  private final Operator m_operator = new Operator();
+  private final Operator m_operator = new Operator(m_arm, m_intake);
+  // The robot's subsystems are defined here...
+  
+ 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -65,7 +71,7 @@ public class RobotContainer {
     PathGroupLoader.loadPathGroups();
 
     m_driver.configureControls();
-    // m_operator.configureControls(m_arm);
+    m_operator.configureControls();
 
     LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
     LiveWindow.setEnabled(false);
