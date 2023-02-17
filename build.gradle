@@ -66,6 +66,8 @@ dependencies {
     nativeRelease wpi.java.vendor.jniRelease(wpi.platforms.desktop)
     simulationRelease wpi.sim.enableRelease()
 
+    implementation "gov.nist.math:jama:1.0.3"
+
     // JUnit 4
     // testImplementation 'junit:junit:4.13'
 

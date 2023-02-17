@@ -1,9 +1,12 @@
 package frc.robot.constants;
 
+/**
+ * Container class for falcon constants.
+ */
 public class FalconConstants {
 
   public static final int kFirmwareVersion = 5633; // version 22.1.1.0
-  public static final boolean kBreakOnWrongFirmware = false;
+  public static final boolean kBreakOnWrongFirmware = false; // TODO: fix issue that make the robot break
 
   public static final double kResolution = 2048;
   public static final double kMaxRpm = 6380.0; // Rotations per minute
