@@ -6,6 +6,8 @@
 /*----------------------------------------------------------------------------*/
 
 package frc.robot.subsystems;
+import java.util.logging.LogManager;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
@@ -38,12 +40,9 @@ public class Elevator extends SubsystemBase {
     //m_motor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
     m_bottomLimitSwitch = new DigitalInput(ElevatorConstants.kBottomLimitSwitchPort); 
     m_topLimitSwitch = new DigitalInput(ElevatorConstants.kTopLimitSwitchPort);
-    
     m_absoluteSpoolEncoder = new DutyCycleEncoder(ElevatorConstants.kAbsEncoderPort); 
-    
     m_elevatorMotorEncoder = new TalonEncoder(m_motor); 
     m_elevatorMotorEncoder.setDistancePerPulse(ElevatorConstants.kDistPerMotorEncoderTick);
-
     m_elevatorPID = new PIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD);  
   }
 
@@ -88,14 +87,19 @@ public class Elevator extends SubsystemBase {
   public void set(double power){
     m_motor.set(power); 
   }
-  public void enablePID(){
-    m_enabled = true; 
+  public void enableDisablePID(boolean condition){
+    if(condition){
+      m_enabled = true; 
+    }
+    if(condition == false){
+      m_enabled = false; 
+    }
   }
   public void disablePID(){
     m_enabled = false; 
   }
 
-  public void setSepointMeters(double setPointMeters){
+  public void setSetpointMeters(double setPointMeters){
     m_elevatorPID.setSetpoint(setPointMeters);
   }
 

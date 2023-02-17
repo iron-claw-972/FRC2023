@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.elevator;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Elevator;
 
@@ -17,20 +17,17 @@ public class MoveToHeight extends CommandBase {
     //set the elevator PID speed to be clamped within the correct range to get it to move faster
     //This should be done already in ResetEncoderAtBottom() but just in case something happens it's here too. 
     m_elevator.setMotorLimit();
-
-    m_elevator.setSepointMeters(m_elevatorSetpoint);
-
+    m_elevator.setSetpointMeters(m_elevatorSetpoint);
+    m_elevator.enableDisablePID(true);
   }
 
   @Override
-  public void execute() {
-    System.out.println(m_elevatorSetpoint-m_elevator.getElevatorHeightMeters());
-    m_elevator.setSepointMeters(m_elevatorSetpoint); 
-
+  public void end(boolean interrupted) {
   }
-
-  public void end(){
-    
-
+  
+  // Returns true when the command should end.
+  @Override
+  public boolean isFinished() {
+    return false; 
   }
 }

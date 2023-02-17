@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
-import frc.robot.commands.DoNothing;
+import frc.robot.commands.elevator.DoNothing;
 import frc.robot.controls.Driver;
 import frc.robot.controls.Operator;
 import frc.robot.controls.TestControls;
@@ -43,8 +43,7 @@ public class RobotContainer {
     PathGroupLoader.loadPathGroups();
 
     Driver.configureControls(m_drive);
-    Operator.configureControls(m_elevator);
-    Operator.configureControls(m_arm);
+    Operator.configureControls(m_elevator,m_arm);
     TestControls.configureControls(m_drive);
 
     LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns

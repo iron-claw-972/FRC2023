@@ -1,7 +1,7 @@
 //TODO: Need to figure out a way to ovverride the constant PID adjustment happening in Elevator.java subsystem to run this command
 
 
-package frc.robot.commands;
+package frc.robot.commands.elevator;
 
 import frc.robot.controls.Operator;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -16,7 +16,7 @@ public class ManualElevatorControl extends CommandBase {
   }
   @Override
   public void initialize() {
-    m_elevator.disablePID(); 
+    m_elevator.enableDisablePID(false); 
   }
   @Override
   public void execute() {
@@ -27,10 +27,10 @@ public class ManualElevatorControl extends CommandBase {
   @Override
   public void end(boolean interrupted) {
   }
-
+  
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return false; 
   }
 }

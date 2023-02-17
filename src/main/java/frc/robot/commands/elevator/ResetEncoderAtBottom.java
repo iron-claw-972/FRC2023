@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.elevator;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.subsystems.Elevator;
@@ -16,7 +16,17 @@ public class ResetEncoderAtBottom extends CommandBase {
     //first lower the power levels
     m_elevator.setMotorLimit(ElevatorConstants.kMotorZeroingLimit);
     //then set the setpoint
-    m_elevator.setSepointMeters(ElevatorConstants.kHeightZeroing);
+    m_elevator.setSetpointMeters(ElevatorConstants.kHeightZeroing);
+  }
+  
+  @Override
+  public void end(boolean interrupted) {
+  }
+  
+  // Returns true when the command should end.
+  @Override
+  public boolean isFinished() {
+    return false; 
   }
 }
 

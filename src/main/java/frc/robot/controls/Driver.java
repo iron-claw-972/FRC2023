@@ -1,6 +1,6 @@
 package frc.robot.controls;
 
-import frc.robot.commands.DoNothing;
+import frc.robot.commands.elevator.DoNothing;
 import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.Drivetrain;
 import lib.controllers.GameController;
