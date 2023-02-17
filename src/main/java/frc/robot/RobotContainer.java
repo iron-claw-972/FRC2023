@@ -39,7 +39,6 @@ public class RobotContainer {
 
   // Shuffleboard stuff
   SendableChooser<Command> m_autoCommand = new SendableChooser<>();
-  SendableChooser<Alliance> m_allianceChooser = new SendableChooser<>();
 
   // Where the robot will score.
   public static Node selectedNode = null;
@@ -52,8 +51,6 @@ public class RobotContainer {
   public final static Node[][] redNodes = new Node[4][];
 
 
-  // The robot's alliance
-  public static Alliance alliance;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -104,11 +101,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return m_autoCommand.getSelected();
-  }
-  public void allianceChooserUpdate() {
-    alliance = DriverStation.getAlliance();
-    // alliance = m_allianceChooser.getSelected();
-    // Shuffleboard.getTab("Main").add("Alliance Chooser", m_allianceChooser);
   }
 
   /**

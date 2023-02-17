@@ -1,5 +1,6 @@
 package frc.robot.controls;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.RobotContainer;
@@ -60,7 +61,7 @@ public class Operator {
         selectValues[2] = pressValue;
         selectTime = 1;
 
-        if (RobotContainer.alliance == Alliance.Blue) {
+        if (DriverStation.getAlliance() == Alliance.Blue) {
           RobotContainer.selectedNode = RobotContainer.blueNodes[selectValues[1]][selectValues[0]*3-3+selectValues[2]];
         }else{
           RobotContainer.selectedNode = RobotContainer.redNodes[selectValues[1]][selectValues[0]*3-3+selectValues[2]];
