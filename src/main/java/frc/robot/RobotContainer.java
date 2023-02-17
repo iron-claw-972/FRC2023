@@ -49,7 +49,6 @@ public class RobotContainer {
   private final ShuffleboardTab m_testTab = Shuffleboard.getTab("Test");
 
   // The robot's subsystems are defined here...
-  // private final FourBarArm m_arm = new FourBarArm();
   private final Drivetrain m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab);
   private final FourBarArm m_arm = new FourBarArm();
   private final Intake m_intake = new Intake();
@@ -57,9 +56,6 @@ public class RobotContainer {
   // Controllers are defined here
   private final BaseDriverConfig m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
   private final Operator m_operator = new Operator(m_arm, m_intake);
-  // The robot's subsystems are defined here...
-  
- 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
