@@ -3,7 +3,7 @@ package frc.robot.constants;
 public class FalconConstants {
 
   public static final int kFirmwareVersion = 5633; // version 22.1.1.0
-  public static final boolean kBreakOnWrongFirmware = true;
+  public static final boolean kBreakOnWrongFirmware = false;
 
   public static final double kResolution = 2048;
   public static final double kMaxRpm = 6380.0; // Rotations per minute
