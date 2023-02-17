@@ -13,20 +13,24 @@ public class ResetEncoderAtBottom extends CommandBase {
 
   @Override
   public void initialize() {
-    //first lower the power levels
-    m_elevator.setMotorLimit(ElevatorConstants.kMotorZeroingLimit);
-    //then set the setpoint
-    m_elevator.setSetpointMeters(ElevatorConstants.kHeightZeroing);
+    m_elevator.enableDisablePID(false); 
+  }
+
+  @Override
+  public void execute(){
+    m_elevator.set(-0.25); 
   }
   
   @Override
   public void end(boolean interrupted) {
+    m_elevator.resetMotorEncoder();
   }
   
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false; 
+    return(m_elevator.getBottomLimitSwitch());
   }
 }
+
 

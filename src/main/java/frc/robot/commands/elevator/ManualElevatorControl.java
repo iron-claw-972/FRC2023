@@ -21,7 +21,6 @@ public class ManualElevatorControl extends CommandBase {
   @Override
   public void execute() {
     m_elevator.set(Operator.getRawThrottleValue()); // rename throttlevalue function to somehting else
-    m_elevator.stopMotorsIfLimitSwitchesTripped(Operator.getRawThrottleValue());
   }
 
   @Override

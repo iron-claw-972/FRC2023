@@ -9,6 +9,8 @@ package frc.robot.subsystems;
 import java.util.logging.LogManager;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.math.MathUtil;
@@ -24,8 +26,6 @@ import lib.ctre_shims.TalonEncoder;
 public class Elevator extends SubsystemBase {
 
   private final WPI_TalonFX m_motor;
-  private final DigitalInput m_bottomLimitSwitch;
-  private final DigitalInput m_topLimitSwitch;
   private final PIDController m_elevatorPID;
   private final DutyCycleEncoder m_absoluteSpoolEncoder;     
   private final TalonEncoder m_elevatorMotorEncoder; 
@@ -36,10 +36,8 @@ public class Elevator extends SubsystemBase {
 
   public Elevator() {
     m_motor = MotorFactory.createTalonFX(ElevatorConstants.kMotorPort, Constants.kRioCAN);
-    //m_motor.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
-    //m_motor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
-    m_bottomLimitSwitch = new DigitalInput(ElevatorConstants.kBottomLimitSwitchPort); 
-    m_topLimitSwitch = new DigitalInput(ElevatorConstants.kTopLimitSwitchPort);
+    m_motor.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
+    m_motor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
     m_absoluteSpoolEncoder = new DutyCycleEncoder(ElevatorConstants.kAbsEncoderPort); 
     m_elevatorMotorEncoder = new TalonEncoder(m_motor); 
     m_elevatorMotorEncoder.setDistancePerPulse(ElevatorConstants.kDistPerMotorEncoderTick);
@@ -62,14 +60,7 @@ public class Elevator extends SubsystemBase {
      * Thus set the setpoint to 0, then atSetpoint() will be triggered, causing the 
      * ResetEncoderAtBottom() command to end
      */
-    if(getBottomLimitSwitch()){
-      m_motor.set(0);
-    }
-
-    if (getTopLimitSwitch()){
-      //TODO: Add functionality to stop elevator after it hits the top limit switch and still be able to go down
-    } 
-
+    
     if(m_enabled == true){
       double pid = m_elevatorPID.calculate(getElevatorHeightMeters());
       double pidClamped = MathUtil.clamp(pid, clampLow, clampHigh);
@@ -79,8 +70,7 @@ public class Elevator extends SubsystemBase {
 
   public void close() {
     // close the ports
-    m_bottomLimitSwitch.close();
-    m_topLimitSwitch.close();
+    //TODO: Is there any way to close the ports of the limit switches attached to the motor? 
     m_absoluteSpoolEncoder.close();
   }
 
@@ -104,32 +94,21 @@ public class Elevator extends SubsystemBase {
   }
 
   public boolean getBottomLimitSwitch(){
-    return m_bottomLimitSwitch.get(); 
+   if(m_motor.getSensorCollection().isRevLimitSwitchClosed() == 0){
+    return true; 
+   }
+    return false; 
   }
 
   public boolean getTopLimitSwitch(){
-    return m_topLimitSwitch.get(); 
+    if(m_motor.getSensorCollection().isFwdLimitSwitchClosed() == 0){
+     return true; 
+    }
+     return false; 
   }
 
   public void resetMotorEncoder(){
     m_elevatorMotorEncoder.reset(); 
-  }
-
-  public void stopMotorsIfLimitSwitchesTripped(double power){
-    if (m_topLimitSwitch.get() && power>0){
-      m_motor.set(0); 
-    }
-    if (m_topLimitSwitch.get() && power <0){
-      //the semicolon makes the if statement do nothing
-      ;//TODO: Maybe remove this if unncesary 
-    }
-    if (m_bottomLimitSwitch.get() && power<0){
-      m_motor.set(0); 
-    }
-    if (m_bottomLimitSwitch.get() && power>0){
-      //the semicolon makes the if statement do nothing
-      ;//TODO: Maybe remove this if unncesary     
-    }
   }
  
   /**
