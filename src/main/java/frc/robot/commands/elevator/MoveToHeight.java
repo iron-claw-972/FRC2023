@@ -5,7 +5,13 @@ import frc.robot.subsystems.Elevator;
 public class MoveToHeight extends CommandBase {
   Elevator m_elevator; 
   double m_elevatorSetpoint; 
-
+  /**
+   * This command allows the elvator to move to the heights 
+   * of the bottom, middle, and top nodes, or any height that we choose. 
+   * 
+   * @param elevator
+   * @param elevatorHeight
+   */
   public MoveToHeight(Elevator elevator, double elevatorHeight) {
     m_elevator = elevator; 
     m_elevatorSetpoint = elevatorHeight; 

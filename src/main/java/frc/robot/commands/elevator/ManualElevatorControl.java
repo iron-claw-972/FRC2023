@@ -9,7 +9,11 @@ import frc.robot.subsystems.Elevator;
 
 public class ManualElevatorControl extends CommandBase {
   Elevator m_elevator; 
-
+  /**
+   * This command allows for manual control of the elevator. 
+   * TODO: get manual control of all subsystems to be exclusive to a third controller
+   * @param elevator
+   */
   public ManualElevatorControl(Elevator elevator) {
     m_elevator = elevator; 
     addRequirements(m_elevator);

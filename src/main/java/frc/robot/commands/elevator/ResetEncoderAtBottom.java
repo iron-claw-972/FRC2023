@@ -5,7 +5,11 @@ import frc.robot.subsystems.Elevator;
 
 public class ResetEncoderAtBottom extends CommandBase {
   Elevator m_elevator; 
-
+  /**
+   * Calibrate the elevator by resetting the encoder after it hits the bottom
+   * limit switch. 
+   * @param elevator
+   */
   public ResetEncoderAtBottom(Elevator elevator) {
     m_elevator = elevator; 
     addRequirements(m_elevator);

@@ -42,6 +42,9 @@ public class Elevator extends SubsystemBase {
     m_elevatorMotorEncoder = new TalonEncoder(m_motor); 
     m_elevatorMotorEncoder.setDistancePerPulse(ElevatorConstants.kDistPerMotorEncoderTick);
     m_elevatorPID = new PIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD);  
+  
+    //TODO: log, addDouble doesn't work. 
+    //LogManager.addDouble("Elevator/error", () -> {return m_pid.getSetpoint() - getElevatorHeight();});
   }
 
   public void setMotorLimit(double powerLevel){
