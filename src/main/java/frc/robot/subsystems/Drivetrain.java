@@ -109,8 +109,6 @@ public class Drivetrain extends SubsystemBase {
    */
   public Drivetrain(ShuffleboardTab drivetrainTab, ShuffleboardTab swerveModulesTab) {
 
-    
-    
     m_config.configureControls();
 
     LiveWindow.disableAllTelemetry();
@@ -141,7 +139,8 @@ public class Drivetrain extends SubsystemBase {
         m_modules[i].periodic();
       }
 
-      m_Controller.get(GCButton.B).toggleOnTrue((Command) new BalanceCommand(this));
+      m_Controller.get(GCButton.RB).onTrue(new BalanceCommand(this));
+     
     }
 
     updateDriveModuleFeedforwardShuffleboard();
