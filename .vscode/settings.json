@@ -25,17 +25,5 @@
       }
     },
   ],
-  "java.test.defaultConfig": "WPIlibUnitTests",
-  "cSpell.words": [
-    "Cancoder",
-    "Canivore",
-    "Catz",
-    "Deadband",
-    "feedforward",
-    "odometry",
-    "Pathplanner",
-    "Setpoint",
-    "Slewrate",
-    "ZROTATE"
-  ]
+  "java.test.defaultConfig": "WPIlibUnitTests"
 }

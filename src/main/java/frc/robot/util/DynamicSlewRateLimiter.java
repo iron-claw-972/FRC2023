@@ -12,6 +12,8 @@ import edu.wpi.first.util.WPIUtilJNI;
  * setpoint, and/or output ramps. A slew-rate limit is most appropriate when the quantity being
  * controlled is a velocity or a voltage; when controlling a position, consider using a {@link
  * edu.wpi.first.math.trajectory.TrapezoidProfile} instead.
+ * Edited by 972 to be "dynamic", that is, the slew rate can be modified on the fly. 
+ * Additionally, it can be set to be continuous on a range, useful for angles.
  */
 public class DynamicSlewRateLimiter {
   private double m_positiveRateLimit;
@@ -19,6 +21,7 @@ public class DynamicSlewRateLimiter {
   private double m_prevVal;
   private double m_prevTime;
 
+  //TODO: write unit test for continuous
   private boolean m_continuous = false;
   private double m_lowerContinuousLimit = -1;
   private double m_upperContinuousLimit = 1;
@@ -80,6 +83,8 @@ public class DynamicSlewRateLimiter {
 
     // TODO: make continuous work properly with + and - slew rates
     if (m_continuous) {
+
+      //TODO: see if MathUtil.inputModulus() can work
       // convert value to be in between limits
       // input = MathUtil.inputModulus(input, m_lowerContinuousLimit, m_upperContinuousLimit);
       //input %= m_upperCycleLimit - m_lowerCycleLimit;

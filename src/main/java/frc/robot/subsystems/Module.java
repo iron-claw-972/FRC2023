@@ -18,6 +18,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.constants.Constants;
 import frc.robot.constants.DriveConstants;
+import frc.robot.constants.FalconConstants;
 import frc.robot.constants.ModuleConstants;
 import frc.robot.constants.ModuleType;
 import frc.robot.util.LogManager;
@@ -59,7 +60,7 @@ public class Module {
   private final WPI_TalonFX m_steerMotor;
 
   private final TalonEncoder m_driveEncoder;
-  private final WPI_CANCoder m_encoder;
+  private final WPI_CANCoder m_steerEncoder;
 
   private PIDController m_drivePIDController;
 
@@ -119,7 +120,7 @@ public class Module {
     m_steerMotor.setNeutralMode(NeutralMode.Brake);
 
     m_driveEncoder = new TalonEncoder(m_driveMotor);
-    m_encoder = new WPI_CANCoder(encoderPort, Constants.kCanivoreCAN);
+    m_steerEncoder = new WPI_CANCoder(encoderPort, Constants.kCanivoreCAN);
 
     m_drivePIDController = new PIDController(driveP, driveI,driveD);
     m_steerPIDController = new ProfiledPIDController(
@@ -133,12 +134,12 @@ public class Module {
     // absolute encoder
     // by default the CANcoder sets it's feedback coefficient to 0.087890625, to
     // make degrees.
-    m_encoder.configFactoryDefault();
-    m_encoder.setPositionToAbsolute();
+    m_steerEncoder.configFactoryDefault();
+    m_steerEncoder.setPositionToAbsolute();
 
-    m_encoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
-
-    m_encoder.configFeedbackCoefficient(2 * Math.PI / Constants.kCancoderResolution, "rad", SensorTimeBase.PerSecond);
+    // CANcoder from -180 to 180, then convert to rad -> output range is -pi to pi
+    m_steerEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
+    m_steerEncoder.configFeedbackCoefficient(2 * Math.PI / Constants.kCancoderResolution, "rad", SensorTimeBase.PerSecond);
 
     m_offset = encoderOffset;
 
@@ -146,7 +147,7 @@ public class Module {
     // distance traveled for one rotation of the wheel divided by the encoder
     // resolution.
     m_driveEncoder.setDistancePerPulse(
-        2 * Math.PI * DriveConstants.kWheelRadius / DriveConstants.kDriveGearRatio / Constants.kCancoderResolution);
+        2 * Math.PI * DriveConstants.kWheelRadius / DriveConstants.kDriveGearRatio / FalconConstants.kResolution);
 
     // Limit the PID Controller's input range between -pi and pi and set the input
     // to be continuous. Factor in the offset amount.
@@ -164,7 +165,7 @@ public class Module {
     m_driveFeedforward = new SimpleMotorFeedforward(m_driveFeedForwardKS, m_driveFeedForwardKV);
     m_steerFeedForward = new SimpleMotorFeedforward(m_steerFeedForwardKS, m_steerFeedForwardKV);
   
-    LogManager.addDouble(m_steerMotor.getDescription() + " Steer Absolute Position", () -> m_encoder.getAbsolutePosition());
+    LogManager.addDouble(m_steerMotor.getDescription() + " Steer Absolute Position", () -> m_steerEncoder.getAbsolutePosition());
     LogManager.addDouble(m_steerMotor.getDescription() + " Steer Velocity", () -> getSteerVelocity());
     LogManager.addDouble(m_steerMotor.getDescription() + " Steer Error", () -> getSteerAngleError());
     LogManager.addDouble(m_steerMotor.getDescription() + " Steer Voltage", () -> getSteerOutputVoltage());
@@ -186,7 +187,7 @@ public class Module {
       return;
     }
 
-    if (m_optimizeStates == true) {
+    if (m_optimizeStates) {
       // Optimize the reference state to avoid spinning further than 90 degrees
       desiredState = SwerveModuleState.optimize(desiredState, new Rotation2d(getSteerAngle()));
     }
@@ -198,7 +199,7 @@ public class Module {
 
   /**
    * Sets the drive velocity of the module using PIDF once. Should be called repeatedly to be effective.
-   * @param speedMetersPerSecond the drive velocity in m/s
+   * @param speedMetersPerSecond the drive velocity in m/s.
    */
   public void setDriveVelocity(double speedMetersPerSecond) {
     m_desiredState.speedMetersPerSecond = speedMetersPerSecond;
@@ -250,7 +251,7 @@ public class Module {
    * @return module drive position in meters.
    */
   public double getDrivePosition() {
-      return m_driveEncoder.getDistance() * DriveConstants.kDriveGearRatio * 2 * Math.PI * DriveConstants.kWheelRadius;
+      return m_driveEncoder.getDistance();
   }
 
   /**
@@ -283,7 +284,7 @@ public class Module {
    * @return encoder's position in radians, from -pi to pi
    */
   public double getSteerAngle() {
-    return MathUtil.angleModulus(m_encoder.getAbsolutePosition() - m_offset);
+    return MathUtil.angleModulus(m_steerEncoder.getAbsolutePosition() - m_offset);
   }
 
   /**
@@ -331,7 +332,7 @@ public class Module {
    * @return the velocity of the steer encoder
    */
   public double getSteerVelocity() {
-    return m_encoder.getVelocity();
+    return m_steerEncoder.getVelocity();
   }
 
   /**
@@ -390,7 +391,7 @@ public class Module {
   }
 
   public WPI_CANCoder getEncoder() {
-    return m_encoder;
+    return m_steerEncoder;
   }
 
   public double getSteerFeedForwardOutput() {

@@ -14,6 +14,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -152,26 +153,26 @@ public class Drivetrain extends SubsystemBase {
   /**
   * Method to drive the robot using joystick info.
   *
-  * @param xSpeed speed of the robot in the x direction (forward)
-  * @param ySpeed speed of the robot in the y direction (sideways)
-  * @param rot angular rate of the robot
+  * @param xSpeed speed of the robot in the x direction (forward) in m/s
+  * @param ySpeed speed of the robot in the y direction (sideways) in m/s
+  * @param rot angular rate of the robot in rad/s
   * @param fieldRelative whether the provided x and y speeds are relative to the field
   */
-  public void driveRot(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {           
+  public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {           
     setChassisSpeeds((
       fieldRelative
-          ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_pigeon.getRotation2d())
+          ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getRotation2d())
           : new ChassisSpeeds(xSpeed, ySpeed, rot)
       )
     );
   }  
 
   /**
-   * Drives the robot using the provided x speed, y speed, and  heading.
+   * Drives the robot using the provided x speed, y speed, and positional heading.
    * 
    * @param xSpeed speed of the robot in the x direction (forward)
    * @param ySpeed speed of the robot in the y direction (sideways)
-   * @param heading target heading of the robot
+   * @param heading target heading of the robot in radians
    * @param fieldRelative whether the provided x and y speeds are relative to the field
    */
   public void driveHeading(double xSpeed, double ySpeed, double heading, boolean fieldRelative) {
@@ -197,17 +198,18 @@ public class Drivetrain extends SubsystemBase {
   }
 
   /**
-   * Runs the PID controllers with the provided x, y, and rot values. Then, calls {@link #driveRot(double, double, double, boolean)} using the PID outputs.
+   * Runs the PID controllers with the provided x, y, and rot values. Then, calls {@link #drive()} using the PID outputs.
+   * This is based on the odometry of the chassis.
    * 
-   * @param xSpeed speed of the robot in the x direction (forward)
-   * @param ySpeed speed of the robot in the y direction (sideways)
-   * @param heading target heading of the robot
+   * @param x the position to move to in the x, in meters
+   * @param y the position to move to in the y, in meters
+   * @param rot the angle to move to, in radians
    */
   public void runChassisPID(double x, double y, double rot) {
     double xSpeed = m_xController.calculate(m_odometry.getPoseMeters().getX(), x);
     double ySpeed = m_yController.calculate(m_odometry.getPoseMeters().getY(), y);
     double rotRadians = m_rotationController.calculate(getAngleHeading(), rot);
-    driveRot(xSpeed, ySpeed, rotRadians, true);
+    drive(xSpeed, ySpeed, rotRadians, true);
   }
   
   /** Updates the field relative position of the robot. */
@@ -225,9 +227,13 @@ public class Drivetrain extends SubsystemBase {
   * @return the rate in rads/s from the pigeon
   */
   public double getAngularRate(int id) {
+
+    // uses pass by reference and edits reference to array
     double[] rawGyros = new double[3];
     m_pigeon.getRawGyro(rawGyros);
-    return rawGyros[id] * Math.PI / 180;
+
+    // outputs in deg/s, so convert to rad/s
+    return Units.degreesToRadians(rawGyros[id]);
   }
   
   /**
@@ -239,14 +245,14 @@ public class Drivetrain extends SubsystemBase {
   
   /**
   * Resets the odometry to the given pose.
-  * @param pose current robot pose
+  * @param pose the pose to reset to.
   */
   public void resetOdometry(Pose2d pose) {
     m_odometry.resetPosition(getRotation2d(), getModulePositions(), pose);
   }
   
   /**
-  * @return the pigeon's Rotation2d
+  * @return the pigeon's heading in a Rotation2d
   */
   public Rotation2d getRotation2d() {
     return m_pigeon.getRotation2d(); 
