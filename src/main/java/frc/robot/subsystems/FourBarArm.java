@@ -24,7 +24,7 @@ public class FourBarArm extends SubsystemBase {
 
     // configure the encoder
     // TODO: use a kConstant instead of the 8192
-    m_encoder = m_motor.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, 8192);
+    m_encoder = m_motor.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, ArmConstants.kEncoderCountsPerRev);
     // The RelativeEncoder reports angles in native revolutions by default.
     // See https://codedocs.revrobotics.com/java/com/revrobotics/relativeencoder
     // Change the encoder's reported value to radians (1 revolution = 2 pi radians).
