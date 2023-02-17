@@ -9,14 +9,16 @@ public class SteerVoltage extends CommandBase {
   Drivetrain m_drive;
   GenericEntry m_voltsEntry;
 
-  public SteerVoltage(Drivetrain drive, GenericEntry voltsEntry){
+  public SteerVoltage(Drivetrain drive){
     m_drive = drive; 
+    m_voltsEntry = m_drive.getRequestedVoltsEntry();
     addRequirements(m_drive);
   }
 
   @Override
   public void execute(){
     m_drive.steerVoltsTest(m_voltsEntry.getDouble(0));
+    System.out.println(m_voltsEntry.getDouble(0));
   }
 
   @Override

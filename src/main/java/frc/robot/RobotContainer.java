@@ -61,13 +61,14 @@ public class RobotContainer {
     LiveWindow.setEnabled(false);
     
     m_drive.setupModulesShuffleboard();
-    addTestCommands();
-    autoChooserUpdate();
-    loadCommandSchedulerShuffleboard();
+
     m_drive.setupDrivetrainShuffleboard();
     m_driver.setupShuffleboard();
 
     m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive,m_driver));
+    addTestCommands();
+    autoChooserUpdate();
+    loadCommandSchedulerShuffleboard();
   }
 
   public void initDriveYaw(boolean force) {
@@ -94,7 +95,7 @@ public class RobotContainer {
     m_testTab.add("Steer All FeedForawrd", new SteerFeedForwardCharacterzationAll(m_drive));
     m_testTab.add("Steer Single FeedForawrd", new SteerFeedForwardCharacterzationSingle(m_drive, m_drive.getModuleChooser()));
     m_testTab.add("Drive Voltage", new DriveVoltage(m_drive, m_drive.getRequestedVoltsEntry()));
-    m_testTab.add("Drive Steer", new SteerVoltage(m_drive, m_drive.getRequestedVoltsEntry()));
+    m_testTab.add("Drive Steer", new SteerVoltage(m_drive));
     m_testTab.add("Test Drive Velocity", new TestDriveVelocity(m_drive, m_drive.getRequestedDriveVelocityEntry(), testEntry));
     m_testTab.add("Heading PID", new TestHeadingPID(m_drive, m_drive.getRequestedSteerAngleEntry()));
     m_testTab.add("Steer angle", new TestSteerAngle(m_drive, m_drive.getRequestedHeadingEntry(), testEntry));
