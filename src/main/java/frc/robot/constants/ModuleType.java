@@ -38,6 +38,6 @@ public enum ModuleType {
   public int getID() {
     if (this == NONE)
       return -1;
-    return this.ordinal() - 1;
+    return this.ordinal();
   }
 }
