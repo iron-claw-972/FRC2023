@@ -48,7 +48,7 @@ public class RobotContainer {
   private final ShuffleboardTab m_testTab = Shuffleboard.getTab("Test");
 
   // The robot's subsystems are defined here...
-  private final FourBarArm m_arm = new FourBarArm();
+  // private final FourBarArm m_arm = new FourBarArm();
   private final Drivetrain m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab);
 
   // Controllers are defined here
@@ -65,7 +65,7 @@ public class RobotContainer {
     PathGroupLoader.loadPathGroups();
 
     m_driver.configureControls();
-    m_operator.configureControls(m_arm);
+    // m_operator.configureControls(m_arm);
 
     LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
     LiveWindow.setEnabled(false);
