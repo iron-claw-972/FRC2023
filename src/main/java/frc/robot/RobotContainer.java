@@ -60,7 +60,7 @@ public class RobotContainer {
     DriverStation.silenceJoystickConnectionWarning(true);
 
     m_driver.configureControls();
-    m_operator.configureControls();
+    m_operator.configureControls(m_drive);
 
     LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
     LiveWindow.setEnabled(false);

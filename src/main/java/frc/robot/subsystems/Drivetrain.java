@@ -138,8 +138,6 @@ public class Drivetrain extends SubsystemBase {
       for (int i = 0; i < m_modules.length; i++) {
         m_modules[i].periodic();
       }
-
-      m_Controller.get(GCButton.RB).onTrue(new BalanceCommand(this));
      
     }
 
@@ -151,15 +149,6 @@ public class Drivetrain extends SubsystemBase {
     m_fieldDisplay.setRobotPose(getPose());
   }
 
-  public GameControllerDriverConfig getGameControllerDriverConfig()
-  {
-    return m_config;
-  }
-
-  public GameController getGameController()
-  {
-    return m_Controller;
-  }
   
   public void setPigeonYaw(double degrees) {
     m_pigeon.setYaw(degrees);
