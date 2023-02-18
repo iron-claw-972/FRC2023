@@ -48,7 +48,7 @@ public class PathPlannerCommand extends SequentialCommandGroup{
             DriverStation.getAlliance());
 
         addCommands(
-            (pathIndex == 0 && resetPose ? new InstantCommand(() -> drive.resetOdometry(path.getInitialHolonomicPose(), drive.getRotation2d())) : new DoNothing()),
+            (pathIndex == 0 && resetPose ? new InstantCommand(() -> drive.resetOdometry(path.getInitialHolonomicPose())) : new DoNothing()),
             new PrintCommand("Number of paths: " + pathGroup.size()),
             new PPSwerveControllerCommand(
                 path, 

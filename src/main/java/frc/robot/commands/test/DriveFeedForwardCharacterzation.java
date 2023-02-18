@@ -62,7 +62,7 @@ public class DriveFeedForwardCharacterzation extends CommandBase {
   public void end(boolean interrupted) {
     System.out.println("FINISHED");
     for (int i=0; i<4; i++){
-      m_feedForwardCharacterizationData[i].print();
+      m_feedForwardCharacterizationData[i].process();
     }
     
     for (int i=0; i<4;i++){

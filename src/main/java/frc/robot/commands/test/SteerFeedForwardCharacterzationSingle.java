@@ -60,7 +60,7 @@ public class SteerFeedForwardCharacterzationSingle extends CommandBase {
   public void end(boolean interrupted) {
     System.out.println("FINISHED");
  
-      m_feedForwardCharacterizationData.print();
+      m_feedForwardCharacterizationData.process();
     
       m_drive.getSteerStaticFeedforwardArray()[m_module.getModuleType().getID()] = m_feedForwardCharacterizationData.getStatic();
       m_drive.getSteerVelocityFeedforwardArray()[m_module.getModuleType().getID()] = m_feedForwardCharacterizationData.getVelocity();

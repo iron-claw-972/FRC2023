@@ -5,7 +5,6 @@ import frc.robot.Robot;
 import frc.robot.Robot.RobotId;
 import frc.robot.constants.Constants;
 import frc.robot.constants.FalconConstants;
-import frc.robot.util.RobotType;
 
 public abstract class DriveConstants {
 
@@ -100,9 +99,9 @@ public abstract class DriveConstants {
     public static double kSteerKS = 1;
     public static double kSteerKV = 0.5;
     // heading PID
-    public static double KheadingP= 4.6;
-    public static double KheadingI= 0;
-    public static double KheadingD= 0.4;
+    public static double kHeadingP= 4.6;
+    public static double kHeadingI= 0;
+    public static double kHeadingD= 0.4;
 
     // CAN
     public static String kDriveMotorCAN = "CANivore";
@@ -194,9 +193,9 @@ public abstract class DriveConstants {
             kSteerKS = 1;
             kSteerKV = 0.5;
             // heading PID
-            KheadingP= 4.6;
-            KheadingI= 0;
-            KheadingD= 0.4;
+            kHeadingP= 4.6;
+            kHeadingI= 0;
+            kHeadingD= 0.4;
 
             // CAN
             kDriveMotorCAN = "rio";
