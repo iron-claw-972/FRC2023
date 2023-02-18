@@ -12,6 +12,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import frc.robot.constants.AutoConstants;
 
+/**
+ * Utility class for loading paths using pathplanner.
+ */
 public class PathGroupLoader {
 
   private static HashMap<String, List<PathPlannerTrajectory>> pathGroups = new HashMap<>();
@@ -48,14 +51,14 @@ public class PathGroupLoader {
   /**
    * 
    * Gets a path that has already been loaded with {@link #loadPathGroups()}. The path group is a list 
-   * of trajectores that path planner can run.
+   * of trajectories that path planner can run.
    * 
    * @param pathGroupName the name of the file, without any extensions. This should be the same exact name that is displayed in pathplanner
-   * @return a list of trajectores that path planner can run.
+   * @return a list of trajectories that path planner can run.
    */
   public static List<PathPlannerTrajectory> getPathGroup(String pathGroupName) {
     if (pathGroups.get(pathGroupName) == null) {
-      System.out.println("Error retriving " + pathGroupName + " path!");
+      System.out.println("Error retrieving " + pathGroupName + " path!");
     }
     return pathGroups.get(pathGroupName);
   }

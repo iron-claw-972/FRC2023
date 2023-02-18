@@ -1,5 +1,0 @@
-package frc.robot.util;
-
-public enum TestType {
-    NONE, HEADING_DRIVE, HEADING_PID, MODULE_DRIVE_VELOCITY, MODULE_STEER_ANGLE, DRIVE_VOLTAGE, STEER_VOLTAGE;
-}
