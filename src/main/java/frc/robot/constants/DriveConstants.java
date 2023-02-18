@@ -159,8 +159,8 @@ public class DriveConstants {
   public static final double kHeadingD = 0.4;
 
   //balance on charge station
-  public static final double kBalanceP = 0.5;
-  public static final double kBalanceI = 0.5;
-  public static final double kBalanceD = 0.5;
+  public static final double kBalanceP = 0.01;
+  public static final double kBalanceI = 0;
+  public static final double kBalanceD = 0;
 
 }

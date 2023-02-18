@@ -21,8 +21,9 @@ public class BalanceCommand extends CommandBase {
      */
     public void initialize()  {
 
-        endPoint = 0;
+        endPoint = 0; //should be called setpoint
         startAngle = Functions.calculateHypotenuse(m_drive.getAngleHeading(), Functions.calculateHypotenuse(m_drive.getPigeon().getPitch(), m_drive.getPigeon().getRoll()));
+        //^ this may be not right, and should be called every execute and calculate new angle
 
         if(90 - m_drive.getAngleHeading() > m_drive.getAngleHeading())  { //Determines whether to use roll or pitch
             mode = false;
