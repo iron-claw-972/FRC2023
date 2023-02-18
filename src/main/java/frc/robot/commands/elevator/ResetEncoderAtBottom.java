@@ -28,6 +28,7 @@ public class ResetEncoderAtBottom extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_elevator.resetMotorEncoder();
+    m_elevator.set(0);
   }
   
   // Returns true when the command should end.

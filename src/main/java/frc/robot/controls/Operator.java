@@ -26,7 +26,6 @@ public class Operator {
     operator.get(operator.RIGHT_TRIGGER_BUTTON).onTrue(new MoveToHeight(elevator, ElevatorConstants.kBottomHeight)); 
     //Calibrate elevator using inbuilt motor encoders
     operator.get(DPad.DOWN).onTrue(new ResetEncoderAtBottom(elevator));
-    //TODO: calibrate elevator using absolute encoders(probably will not work yet as of 2/15/2023);
     //move to bottom node height
     operator.get(Button.A).onTrue(new MoveToHeight(elevator, ElevatorConstants.kHeightBottomNode));
     //move to mid node height
