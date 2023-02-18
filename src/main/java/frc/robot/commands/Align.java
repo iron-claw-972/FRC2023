@@ -57,7 +57,7 @@ public class Align extends CommandBase{
       a-=2*Math.PI;
     }
     double speed = a>m_setpoint?-0.1:0.1;
-    m_drive.arcadeDrive(0, -speed);
+    m_drive.drive(0, 0, -speed, false);
   }
 
   /**
@@ -67,7 +67,7 @@ public class Align extends CommandBase{
   @Override
   public void end(boolean interrupted){
     System.out.printf("\nExact angle: %.4f degrees\n", Units.radiansToDegrees(getAngle()));
-    m_drive.arcadeDrive(0, 0);
+    m_drive.stop();
   }
 
   /**

@@ -4,7 +4,7 @@ import edu.wpi.first.math.util.Units;
 
 public class ArmConstants {
   // TODO: arm ids - TBD (fake using 5 -- 1-4 have been taken)
-  public static final int motorID = 5;
+  public static final int kmotorID = 5;
 
   // TODO: PID values - TBD (fake values for now)
   public static final double kP = 1.0;

@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -20,7 +21,6 @@ import frc.robot.commands.Align;
 import frc.robot.commands.DoNothing;
 import frc.robot.commands.TestVision;
 import frc.robot.commands.TestVision2;
-import frc.robot.controls.Driver;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.test.CircleDrive;
 import frc.robot.commands.test.DriveFeedForwardCharacterization;
@@ -66,7 +66,7 @@ public class RobotContainer {
 
   // Controllers are defined here
   private final BaseDriverConfig m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
-  private final Operator m_operator = new Operator(m_arm, m_intake);
+  // private final Operator m_operator = new Operator(m_arm, m_intake);
 
   // Array of april tags. The index of the april tag in the array is equal to its id, and aprilTags[0] is null.
   public final static Pose3d[] aprilTags = new Pose3d[9];
@@ -86,9 +86,8 @@ public class RobotContainer {
     // load paths before auto starts
     PathGroupLoader.loadPathGroups();
 
-    TestControls.configureControls(m_drive);
     m_driver.configureControls();
-    m_operator.configureControls();
+    Operator.configureControls(m_drive, m_arm);
 
     Vision.setup(m_drive);
 
@@ -115,7 +114,7 @@ public class RobotContainer {
     loadCommandSchedulerShuffleboard();
 
     // Sets robot pose to 1 meter in front of april tag 2
-    m_drive.resetPose(aprilTags[2].getX()-1, aprilTags[2].getY(), Math.PI);
+    m_drive.resetPose(new Pose2d(aprilTags[2].getX()-1, aprilTags[2].getY(), new Rotation2d(Math.PI)));
 
     m_drive.setupDrivetrainShuffleboard();
     m_drive.setupModulesShuffleboard();
@@ -154,7 +153,7 @@ public class RobotContainer {
     tab.add("Test vision (backward)", new TestVision(-0.1, m_drive));
     tab.add("Test vision (forward then backward)", new TestVision2(0.1, 3, m_drive));
     tab.add("Test vision (backward then forward)", new TestVision2(-0.1, 3, m_drive));
-    tab.add("Print robot pose", new InstantCommand(()->m_drive.printPose()));
+    // tab.add("Print robot pose", new InstantCommand(()->m_drive.printPose()));
     tab.add("Print pose from vision", new InstantCommand(()->Vision.printEstimate()));
     tab.add("Align to 0 degrees", new Align(0, m_drive));
     tab.add("Align to 90 degrees", new Align(Math.PI/2, m_drive));

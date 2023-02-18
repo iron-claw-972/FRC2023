@@ -35,8 +35,11 @@ public class TestVision2 extends CommandBase{
   }
 
   private double getDist(){
-    // return 0;
-    return m_drive.getLeftDistance()/2+m_drive.getRightDistance()/2;
+    return 
+      m_drive.m_modules[0].getDrivePosition()/4+
+      m_drive.m_modules[1].getDrivePosition()/4+
+      m_drive.m_modules[2].getDrivePosition()/4+
+      m_drive.m_modules[3].getDrivePosition()/4;
   }
 
   /**
@@ -59,7 +62,7 @@ public class TestVision2 extends CommandBase{
    */
   @Override
   public void execute(){
-    m_drive.arcadeDrive(m_direction*m_speed, 0);
+    m_drive.drive(m_direction*m_speed, 0, 0, false);
     if(Vision.getPose2d(m_currentPose)==null){
       m_endCounter++;
     }else{
@@ -80,7 +83,7 @@ public class TestVision2 extends CommandBase{
           System.out.println(dist2);
           System.out.println(m_closest);
           m_endCounter+=2;
-          m_drive.arcadeDrive(0, 0);
+          m_drive.stop();
         }
       }
     }
@@ -93,7 +96,7 @@ public class TestVision2 extends CommandBase{
   @Override
   public void end(boolean interrupted){
     System.out.printf("\nVision distance: %.4f\nEncoder distance: %.4f\n", Math.sqrt(Math.pow(m_currentPose.getX()-m_startPose.getX(), 2) + Math.pow(m_currentPose.getY()-m_startPose.getY(), 2)), Math.abs(m_encoderPosition-m_encoderStart));
-    m_drive.arcadeDrive(0, 0);
+    m_drive.stop();
   }
 
   /**
