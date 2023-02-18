@@ -1,5 +1,6 @@
 package frc.robot.constants;
 
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 
 public class ArmConstants {
@@ -27,9 +28,9 @@ public class ArmConstants {
   public static final double kTopPosition = 0.5;
 
   // simulation constants
-  public static final DCMotor armSimMotor = DCMotor.getNEO(1);
-  public static final double armReduction = 45;
-  public static final double armMass = 2.05;
-  public static final double armLength = .24;
-  public static final double armMOI = .1194;
+  public static final DCMotor kArmSimMotor = DCMotor.getNEO(1);
+  public static final double kArmReduction = 45;
+  public static final double kArmMass = 2.05;
+  public static final double kArmLength = .24;
+  public static final double kArmMOI = .1194;
 }

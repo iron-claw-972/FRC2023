@@ -21,7 +21,7 @@ public class Operator {
   /**
    * Configures all of the operator controls.
    */
-  public static void configureControls(FourBarArm arm) {
+  public static void configureControls() {
     
   }
 

@@ -41,13 +41,12 @@ public class FourBarArm extends SubsystemBase {
 
   private final SingleJointedArmSim armSim = 
   new SingleJointedArmSim(
-    ArmConstants.armSimMotor, 
-    ArmConstants.armReduction, 
-    ArmConstants.armMOI, 
-    ArmConstants.armLength, 
+    ArmConstants.kArmSimMotor, 
+    ArmConstants.kArmReduction, 
+    ArmConstants.kArmMOI, 
+    ArmConstants.kArmLength, 
     Units.degreesToRadians(0), 
     Units.degreesToRadians(180), 
-    ArmConstants.armMass, 
     true
     );
   private double armPositionDeg = 0;
@@ -105,10 +104,10 @@ public class FourBarArm extends SubsystemBase {
     SmartDashboard.putData("Arm Sim", mech2d);
     armTower.setColor(new Color8Bit(Color.kBlue));
 
-    operator.get(Button.B).onTrue(new InstantCommand(() -> setArmSetpoint(ArmConstants.topPosition)));
-    operator.get(Button.X).onTrue(new InstantCommand(() -> setArmSetpoint(ArmConstants.middlePosiiton)));
-    operator.get(Button.A).onTrue(new InstantCommand(() -> setArmSetpoint(ArmConstants.initialPosition)));
-    operator.get(Button.Y).onTrue(new InstantCommand(() -> setArmSetpoint(ArmConstants.shelfPosition)));
+    operator.get(Button.B).onTrue(new InstantCommand(() -> setArmSetpoint(ArmConstants.kTopPosition)));
+    operator.get(Button.X).onTrue(new InstantCommand(() -> setArmSetpoint(ArmConstants.kMiddlePosition)));
+    operator.get(Button.A).onTrue(new InstantCommand(() -> setArmSetpoint(ArmConstants.kInitialPosition)));
+    operator.get(Button.Y).onTrue(new InstantCommand(() -> setArmSetpoint(ArmConstants.kShelfPosition)));
   }
 
   @Override
