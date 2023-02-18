@@ -16,7 +16,6 @@ public class ArmConstants {
   public static final double maxMotorPower = +0.05;
 
   // feedforward values - TBD
-  public static final double kS = 0;
   public static final double kG = 0;
   public static final double kV = 0;
   

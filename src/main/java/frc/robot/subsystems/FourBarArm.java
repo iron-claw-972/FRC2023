@@ -38,7 +38,7 @@ public class FourBarArm extends SubsystemBase {
     // set the PID controller's tolerance
     m_pid.setTolerance(ArmConstants.kTolerance);
 
-    m_feedforward = new ArmFeedforward(ArmConstants.kS, ArmConstants.kG, ArmConstants.kV);
+    m_feedforward = new ArmFeedforward(0, ArmConstants.kG, 0);
 
     // go to the initial position (use the class method)
     setArmSetpoint(ArmConstants.initialPosition);
