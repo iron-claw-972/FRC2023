@@ -22,16 +22,16 @@ public class LogManager {
   private static DataLog log = DataLogManager.getLog();
 
   // These are array lists of log entry classes from WPI. appending to a log entry automatically adds to the log file.
-  private static ArrayList<DoubleLogEntry> doubleLogs = new ArrayList<DoubleLogEntry>();
-  private static ArrayList<DoubleArrayLogEntry> doubleArrayLogs = new ArrayList<DoubleArrayLogEntry>();
-  private static ArrayList<BooleanLogEntry> boolLogs = new ArrayList<BooleanLogEntry>();
-  private static ArrayList<IntegerLogEntry> intLogs = new ArrayList<IntegerLogEntry>();
+  private static ArrayList<DoubleLogEntry> doubleLogs = new ArrayList<>();
+  private static ArrayList<DoubleArrayLogEntry> doubleArrayLogs = new ArrayList<>();
+  private static ArrayList<BooleanLogEntry> boolLogs = new ArrayList<>();
+  private static ArrayList<IntegerLogEntry> intLogs = new ArrayList<>();
 
   // These are the suppliers, or functions that return values. This is how the values are accessed.
-  private static ArrayList<DoubleSupplier> doubleValues = new ArrayList<DoubleSupplier>();
-  private static ArrayList<DoubleSupplier[]> doubleArrayValues = new ArrayList<DoubleSupplier[]>();
-  private static ArrayList<BooleanSupplier> boolValues = new ArrayList<BooleanSupplier>();
-  private static ArrayList<IntSupplier> intValues = new ArrayList<IntSupplier>();
+  private static ArrayList<DoubleSupplier> doubleValues = new ArrayList<>();
+  private static ArrayList<DoubleSupplier[]> doubleArrayValues = new ArrayList<>();
+  private static ArrayList<BooleanSupplier> boolValues = new ArrayList<>();
+  private static ArrayList<IntSupplier> intValues = new ArrayList<>();
 
   /**
    * Records the metadata supplied by gversion (https://github.com/lessthanoptimal/gversion-plugin) in BuildData.java.

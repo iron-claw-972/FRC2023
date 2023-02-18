@@ -15,16 +15,14 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Robot;
-import frc.robot.commands.BalanceCommand;
 import frc.robot.constants.Constants;
 import frc.robot.constants.DriveConstants;
 import frc.robot.constants.ModuleConstants;
@@ -32,7 +30,6 @@ import frc.robot.constants.OIConstants;
 import frc.robot.controls.GameControllerDriverConfig;
 import frc.robot.util.LogManager;
 import lib.controllers.GameController;
-import lib.controllers.GameController.GCButton;
 
 /** 
  * Represents a swerve drive style drivetrain.
@@ -71,6 +68,7 @@ public class Drivetrain extends SubsystemBase {
   private final Field2d m_fieldDisplay = new Field2d();
   
   // PID Controllers
+  // translation controllers have dummy constants that are just good enough to run the odometry test
   private final PIDController m_xController = new PIDController(0.1, 0, 0);
   private final PIDController m_yController = new PIDController(0.1, 0, 0);
   private final PIDController m_rotationController = new PIDController(DriveConstants.kHeadingP, DriveConstants.kHeadingI, DriveConstants.kHeadingD);
@@ -134,15 +132,7 @@ public class Drivetrain extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (!Robot.isReal()) {
-      for (int i = 0; i < m_modules.length; i++) {
-        m_modules[i].periodic();
-      }
-
-      m_Controller.get(GCButton.RB).onTrue(new BalanceCommand(this));
-     
-    }
-
+    
     updateDriveModuleFeedforwardShuffleboard();
     updateDriveModuleFeedforwardShuffleboard();
 
@@ -161,16 +151,25 @@ public class Drivetrain extends SubsystemBase {
     return m_Controller;
   }
   
+  /**
+   * 
+   * Resets the pigeon IMU's yaw.
+   * 
+   * @param degrees the new yaw angle, in degrees.
+   */
   public void setPigeonYaw(double degrees) {
     m_pigeon.setYaw(degrees);
   }
   
   /**
   * Resets the pigeon yaw, but only if it hasn't already been reset. Will reset it to {@link DriveConstants.kStartingHeadingDegrees}
+  *
+  * @param force Will reset the yaw no matter what
   */
   public void initializePigeonYaw(boolean force) {
     if (!m_hasResetYaw || force) {
       m_hasResetYaw = true;
+      // TODO: reset the yaw to different angles depending on auto start position
       setPigeonYaw(DriveConstants.kStartingHeadingDegrees);
     }
   }
@@ -178,26 +177,26 @@ public class Drivetrain extends SubsystemBase {
   /**
   * Method to drive the robot using joystick info.
   *
-  * @param xSpeed speed of the robot in the x direction (forward)
-  * @param ySpeed speed of the robot in the y direction (sideways)
-  * @param rot angular rate of the robot
+  * @param xSpeed speed of the robot in the x direction (forward) in m/s
+  * @param ySpeed speed of the robot in the y direction (sideways) in m/s
+  * @param rot angular rate of the robot in rad/s
   * @param fieldRelative whether the provided x and y speeds are relative to the field
   */
-  public void driveRot(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {           
+  public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {           
     setChassisSpeeds((
       fieldRelative
-          ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_pigeon.getRotation2d())
+          ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getRotation2d())
           : new ChassisSpeeds(xSpeed, ySpeed, rot)
       )
     );
   }  
 
   /**
-   * Drives the robot using the provided x speed, y speed, and  heading.
+   * Drives the robot using the provided x speed, y speed, and positional heading.
    * 
    * @param xSpeed speed of the robot in the x direction (forward)
    * @param ySpeed speed of the robot in the y direction (sideways)
-   * @param heading target heading of the robot
+   * @param heading target heading of the robot in radians
    * @param fieldRelative whether the provided x and y speeds are relative to the field
    */
   public void driveHeading(double xSpeed, double ySpeed, double heading, boolean fieldRelative) {
@@ -223,25 +222,25 @@ public class Drivetrain extends SubsystemBase {
   }
 
   /**
-   * Runs the PID controllers with the provided x, y, and rot values. Then, calls {@link #driveRot(double, double, double, boolean)} using the PID outputs.
+   * Runs the PID controllers with the provided x, y, and rot values. Then, calls {@link #drive()} using the PID outputs.
+   * This is based on the odometry of the chassis.
    * 
-   * @param xSpeed speed of the robot in the x direction (forward)
-   * @param ySpeed speed of the robot in the y direction (sideways)
-   * @param heading target heading of the robot
+   * @param x the position to move to in the x, in meters
+   * @param y the position to move to in the y, in meters
+   * @param rot the angle to move to, in radians
    */
   public void runChassisPID(double x, double y, double rot) {
     double xSpeed = m_xController.calculate(m_odometry.getPoseMeters().getX(), x);
     double ySpeed = m_yController.calculate(m_odometry.getPoseMeters().getY(), y);
     double rotRadians = m_rotationController.calculate(getAngleHeading(), rot);
-    // System.out.println(rotRadians);
-    driveRot(xSpeed, ySpeed, rotRadians, true);
+    drive(xSpeed, ySpeed, rotRadians, true);
   }
   
   /** Updates the field relative position of the robot. */
   public void updateOdometry() {
     m_robotPose = m_odometry.update(
-    m_pigeon.getRotation2d(),
-    getModulePositions()
+      m_pigeon.getRotation2d(),
+      getModulePositions()
     );
   }
   
@@ -252,9 +251,13 @@ public class Drivetrain extends SubsystemBase {
   * @return the rate in rads/s from the pigeon
   */
   public double getAngularRate(int id) {
+
+    // uses pass by reference and edits reference to array
     double[] rawGyros = new double[3];
     m_pigeon.getRawGyro(rawGyros);
-    return rawGyros[id] * Math.PI / 180;
+
+    // outputs in deg/s, so convert to rad/s
+    return Units.degreesToRadians(rawGyros[id]);
   }
   
   /**
@@ -265,16 +268,15 @@ public class Drivetrain extends SubsystemBase {
   }
   
   /**
-  * Resets the odometry to the given pose and gyro angle.
-  * @param pose current robot pose
-  * @param gyroAngle current robot gyro angle
+  * Resets the odometry to the given pose.
+  * @param pose the pose to reset to.
   */
-  public void resetOdometry(Pose2d pose, Rotation2d gyroAngle) {
-    m_odometry.resetPosition(gyroAngle, getModulePositions(), pose);
+  public void resetOdometry(Pose2d pose) {
+    m_odometry.resetPosition(getRotation2d(), getModulePositions(), pose);
   }
   
   /**
-  * @return the pigeon's Rotation2d
+  * @return the pigeon's heading in a Rotation2d
   */
   public Rotation2d getRotation2d() {
     return m_pigeon.getRotation2d(); 
@@ -321,7 +323,9 @@ public class Drivetrain extends SubsystemBase {
   }
   
   /**
-   * Enables or disables the state deadband for all swerve modules.
+   * Enables or disables the state deadband for all swerve modules. 
+   * The state deadband determines if the robot will stop drive and steer motors when inputted drive velocity is low. 
+   * It should be enabled for all regular driving, to prevent releasing the controls from setting the angles.
    */
   public void enableStateDeadband(boolean stateDeadBand){
     for (int i = 0; i < 4; i++) {
@@ -331,6 +335,7 @@ public class Drivetrain extends SubsystemBase {
 
   /**
    * Sets the optimize state for all swerve modules.
+   * Optimizing the state means the modules will not turn the steer motors more than 90 degrees for any one movement.
    */
   public void setAllOptimize(Boolean optimizeSate) {
     for (int i = 0; i < 4; i++) {
@@ -369,6 +374,7 @@ public class Drivetrain extends SubsystemBase {
     m_drivetrainTab.add("yController", getYController());
     m_drivetrainTab.add("rotationController", getRotationController());
     
+    // add angles
     m_drivetrainTab.addNumber("getAngle", () -> getAngleHeading());
     m_drivetrainTab.addNumber("heading PID output", () -> m_headingPIDOutput);
     
@@ -378,6 +384,7 @@ public class Drivetrain extends SubsystemBase {
     
     // m_drivetrainTab.add("odometry", m_odometry);
     
+    // add the controllers to shuffleboard for tuning
     m_drivetrainTab.add(getXController());
     m_drivetrainTab.add(getYController());
     m_drivetrainTab.add(getRotationController());
@@ -516,6 +523,7 @@ public class Drivetrain extends SubsystemBase {
       m_modules[3].getSteerFeedForwardKV()
     };
   }
+  
   public Double[] getDriveStaticFeedforwardArray() {
     return m_driveStaticFeedForwardSaver;
   }

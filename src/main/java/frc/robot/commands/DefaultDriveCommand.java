@@ -8,14 +8,10 @@ import frc.robot.subsystems.Drivetrain;
  * Default drive command. Drives robot using driver controls.
  */
 public class DefaultDriveCommand extends CommandBase {
+
   private final Drivetrain m_drive;
   private final BaseDriverConfig m_driver;
   
-  /**
-   * Creates a new command.
-   * @param drive the drivetrain instance
-   * @param driver the driver controls instance
-   */
   public DefaultDriveCommand(Drivetrain drive, BaseDriverConfig driver) {
     m_drive = drive;
     m_driver = driver;
@@ -32,12 +28,11 @@ public class DefaultDriveCommand extends CommandBase {
     double ySpeed = m_driver.getSideTranslation();
     double rot = m_driver.getRotation();
 
-    m_drive.driveRot(xSpeed, ySpeed, rot, true);
+    m_drive.drive(xSpeed, ySpeed, rot, true);
   }
   
   @Override
   public void end(boolean interrupted) {
-    m_drive.driveRot(0.0, 0.0, 0.0, false);
+    m_drive.drive(0.0, 0.0, 0.0, false);
   }
-  
 }

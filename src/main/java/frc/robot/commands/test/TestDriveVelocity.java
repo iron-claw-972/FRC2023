@@ -15,8 +15,8 @@ import frc.robot.util.TimeAccuracyTest;
  */
 public class TestDriveVelocity extends CommandBase{
   
-  private Drivetrain m_drive;
-  private GenericEntry m_testEntry;
+  private final Drivetrain m_drive;
+  private final GenericEntry m_testEntry;
   private TimeAccuracyTest[] m_timeAccuracyTests = new TimeAccuracyTest[4];
   
   public TestDriveVelocity(Drivetrain drive, GenericEntry testEntry) {
@@ -31,7 +31,7 @@ public class TestDriveVelocity extends CommandBase{
     for (int i = 0; i < 4; i++){
       Module module = m_drive.m_modules[i];
       m_timeAccuracyTests[i] = new TimeAccuracyTest(
-        () -> module.getDriveVelocityError(),
+        () -> module.getDriveVelocity(),
         () -> m_drive.getRequestedSteerVelocityEntry().getDouble(0),
         TestConstants.kDriveVelocityError,
         TestConstants.kDriveVelocityTimeError

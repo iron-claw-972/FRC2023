@@ -17,8 +17,8 @@ public class SteerFeedForwardCharacterizationSingle extends CommandBase {
   private FeedForwardCharacterizationData m_feedForwardCharacterizationData;
   private Module m_module;
   
-  private Timer m_timer = new Timer();
-  private Drivetrain m_drive;
+  private final Timer m_timer = new Timer();
+  private final Drivetrain m_drive;
   private SendableChooser<Module> m_moduleChooser;
 
   public SteerFeedForwardCharacterizationSingle(Drivetrain drive) {
@@ -26,20 +26,24 @@ public class SteerFeedForwardCharacterizationSingle extends CommandBase {
     addRequirements(drive);
   }
   
+  @Override
   public void initialize() {
     m_timer.start();
-    m_drive.setAllOptimize(false);
     m_feedForwardCharacterizationData = new FeedForwardCharacterizationData();
-    this.m_module = m_drive.getModuleChooser().getSelected();
+    m_module = m_drive.getModuleChooser().getSelected();
   }
   
+  @Override
   public void execute() {
+    //set voltages
     m_module.setDriveVoltage(0);
     m_module.setSteerVoltage(m_voltage);
     
+    // collect data after acceleration time buffer
     if (m_timer.get() > TestConstants.kSteerFeedForwardAccelerationTimeBuffer) {
       m_feedForwardCharacterizationData.add(m_module.getSteerVelocity(), m_voltage);
     }
+    // if time past collection time move to increases voltage
     if (m_timer.get() > TestConstants.kSteerFeedForwardAccelerationTimeBuffer + TestConstants.kSteerFeedForwardRecordingTime) {
       m_voltage += TestConstants.kSteerFeedForwardVoltageStep;
       m_timer.reset();
@@ -48,27 +52,36 @@ public class SteerFeedForwardCharacterizationSingle extends CommandBase {
     }
   }
   
+  @Override
   public void end(boolean interrupted) {
     System.out.println("FINISHED");
     
     m_feedForwardCharacterizationData.process();
     
+    //save and print Feed Forward values
     m_drive.getSteerStaticFeedforwardArray()[m_module.getModuleType().getID()] = m_feedForwardCharacterizationData.getStatic();
     m_drive.getSteerVelocityFeedforwardArray()[m_module.getModuleType().getID()] = m_feedForwardCharacterizationData.getVelocity();
     System.out.println("Static : " + m_feedForwardCharacterizationData.getStatic());
     System.out.println("Velocity : " + m_feedForwardCharacterizationData.getVelocity());
     System.out.println("Variance : " + m_feedForwardCharacterizationData.getVariance());
 
-    m_module.setDriveVoltage(0);
-    m_module.setSteerVoltage(0);
+    m_module.stop();
     
-    m_drive.getSteerStaticFeedforwardEntry().setDouble(m_drive.getSteerStaticFeedforwardArray()[m_moduleChooser.getSelected().getModuleType().getID()]);
-    m_drive.getSteerVelocityFeedforwardEntry().setDouble(m_drive.getSteerVelocityFeedforwardArray()[m_moduleChooser.getSelected().getModuleType().getID()]);
+    // update shuffleboard values.
+    m_drive.getSteerStaticFeedforwardEntry().setDouble(
+      m_drive.getSteerStaticFeedforwardArray()[
+        m_moduleChooser.getSelected().getModuleType().getID()
+      ]
+    );
+    m_drive.getSteerVelocityFeedforwardEntry().setDouble(
+      m_drive.getSteerVelocityFeedforwardArray()[
+          m_moduleChooser.getSelected().getModuleType().getID()
+        ]
+      );
   }
   
+  @Override
   public boolean isFinished() {
-    m_drive.setAllOptimize(true);
-    //System.out.println(value > 11);
     return m_voltage > TestConstants.kSteerFeedForwardMaxVoltage;
   }
 }
