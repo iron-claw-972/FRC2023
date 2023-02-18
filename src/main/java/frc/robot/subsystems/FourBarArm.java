@@ -79,7 +79,7 @@ public class FourBarArm extends SubsystemBase {
     m_motor.set(MathUtil.clamp(power, ArmConstants.kMinMotorPower, ArmConstants.kMaxMotorPower));
   }
 
-  public void setEnabled()  {
-    m_enabled = true;
+  public void setEnabled(boolean enable)  {
+    m_enabled = enable;
   }
 }
