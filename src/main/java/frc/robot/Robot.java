@@ -46,13 +46,11 @@ public class Robot extends TimedRobot {
     String strId = Preferences.getString(kRobotId.name(), RobotId.Default.toString());
     // match the string to an RobotId
     for (RobotId rid : RobotId.values()) {
-      // does it match the preference rid
-      if (rid.name().equals(strId)) {
-        // set the RobotId
+      // does it match the preference string?
+      if (strId.equals(rid.name())) {
+        // yes, so it is the RobotId
         kRobotId = rid;
-        break;
       }
-      
     }
     // report the RobotId to the SmartDashboard
     SmartDashboard.putString("Robot Identity", kRobotId.name());

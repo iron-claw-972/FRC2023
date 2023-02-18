@@ -16,8 +16,8 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import frc.robot.Robot;
 import frc.robot.constants.Constants;
+import frc.robot.constants.FalconConstants;
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.constants.swerve.ModuleConstants;
 import frc.robot.constants.swerve.ModuleType;
@@ -29,6 +29,32 @@ import lib.ctre_shims.TalonEncoder;
  * Represents a swerve module for a swerve drivetrain.
  */
 public class Module {
+
+  /**
+   * @param moduleConstants the constants for the module, found in {@link ModuleConstants}
+   * @param moduleTab the shuffleboard tab for the module
+   * @see ModuleConstants
+   */
+  public static Module create(ModuleConstants moduleConstants, ShuffleboardTab moduleTab) {
+    return new Module(
+      moduleConstants.getDrivePort(),
+      moduleConstants.getSteerPort(),
+      moduleConstants.getEncoderPort(),
+      moduleConstants.getSteerOffset(),
+      moduleConstants.getDriveKS(),
+      moduleConstants.getDriveKV(),
+      moduleConstants.getDriveP(),
+      moduleConstants.getDriveI(),
+      moduleConstants.getDriveD(),
+      moduleConstants.getSteerKS(),
+      moduleConstants.getSteerKV(),
+      moduleConstants.getSteerP(),
+      moduleConstants.getSteerI(),
+      moduleConstants.getSteerD(),
+      moduleConstants.getType(),
+      moduleTab
+    );
+  }
 
   private final WPI_TalonFX m_driveMotor;
   private final WPI_TalonFX m_steerMotor;
@@ -64,32 +90,6 @@ public class Module {
 
   private ModuleType m_moduleType;
 
-  /**
-   * @param moduleConstants the constants for the module, found in {@link ModuleConstants}
-   * @param moduleTab the shuffleboard tab for the module
-   * @see ModuleConstants
-   */
-  public Module(ModuleConstants moduleConstants, ShuffleboardTab moduleTab) {
-    this(
-      moduleConstants.getDrivePort(),
-      moduleConstants.getSteerPort(),
-      moduleConstants.getEncoderPort(),
-      moduleConstants.getSteerOffset(),
-      moduleConstants.getDriveKS(),
-      moduleConstants.getDriveKV(),
-      moduleConstants.getDriveP(),
-      moduleConstants.getDriveI(),
-      moduleConstants.getDriveD(),
-      moduleConstants.getSteerKS(),
-      moduleConstants.getSteerKV(),
-      moduleConstants.getSteerP(),
-      moduleConstants.getSteerI(),
-      moduleConstants.getSteerD(),
-      moduleConstants.getType(),
-      moduleTab
-    );
-  }
-
   private Module(
     int driveMotorPort,
     int steerMotorPort,
@@ -109,14 +109,9 @@ public class Module {
     ShuffleboardTab moduleTab
   ) {
     
-    if (Robot.isReal()) {
-      // TODO: The CANBus needs to be a constant because on the new 2023 bot, drive motors use Canivore, not rio
-      m_driveMotor = MotorFactory.createTalonFX(driveMotorPort, DriveConstants.kDriveMotorCAN);
-      m_steerMotor = MotorFactory.createTalonFX(steerMotorPort, DriveConstants.kSteerMotorCAN);
-    } else {
-      m_driveMotor = new WPI_TalonFX(driveMotorPort);
-      m_steerMotor = new WPI_TalonFX(steerMotorPort);
-    }
+    // TODO: The CANBus needs to be a constant because on the new 2023 bot, drive motors use Canivore, not rio
+    m_driveMotor = MotorFactory.createTalonFX(driveMotorPort, DriveConstants.kDriveMotorCAN);
+    m_steerMotor = MotorFactory.createTalonFX(steerMotorPort, DriveConstants.kSteerMotorCAN);
 
     m_moduleTab = moduleTab;
     m_moduleType = moduleType;
@@ -125,7 +120,7 @@ public class Module {
     m_steerMotor.setNeutralMode(NeutralMode.Brake);
 
     m_driveEncoder = new TalonEncoder(m_driveMotor);
-    m_steerEncoder = new WPI_CANCoder(encoderPort, DriveConstants.kEncoderCAN);
+    m_steerEncoder = new WPI_CANCoder(encoderPort, DriveConstants.kSteerEncoderCAN);
 
     m_drivePIDController = new PIDController(driveP, driveI,driveD);
     m_steerPIDController = new ProfiledPIDController(
@@ -152,7 +147,7 @@ public class Module {
     // distance traveled for one rotation of the wheel divided by the encoder
     // resolution.
     m_driveEncoder.setDistancePerPulse(
-        2 * Math.PI * DriveConstants.kWheelRadius / DriveConstants.kDriveGearRatio / Constants.kCancoderResolution);
+        2 * Math.PI * DriveConstants.kWheelRadius / DriveConstants.kDriveGearRatio / FalconConstants.kResolution);
 
     // Limit the PID Controller's input range between -pi and pi and set the input
     // to be continuous. Factor in the offset amount.
@@ -178,18 +173,6 @@ public class Module {
     LogManager.addDouble(m_driveMotor.getDescription() + " Drive Velocity Filtered", () -> getDriveVelocityFiltered());
     LogManager.addDouble(m_driveMotor.getDescription() + " Drive Voltage", () -> getDriveOutputVoltage());
     LogManager.addDouble(m_driveMotor.getDescription() + " Bus to Drive Voltage", () -> getBusToDriveVoltage());
-  }
-
-  public static Module create(ModuleConstants moduleConstants, ShuffleboardTab shuffleboardTab){
-    if (Robot.isReal()){
-      return new Module(moduleConstants, shuffleboardTab);
-    } else {
-      return new ModuleSim(moduleConstants, shuffleboardTab);
-    }
-  }
-
-  public void periodic(){
-
   }
 
 
@@ -268,7 +251,7 @@ public class Module {
    * @return module drive position in meters.
    */
   public double getDrivePosition() {
-      return m_driveEncoder.getDistance() * DriveConstants.kDriveGearRatio * 2 * Math.PI * DriveConstants.kWheelRadius;
+      return m_driveEncoder.getDistance();
   }
 
   /**
@@ -471,14 +454,6 @@ public class Module {
     return m_steerFeedForwardKV;
   }
   
-  public double getDesieredVelocity(){
-    return m_desiredState.speedMetersPerSecond;
-  }
-
-  public Rotation2d getDesieredAngle(){
-    return m_desiredState.angle;
-  }
-
   /**
    * Sets up the Shuffleboard tab for the module.
    */
@@ -501,4 +476,5 @@ public class Module {
     //Steer PID
     m_moduleTab.add("Steer PID " + m_moduleType.getAbbreviation(), getSteerPID());
   }
+
 }

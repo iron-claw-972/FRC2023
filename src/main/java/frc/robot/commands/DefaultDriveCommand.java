@@ -27,22 +27,12 @@ public class DefaultDriveCommand extends CommandBase {
     double xSpeed = m_driver.getForwardTranslation();
     double ySpeed = m_driver.getSideTranslation();
     double rot = m_driver.getRotation();
-    
-    // TODO: move heading drive to seprate command
-    // if (Robot.shuffleboard.getTestModeType() == TestType.HEADING_DRIVE){
-    //   rot = m_driveConfig.getHeading();
-    //   m_drive.driveHeading(xSpeed, ySpeed, rot); 
-    //   return;
-    // }
-    /*  System.out.println("driving: " + xSpeed + "," + ySpeed + "," + rot +
-    "," + m_driveConfig.getRawForwardTranslation() + "," + m_driveConfig.getRawSideTranslation() +","+ m_driveConfig.getRawRotation());
-    */
-    m_drive.driveRot(xSpeed, ySpeed, rot, true);
-}
 
-  @Override
-  public void end(boolean interrupted) {
-    m_drive.driveRot(0.0, 0.0, 0.0, false);
+    m_drive.drive(xSpeed, ySpeed, rot, true);
   }
   
+  @Override
+  public void end(boolean interrupted) {
+    m_drive.drive(0.0, 0.0, 0.0, false);
+  }
 }
