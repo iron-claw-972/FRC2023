@@ -9,6 +9,8 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAlternateEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ArmConstants;
 
@@ -18,6 +20,7 @@ public class FourBarArm extends SubsystemBase {
   private final RelativeEncoder m_encoder;
   private final ArmFeedforward m_feedforward;
   private final ShuffleboardTab m_armTab;
+  private boolean m_enabled = false;
 
   public FourBarArm(ShuffleboardTab armTab) {
     // configure the motor
@@ -35,6 +38,7 @@ public class FourBarArm extends SubsystemBase {
     // Change the velocity to radians per second (1 RPM = 2 pi radians / 60 seconds)
     m_encoder.setVelocityConversionFactor(2.0 * Math.PI / 60.0);  
 
+ 
     // make the PID controller
     m_pid = new PIDController(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD);
     // set the PID controller's tolerance
@@ -61,13 +65,15 @@ public class FourBarArm extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // calculate the PID power level
-    double pidPower = m_pid.calculate(m_encoder.getPosition());
-    // calculate the feedforward power (nothing for now)
-    double feedforwardPower = m_feedforward.calculate(m_encoder.getPosition(), m_encoder.getVelocity());
+    if(m_enabled) {
+      // calculate the PID power level
+      double pidPower = m_pid.calculate(m_encoder.getPosition());
+      // calculate the feedforward power (nothing for now)
+      double feedforwardPower = m_feedforward.calculate(m_encoder.getPosition(), m_encoder.getVelocity());
 
-    // set the motor power
-    m_motor.set(MathUtil.clamp(pidPower + feedforwardPower, ArmConstants.kMinMotorPower, ArmConstants.kMaxMotorPower));
+      // set the motor power
+      setMotorPower(pidPower + feedforwardPower);
+    }
   }
 
   /**
@@ -83,5 +89,13 @@ public class FourBarArm extends SubsystemBase {
     m_armTab.addNumber("Motor output", () -> m_motor.get());
     m_armTab.add("Feedforward", m_feedforward);
     m_armTab.add(m_pid);
+  }
+  
+  public void setMotorPower(double power){
+    m_motor.set(MathUtil.clamp(power, ArmConstants.kMinMotorPower, ArmConstants.kMaxMotorPower));
+  }
+
+  public void setEnabled(boolean enable)  {
+    m_enabled = enable;
   }
 }
