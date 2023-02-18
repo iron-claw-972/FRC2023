@@ -27,7 +27,9 @@ public class Elevator extends SubsystemBase {
 
   private final WPI_TalonFX m_motor;
   private final PIDController m_elevatorPID;
+  private final DutyCycleEncoder m_absoluteSpoolEncoder;     
   private final TalonEncoder m_elevatorMotorEncoder; 
+  private double m_absEncoderZeroPositionTicks;
   private double clampLow = -ElevatorConstants.kMotorLimit; 
   private double clampHigh = ElevatorConstants.kMotorLimit;
   private boolean m_enabled; 
@@ -36,6 +38,7 @@ public class Elevator extends SubsystemBase {
     m_motor = MotorFactory.createTalonFX(ElevatorConstants.kMotorPort, Constants.kRioCAN);
     m_motor.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
     m_motor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
+    m_absoluteSpoolEncoder = new DutyCycleEncoder(ElevatorConstants.kAbsEncoderPort); 
     m_elevatorMotorEncoder = new TalonEncoder(m_motor); 
     m_elevatorMotorEncoder.setDistancePerPulse(ElevatorConstants.kDistPerMotorEncoderTick);
     m_elevatorPID = new PIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD);  
@@ -71,6 +74,7 @@ public class Elevator extends SubsystemBase {
   public void close() {
     // close the ports
     //TODO: Is there any way to close the ports of the limit switches attached to the motor? 
+    m_absoluteSpoolEncoder.close();
   }
 
   public void set(double power){
@@ -116,6 +120,18 @@ public class Elevator extends SubsystemBase {
    */
   public double getElevatorHeightMeters() {
     return m_elevatorMotorEncoder.getDistance(); 
+  }
+
+  /**
+   * 
+   * Zero position is the value of the absolute encoder after the elevator
+   * hits the bottom limit switch. 
+   * @return return the absolute encoder's zero position in ticks. 
+   * 
+   */
+  public double setAbsEncoderZeroPos(){
+    m_absEncoderZeroPositionTicks = m_absoluteSpoolEncoder.getAbsolutePosition();
+    return m_absEncoderZeroPositionTicks; 
   }
 
   public boolean atSetpoint() {
