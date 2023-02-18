@@ -11,6 +11,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ArmConstants;
+import frc.robot.util.LogManager;
 
 public class FourBarArm extends SubsystemBase {
   private final CANSparkMax m_motor;
@@ -48,6 +49,11 @@ public class FourBarArm extends SubsystemBase {
     setArmSetpoint(ArmConstants.kInitialPosition);
 
     m_armTab = armTab;
+
+    LogManager.addDouble("Arm Angle", () -> m_encoder.getPosition());
+    LogManager.addDouble("Arm Velocity", () -> m_encoder.getVelocity());
+    LogManager.addDouble("Arm Motor Power", () -> m_motor.get());
+    LogManager.addDouble("Arm Setpoint", () -> m_pid.getSetpoint());
   }
 
   /**
