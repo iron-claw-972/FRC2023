@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.commands.DefaultDriveCommand;
+import frc.robot.commands.auto.PathPlannerCommand;
 import frc.robot.commands.test.CircleDrive;
 import frc.robot.commands.test.DriveFeedForwardCharacterization;
 import frc.robot.commands.test.OdometryTestCommand;
@@ -114,6 +115,7 @@ public class RobotContainer {
     m_testTab.add("Heading PID", new TestHeadingPID(m_drive, testEntry));
     m_testTab.add("Steer angle", new TestSteerAngle(m_drive, testEntry));
     m_testTab.add("Odometry Test", new OdometryTestCommand(m_drive, new Transform2d(new Translation2d(1,1), new Rotation2d(Math.PI))));
+    
   }
 
   /**
@@ -122,11 +124,12 @@ public class RobotContainer {
    * Do Nothing should stay the default, other autos are added with m_autoCommand.addOption()
    */
   public void autoChooserUpdate() {
-    m_autoCommand.setDefaultOption("Do Nothing", new PrintCommand("This will do nothing!"));
     // add commands below with: m_autoCommand.addOption("Example", new ExampleCommand());
+    m_autoCommand.setDefaultOption("Do Nothing", new PrintCommand("This will do nothing!"));
+    m_autoCommand.addOption("DriveSidwaysPath", new PathPlannerCommand(PathGroupLoader.getPathGroup("DriveSidewaysPath"), 0 ,m_drive, true));
+  
     
-    m_autoTab.add("Auto Chooser", m_autoCommand);
-  }
+    m_autoTab.add("Auto Chooser", m_autoCommand);}
 
   /**
    * Loads the command scheduler shuffleboard which will add event markers whenever a command finishes, ends, or is interrupted.
