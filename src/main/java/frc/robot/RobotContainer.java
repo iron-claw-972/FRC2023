@@ -40,9 +40,6 @@ public class RobotContainer {
   // Shuffleboard stuff
   SendableChooser<Command> m_autoCommand = new SendableChooser<>();
 
-  // Where the robot will score.
-  public static Node selectedNode = null;
-
   // Array of april tags. The index of the april tag in the array is equal to its id, and aprilTags[0] is null.
   public final static Pose3d[] aprilTags = new Pose3d[9];
 

@@ -1,7 +1,6 @@
 package frc.robot.controls;
 
 import frc.robot.commands.DoNothing;
-import frc.robot.commands.ScoreCommand;
 import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.FourBarArm;
@@ -18,6 +17,7 @@ public class Driver {
     
     // example button binding implementation
     driver.get(Button.A).onTrue(new DoNothing());
-    driver.get(Button.RB).toggleOnTrue(new ScoreCommand(drive, arm));
+    //TODO: Change this to call whatever function swerve uses
+    // driver.get(Button.RB).toggleOnTrue(new MoveToPose(drive, Operator.selectedNode.scorePose));
   }
 }
