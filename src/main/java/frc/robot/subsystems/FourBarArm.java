@@ -19,7 +19,7 @@ public class FourBarArm extends SubsystemBase {
 
   public FourBarArm() {
     // configure the motor
-    m_motor = new CANSparkMax(ArmConstants.motorID, MotorType.kBrushless);
+    m_motor = new CANSparkMax(ArmConstants.kMotorId, MotorType.kBrushless);
     m_motor.setIdleMode(IdleMode.kBrake);
 
     // configure the encoder
@@ -41,7 +41,7 @@ public class FourBarArm extends SubsystemBase {
     m_feedforward = new ArmFeedforward(0, ArmConstants.kG, 0);
 
     // go to the initial position (use the class method)
-    setArmSetpoint(ArmConstants.initialPosition);
+    setArmSetpoint(ArmConstants.kInitialPosition);
   }
 
   /**
@@ -63,7 +63,7 @@ public class FourBarArm extends SubsystemBase {
     double feedforwardPower = m_feedforward.calculate(m_encoder.getPosition(), m_encoder.getVelocity());
 
     // set the motor power
-    m_motor.set(MathUtil.clamp(pidPower + feedforwardPower, ArmConstants.minMotorPower, ArmConstants.maxMotorPower));
+    m_motor.set(MathUtil.clamp(pidPower + feedforwardPower, ArmConstants.kMinMotorPower, ArmConstants.kMaxMotorPower));
   }
 
   /**

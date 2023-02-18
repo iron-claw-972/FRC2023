@@ -21,6 +21,9 @@ import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.constants.Constants;
 import frc.robot.constants.FalconConstants;
 
+/**
+ * Utility class for easy creation of motor controllers.
+ */
 public class MotorFactory {
 
   private static int talonSRXDefaultContinuousLimit = 38;

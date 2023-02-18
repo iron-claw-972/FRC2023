@@ -8,7 +8,7 @@ public class Ex3DProController extends Controller {
     super(port);
   }
 
-  public enum Button {
+  public enum Ex3DProButton {
     B1(1),
     B2(2),
     B3(3),
@@ -23,12 +23,12 @@ public class Ex3DProController extends Controller {
 
     public final int id;
 
-    Button(final int id) {
+    Ex3DProButton(final int id) {
       this.id = id;
     }
   }
 
-  public enum Axis {
+  public enum Ex3DProAxis {
     X(0),
     Y(1),
     Z(2),
@@ -36,16 +36,16 @@ public class Ex3DProController extends Controller {
 
     public final int id;
 
-    Axis(final int id) {
+    Ex3DProAxis(final int id) {
       this.id = id;
     }
   }
 
-  public JoystickButton get(Button button) {
+  public JoystickButton get(Ex3DProButton button) {
     return new JoystickButton(m_controller, button.id);
   }
 
-  public double get(Axis axis) {
+  public double get(Ex3DProAxis axis) {
     return m_controller.getRawAxis(axis.id);
   }
 

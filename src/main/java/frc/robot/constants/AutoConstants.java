@@ -1,5 +1,8 @@
 package frc.robot.constants;
 
+/**
+ * Container class for auto constants.
+ */
 public class AutoConstants {
 
   // Pathplanner output folder should be src/main/deploy/pathplanner
