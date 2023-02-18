@@ -14,6 +14,7 @@ import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -27,6 +28,7 @@ public class Elevator extends SubsystemBase {
 
   private final WPI_TalonFX m_motor;
   private final PIDController m_elevatorPID;
+  private final ElevatorFeedforward m_elevatorFF;
   private final DutyCycleEncoder m_absEncoder;     
   private final TalonEncoder m_talonEncoder; 
   private final DigitalInput m_topLimitSwitch; 
@@ -42,12 +44,18 @@ public class Elevator extends SubsystemBase {
     m_absEncoder = new DutyCycleEncoder(ElevatorConstants.kAbsEncoderPort); 
     m_talonEncoder = new TalonEncoder(m_motor); 
     m_talonEncoder.setDistancePerPulse(ElevatorConstants.kDistPerPulse);
+   
     m_elevatorPID = new PIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD);
+    m_elevatorFF = new ElevatorFeedforward(ElevatorConstants.kS, ElevatorConstants.kG, ElevatorConstants.kV, ElevatorConstants.kA);
+
     m_topLimitSwitch = new DigitalInput(ElevatorConstants.kTopLimitSwitchPort); 
     m_bottomLimitSwitch = new DigitalInput(ElevatorConstants.kBottomLimitSwitchPort); 
+    
     //TODO: log, addDouble doesn't work. 
     //LogManager.addDouble("Elevator/error", () -> {return m_pid.getSetpoint() - getElevatorHeight();});
+    
     m_motor.setSafetyEnabled(true);
+    
   }
 
   @Override
@@ -60,8 +68,12 @@ public class Elevator extends SubsystemBase {
     
     if(m_enabled) {
       double pid = m_elevatorPID.calculate(getHeight());
+      double ff = m_elevatorFF.calculate(ElevatorConstants.kVelocity, ElevatorConstants.kAccel); 
+
       double pidClamped = MathUtil.clamp(pid, -ElevatorConstants.kPowerLimit, ElevatorConstants.kPowerLimit);
-      set(pidClamped);
+      double finalMotorPower = pidClamped + ff; 
+      
+      set(finalMotorPower);
     } else {
       m_motor.feed();
     }

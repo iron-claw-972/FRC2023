@@ -13,6 +13,16 @@ public class ElevatorConstants {
   public static final double kI = 0.0;
   public static final double kD = 0.0;
 
+  //these feedforward values were calculated using : https://www.reca.lc/linear
+  public static final double kS = 0.0000001; //FIXME: Not sure what to put for this feedforward value. 
+  public static final double kG = 0.28; 
+  public static final double kV = 10.72; 
+  public static final double kA = 0.05; 
+
+  public static final double kVelocity = 0.25; 
+  public static final double kAccel = 0; 
+
+
   public static final double kHeightBottomNode = 0.2; //based on Arnav's calcs: 
   public static final double kHeightMiddleNode = 0.3; //based on Arnav's calcs: 
   public static final double kHeightTopNode = 0.4; //based on Arnav's calcs: 
