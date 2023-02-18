@@ -26,12 +26,19 @@ public class ManualElevatorControl extends CommandBase {
   }
   @Override
   public void execute() {
-    m_elevator.setEnabled(false); 
-    m_elevator.set(Operator.getClampedThrottleValue()); // rename throttlevalue function to somehting else
+    if ((Operator.getClampedThrottleValue() > 0) || (Operator.getClampedThrottleValue() < 0)){
+      m_elevator.setEnabled(false); 
+      m_elevator.set(Operator.getClampedThrottleValue());
+    }
 
-    m_elevator.setEnabled(true); 
-    m_currentElevatorPos = m_elevator.getHeight(); 
-    m_elevator.setSetpoint(m_currentElevatorPos);
+    if(Operator.getClampedThrottleValue() == 0){
+      m_elevator.setEnabled(true); 
+      m_currentElevatorPos = m_elevator.getHeight(); 
+      m_elevator.setSetpoint(m_currentElevatorPos);
+    }
+
+    
+   
   }
 
   @Override
