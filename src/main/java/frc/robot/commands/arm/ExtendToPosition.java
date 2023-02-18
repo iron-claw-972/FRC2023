@@ -19,6 +19,7 @@ public class ExtendToPosition extends CommandBase {
 
   @Override
   public void initialize() {
+    m_arm.setEnabled();
     m_arm.setArmSetpoint(m_armSetpoint);
   }
 
