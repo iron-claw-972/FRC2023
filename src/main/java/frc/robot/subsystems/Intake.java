@@ -13,6 +13,14 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.IntakeConstants;
 
+import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.util.Color;
+
+import com.revrobotics.ColorSensorV3;
+import com.revrobotics.ColorMatchResult;
+import com.revrobotics.ColorMatch;  
+
+
 public class Intake extends SubsystemBase {
 
   private final CANSparkMax leftMotor;
@@ -23,7 +31,26 @@ public class Intake extends SubsystemBase {
     rightMotor = new CANSparkMax(IntakeConstants.kRightMotorPort, MotorType.kBrushless);
     leftMotor.restoreFactoryDefaults();
     rightMotor.restoreFactoryDefaults();
+
+    m_colorMatcher.addColorMatch(kPurpleTarget);
+    m_colorMatcher.addColorMatch(kYellowTarget);  
   }
+
+  private final I2C.Port i2cPort = I2C.Port.kOnboard;
+
+  private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort); 
+
+  private final ColorMatch m_colorMatcher = new ColorMatch();
+
+  private final Color kYellowTarget = new Color(0.361, 0.524, 0.113);
+  private final Color kPurpleTarget = new Color(0.102, 0, 0.204);
+
+  public ColorMatchResult Color() {
+    return m_colorMatcher.matchClosestColor(detectedColor);
+  }
+
+  Color detectedColor = m_colorSensor.getColor();
+
 
   public void intake(double speed) {
     leftMotor.set(speed);
