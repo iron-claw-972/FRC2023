@@ -12,6 +12,8 @@ import edu.wpi.first.util.WPIUtilJNI;
  * setpoint, and/or output ramps. A slew-rate limit is most appropriate when the quantity being
  * controlled is a velocity or a voltage; when controlling a position, consider using a {@link
  * edu.wpi.first.math.trajectory.TrapezoidProfile} instead.
+ * Edited by 972 to be "dynamic", that is, the slew rate can be modified on the fly. 
+ * Additionally, it can be set to be continuous on a range, useful for angles.
  */
 public class DynamicSlewRateLimiter {
   private double m_positiveRateLimit;
@@ -19,12 +21,13 @@ public class DynamicSlewRateLimiter {
   private double m_prevVal;
   private double m_prevTime;
 
+  //TODO: write unit test for continuous
   private boolean m_continuous = false;
   private double m_lowerContinuousLimit = -1;
   private double m_upperContinuousLimit = 1;
 
   /**
-   * Creates a new SlewRateLimiter with the given positive and negative rate limits and initial
+   * Creates a new DynamicSlewRateLimiter with the given positive and negative rate limits and initial
    * value.
    *
    * @param positiveRateLimit The rate-of-change limit in the positive direction, in units per
@@ -41,13 +44,11 @@ public class DynamicSlewRateLimiter {
   }
 
   /**
-   * Creates a new SlewRateLimiter with the given positive rate limit and negative rate limit of
+   * Creates a new DynamicSlewRateLimiter with the given positive rate limit and negative rate limit of
    * -rateLimit and initial value.
    *
    * @param rateLimit The rate-of-change limit, in units per second.
    * @param initialValue The initial value of the input.
-   * @deprecated Use SlewRateLimiter(double positiveRateLimit, double negativeRateLimit, double
-   *     initialValue) instead.
    */
   @Deprecated(since = "2023", forRemoval = true)
   public DynamicSlewRateLimiter(double rateLimit, double initialValue) {
@@ -82,6 +83,8 @@ public class DynamicSlewRateLimiter {
 
     // TODO: make continuous work properly with + and - slew rates
     if (m_continuous) {
+
+      //TODO: see if MathUtil.inputModulus() can work
       // convert value to be in between limits
       // input = MathUtil.inputModulus(input, m_lowerContinuousLimit, m_upperContinuousLimit);
       //input %= m_upperCycleLimit - m_lowerCycleLimit;
@@ -147,28 +150,54 @@ public class DynamicSlewRateLimiter {
     m_prevTime = WPIUtilJNI.now() * 1e-6;
   }
   
+  /**
+   * set positive rate limit
+   * @param positiveRateLimit new positive rate limit
+   */
   public void setPositiveRateLimit(double positiveRateLimit) {
     m_positiveRateLimit = positiveRateLimit;
   }
 
+  /**
+   * set negative rate limit
+   * @param negativeRateLimit new negative rate limit
+   */
   public void setNegativeRateLimit(double negativeRateLimit) {
     m_negativeRateLimit = negativeRateLimit;
   }
+  /**
+   * Sets positive and negative rate limits
+   * @param rateLimit new rate limits
+   */
   public void setRateLimit(double rateLimit) {
     m_positiveRateLimit = rateLimit;
     m_negativeRateLimit = -rateLimit;
   }
-
+  /**
+   * Sets positive and negative rate limits
+   * @param positiveRateLimit new positive rate limit
+   * @param negativeRateLimit new negative rate limit
+   */
   public void setRateLimit(double positiveRateLimit, double negativeRateLimit) {
     m_positiveRateLimit = positiveRateLimit;
     m_negativeRateLimit = negativeRateLimit;
   }
 
+  /**
+   * Sets Continuous Limits
+   * @param lowerContinuousLimit Lower Continuous Limit
+   * @param upperContinuousLimit Upper Continuous Limit
+   */
   public void setContinuousLimits(double lowerContinuousLimit, double upperContinuousLimit) {
     m_lowerContinuousLimit = lowerContinuousLimit;
     m_upperContinuousLimit = upperContinuousLimit;
   }
 
+  /**
+   * Enables or disables continuous
+   * WARNING: Continuous doesn't work properly with non-symmetrical rate limits
+   * @param continuous is continuous enabled
+   */
   public void enableContinuous(boolean continuous) {
     m_continuous = continuous;
   }

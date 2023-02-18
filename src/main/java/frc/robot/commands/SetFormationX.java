@@ -10,13 +10,15 @@ import frc.robot.subsystems.Drivetrain;
  * Sets the robot's wheels to an X formation to prevent being pushed around by other bots.
  */
 public class SetFormationX extends CommandBase {
-  Drivetrain m_drive;
+
+  private final Drivetrain m_drive;
 
   public SetFormationX(Drivetrain drive) {
-    this.m_drive=drive;
+    this.m_drive = drive;
     addRequirements(drive);
   }
 
+  @Override
   public void execute() {
     m_drive.setModuleStates(new SwerveModuleState[] {
       new SwerveModuleState(0.01, new Rotation2d(Units.degreesToRadians(-45))),

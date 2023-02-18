@@ -25,6 +25,9 @@ import frc.robot.controls.BaseDriverConfig;
 import frc.robot.controls.GameControllerDriverConfig;
 import frc.robot.controls.Operator;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.FourBarArm;
+import frc.robot.subsystems.Intake;
+import frc.robot.util.PathGroupLoader;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -47,17 +50,21 @@ public class RobotContainer {
 
   // The robot's subsystems are defined here...
   private final Drivetrain m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab);
-
+  private final FourBarArm m_arm = new FourBarArm();
+  private final Intake m_intake = new Intake();
 
   // Controllers are defined here
   private final BaseDriverConfig m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
-  private final Operator m_operator = new Operator();
+  private final Operator m_operator = new Operator(m_arm, m_intake);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
     // This is really annoying so it's disabled
     DriverStation.silenceJoystickConnectionWarning(true);
+
+    // load paths before auto starts
+    PathGroupLoader.loadPathGroups();
 
     m_driver.configureControls();
     m_operator.configureControls(m_drive);
@@ -77,6 +84,11 @@ public class RobotContainer {
     m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive,m_driver));
   }
 
+  /**
+   * Resets the yaw of the pigeon, unless it has already been reset. Or use force to reset it no matter what.
+   * 
+   * @param force if the yaw should be reset even if it already has been reset since robot enable.
+   */
   public void initDriveYaw(boolean force) {
     m_drive.initializePigeonYaw(force);
   }

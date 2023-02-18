@@ -3,6 +3,8 @@ package frc.robot.util;
 import java.util.LinkedList;
 import java.util.List;
 
+import lib.PolynomialRegression;
+
 /**
  * A class for storing and processing feedforward characterization data. Used in automatic feedforward characterization.
  * @see frc.robot.commands.test.DriveFeedForwardCharacterization
@@ -30,6 +32,7 @@ public class FeedForwardCharacterizationData {
    * @see PolynomialRegression
    */
   public void process() {
+    // creates a new process polynomial regression to get calculated values
     m_regression = new PolynomialRegression(
       velocityData.stream().mapToDouble(Double::doubleValue).toArray(),
       voltageData.stream().mapToDouble(Double::doubleValue).toArray(),
@@ -42,6 +45,7 @@ public class FeedForwardCharacterizationData {
    * @return the static voltage of the motor
    */
   public double getStatic() {
+    // gets y-intercept
     return m_regression.beta(0);
   }
 
@@ -50,6 +54,7 @@ public class FeedForwardCharacterizationData {
    * @return the velocity of the motor
    */
   public double getVelocity() {
+    // gets slope of regression line
     return m_regression.beta(1);
   }
   
@@ -58,6 +63,7 @@ public class FeedForwardCharacterizationData {
    * @return the variance of the data set
    */
   public double getVariance() {
+    // gets variance of data set
     return m_regression.R2();
   }
 }

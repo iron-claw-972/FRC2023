@@ -7,7 +7,7 @@ import edu.wpi.first.math.util.Units;
  */
 public class TestConstants {
   
-  public static double kTranslationError = 0.05;
+  public static final double kTranslationError = 0.05;
   //time error for odometry is dependent on test
   public static final double kHeadingError = Units.degreesToRadians(1);
   public static final double kHeadingTimeError = 0.1;
@@ -27,5 +27,4 @@ public class TestConstants {
   public static final double kSteerFeedForwardAccelerationTimeBuffer = 0.5;
   public static final double kSteerFeedForwardRecordingTime = 2;
   
-
 }
