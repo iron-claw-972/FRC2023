@@ -18,7 +18,7 @@ public class FourBarArm extends SubsystemBase {
   private final RelativeEncoder m_encoder;
   private final ArmFeedforward m_feedforward;
   private final ShuffleboardTab m_armTab;
-  private boolean m_enabled = false;
+  private boolean m_pidEnabled = false;
 
   public FourBarArm(ShuffleboardTab armTab) {
     // configure the motor
@@ -63,7 +63,7 @@ public class FourBarArm extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if(m_enabled) {
+    if(m_pidEnabled) {
       // calculate the PID power level
       double pidPower = m_pid.calculate(m_encoder.getPosition());
       // calculate the feedforward power (nothing for now)
@@ -94,6 +94,6 @@ public class FourBarArm extends SubsystemBase {
   }
 
   public void setEnabled(boolean enable)  {
-    m_enabled = enable;
+    m_pidEnabled = enable;
   }
 }
