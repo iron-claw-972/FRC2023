@@ -86,6 +86,7 @@ public class FourBarArm extends SubsystemBase {
     m_armTab.addNumber("Arm angle", () -> m_encoder.getPosition());
     m_armTab.addNumber("Motor output", () -> m_motor.get());
     m_armTab.add("Feedforward", m_feedforward);
+    m_armTab.add("PID", m_pid);
     m_armTab.add(m_pid);
   }
   
