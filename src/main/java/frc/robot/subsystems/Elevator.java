@@ -33,10 +33,6 @@ public class Elevator extends SubsystemBase {
   private final DigitalInput m_bottomLimitSwitch; 
 
   private double m_absEncoderZeroPositionTicks;
-
-  private double clampLow = -ElevatorConstants.kPowerLimit; 
-  private double clampHigh = ElevatorConstants.kPowerLimit;
-
   private boolean m_enabled; 
 
   public Elevator() {

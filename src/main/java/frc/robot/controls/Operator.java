@@ -1,5 +1,6 @@
 package frc.robot.controls;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.arm.ExtendToPosition;
 import frc.robot.commands.elevator.MoveToHeight;
@@ -46,7 +47,9 @@ public class Operator {
     operator.get(DPad.LEFT).onTrue(new InstantCommand(() -> m_intake.stop(), m_intake));
   }
 
-  public static double getRawThrottleValue() {
-    return operator.get(Axis.LEFT_Y);
+  public static double getClampedThrottleValue() {
+    double getClampedRawThrottleValue = MathUtil.clamp(operator.get(Axis.LEFT_Y),-ElevatorConstants.kPowerLimit, ElevatorConstants.kPowerLimit);
+    return getClampedRawThrottleValue; 
   }
+
 }
