@@ -5,16 +5,16 @@ import edu.wpi.first.wpilibj2.command.button.*;
 
 public class MadCatzController extends Controller {
   public final Trigger
-      ALL_UP = get(HatSwitch.UP).or(get(HatSwitch.UP_LEFT)).or(get(HatSwitch.UP_RIGHT)),
-      ALL_DOWN = get(HatSwitch.DOWN).or(get(HatSwitch.DOWN_LEFT)).or(get(HatSwitch.DOWN_RIGHT)),
-      ALL_LEFT = get(HatSwitch.LEFT).or(get(HatSwitch.UP_LEFT)).or(get(HatSwitch.DOWN_LEFT)),
-      ALL_RIGHT = get(HatSwitch.RIGHT).or(get(HatSwitch.UP_RIGHT)).or(get(HatSwitch.DOWN_RIGHT));
+      ALL_UP = get(MadCatzHatSwitch.UP).or(get(MadCatzHatSwitch.UP_LEFT)).or(get(MadCatzHatSwitch.UP_RIGHT)),
+      ALL_DOWN = get(MadCatzHatSwitch.DOWN).or(get(MadCatzHatSwitch.DOWN_LEFT)).or(get(MadCatzHatSwitch.DOWN_RIGHT)),
+      ALL_LEFT = get(MadCatzHatSwitch.LEFT).or(get(MadCatzHatSwitch.UP_LEFT)).or(get(MadCatzHatSwitch.DOWN_LEFT)),
+      ALL_RIGHT = get(MadCatzHatSwitch.RIGHT).or(get(MadCatzHatSwitch.UP_RIGHT)).or(get(MadCatzHatSwitch.DOWN_RIGHT));
 
   public MadCatzController(int port) {
     super(port);
   }
 
-  public enum Button {
+  public enum MadCatzButton {
     B1(1),
     B2(2),
     B3(3),
@@ -24,25 +24,25 @@ public class MadCatzController extends Controller {
 
     public final int id;
 
-    Button(final int id) {
+    MadCatzButton(final int id) {
       this.id = id;
     }
   }
 
-  public enum Axis {
+  public enum MadCatzAxis {
     X(0),
     Y(1),
-    ZAXIS(2),
+    SLIDER(2),
     ZROTATE(3);
 
     public final int id;
 
-    Axis(final int id) {
+    MadCatzAxis(final int id) {
       this.id = id;
     }
   }
 
-  public enum HatSwitch {
+  public enum MadCatzHatSwitch {
     UNPRESSED(-1),
     UP(0),
     UP_RIGHT(45),
@@ -55,20 +55,20 @@ public class MadCatzController extends Controller {
 
     public final int angle;
 
-    HatSwitch(final int angle) {
+    MadCatzHatSwitch(final int angle) {
       this.angle = angle;
     }
   }
 
-  public JoystickButton get(Button button) {
+  public JoystickButton get(MadCatzButton button) {
     return new JoystickButton(m_controller, button.id);
   }
 
-  public double get(Axis axis) {
+  public double get(MadCatzAxis axis) {
     return m_controller.getRawAxis(axis.id);
   }
 
-  public POVButton get(HatSwitch hatSwitch) {
+  public POVButton get(MadCatzHatSwitch hatSwitch) {
     return new POVButton(m_controller, hatSwitch.angle);
   }
 

@@ -1,6 +1,10 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -17,11 +21,21 @@ import frc.robot.commands.DoNothing;
 import frc.robot.commands.TestVision;
 import frc.robot.commands.TestVision2;
 import frc.robot.controls.Driver;
+import frc.robot.commands.DefaultDriveCommand;
+import frc.robot.commands.test.CircleDrive;
+import frc.robot.commands.test.DriveFeedForwardCharacterization;
+import frc.robot.commands.test.OdometryTestCommand;
+import frc.robot.commands.test.SteerFeedForwardCharacterizationSingle;
+import frc.robot.commands.test.TestDriveVelocity;
+import frc.robot.commands.test.TestHeadingPID;
+import frc.robot.commands.test.TestSteerAngle;
+import frc.robot.controls.BaseDriverConfig;
+import frc.robot.controls.GameControllerDriverConfig;
 import frc.robot.controls.Operator;
-import frc.robot.controls.TestControls;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.util.Node;
 import frc.robot.subsystems.FourBarArm;
+import frc.robot.subsystems.Intake;
 import frc.robot.util.PathGroupLoader;
 import frc.robot.util.Vision;
 
@@ -33,12 +47,26 @@ import frc.robot.util.Vision;
  */
 public class RobotContainer {
 
-  // The robot's subsystems are defined here...
-  private final Drivetrain m_drive = new Drivetrain();
-  private final FourBarArm m_arm = new FourBarArm();
 
-  // Shuffleboard stuff
-  SendableChooser<Command> m_autoCommand = new SendableChooser<>();
+  // Shuffleboard auto chooser
+  private final SendableChooser<Command> m_autoCommand = new SendableChooser<>();
+
+  //shuffleboard tabs
+  private final ShuffleboardTab m_mainTab = Shuffleboard.getTab("Main");
+  private final ShuffleboardTab m_drivetrainTab = Shuffleboard.getTab("Drive");
+  private final ShuffleboardTab m_swerveModulesTab = Shuffleboard.getTab("Swerve Modules");
+  private final ShuffleboardTab m_autoTab = Shuffleboard.getTab("Auto");
+  private final ShuffleboardTab m_controllerTab = Shuffleboard.getTab("Controller");
+  private final ShuffleboardTab m_testTab = Shuffleboard.getTab("Test");
+
+  // The robot's subsystems are defined here...
+  private final Drivetrain m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab);
+  private final FourBarArm m_arm = new FourBarArm();
+  private final Intake m_intake = new Intake();
+
+  // Controllers are defined here
+  private final BaseDriverConfig m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
+  private final Operator m_operator = new Operator(m_arm, m_intake);
 
   // Array of april tags. The index of the april tag in the array is equal to its id, and aprilTags[0] is null.
   public final static Pose3d[] aprilTags = new Pose3d[9];
@@ -58,9 +86,9 @@ public class RobotContainer {
     // load paths before auto starts
     PathGroupLoader.loadPathGroups();
 
-    Driver.configureControls(m_drive, m_arm);
-    Operator.configureControls(m_drive, m_arm);
     TestControls.configureControls(m_drive);
+    m_driver.configureControls();
+    m_operator.configureControls();
 
     Vision.setup(m_drive);
 
@@ -82,14 +110,30 @@ public class RobotContainer {
     LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
     LiveWindow.setEnabled(false);
     
-    addTestCommands();
+    
     autoChooserUpdate();
     loadCommandSchedulerShuffleboard();
 
     // Sets robot pose to 1 meter in front of april tag 2
     m_drive.resetPose(aprilTags[2].getX()-1, aprilTags[2].getY(), Math.PI);
+
+    m_drive.setupDrivetrainShuffleboard();
+    m_drive.setupModulesShuffleboard();
+    m_driver.setupShuffleboard();
+    
+    addTestCommands();
+
+    m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive,m_driver));
   }
 
+  /**
+   * Resets the yaw of the pigeon, unless it has already been reset. Or use force to reset it no matter what.
+   * 
+   * @param force if the yaw should be reset even if it already has been reset since robot enable.
+   */
+  public void initDriveYaw(boolean force) {
+    m_drive.initializePigeonYaw(force);
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -116,6 +160,15 @@ public class RobotContainer {
     tab.add("Align to 90 degrees", new Align(Math.PI/2, m_drive));
     tab.add("Align to -90 degrees", new Align(-Math.PI/2, m_drive));
     tab.add("Align to 180 degrees", new Align(Math.PI, m_drive));
+
+    GenericEntry testEntry = m_testTab.add("Test Results", false).getEntry();
+    m_testTab.add("Circle Drive", new CircleDrive(m_drive));
+    m_testTab.add("Drive FeedForward", new DriveFeedForwardCharacterization(m_drive));
+    m_testTab.add("Steer Single FeedForward", new SteerFeedForwardCharacterizationSingle(m_drive));
+    m_testTab.add("Test Drive Velocity", new TestDriveVelocity(m_drive, testEntry));
+    m_testTab.add("Heading PID", new TestHeadingPID(m_drive, testEntry));
+    m_testTab.add("Steer angle", new TestSteerAngle(m_drive, testEntry));
+    m_testTab.add("Odometry Test", new OdometryTestCommand(m_drive, new Transform2d(new Translation2d(1,1), new Rotation2d(Math.PI))));
   }
 
   /**
@@ -126,9 +179,8 @@ public class RobotContainer {
   public void autoChooserUpdate() {
     m_autoCommand.setDefaultOption("Do Nothing", new PrintCommand("This will do nothing!"));
     // add commands below with: m_autoCommand.addOption("Example", new ExampleCommand());
-
     
-    Shuffleboard.getTab("Auto").add("Auto Chooser", m_autoCommand);
+    m_autoTab.add("Auto Chooser", m_autoCommand);
   }
 
   /**

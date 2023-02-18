@@ -16,27 +16,27 @@ import org.junit.jupiter.api.Test;
  */
 public class ArithTest {
 
-    @BeforeEach
-    public void prepare() {}
+  @BeforeEach
+  public void prepare() {}
 
-    @AfterEach
-    public void cleanup() {}
+  @AfterEach
+  public void cleanup() {}
 
-    /**
-     * Test if floating point addition works.
-     */
-    @Test
-    public void testSimpleArith() {
-        assertEquals(5.0, 2.0 + 3.0,  0.0001);
-    }
+  /**
+   * Test if floating point addition works.
+   */
+  @Test
+  public void testSimpleArith() {
+    assertEquals(5.0, 2.0 + 3.0,  0.0001);
+  }
 
-    /**
-     * Here is a disabled test
-     */
-    @Disabled
-    @Test
-    public void testNaught() {
-        assertEquals(0, 0);
-    }
+  /**
+   * Here is a disabled test
+   */
+  @Disabled
+  @Test
+  public void testNaught() {
+    assertEquals(0, 0);
+  }
     
 }
