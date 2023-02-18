@@ -99,8 +99,8 @@ public class DriveConstants {
   // CAN
   public static String kDriveMotorCAN = Constants.kCanivoreCAN;
   public static String kSteerMotorCAN = Constants.kCanivoreCAN;
-  public static String kPigeonCAN = Constants.kCanivoreCAN;
   public static String kSteerEncoderCAN = Constants.kCanivoreCAN;
+  public static String kPigeonCAN = Constants.kCanivoreCAN;
 
   static {
     if (Robot.kRobotId == RobotId.SwerveTest) {
