@@ -281,6 +281,9 @@ public class Drivetrain extends SubsystemBase {
     };
     return positions;
   }
+  public SwerveDriveKinematics getKinematics(){
+    return m_kinematics;
+  }
   
   /**
   * Sets the desired states for all swerve modules.

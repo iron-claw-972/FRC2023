@@ -53,7 +53,7 @@ public class PathPlannerCommand extends SequentialCommandGroup{
             new PPSwerveControllerCommand(
                 path, 
                 drive::getPose, // Pose supplier
-                drive.m_kinematics, // SwerveDriveKinematics
+                drive.getKinematics(), // SwerveDriveKinematics
                 drive.getXController(), // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
                 drive.getYController(), // Y controller (usually the same values as X controller)
                 drive.getRotationController(), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
