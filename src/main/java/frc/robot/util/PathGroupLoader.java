@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import frc.robot.constants.AutoConstants;
 
-public class PathGroupLoader{
+public class PathGroupLoader {
 
   private static HashMap<String, List<PathPlannerTrajectory>> pathGroups = new HashMap<>();
 
@@ -59,6 +59,5 @@ public class PathGroupLoader{
     }
     return pathGroups.get(pathGroupName);
   }
-
 
 }
