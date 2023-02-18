@@ -67,6 +67,7 @@ public class RobotContainer {
 
     // If the robot is the competition robot, create the arm and intake
     if (Robot.kRobotId == RobotId.SwerveCompetition) {
+
       m_arm = new FourBarArm();
       m_intake = new Intake();
 
@@ -78,6 +79,9 @@ public class RobotContainer {
       m_testController.configureControls();
       m_manualController.configureControls();
     } else {
+
+      DriverStation.reportWarning("Not registering subsystems and controls due to incorrect robot", false);
+
       m_arm = null;
       m_intake = null;
 
