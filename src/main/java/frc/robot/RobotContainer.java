@@ -47,10 +47,11 @@ public class RobotContainer {
   private final ShuffleboardTab m_autoTab = Shuffleboard.getTab("Auto");
   private final ShuffleboardTab m_controllerTab = Shuffleboard.getTab("Controller");
   private final ShuffleboardTab m_testTab = Shuffleboard.getTab("Test");
+  private final ShuffleboardTab m_armTab = Shuffleboard.getTab("Arm");
 
   // The robot's subsystems are defined here...
   private final Drivetrain m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab);
-  private final FourBarArm m_arm = new FourBarArm();
+  private final FourBarArm m_arm = new FourBarArm(m_armTab);
   private final Intake m_intake = new Intake();
 
   // Controllers are defined here
@@ -78,6 +79,8 @@ public class RobotContainer {
     m_drive.setupDrivetrainShuffleboard();
     m_drive.setupModulesShuffleboard();
     m_driver.setupShuffleboard();
+
+    m_arm.setUpArmShuffleboard();
     
     addTestCommands();
 

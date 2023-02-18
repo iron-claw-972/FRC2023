@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAlternateEncoder;
@@ -16,8 +17,9 @@ public class FourBarArm extends SubsystemBase {
   private final PIDController m_pid;
   private final RelativeEncoder m_encoder;
   private final ArmFeedforward m_feedforward;
+  private final ShuffleboardTab m_armTab;
 
-  public FourBarArm() {
+  public FourBarArm(ShuffleboardTab armTab) {
     // configure the motor
     m_motor = new CANSparkMax(ArmConstants.kMotorId, MotorType.kBrushless);
     m_motor.setIdleMode(IdleMode.kBrake);
@@ -42,6 +44,8 @@ public class FourBarArm extends SubsystemBase {
 
     // go to the initial position (use the class method)
     setArmSetpoint(ArmConstants.kInitialPosition);
+
+    m_armTab = armTab;
   }
 
   /**
@@ -72,5 +76,12 @@ public class FourBarArm extends SubsystemBase {
    */
   public boolean reachedSetpoint() {
     return m_pid.atSetpoint();
+  }
+
+  public void setUpArmShuffleboard() {
+    m_armTab.addNumber("Arm angle", () -> m_encoder.getPosition());
+    m_armTab.addNumber("Motor output", () -> m_motor.get());
+    m_armTab.add("Feedforward", m_feedforward);
+    m_armTab.add(m_pid);
   }
 }
