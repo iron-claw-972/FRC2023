@@ -4,9 +4,9 @@ import edu.wpi.first.math.util.Units;
 
 public class ElevatorConstants {
   //TODO: Set everything to meters in whole robot code
-  public static final int kMotorPort = 14;
-  public static final int kTopLimitSwitchPort = 4;
-  public static final int kBottomLimitSwitchPort = 5;
+  public static final int kMotorPort = 16;
+  public static final int kTopLimitSwitchPort = 1;
+  public static final int kBottomLimitSwitchPort = 2;
   public static final int kAbsEncoderPort = 6;
 
   public static final double kP = 0.1;

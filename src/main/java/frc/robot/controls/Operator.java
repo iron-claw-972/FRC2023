@@ -1,6 +1,7 @@
 package frc.robot.controls;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.arm.ExtendToPosition;
 import frc.robot.commands.elevator.MoveToHeight;
@@ -15,7 +16,7 @@ import frc.robot.subsystems.Intake;
 import lib.controllers.GameController;
 import lib.controllers.GameController.Button;
 import lib.controllers.GameController.DPad;
-import lib.controllers.GameController.Axis;;
+import lib.controllers.GameController.Axis;
 
 public class Operator {
   private static GameController operator = new GameController(OIConstants.kOperatorJoy);
@@ -48,6 +49,7 @@ public class Operator {
   }
 
   public static double getClampedThrottleValue() {
+    
     double getClampedRawThrottleValue = MathUtil.clamp(operator.get(Axis.LEFT_Y),-ElevatorConstants.kPowerLimit, ElevatorConstants.kPowerLimit);
     return getClampedRawThrottleValue; 
   }

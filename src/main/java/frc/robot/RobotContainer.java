@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.commands.DefaultDriveCommand;
+import frc.robot.commands.elevator.ManualElevatorControl;
 import frc.robot.commands.test.CircleDrive;
 import frc.robot.commands.test.DriveFeedForwardCharacterization;
 import frc.robot.commands.test.OdometryTestCommand;
@@ -86,6 +87,7 @@ public class RobotContainer {
     addTestCommands();
 
     m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive,m_driver));
+    m_elevator.setDefaultCommand(new ManualElevatorControl(m_elevator)); 
   }
 
   /**
