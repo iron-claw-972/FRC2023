@@ -23,7 +23,9 @@ import frc.robot.commands.test.TestHeadingPID;
 import frc.robot.commands.test.TestSteerAngle;
 import frc.robot.controls.BaseDriverConfig;
 import frc.robot.controls.GameControllerDriverConfig;
+import frc.robot.controls.ManualController;
 import frc.robot.controls.Operator;
+import frc.robot.controls.TestController;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.Intake;
@@ -55,7 +57,9 @@ public class RobotContainer {
 
   // Controllers are defined here
   private final BaseDriverConfig m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
-  private final Operator m_operator = new Operator();
+  private final Operator m_operator = new Operator(m_arm, m_intake);
+  private final TestController m_testController = new TestController(m_arm, m_intake);
+  private final ManualController m_manualController = new ManualController(m_arm, m_intake);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -68,6 +72,8 @@ public class RobotContainer {
 
     m_driver.configureControls();
     m_operator.configureControls();
+    m_testController.configureControls();
+    m_manualController.configureControls();
 
     LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
     LiveWindow.setEnabled(false);
