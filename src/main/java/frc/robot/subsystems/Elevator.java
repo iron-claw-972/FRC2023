@@ -27,36 +27,31 @@ public class Elevator extends SubsystemBase {
 
   private final WPI_TalonFX m_motor;
   private final PIDController m_elevatorPID;
-  private final DutyCycleEncoder m_absoluteSpoolEncoder;     
-  private final TalonEncoder m_elevatorMotorEncoder; 
+  private final DutyCycleEncoder m_absEncoder;     
+  private final TalonEncoder m_talonEncoder; 
   private final DigitalInput m_topLimitSwitch; 
   private final DigitalInput m_bottomLimitSwitch; 
+
   private double m_absEncoderZeroPositionTicks;
-  private double clampLow = -ElevatorConstants.kMotorLimit; 
-  private double clampHigh = ElevatorConstants.kMotorLimit;
+
+  private double clampLow = -ElevatorConstants.kPowerLimit; 
+  private double clampHigh = ElevatorConstants.kPowerLimit;
+
   private boolean m_enabled; 
 
   public Elevator() {
     m_motor = MotorFactory.createTalonFX(ElevatorConstants.kMotorPort, Constants.kRioCAN);
     //m_motor.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
     //m_motor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
-    m_absoluteSpoolEncoder = new DutyCycleEncoder(ElevatorConstants.kAbsEncoderPort); 
-    m_elevatorMotorEncoder = new TalonEncoder(m_motor); 
-    m_elevatorMotorEncoder.setDistancePerPulse(ElevatorConstants.kDistPerMotorEncoderTick);
-    m_elevatorPID = new PIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD);  
+    m_absEncoder = new DutyCycleEncoder(ElevatorConstants.kAbsEncoderPort); 
+    m_talonEncoder = new TalonEncoder(m_motor); 
+    m_talonEncoder.setDistancePerPulse(ElevatorConstants.kDistPerPulse);
+    m_elevatorPID = new PIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD);
     m_topLimitSwitch = new DigitalInput(ElevatorConstants.kTopLimitSwitchPort); 
     m_bottomLimitSwitch = new DigitalInput(ElevatorConstants.kBottomLimitSwitchPort); 
     //TODO: log, addDouble doesn't work. 
     //LogManager.addDouble("Elevator/error", () -> {return m_pid.getSetpoint() - getElevatorHeight();});
-  }
-
-  public void setMotorLimit(double powerLevel){
-    clampLow = -powerLevel; 
-    clampHigh = powerLevel; 
-  }
-
-  public void setMotorLimit(){
-    setMotorLimit(ElevatorConstants.kMotorLimit);
+    m_motor.setSafetyEnabled(true);
   }
 
   @Override
@@ -67,47 +62,38 @@ public class Elevator extends SubsystemBase {
      * ResetEncoderAtBottom() command to end
      */
     
-    if(m_enabled == true){
-      double pid = m_elevatorPID.calculate(getElevatorHeightMeters());
-      double pidClamped = MathUtil.clamp(pid, clampLow, clampHigh);
-      m_motor.set(ControlMode.PercentOutput, pidClamped);   
+    if(m_enabled) {
+      double pid = m_elevatorPID.calculate(getHeight());
+      double pidClamped = MathUtil.clamp(pid, -ElevatorConstants.kPowerLimit, ElevatorConstants.kPowerLimit);
+      set(pidClamped);
+    } else {
+      m_motor.feed();
     }
   }
 
   public void close() {
     // close the ports
     //TODO: Is there any way to close the ports of the limit switches attached to the motor? 
-    m_absoluteSpoolEncoder.close();
+    m_topLimitSwitch.close(); 
+    m_bottomLimitSwitch.close(); 
+    m_absEncoder.close();
   }
 
-  public void set(double power){
-    if(m_motor.get() > 0 && getBottomLimitSwitch() == true){
+  public void set(double power) {
+    if((m_motor.get() > 0 && isBottom()) || (m_motor.get() < 0 && isTop())){
       m_motor.set(power); 
-    }
-  
-    if(m_motor.get() <0 && getTopLimitSwitch() == true){
-      m_motor.set(power); 
-    }
-
-    else{
+    } else {
       m_motor.set(0); 
     }
   }
   
-  public void enableDisablePID(boolean condition){
-    if(condition){
-      m_enabled = true; 
-    }
-    if(condition == false){
-      m_enabled = false; 
-    }
-  }
-  public void disablePID(){
-    m_enabled = false; 
+  public void setEnabled(boolean isEnabled){
+    m_enabled = isEnabled; 
   }
 
-  public void setSetpointMeters(double setPointMeters){
-    m_elevatorPID.setSetpoint(setPointMeters);
+
+  public void setSetpoint(double setpoint){
+    m_elevatorPID.setSetpoint(setpoint);
   }
 
   // public boolean getBottomLimitSwitch(){
@@ -124,24 +110,24 @@ public class Elevator extends SubsystemBase {
   //    return false; 
   // }
 
-  public boolean getBottomLimitSwitch(){
+  public boolean isBottom(){
     return m_bottomLimitSwitch.get(); 
   }
 
-  public boolean getTopLimitSwitch(){
+  public boolean isTop(){
     return m_topLimitSwitch.get(); 
   }
 
-  public void resetMotorEncoder(){
-    m_elevatorMotorEncoder.reset(); 
+  public void resetTalonEncoder(){
+    m_talonEncoder.reset(); 
   }
  
   /**
    * Determine the elevator height from the motor encoder.
    * @return return height in meters
    */
-  public double getElevatorHeightMeters() {
-    return m_elevatorMotorEncoder.getDistance(); 
+  public double getHeight() {
+    return m_talonEncoder.getDistance(); 
   }
 
   /**
@@ -152,7 +138,7 @@ public class Elevator extends SubsystemBase {
    * 
    */
   public double setAbsEncoderZeroPos(){
-    m_absEncoderZeroPositionTicks = m_absoluteSpoolEncoder.getAbsolutePosition();
+    m_absEncoderZeroPositionTicks = m_absEncoder.getAbsolutePosition();
     return m_absEncoderZeroPositionTicks; 
   }
 

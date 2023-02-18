@@ -17,23 +17,23 @@ public class ResetEncoderAtBottom extends CommandBase {
 
   @Override
   public void initialize() {
-    m_elevator.enableDisablePID(false); 
+    m_elevator.setEnabled(false); 
   }
 
   @Override
   public void execute(){
-    m_elevator.set(-0.25); 
+    m_elevator.set(-ElevatorConstants.kCalibrationPower); 
   }
   
   @Override
   public void end(boolean interrupted) {
-    m_elevator.resetMotorEncoder();
+    m_elevator.resetTalonEncoder();
   }
   
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return(m_elevator.getBottomLimitSwitch());
+    return m_elevator.isBottom();
   }
 }
 

@@ -20,7 +20,7 @@ public class ManualElevatorControl extends CommandBase {
   }
   @Override
   public void initialize() {
-    m_elevator.enableDisablePID(false); 
+    m_elevator.setEnabled(false); 
   }
   @Override
   public void execute() {
@@ -29,6 +29,7 @@ public class ManualElevatorControl extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
+    
   }
   
   // Returns true when the command should end.

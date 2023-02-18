@@ -4,17 +4,17 @@ import frc.robot.subsystems.Elevator;
 
 public class MoveToHeight extends CommandBase {
   Elevator m_elevator; 
-  double m_elevatorSetpoint; 
+  double m_targetHeight; 
   /**
    * This command allows the elvator to move to the heights 
    * of the bottom, middle, and top nodes, or any height that we choose. 
    * 
    * @param elevator
-   * @param elevatorHeight
+   * @param targetHeight
    */
-  public MoveToHeight(Elevator elevator, double elevatorHeight) {
+  public MoveToHeight(Elevator elevator, double targetHeight) {
     m_elevator = elevator; 
-    m_elevatorSetpoint = elevatorHeight; 
+    m_targetHeight = targetHeight; 
     addRequirements(m_elevator);
   }
 
@@ -22,13 +22,8 @@ public class MoveToHeight extends CommandBase {
   public void initialize(){
     //set the elevator PID speed to be clamped within the correct range to get it to move faster
     //This should be done already in ResetEncoderAtBottom() but just in case something happens it's here too. 
-    m_elevator.setMotorLimit();
-    m_elevator.setSetpointMeters(m_elevatorSetpoint);
-    m_elevator.enableDisablePID(true);
-  }
-
-  @Override
-  public void end(boolean interrupted) {
+    m_elevator.setSetpoint(m_targetHeight);
+    m_elevator.setEnabled(true);
   }
   
   // Returns true when the command should end.

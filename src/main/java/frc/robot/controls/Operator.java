@@ -25,7 +25,7 @@ public class Operator {
     //Move to max height
     operator.get(operator.LEFT_TRIGGER_BUTTON).onTrue(new MoveToHeight(m_elevator, ElevatorConstants.kMaxHeight)); 
     //Move to min height
-    operator.get(operator.RIGHT_TRIGGER_BUTTON).onTrue(new MoveToHeight(m_elevator, ElevatorConstants.kBottomHeight)); 
+    operator.get(operator.RIGHT_TRIGGER_BUTTON).onTrue(new MoveToHeight(m_elevator, ElevatorConstants.kMinHeight)); 
     //Calibrate elevator using inbuilt motor encoders
     operator.get(DPad.DOWN).onTrue(new ResetEncoderAtBottom(m_elevator));
     //TODO: calibrate elevator using absolute encoders(probably will not work yet as of 2/15/2023);
