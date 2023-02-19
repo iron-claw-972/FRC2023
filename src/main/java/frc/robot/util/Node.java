@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.constants.VisionConstants;
 
@@ -19,6 +20,18 @@ public class Node {
     public final Pose3d pose;
     public final Pose2d scorePose;
     public final Types type;
+
+    /**
+     * Creates a new Node with default values
+     */
+    public Node(){
+        alliance = DriverStation.getAlliance();
+        row = 1;
+        column = 1;
+        pose = new Pose3d();
+        scorePose = new Pose2d();
+        type = Types.HYBRID;
+    }
 
     /**
      * Creates a new Node object

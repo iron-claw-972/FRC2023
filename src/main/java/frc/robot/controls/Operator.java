@@ -29,7 +29,7 @@ public class Operator {
   public final static double selectTimeAmount=100 + Double.POSITIVE_INFINITY;
   
   // Where the robot will score
-  public static Node selectedNode = null;
+  public static Node selectedNode = new Node();
 
   private GameController m_operator;
 
@@ -42,6 +42,7 @@ public class Operator {
     m_arm=arm;
     m_vision=vision;
     m_operator = new GameController(OIConstants.kOperatorJoy);
+    selectValue(0, 1);
   }
 
   public void configureControls() {
@@ -63,7 +64,7 @@ public class Operator {
     m_operator.get(Button.LB).onTrue(new ExtendToPosition(m_arm, ArmConstants.kinitialPosition));
   }
 
-  private void selectValue(int index, int value){
+  public void selectValue(int index, int value){
     selectValues[index] = value;
     selectedNode = new Node(m_vision, DriverStation.getAlliance(), selectValues[1], selectValues[0]*3-3+selectValues[2]);
 }
