@@ -1,6 +1,9 @@
 package frc.robot.commands.vision;
 
+import java.util.ArrayList;
 import java.util.Optional;
+
+import org.photonvision.EstimatedRobotPose;
 
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -27,7 +30,7 @@ public class Align extends CommandBase{
   }
 
   private double getAngle(){
-    Optional<Pair<Pose3d, Double>> p = Vision.getEstimatedGlobalPose(m_drive.getPose());
+    ArrayList<EstimatedRobotPose> p = Vision.getEstimatedPoses(m_drive.getPose());
     if(p.isPresent() && p.get().getFirst() != null && p.get().getSecond() != null && p.get().getFirst().getX() > -10000 && p.get().getSecond() >= 0){
       return p.get().getFirst().toPose2d().getRotation().getRadians();
     }
