@@ -2,8 +2,8 @@ package frc.robot.controls;
 
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import frc.robot.constants.DriveConstants;
 import frc.robot.constants.OIConstants;
+import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.util.DynamicSlewRateLimiter;
 import frc.robot.util.Functions;

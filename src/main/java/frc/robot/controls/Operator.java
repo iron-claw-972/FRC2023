@@ -4,6 +4,7 @@ import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.Intake;
 import lib.controllers.GameController;
+
 public class Operator {
 
   private GameController operator = new GameController(OIConstants.kOperatorJoy);

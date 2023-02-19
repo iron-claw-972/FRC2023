@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import frc.robot.Robot.RobotId;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.test.CircleDrive;
 import frc.robot.commands.test.DriveFeedForwardCharacterization;
@@ -22,6 +23,7 @@ import frc.robot.commands.test.TestDriveVelocity;
 import frc.robot.commands.test.TestHeadingPID;
 import frc.robot.commands.test.TestSteerAngle;
 import frc.robot.constants.VisionConstants;
+import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.controls.BaseDriverConfig;
 import frc.robot.controls.GameControllerDriverConfig;
 import frc.robot.controls.ManualController;
@@ -53,21 +55,57 @@ public class RobotContainer {
   private final ShuffleboardTab m_visionTab = Shuffleboard.getTab("Vision");
   private final ShuffleboardTab m_testTab = Shuffleboard.getTab("Test");
 
-  private final Vision m_vision = new Vision(m_visionTab, VisionConstants.kCameras);
+  private final Vision m_vision;
 
   // The robot's subsystems are defined here...
-  private final Drivetrain m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab, m_vision);
-  private final FourBarArm m_arm = new FourBarArm();
-  private final Intake m_intake = new Intake();
+  private final Drivetrain m_drive;
+  private final FourBarArm m_arm;
+  private final Intake m_intake;
 
   // Controllers are defined here
-  private final BaseDriverConfig m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
-  private final Operator m_operator = new Operator(m_arm, m_intake);
-  private final TestController m_testController = new TestController(m_arm, m_intake);
-  private final ManualController m_manualController = new ManualController(m_arm, m_intake);
+  private final BaseDriverConfig m_driver;
+  private final Operator m_operator;
+  private final TestController m_testController;
+  private final ManualController m_manualController;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
+    // Update drive constants based off of robot type
+    DriveConstants.update();
+    VisionConstants.update();
+
+    m_vision = new Vision(m_visionTab, VisionConstants.kCameras);
+
+    // Create Drivetrain, because every robot will have a drivetrain
+    m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab, m_vision);
+    m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
+
+    // If the robot is the competition robot, create the arm and intake
+    if (Robot.kRobotId == RobotId.SwerveCompetition) {
+
+      m_arm = new FourBarArm();
+      m_intake = new Intake();
+
+      m_operator = new Operator(m_arm, m_intake);
+      m_testController = new TestController(m_arm, m_intake);
+      m_manualController = new ManualController(m_arm, m_intake);
+
+      m_operator.configureControls();
+      m_testController.configureControls();
+      m_manualController.configureControls();
+
+    } else {
+
+      DriverStation.reportWarning("Not registering subsystems and controls due to incorrect robot", false);
+
+      m_arm = null;
+      m_intake = null;
+
+      m_operator = null;
+      m_testController = null;
+      m_manualController = null;
+    }
 
     // This is really annoying so it's disabled
     DriverStation.silenceJoystickConnectionWarning(true);
@@ -76,9 +114,6 @@ public class RobotContainer {
     PathGroupLoader.loadPathGroups();
 
     m_driver.configureControls();
-    m_operator.configureControls();
-    m_testController.configureControls();
-    m_manualController.configureControls();
 
     LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
     LiveWindow.setEnabled(false);
@@ -92,7 +127,7 @@ public class RobotContainer {
     
     addTestCommands();
 
-    m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive,m_driver));
+    m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive, m_driver));
   }
 
   /**
