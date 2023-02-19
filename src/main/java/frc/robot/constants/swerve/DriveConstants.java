@@ -102,13 +102,16 @@ public class DriveConstants {
   public static String kSteerEncoderCAN = Constants.kCanivoreCAN;
   public static String kPigeonCAN = Constants.kCanivoreCAN;
 
-  static {
+  /**
+   * Updates the constants if the RobotId is not the competition robot.
+   */
+  public static void update() {
     if (Robot.kRobotId == RobotId.SwerveTest) {
-
+  
       kTrackWidth = Units.inchesToMeters(22.75); //22.75 swerve bot, 20.75 comp bot
-
+  
       kPigeon = 13;
-
+  
       kDriveFrontLeft = 1;
       kSteerFrontLeft = 2;
       kEncoderFrontLeft = 3;
@@ -168,7 +171,7 @@ public class DriveConstants {
       kSteerPBackRight = 12;
       kSteerIBackRight = 0;
       kSteerDBackRight = 0;
-
+  
       // CAN
       kDriveMotorCAN = Constants.kRioCAN;
     }
