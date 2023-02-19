@@ -52,18 +52,22 @@ public class RobotContainer {
   private final ShuffleboardTab m_testTab = Shuffleboard.getTab("Test");
 
   // The robot's subsystems are defined here...
-  private final Drivetrain m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab);
+  private final Drivetrain m_drive;
   private final FourBarArm m_arm;
   private final Intake m_intake;
 
   // Controllers are defined here
-  private final BaseDriverConfig m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
+  private final BaseDriverConfig m_driver;
   private final Operator m_operator;
   private final TestController m_testController;
   private final ManualController m_manualController;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
+    // Create Drivetrain, because every robot will have a drivetrain
+    m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab);
+    m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
 
     // If the robot is the competition robot, create the arm and intake
     if (Robot.kRobotId == RobotId.SwerveCompetition) {
