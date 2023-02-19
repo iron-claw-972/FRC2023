@@ -62,7 +62,6 @@ public class Drivetrain extends SubsystemBase {
 
   // Odometry
   private final SwerveDrivePoseEstimator m_poseEstimator;
-  private Pose2d m_robotPose = new Pose2d();
 
   // Displays the field with the robots estimated pose on it
   private final Field2d m_fieldDisplay = new Field2d();
@@ -116,7 +115,7 @@ public class Drivetrain extends SubsystemBase {
     };
     m_prevModule = m_modules[0];
     
-    m_poseEstimator = new SwerveDrivePoseEstimator(m_kinematics, m_pigeon.getRotation2d(), getModulePositions(), m_robotPose);
+    m_poseEstimator = new SwerveDrivePoseEstimator(m_kinematics, m_pigeon.getRotation2d(), getModulePositions(), new Pose2d());
     m_poseEstimator.setVisionMeasurementStdDevs(VisionConstants.kBaseVisionPoseStdDevs);
 
     m_rotationController.enableContinuousInput(-Math.PI, Math.PI);
@@ -224,7 +223,7 @@ public class Drivetrain extends SubsystemBase {
   
   /** Updates the field relative position of the robot. */
   public void updateOdometry() {
-    m_robotPose = m_poseEstimator.update(
+    m_poseEstimator.update(
       m_pigeon.getRotation2d(),
       getModulePositions()
     );
@@ -269,7 +268,7 @@ public class Drivetrain extends SubsystemBase {
   * Gets the current robot pose from the odometry.
   */
   public Pose2d getPose() {
-    return m_robotPose;
+    return m_poseEstimator.getEstimatedPosition();
   }
   
   /**
