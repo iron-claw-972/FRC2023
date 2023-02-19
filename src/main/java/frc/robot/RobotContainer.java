@@ -1,13 +1,10 @@
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -15,9 +12,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
-import frc.robot.commands.DoNothing;
 import frc.robot.Robot.RobotId;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.test.CircleDrive;
@@ -27,21 +22,18 @@ import frc.robot.commands.test.SteerFeedForwardCharacterizationSingle;
 import frc.robot.commands.test.TestDriveVelocity;
 import frc.robot.commands.test.TestHeadingPID;
 import frc.robot.commands.test.TestSteerAngle;
-import frc.robot.commands.vision.Align;
-import frc.robot.commands.vision.TestVision;
-import frc.robot.commands.vision.TestVision2;
+import frc.robot.constants.VisionConstants;
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.controls.BaseDriverConfig;
 import frc.robot.controls.GameControllerDriverConfig;
+import frc.robot.controls.ManualController;
 import frc.robot.controls.Operator;
 import frc.robot.controls.TestController;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.util.Node;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.Intake;
 import frc.robot.util.PathGroupLoader;
 import frc.robot.util.Vision;
-import frc.robot.controls.ManualController;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -50,7 +42,6 @@ import frc.robot.controls.ManualController;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-
 
   // Shuffleboard auto chooser
   private final SendableChooser<Command> m_autoCommand = new SendableChooser<>();
@@ -61,7 +52,10 @@ public class RobotContainer {
   private final ShuffleboardTab m_swerveModulesTab = Shuffleboard.getTab("Swerve Modules");
   private final ShuffleboardTab m_autoTab = Shuffleboard.getTab("Auto");
   private final ShuffleboardTab m_controllerTab = Shuffleboard.getTab("Controller");
+  private final ShuffleboardTab m_visionTab = Shuffleboard.getTab("Vision");
   private final ShuffleboardTab m_testTab = Shuffleboard.getTab("Test");
+
+  private final Vision m_vision;
 
   // The robot's subsystems are defined here...
   private final Drivetrain m_drive;
@@ -69,15 +63,6 @@ public class RobotContainer {
   private final Intake m_intake;
 
   // Controllers are defined here
-
-  // Array of april tags. The index of the april tag in the array is equal to its id, and aprilTags[0] is null.
-  public final static Pose3d[] aprilTags = new Pose3d[9];
-
-  // 2D arrays of nodes. blueNodes[3][1] will return the top row cone node on the far left side (from the perspective of the driver)
-  public final static Node[][] blueNodes = new Node[4][];
-  public final static Node[][] redNodes = new Node[4][];
-
-
   private final BaseDriverConfig m_driver;
   // private final Operator m_operator;
   private final TestController m_testController;
@@ -88,9 +73,12 @@ public class RobotContainer {
 
     // Update drive constants based off of robot type
     DriveConstants.update();
+    VisionConstants.update();
+
+    m_vision = new Vision(m_visionTab, VisionConstants.kCameras);
 
     // Create Drivetrain, because every robot will have a drivetrain
-    m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab);
+    m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab, m_vision);
     m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
 
     // If the robot is the competition robot, create the arm and intake
@@ -126,24 +114,7 @@ public class RobotContainer {
     PathGroupLoader.loadPathGroups();
 
     m_driver.configureControls();
-    Operator.configureControls(m_drive, m_arm);
-
-    Vision.setup(m_drive);
-
-    // Puts April tags in array
-    for(int i = 1; i <= 8; i++){
-      aprilTags[i] = Vision.getTagPose(i);
-    }
-
-    // Puts nodes in arrays
-    for(int i = 1; i <= 3; i++){
-      blueNodes[i] = new Node[10];
-      redNodes[i] = new Node[10];
-      for(int j = 1; j <= 9; j++){
-        blueNodes[i][j] = new Node(Alliance.Blue, i, j);
-        redNodes[i][j] = new Node(Alliance.Red, i, j);
-      }
-    }
+    Operator.configureControls(m_drive, m_arm, m_vision);
 
     LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
     LiveWindow.setEnabled(false);
@@ -151,12 +122,9 @@ public class RobotContainer {
     
     autoChooserUpdate();
     loadCommandSchedulerShuffleboard();
-
-    // Sets robot pose to 1 meter in front of april tag 2
-    m_drive.resetPose(new Pose2d(aprilTags[2].getX()-1, aprilTags[2].getY(), new Rotation2d(Math.PI)));
-
     m_drive.setupDrivetrainShuffleboard();
     m_drive.setupModulesShuffleboard();
+    m_vision.setupVisionShuffleboard();
     m_driver.setupShuffleboard();
     
     addTestCommands();
@@ -186,19 +154,6 @@ public class RobotContainer {
    * Adds the test commands to shuffleboard so they can be run that way.
    */
   public void addTestCommands() {
-    ShuffleboardTab tab = Shuffleboard.getTab("Test");
-    tab.add("Do Nothing", new DoNothing());
-    tab.add("Test vision (forward)", new TestVision(0.1, m_drive));
-    tab.add("Test vision (backward)", new TestVision(-0.1, m_drive));
-    tab.add("Test vision (forward then backward)", new TestVision2(0.1, 3, m_drive));
-    tab.add("Test vision (backward then forward)", new TestVision2(-0.1, 3, m_drive));
-    // tab.add("Print robot pose", new InstantCommand(()->m_drive.printPose()));
-    tab.add("Print pose from vision", new InstantCommand(()->Vision.printEstimate()));
-    tab.add("Align to 0 degrees", new Align(0, m_drive));
-    tab.add("Align to 90 degrees", new Align(Math.PI/2, m_drive));
-    tab.add("Align to -90 degrees", new Align(-Math.PI/2, m_drive));
-    tab.add("Align to 180 degrees", new Align(Math.PI, m_drive));
-
     GenericEntry testEntry = m_testTab.add("Test Results", false).getEntry();
     m_testTab.add("Circle Drive", new CircleDrive(m_drive));
     m_testTab.add("Drive FeedForward", new DriveFeedForwardCharacterization(m_drive));

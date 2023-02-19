@@ -1,18 +1,17 @@
 package frc.robot.subsystems;
 
-import java.util.Optional;
+import java.util.ArrayList;
 import java.util.function.DoubleSupplier;
+
+import org.photonvision.EstimatedRobotPose;
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
-import edu.wpi.first.math.MatBuilder;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -21,13 +20,13 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constants.VisionConstants;
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.constants.swerve.ModuleConstants;
 import frc.robot.util.LogManager;
@@ -43,6 +42,8 @@ import frc.robot.util.Vision;
  * 4: Back right
  */
 public class Drivetrain extends SubsystemBase {
+
+  public Vision m_vision;
 
   // This is left intentionally public
   public final Module[] m_modules;
@@ -62,7 +63,6 @@ public class Drivetrain extends SubsystemBase {
 
   // Odometry
   private final SwerveDrivePoseEstimator m_poseEstimator;
-  private Pose2d m_robotPose = new Pose2d();
 
   // Displays the field with the robots estimated pose on it
   private final Field2d m_fieldDisplay = new Field2d();
@@ -100,11 +100,13 @@ public class Drivetrain extends SubsystemBase {
    * @param drivetrainTab the shuffleboard tab to display drivetrain data on
    * @param swerveModulesTab the shuffleboard tab to display module data on
    */
-  public Drivetrain(ShuffleboardTab drivetrainTab, ShuffleboardTab swerveModulesTab) {
+  public Drivetrain(ShuffleboardTab drivetrainTab, ShuffleboardTab swerveModulesTab, Vision vision) {
 
     LiveWindow.disableAllTelemetry();
     m_drivetrainTab = drivetrainTab;
     m_swerveModulesTab = swerveModulesTab;
+
+    m_vision = vision;
     
     m_modules = new Module[] {
       Module.create(ModuleConstants.FRONT_LEFT, m_swerveModulesTab),
@@ -114,7 +116,9 @@ public class Drivetrain extends SubsystemBase {
     };
     m_prevModule = m_modules[0];
     
-    m_poseEstimator = new SwerveDrivePoseEstimator(m_kinematics, m_pigeon.getRotation2d(), getModulePositions(), m_robotPose, new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02, 0.02, 0.01), new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.1, 0.1, 0.01));
+    m_poseEstimator = new SwerveDrivePoseEstimator(m_kinematics, m_pigeon.getRotation2d(), getModulePositions(), new Pose2d());
+    m_poseEstimator.setVisionMeasurementStdDevs(VisionConstants.kBaseVisionPoseStdDevs);
+
     m_rotationController.enableContinuousInput(-Math.PI, Math.PI);
     DoubleSupplier[] poseSupplier = {() -> getPose().getX(), () -> getPose().getY(), () -> getPose().getRotation().getRadians()};
     LogManager.addDoubleArray("Pose2d", poseSupplier);
@@ -131,6 +135,29 @@ public class Drivetrain extends SubsystemBase {
     updateOdometry();
     
     m_fieldDisplay.setRobotPose(getPose());
+  }
+
+  /**
+   * @return chassis speed of swerve drive
+   */
+  public ChassisSpeeds getChassisSpeeds() {
+    return m_kinematics.toChassisSpeeds(
+      m_modules[0].getState(),
+      m_modules[1].getState(),
+      m_modules[2].getState(),
+      m_modules[3].getState()
+    );
+  }
+
+  /**
+   * @return velocity of swerve drive as <magnitude, direction>
+   */
+  public Pair<Double, Double> getVelocity() {
+    ChassisSpeeds chassisSpeeds = getChassisSpeeds();
+    return new Pair<Double, Double>(
+      Math.hypot(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond),
+      Math.atan2(chassisSpeeds.vyMetersPerSecond, chassisSpeeds.vxMetersPerSecond)
+    );
   }
   
   /**
@@ -212,22 +239,36 @@ public class Drivetrain extends SubsystemBase {
    * @param rot the angle to move to, in radians
    */
   public void runChassisPID(double x, double y, double rot) {
-    double xSpeed = m_xController.calculate(m_poseEstimator.getEstimatedPosition().getX(), x);
-    double ySpeed = m_yController.calculate(m_poseEstimator.getEstimatedPosition().getY(), y);
+    double xSpeed = m_xController.calculate(m_poseEstimator.getEstimatedPosition().getTranslation().getX(), x);
+    double ySpeed = m_yController.calculate(m_poseEstimator.getEstimatedPosition().getTranslation().getY(), y);
     double rotRadians = m_rotationController.calculate(getAngleHeading(), rot);
     drive(xSpeed, ySpeed, rotRadians, true);
   }
   
   /** Updates the field relative position of the robot. */
   public void updateOdometry() {
-    m_robotPose = m_poseEstimator.update(
+    m_poseEstimator.update(
       m_pigeon.getRotation2d(),
       getModulePositions()
     );
-
-    Optional<Pair<Pose3d, Double>> result = Vision.getEstimatedGlobalPose(m_robotPose);
-    if(result.isPresent() && result.get()!=null && result.get().getFirst()!=null && result.get().getFirst().getX()>-100 && result.get().getSecond()>=0){
-      m_poseEstimator.addVisionMeasurement(result.get().getFirst().toPose2d(), Timer.getFPGATimestamp()-result.get().getSecond());
+    ArrayList<EstimatedRobotPose> estimatedPoses = m_vision.getEstimatedPoses(m_poseEstimator.getEstimatedPosition());
+    Translation2d currentEstimatedPoseTranslation = m_poseEstimator.getEstimatedPosition().getTranslation();
+    for (int i = 0; i < estimatedPoses.size(); i++) {
+      EstimatedRobotPose estimatedPose = estimatedPoses.get(i);
+      Translation2d closestTagPoseTranslation = new Translation2d();
+      for (int j = 0; j < estimatedPose.targetsUsed.size(); j++) {
+        Translation2d currentTagPoseTranslation = m_vision.getTagPose(estimatedPose.targetsUsed.get(j).getFiducialId()).toPose2d().getTranslation();
+        if (j == 0 || currentEstimatedPoseTranslation.getDistance(currentTagPoseTranslation) < currentEstimatedPoseTranslation.getDistance(closestTagPoseTranslation)) {
+          closestTagPoseTranslation = currentTagPoseTranslation;
+        }
+      }
+      m_poseEstimator.addVisionMeasurement(
+        estimatedPose.estimatedPose.toPose2d(),
+        estimatedPose.timestampSeconds,
+        VisionConstants.kBaseVisionPoseStdDevs.plus(
+          currentEstimatedPoseTranslation.getDistance(closestTagPoseTranslation) * VisionConstants.kVisionPoseStdDevFactor
+        )
+      );
     }
   }
   
@@ -251,14 +292,14 @@ public class Drivetrain extends SubsystemBase {
   * Gets the current robot pose from the odometry.
   */
   public Pose2d getPose() {
-    return m_robotPose;
+    return m_poseEstimator.getEstimatedPosition();
   }
   
   /**
   * Resets the odometry to the given pose.
   * @param pose the pose to reset to.
   */
-  public void resetPose(Pose2d pose) {
+  public void resetOdometry(Pose2d pose) {
     m_poseEstimator.resetPosition(getRotation2d(), getModulePositions(), pose);
   }
   
@@ -343,6 +384,9 @@ public class Drivetrain extends SubsystemBase {
   public PIDController getRotationController() {
     return m_rotationController;
   }
+  public SwerveDriveKinematics getKinematics() {
+    return m_kinematics;
+  }
 
   /**
    * Sets up the shuffleboard tab for the drivetrain.
@@ -364,7 +408,7 @@ public class Drivetrain extends SubsystemBase {
     m_drivetrainTab.addNumber("Gyro Y", () -> getAngularRate(1));
     m_drivetrainTab.addNumber("Gyro Z", () -> getAngularRate(2));
     
-    // m_drivetrainTab.add("odometry", m_poseEstimator);
+    // m_drivetrainTab.add("odometry", m_odometry);
     
     // add the controllers to shuffleboard for tuning
     m_drivetrainTab.add(getXController());
@@ -504,10 +548,6 @@ public class Drivetrain extends SubsystemBase {
       m_modules[2].getSteerFeedForwardKV(),
       m_modules[3].getSteerFeedForwardKV()
     };
-  }
-
-  public void printPose(){
-    System.out.printf("(%.3f, %.3f) at %.3f degrees\n", m_robotPose.getX(), m_robotPose.getY(), m_robotPose.getRotation().getDegrees());
   }
   
   public Double[] getDriveStaticFeedforwardArray() {

@@ -6,7 +6,6 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import frc.robot.RobotContainer;
 import frc.robot.constants.VisionConstants;
 
 /**Class to store data about scoring locations*/
@@ -30,14 +29,14 @@ public class Node {
      * @param column
      *  Grid column from left to right (1-9)
      */
-    public Node(Alliance alliance, int row, int column){
+    public Node(Vision vision, Alliance alliance, int row, int column){
         this.alliance=alliance;
         this.row=row;
         this.column=column;
         type = row==1?Types.HYBRID:column%3==2?Types.CUBE:Types.CONE;
 
         // Which April tag this node is closest to
-        Pose3d tag = RobotContainer.aprilTags[(column-1)/3+(alliance==Alliance.Red?1:6)];
+        Pose3d tag = vision.getTagPose((column-1)/3+(alliance==Alliance.Red?1:6));
         // The x coordinate in meters
         double x;
         // Vertical distance in meters

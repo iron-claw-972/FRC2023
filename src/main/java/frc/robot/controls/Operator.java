@@ -11,6 +11,7 @@ import frc.robot.commands.arm.ExtendToPosition;
 import frc.robot.constants.ArmConstants;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.util.Node;
+import frc.robot.util.Vision;
 import lib.controllers.GameController;
 import lib.controllers.GameController.Button;
 import lib.controllers.GameController.DPad;
@@ -32,7 +33,11 @@ public class Operator {
 
   private static GameController operator = new GameController(OIConstants.kOperatorJoy);
 
-  public static void configureControls(Drivetrain drive, FourBarArm arm) {
+  private static Vision vision;
+
+  public static void configureControls(Drivetrain drive, FourBarArm arm, Vision vision) {
+    Operator.vision=vision;
+
     // operator.get(Button.A).whenPressed(new DoNothing());
     operator.get(operator.LEFT_STICK_LEFT).onTrue(new InstantCommand(()->selectValue(0, 1)));
     operator.get(operator.LEFT_STICK_UP).onTrue(new InstantCommand(()->selectValue(0, 2)));
@@ -52,11 +57,7 @@ public class Operator {
 
   private static void selectValue(int index, int value){
     selectValues[index] = value;
-    if (DriverStation.getAlliance() == Alliance.Blue) {
-      selectedNode = RobotContainer.blueNodes[selectValues[1]][selectValues[0]*3-3+selectValues[2]];
-    }else{
-      selectedNode = RobotContainer.redNodes[selectValues[1]][selectValues[0]*3-3+selectValues[2]];
-    }
+    selectedNode = new Node(vision, DriverStation.getAlliance(), selectValues[1], selectValues[0]*3-3+selectValues[2]);
 }
 
   
@@ -84,11 +85,7 @@ public class Operator {
         selectValues[2] = pressValue;
         selectTime = 1;
 
-        if (DriverStation.getAlliance() == Alliance.Blue) {
-          selectedNode = RobotContainer.blueNodes[selectValues[1]][selectValues[0]*3-3+selectValues[2]];
-        }else{
-          selectedNode = RobotContainer.redNodes[selectValues[1]][selectValues[0]*3-3+selectValues[2]];
-        }
+        selectValue(0, selectValues[0]);
       }
     }
 

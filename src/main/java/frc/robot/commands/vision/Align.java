@@ -6,7 +6,9 @@ import java.util.Optional;
 import org.photonvision.EstimatedRobotPose;
 
 import edu.wpi.first.math.Pair;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
@@ -14,6 +16,7 @@ import frc.robot.util.Vision;
 
 public class Align extends CommandBase{
   private Drivetrain m_drive;
+  private Vision m_vision;
   private double m_setpoint;
   private double m_angle;
   // private PIDController m_pid = new PIDController(1, 0.01, 0.1);
@@ -23,18 +26,24 @@ public class Align extends CommandBase{
    * @param angle The angle to go to
    * @param drive The drivetrain
    */
-  public Align(double angle, Drivetrain drive){
+  public Align(double angle, Drivetrain drive, Vision vision){
     addRequirements(drive);
     m_setpoint=angle;
     m_drive=drive;
+    m_vision=vision;
   }
 
   private double getAngle(){
-    ArrayList<EstimatedRobotPose> p = Vision.getEstimatedPoses(m_drive.getPose());
-    if(p.isPresent() && p.get().getFirst() != null && p.get().getSecond() != null && p.get().getFirst().getX() > -10000 && p.get().getSecond() >= 0){
-      return p.get().getFirst().toPose2d().getRotation().getRadians();
+    ArrayList<EstimatedRobotPose> p = m_vision.getEstimatedPoses(m_drive.getPose());
+    Pose2d p2;
+    if(p.size()==0){
+      return m_angle;
+    }else if(p.size()==1){
+      p2=p.get(0).estimatedPose.toPose2d();
+    }else{
+      p2 = new Pose2d(p.get(0).estimatedPose.getX()/2+p.get(1).estimatedPose.getX()/2, p.get(0).estimatedPose.getY()/2+p.get(1).estimatedPose.getY()/2, new Rotation2d(p.get(0).estimatedPose.toPose2d().getRotation().getRadians()/2+p.get(1).estimatedPose.toPose2d().getRotation().getRadians()/2));
     }
-    return m_angle;
+    return p2.getRotation().getRadians();
   }
 
   /**

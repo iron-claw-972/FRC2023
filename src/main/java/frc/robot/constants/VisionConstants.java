@@ -24,6 +24,9 @@ public class VisionConstants {
   public static ArrayList<Pair<String, Transform3d>> kCameras = new ArrayList<Pair<String, Transform3d>>(List.of(
   ));
 
+  //How far from the grid the robot should go to score in inches
+  public static double kgridDistance = 24;
+
 
   public static void update() {
     if (Robot.kRobotId == RobotId.SwerveTest) {

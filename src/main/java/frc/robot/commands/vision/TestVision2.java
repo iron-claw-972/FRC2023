@@ -7,6 +7,7 @@ import frc.robot.util.Vision;
 
 public class TestVision2 extends CommandBase{
   private Drivetrain m_drive;
+  private Vision m_vision;
   private double m_encoderStart;
   private Pose2d m_startPose;
   private double m_encoderPosition;
@@ -27,9 +28,10 @@ public class TestVision2 extends CommandBase{
    * @param distance How far it should move
    * @param drive The drivetrain
    */
-  public TestVision2(double speed, double distance, Drivetrain drive){
+  public TestVision2(double speed, double distance, Drivetrain drive, Vision vision){
     addRequirements(drive);
     m_drive=drive;
+    m_vision=vision;
     m_speed=speed;
     m_distanceToMove=distance;
   }
@@ -48,7 +50,7 @@ public class TestVision2 extends CommandBase{
   @Override
   public void initialize(){
     m_encoderStart=getDist();
-    m_startPose=Vision.getPose2d(m_currentPose);
+    m_startPose=m_vision.getPose2d(m_currentPose);
     m_direction=1;
     m_turned=false;
     m_endCounter=0;
@@ -63,11 +65,11 @@ public class TestVision2 extends CommandBase{
   @Override
   public void execute(){
     m_drive.drive(m_direction*m_speed, 0, 0, false);
-    if(Vision.getPose2d(m_currentPose)==null){
+    if(m_vision.getPose2d(m_currentPose)==null){
       m_endCounter++;
     }else{
       m_endCounter = Math.max(0, m_endCounter-1);
-      m_currentPose = Vision.getPose2d(m_currentPose);
+      m_currentPose = m_vision.getPose2d(m_currentPose);
       m_encoderPosition = getDist();
       double dist1 = Math.abs(m_encoderPosition-m_encoderStart);
       double dist2 = Math.sqrt(Math.pow(m_currentPose.getX()-m_startPose.getX(), 2) + Math.pow(m_currentPose.getY()-m_startPose.getY(), 2));

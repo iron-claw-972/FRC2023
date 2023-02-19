@@ -7,6 +7,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import frc.robot.constants.VisionConstants;
 
 /**
  * Example of a JUnit test class.
@@ -20,7 +22,7 @@ public class FieldLayoutTest {
 
     @BeforeEach
     public void prepare() {
-        fieldLayout = Vision.getTagFieldLayout();
+        fieldLayout = new Vision(Shuffleboard.getTab("Vision"), VisionConstants.kCameras).getAprilTagFieldLayout();
     }
 
     @AfterEach

@@ -16,6 +16,7 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -56,6 +57,19 @@ public class Vision {
       }
     }
     return estimatedPoses;
+  }
+
+  public Pose2d getPose2d(Pose2d referencePose){
+    ArrayList<EstimatedRobotPose> p = getEstimatedPoses(referencePose);
+    Pose2d p2;
+    if(p.size()==0){
+      return null;
+    }else if(p.size()==1){
+      p2=p.get(0).estimatedPose.toPose2d();
+    }else{
+      p2 = new Pose2d(p.get(0).estimatedPose.getX()/2+p.get(1).estimatedPose.getX()/2, p.get(0).estimatedPose.getY()/2+p.get(1).estimatedPose.getY()/2, new Rotation2d(p.get(0).estimatedPose.toPose2d().getRotation().getRadians()/2+p.get(1).estimatedPose.toPose2d().getRotation().getRadians()/2));
+    }
+    return p2;
   }
 
   public AprilTagFieldLayout getAprilTagFieldLayout(){

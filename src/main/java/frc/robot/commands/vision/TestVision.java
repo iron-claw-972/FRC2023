@@ -7,6 +7,7 @@ import frc.robot.util.Vision;
 
 public class TestVision extends CommandBase{
   private Drivetrain m_drive;
+  private Vision m_vision;
   private double m_encoderStart;
   private Pose2d m_startPose;
   private double m_encoderPosition;
@@ -25,11 +26,13 @@ public class TestVision extends CommandBase{
    * A command that moves and prints out distances
    * @param speed What speed to move at
    * @param drive The drivetrain
+   * @param vision The vision
    */
-  public TestVision(double speed, Drivetrain drive){
+  public TestVision(double speed, Drivetrain drive, Vision vision){
     addRequirements(drive);
     m_drive=drive;
     m_speed=speed;
+    m_vision=vision;
   }
 
   private double getDist(){
@@ -47,7 +50,7 @@ public class TestVision extends CommandBase{
   @Override
   public void initialize(){
     m_encoderStart=getDist();
-    m_startPose=Vision.getPose2d(m_currentPose);
+    m_startPose=m_vision.getPose2d(m_currentPose);
   }
 
   /**
@@ -57,12 +60,12 @@ public class TestVision extends CommandBase{
   @Override
   public void execute(){
     m_drive.drive(m_speed, 0, 0, false);
-    if(Vision.getPose2d(m_currentPose)==null){
+    if(m_vision.getPose2d(m_currentPose)==null){
       m_endCounter++;
     }else{
       m_endCounter = 0;
       m_printCounter++;
-      m_currentPose = Vision.getPose2d(m_currentPose);
+      m_currentPose = m_vision.getPose2d(m_currentPose);
       m_encoderPosition = getDist();
       if(m_printCounter%printDelay==0){
         double dist1 = Math.abs(m_encoderPosition-m_encoderStart);
