@@ -27,6 +27,7 @@ import frc.robot.controls.ManualController;
 import frc.robot.controls.Operator;
 import frc.robot.controls.TestController;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.Intake;
 import frc.robot.util.PathGroupLoader;
@@ -55,12 +56,12 @@ public class RobotContainer {
   private final Drivetrain m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab);
   private final FourBarArm m_arm = new FourBarArm(m_armTab);
   private final Intake m_intake = new Intake();
-
+  private final Elevator m_elevator = new Elevator();
   // Controllers are defined here
   private final BaseDriverConfig m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
   private final Operator m_operator = new Operator(m_arm, m_intake);
-  private final TestController m_testController = new TestController(m_arm, m_intake);
-  private final ManualController m_manualController = new ManualController(m_arm, m_intake);
+  private final TestController m_testController = new TestController(m_arm, m_intake, m_elevator);
+  private final ManualController m_manualController = new ManualController(m_arm, m_intake, m_elevator);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
