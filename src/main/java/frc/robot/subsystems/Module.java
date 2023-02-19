@@ -17,10 +17,10 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.constants.Constants;
-import frc.robot.constants.DriveConstants;
 import frc.robot.constants.FalconConstants;
-import frc.robot.constants.ModuleConstants;
-import frc.robot.constants.ModuleType;
+import frc.robot.constants.swerve.DriveConstants;
+import frc.robot.constants.swerve.ModuleConstants;
+import frc.robot.constants.swerve.ModuleType;
 import frc.robot.util.LogManager;
 import frc.robot.util.MotorFactory;
 import lib.ctre_shims.TalonEncoder;
@@ -110,8 +110,8 @@ public class Module {
   ) {
     
     // TODO: The CANBus needs to be a constant because on the new 2023 bot, drive motors use Canivore, not rio
-    m_driveMotor = MotorFactory.createTalonFX(driveMotorPort, Constants.kCanivoreCAN);
-    m_steerMotor = MotorFactory.createTalonFX(steerMotorPort, Constants.kCanivoreCAN);
+    m_driveMotor = MotorFactory.createTalonFX(driveMotorPort, DriveConstants.kDriveMotorCAN);
+    m_steerMotor = MotorFactory.createTalonFX(steerMotorPort, DriveConstants.kSteerMotorCAN);
 
     m_moduleTab = moduleTab;
     m_moduleType = moduleType;
@@ -120,7 +120,7 @@ public class Module {
     m_steerMotor.setNeutralMode(NeutralMode.Brake);
 
     m_driveEncoder = new TalonEncoder(m_driveMotor);
-    m_steerEncoder = new WPI_CANCoder(encoderPort, Constants.kCanivoreCAN);
+    m_steerEncoder = new WPI_CANCoder(encoderPort, DriveConstants.kSteerEncoderCAN);
 
     m_drivePIDController = new PIDController(driveP, driveI,driveD);
     m_steerPIDController = new ProfiledPIDController(

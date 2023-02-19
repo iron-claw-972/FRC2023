@@ -9,11 +9,13 @@ import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.commands.arm.ExtendToPosition;
 import frc.robot.constants.ArmConstants;
+import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.util.Node;
 import lib.controllers.GameController;
 import lib.controllers.GameController.Button;
 import lib.controllers.GameController.DPad;
+
 
 public class Operator {
   /// Selection values (grid, row, spot) for selecting where to score
@@ -58,6 +60,11 @@ public class Operator {
     }
 }
 
+  public Operator(FourBarArm arm, Intake intake){
+      m_arm = arm;
+      m_intake = intake;
+  }
+  
   /**
    * This is not currently used because we are using other controls
    * 
@@ -89,5 +96,7 @@ public class Operator {
         }
       }
     }
+
   }
+
 }

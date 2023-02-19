@@ -1,12 +1,13 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxAlternateEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxAlternateEncoder;
+
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ArmConstants;
 
@@ -14,6 +15,7 @@ public class FourBarArm extends SubsystemBase {
   private final CANSparkMax m_motor;
   private final PIDController m_pid;
   private final RelativeEncoder m_encoder;
+  private boolean m_enabled = false;
 
   public FourBarArm() {
     // configure the motor
@@ -31,6 +33,7 @@ public class FourBarArm extends SubsystemBase {
     // Change the velocity to radians per second (1 RPM = 2 pi radians / 60 seconds)
     m_encoder.setVelocityConversionFactor(2.0 * Math.PI / 60.0);  
 
+ 
     // make the PID controller
     m_pid = new PIDController(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD);
     // set the PID controller's tolerance
@@ -52,13 +55,15 @@ public class FourBarArm extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // calculate the PID power level
-    double pidPower = m_pid.calculate(m_encoder.getPosition());
-    // calculate the feedforward power (nothing for now)
-    double feedforwardPower = 0.0;
+    if(m_enabled) {
+      // calculate the PID power level
+      double pidPower = m_pid.calculate(m_encoder.getPosition());
+      // calculate the feedforward power (nothing for now)
+      double feedforwardPower = 0.0;
 
-    // set the motor power
-    m_motor.set(MathUtil.clamp(pidPower + feedforwardPower, ArmConstants.kminMotorPower, ArmConstants.kmaxMotorPower));
+      // set the motor power
+      setMotorPower(pidPower + feedforwardPower);
+    }
   }
 
   /**
@@ -67,5 +72,13 @@ public class FourBarArm extends SubsystemBase {
    */
   public boolean reachedSetpoint() {
     return m_pid.atSetpoint();
+  }
+
+  public void setMotorPower(double power){
+    m_motor.set(MathUtil.clamp(power, ArmConstants.kMinMotorPower, ArmConstants.kMaxMotorPower));
+  }
+
+  public void setEnabled(boolean enable)  {
+    m_enabled = enable;
   }
 }
