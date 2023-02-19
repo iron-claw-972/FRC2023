@@ -1,30 +1,34 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAlternateEncoder;
-
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ArmConstants;
+import frc.robot.util.LogManager;
 
 public class FourBarArm extends SubsystemBase {
   private final CANSparkMax m_motor;
   private final PIDController m_pid;
   private final RelativeEncoder m_encoder;
-  private boolean m_enabled = false;
+  private final ArmFeedforward m_feedforward;
+  private final ShuffleboardTab m_armTab;
+  private boolean m_pidEnabled = false;
 
-  public FourBarArm() {
+  public FourBarArm(ShuffleboardTab armTab) {
     // configure the motor
     m_motor = new CANSparkMax(ArmConstants.kMotorId, MotorType.kBrushless);
     m_motor.setIdleMode(IdleMode.kBrake);
 
     // configure the encoder
     // TODO: use a kConstant instead of the 8192
-    m_encoder = m_motor.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, 8192);
+    m_encoder = m_motor.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, ArmConstants.kEncoderCountsPerRev);
     // The RelativeEncoder reports angles in native revolutions by default.
     // See https://codedocs.revrobotics.com/java/com/revrobotics/relativeencoder
     // Change the encoder's reported value to radians (1 revolution = 2 pi radians).
@@ -38,8 +42,18 @@ public class FourBarArm extends SubsystemBase {
     m_pid = new PIDController(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD);
     // set the PID controller's tolerance
     m_pid.setTolerance(ArmConstants.kTolerance);
+
+    m_feedforward = new ArmFeedforward(0, ArmConstants.kG, 0);
+
     // go to the initial position (use the class method)
     setArmSetpoint(ArmConstants.kInitialPosition);
+
+    m_armTab = armTab;
+
+    LogManager.addDouble("Arm Angle", () -> m_encoder.getPosition());
+    LogManager.addDouble("Arm Velocity", () -> m_encoder.getVelocity());
+    LogManager.addDouble("Arm Motor Power", () -> m_motor.get());
+    LogManager.addDouble("Arm Setpoint", () -> m_pid.getSetpoint());
   }
 
   /**
@@ -55,11 +69,11 @@ public class FourBarArm extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if(m_enabled) {
+    if(m_pidEnabled) {
       // calculate the PID power level
       double pidPower = m_pid.calculate(m_encoder.getPosition());
       // calculate the feedforward power (nothing for now)
-      double feedforwardPower = 0.0;
+      double feedforwardPower = m_feedforward.calculate(m_encoder.getPosition(), m_encoder.getVelocity());
 
       // set the motor power
       setMotorPower(pidPower + feedforwardPower);
@@ -74,11 +88,18 @@ public class FourBarArm extends SubsystemBase {
     return m_pid.atSetpoint();
   }
 
+  public void setUpArmShuffleboard() {
+    m_armTab.addNumber("Arm angle", () -> m_encoder.getPosition());
+    m_armTab.addNumber("Motor output", () -> m_motor.get());
+    m_armTab.add("PID", m_pid);
+    m_armTab.add(m_pid);
+  }
+  
   public void setMotorPower(double power){
     m_motor.set(MathUtil.clamp(power, ArmConstants.kMinMotorPower, ArmConstants.kMaxMotorPower));
   }
 
   public void setEnabled(boolean enable)  {
-    m_enabled = enable;
+    m_pidEnabled = enable;
   }
 }
