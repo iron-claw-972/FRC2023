@@ -22,6 +22,7 @@ import frc.robot.commands.test.SteerFeedForwardCharacterizationSingle;
 import frc.robot.commands.test.TestDriveVelocity;
 import frc.robot.commands.test.TestHeadingPID;
 import frc.robot.commands.test.TestSteerAngle;
+import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.controls.BaseDriverConfig;
 import frc.robot.controls.GameControllerDriverConfig;
 import frc.robot.controls.ManualController;
@@ -65,6 +66,9 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
+    // Update drive constants based off of robot type
+    DriveConstants.update();
+
     // Create Drivetrain, because every robot will have a drivetrain
     m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab);
     m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
@@ -82,6 +86,7 @@ public class RobotContainer {
       m_operator.configureControls();
       m_testController.configureControls();
       m_manualController.configureControls();
+
     } else {
 
       DriverStation.reportWarning("Not registering subsystems and controls due to incorrect robot", false);

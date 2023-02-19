@@ -13,4 +13,7 @@ public final class Constants {
   // CAN bus names
   public static final String kCanivoreCAN = "CANivore";
   public static final String kRioCAN = "rio";
+
+  // RobotId key in rio preferences
+  public static final String kRobotIdKey = "RobotId";
 }

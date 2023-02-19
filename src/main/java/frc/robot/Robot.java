@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.constants.Constants;
 import frc.robot.util.LogManager;
 
 /**
@@ -43,7 +44,7 @@ public class Robot extends TimedRobot {
       Preferences.setString(kRobotId.name(), RobotId.Default.toString());
     }
     // get the RobotId from Preferences
-    String strId = Preferences.getString(kRobotId.name(), RobotId.Default.toString());
+    String strId = Preferences.getString(Constants.kRobotIdKey, RobotId.Default.toString());
     // match the string to an RobotId
     for (RobotId rid : RobotId.values()) {
       // does it match the preference string?
@@ -53,10 +54,10 @@ public class Robot extends TimedRobot {
       }
     }
 
-    // TODO: Remove this line when robot preferences are set up
+    // TODO: Remove this line when someone is able to test whether or not preferences are working
     kRobotId = RobotId.SwerveTest;
     // report the RobotId to the SmartDashboard
-    SmartDashboard.putString("Robot Identity", kRobotId.name());
+    SmartDashboard.putString("RobotID", kRobotId.name());
 
     // build the RobotContainer
     m_robotContainer = new RobotContainer();
