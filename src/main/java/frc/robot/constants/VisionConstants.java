@@ -28,6 +28,9 @@ public class VisionConstants {
   public static final double kCamera1Rotation=0;
   public static final double kCamera2Rotation=0;
 
+  //How far from the grid the center of the robot should be in inches
+  public static final double kgridDistance = 25;
+
   //Array to use if it can't find the April tag field layout
   public static final ArrayList<AprilTag> kTagPoses = new ArrayList<AprilTag>(List.of(
     new AprilTag(2, new Pose3d())

@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.RobotContainer;
+import frc.robot.constants.VisionConstants;
 
 /**Class to store data about scoring locations*/
 public class Node {
@@ -62,6 +63,6 @@ public class Node {
         // The pose of the node
         pose=new Pose3d(x, y, z, tag.getRotation());
         // The pose the robot goes to to score
-        scorePose=new Pose2d(tag.getX()+(15.25+26/2)*(alliance==Alliance.Red?-1:1), y, new Rotation2d(alliance==Alliance.Red?0:Math.PI));
+        scorePose=new Pose2d(tag.getX()+Units.inchesToMeters(14.25+VisionConstants.kgridDistance)*(alliance==Alliance.Red?-1:1), y, new Rotation2d(alliance==Alliance.Red?0:Math.PI));
     }
 }
