@@ -1,40 +1,32 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.controls.BaseDriverConfig;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.pathplanner.lib.PathPoint;
+
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.PathPlannerCommand;
+import frc.robot.controls.Operator;
 import frc.robot.subsystems.Drivetrain;
 
 /**
- * Default drive command. Drives robot using driver controls.
+ * Go to 1-9 row in grid area
  */
-public class DefaultDriveCommand extends CommandBase {
+public class AlignToRow extends SequentialCommandGroup {
 
   private final Drivetrain m_drive;
-  private final BaseDriverConfig m_driver;
   
-  public DefaultDriveCommand(Drivetrain drive, BaseDriverConfig driver) {
+  public AlignToRow(Drivetrain drive) {
     m_drive = drive;
-    m_driver = driver;
-    
     addRequirements(drive);
-  }
-  
-  @Override
-  public void execute() {
-    m_drive.setAllOptimize(true);
-    
-    m_driver.updateSettings();
-    double xSpeed = m_driver.getForwardTranslation();
-    double ySpeed = m_driver.getSideTranslation();
-    double rot = m_driver.getRotation();
-
-    m_drive.drive(DriverStation.getAlliance()==Alliance.Blue?xSpeed:-xSpeed, DriverStation.getAlliance()==Alliance.Blue?ySpeed:-ySpeed, rot, true);
-  }
-  
-  @Override
-  public void end(boolean interrupted) {
-    m_drive.drive(0.0, 0.0, 0.0, false);
+    addCommands(
+      new PathPlannerCommand(new ArrayList<PathPoint>(List.of(
+        PathPoint.fromCurrentHolonomicState(m_drive.getPose(), m_drive.getChassisSpeeds()),
+        new PathPoint(Operator.selectedNode.scorePose.getTranslation(), Operator.selectedNode.scorePose.getRotation())
+      )), m_drive)
+    );
   }
 }
