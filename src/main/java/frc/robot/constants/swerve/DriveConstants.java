@@ -16,7 +16,7 @@ public class DriveConstants {
 
   public static double kTrackWidth = Units.inchesToMeters(20.75);//22.75 swerve bot, 20.75 comp bot
   public static double kDriveGearRatio = 6.75;
-  public static double kSteerGearRatio = 12.8;
+  public static double kSteerGearRatio = 21.43;
 
   public static double kMaxSpeed = (FalconConstants.kMaxRpm / 60.0) * kDriveGearRatio * kWheelRadius * 2 * Math.PI;
 
