@@ -8,6 +8,7 @@ import org.photonvision.EstimatedRobotPose;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -134,6 +135,29 @@ public class Drivetrain extends SubsystemBase {
     updateOdometry();
     
     m_fieldDisplay.setRobotPose(getPose());
+  }
+
+  /**
+   * @return chassis speed of swerve drive
+   */
+  public ChassisSpeeds getChassisSpeeds() {
+    return m_kinematics.toChassisSpeeds(
+      m_modules[0].getState(),
+      m_modules[1].getState(),
+      m_modules[2].getState(),
+      m_modules[3].getState()
+    );
+  }
+
+  /**
+   * @return velocity of swerve drive as <magnitude, direction>
+   */
+  public Pair<Double, Double> getVelocity() {
+    ChassisSpeeds chassisSpeeds = getChassisSpeeds();
+    return new Pair<Double, Double>(
+      Math.hypot(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond),
+      Math.atan2(chassisSpeeds.vyMetersPerSecond, chassisSpeeds.vxMetersPerSecond)
+    );
   }
   
   /**
@@ -359,6 +383,9 @@ public class Drivetrain extends SubsystemBase {
   }
   public PIDController getRotationController() {
     return m_rotationController;
+  }
+  public SwerveDriveKinematics getKinematics() {
+    return m_kinematics;
   }
 
   /**

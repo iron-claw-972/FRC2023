@@ -1,4 +1,4 @@
-package frc.robot.commands.test;
+package frc.robot.commands.test.drive;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;

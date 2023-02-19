@@ -1,4 +1,4 @@
-package frc.robot.commands.test;
+package frc.robot.commands.test.drive;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;

@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.drive;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.controls.BaseDriverConfig;
@@ -18,11 +18,14 @@ public class DefaultDriveCommand extends CommandBase {
     
     addRequirements(drive);
   }
+
+  @Override
+  public void initialize() {
+    m_drive.setAllOptimize(true);
+  }
   
   @Override
   public void execute() {
-    m_drive.setAllOptimize(true);
-    
     m_driver.updateSettings();
     double xSpeed = m_driver.getForwardTranslation();
     double ySpeed = m_driver.getSideTranslation();
