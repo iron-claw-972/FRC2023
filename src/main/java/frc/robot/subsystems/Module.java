@@ -16,8 +16,8 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import frc.robot.Robot;
 import frc.robot.constants.Constants;
+import frc.robot.constants.FalconConstants;
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.constants.swerve.ModuleConstants;
 import frc.robot.constants.swerve.ModuleType;
@@ -25,53 +25,18 @@ import frc.robot.util.LogManager;
 import frc.robot.util.MotorFactory;
 import lib.ctre_shims.TalonEncoder;
 
+/**
+ * Represents a swerve module for a swerve drivetrain.
+ */
 public class Module {
 
   /**
-   * Creates a swerve module, or a simulated one if running on the simulator.
-   * 
-   * @param moduleConstants the constants for the module
+   * @param moduleConstants the constants for the module, found in {@link ModuleConstants}
    * @param moduleTab the shuffleboard tab for the module
+   * @see ModuleConstants
    */
   public static Module create(ModuleConstants moduleConstants, ShuffleboardTab moduleTab) {
-    if (Robot.isReal()) {
-      return new Module(moduleConstants, moduleTab);
-    } else {
-      return new ModuleSim(moduleConstants, moduleTab);
-    }
-  }
-
-  private final WPI_TalonFX m_driveMotor;
-  private final WPI_TalonFX m_steerMotor;
-
-  private final TalonEncoder m_driveEncoder;
-  private final WPI_CANCoder m_encoder;
-
-  private PIDController m_drivePIDController;
-
-  private ProfiledPIDController m_steerPIDController;
-
-  private SimpleMotorFeedforward m_driveFeedforward;
-  private SimpleMotorFeedforward m_steerFeedForward;
-      
-  private double m_offset = 0.0;
-  
-  private double m_drivePIDOutput = 0;
-  private double m_driveFeedforwardOutput = 0;
-  private double m_steerFeedForwardOutput = 0.0;
-  private double m_steerPIDOutput = 0.0;
-
-  private SwerveModuleState m_desieredState = new SwerveModuleState();
-  ShuffleboardTab m_moduleTab;
-
-  private MedianFilter m_driveVelocityMedianFilter = new MedianFilter(80);
-
-  private boolean m_optimizeStates = false;
-
-  private ModuleType m_moduleType;
-  
-  public Module(ModuleConstants moduleConstants, ShuffleboardTab moduleTab) {
-    this(
+    return new Module(
       moduleConstants.getDrivePort(),
       moduleConstants.getSteerPort(),
       moduleConstants.getEncoderPort(),
@@ -91,7 +56,41 @@ public class Module {
     );
   }
 
-  public Module(
+  private final WPI_TalonFX m_driveMotor;
+  private final WPI_TalonFX m_steerMotor;
+
+  private final TalonEncoder m_driveEncoder;
+  private final WPI_CANCoder m_steerEncoder;
+
+  private PIDController m_drivePIDController;
+
+  private ProfiledPIDController m_steerPIDController;
+
+  private SimpleMotorFeedforward m_driveFeedforward;
+  private SimpleMotorFeedforward m_steerFeedForward;
+  private double m_driveFeedForwardKS;
+  private double m_driveFeedForwardKV;
+  private double m_steerFeedForwardKS;
+  private double m_steerFeedForwardKV;
+      
+  private double m_offset = 0.0;
+  
+  private double m_drivePIDOutput = 0;
+  private double m_driveFeedforwardOutput = 0;
+  private double m_steerFeedForwardOutput = 0.0;
+  private double m_steerPIDOutput = 0.0;
+
+  private SwerveModuleState m_desiredState = new SwerveModuleState();
+  private ShuffleboardTab m_moduleTab;
+
+  private MedianFilter m_driveVelocityMedianFilter = new MedianFilter(80);
+
+  private boolean m_optimizeStates = false;
+  private boolean m_stateDeadband = true;
+
+  private ModuleType m_moduleType;
+
+  private Module(
     int driveMotorPort,
     int steerMotorPort,
     int encoderPort,
@@ -110,14 +109,9 @@ public class Module {
     ShuffleboardTab moduleTab
   ) {
     
-    if (Robot.isReal()) {
-      // TODO: The CANBus needs to be a constant because on the new 2023 bot, drive motors use Canivore, not rio
-      m_driveMotor = MotorFactory.createTalonFX(driveMotorPort, DriveConstants.kDriveMotorCAN);
-      m_steerMotor = MotorFactory.createTalonFX(steerMotorPort, DriveConstants.kSteerMotorCAN);
-    } else {
-      m_driveMotor = new WPI_TalonFX(driveMotorPort);
-      m_steerMotor = new WPI_TalonFX(steerMotorPort);
-    }
+    // TODO: The CANBus needs to be a constant because on the new 2023 bot, drive motors use Canivore, not rio
+    m_driveMotor = MotorFactory.createTalonFX(driveMotorPort, DriveConstants.kDriveMotorCAN);
+    m_steerMotor = MotorFactory.createTalonFX(steerMotorPort, DriveConstants.kSteerMotorCAN);
 
     m_moduleTab = moduleTab;
     m_moduleType = moduleType;
@@ -126,7 +120,7 @@ public class Module {
     m_steerMotor.setNeutralMode(NeutralMode.Brake);
 
     m_driveEncoder = new TalonEncoder(m_driveMotor);
-    m_encoder = new WPI_CANCoder(encoderPort, DriveConstants.kEncoderCAN);
+    m_steerEncoder = new WPI_CANCoder(encoderPort, DriveConstants.kSteerEncoderCAN);
 
     m_drivePIDController = new PIDController(driveP, driveI,driveD);
     m_steerPIDController = new ProfiledPIDController(
@@ -140,12 +134,12 @@ public class Module {
     // absolute encoder
     // by default the CANcoder sets it's feedback coefficient to 0.087890625, to
     // make degrees.
-    m_encoder.configFactoryDefault();
-    m_encoder.setPositionToAbsolute();
+    m_steerEncoder.configFactoryDefault();
+    m_steerEncoder.setPositionToAbsolute();
 
-    m_encoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
-
-    m_encoder.configFeedbackCoefficient(2 * Math.PI / Constants.kCancoderResolution, "rad", SensorTimeBase.PerSecond);
+    // CANcoder from -180 to 180, then convert to rad -> output range is -pi to pi
+    m_steerEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
+    m_steerEncoder.configFeedbackCoefficient(2 * Math.PI / Constants.kCancoderResolution, "rad", SensorTimeBase.PerSecond);
 
     m_offset = encoderOffset;
 
@@ -153,7 +147,7 @@ public class Module {
     // distance traveled for one rotation of the wheel divided by the encoder
     // resolution.
     m_driveEncoder.setDistancePerPulse(
-        2 * Math.PI * DriveConstants.kWheelRadius / DriveConstants.kDriveGearRatio / Constants.kCancoderResolution);
+        2 * Math.PI * DriveConstants.kWheelRadius / DriveConstants.kDriveGearRatio / FalconConstants.kResolution);
 
     // Limit the PID Controller's input range between -pi and pi and set the input
     // to be continuous. Factor in the offset amount.
@@ -163,10 +157,15 @@ public class Module {
 
     m_steerPIDController.reset(getSteerAngle()); // reset the PID, and the Trapezoid motion profile needs to know the starting state
 
-    m_driveFeedforward = new SimpleMotorFeedforward(driveFeedForwardKS, driveFeedForwardKV);
-    m_steerFeedForward = new SimpleMotorFeedforward(steerFeedForwardKS, steerFeedForwardKV);
+    m_driveFeedForwardKS = driveFeedForwardKS;
+    m_driveFeedForwardKV = driveFeedForwardKV;
+    m_steerFeedForwardKS = steerFeedForwardKS;
+    m_steerFeedForwardKV = steerFeedForwardKV;
+
+    m_driveFeedforward = new SimpleMotorFeedforward(m_driveFeedForwardKS, m_driveFeedForwardKV);
+    m_steerFeedForward = new SimpleMotorFeedforward(m_steerFeedForwardKS, m_steerFeedForwardKV);
   
-    LogManager.addDouble(m_steerMotor.getDescription() + " Steer Absolute Position", () -> m_encoder.getAbsolutePosition());
+    LogManager.addDouble(m_steerMotor.getDescription() + " Steer Absolute Position", () -> m_steerEncoder.getAbsolutePosition());
     LogManager.addDouble(m_steerMotor.getDescription() + " Steer Velocity", () -> getSteerVelocity());
     LogManager.addDouble(m_steerMotor.getDescription() + " Steer Error", () -> getSteerAngleError());
     LogManager.addDouble(m_steerMotor.getDescription() + " Steer Voltage", () -> getSteerOutputVoltage());
@@ -183,27 +182,27 @@ public class Module {
    * @param desiredState Desired state with speed and angle.
    */
   public void setDesiredState(SwerveModuleState desiredState) {
-    if (Math.abs(desiredState.speedMetersPerSecond) < 0.001) {
+    if (Math.abs(desiredState.speedMetersPerSecond) < 0.001 && m_stateDeadband) {
       stop();
       return;
     }
 
-    if (m_optimizeStates == true) {
+    if (m_optimizeStates) {
       // Optimize the reference state to avoid spinning further than 90 degrees
       desiredState = SwerveModuleState.optimize(desiredState, new Rotation2d(getSteerAngle()));
     }
 
-    //no need to set the desisier stae directly as the angle and velocity set desierd values
+    //no need to set the desired state directly as the angle and velocity set desired values
     setDriveVelocity(desiredState.speedMetersPerSecond);
     setSteerAngle(desiredState.angle);
   }
 
   /**
    * Sets the drive velocity of the module using PIDF once. Should be called repeatedly to be effective.
-   * @param speedMetersPerSecond the drive velocity in m/s
+   * @param speedMetersPerSecond the drive velocity in m/s.
    */
   public void setDriveVelocity(double speedMetersPerSecond) {
-    m_desieredState.speedMetersPerSecond = speedMetersPerSecond;
+    m_desiredState.speedMetersPerSecond = speedMetersPerSecond;
     m_drivePIDOutput = m_drivePIDController.calculate(m_driveEncoder.getRate(), speedMetersPerSecond);
     m_driveFeedforwardOutput = m_driveFeedforward.calculate(speedMetersPerSecond);
     setDriveVoltage(m_drivePIDOutput + m_driveFeedforwardOutput);
@@ -214,7 +213,7 @@ public class Module {
    * @param angle a Rotation2d object representing the angle the steer of the module should go to.
    */
   public void setSteerAngle(Rotation2d angle) {
-    m_desieredState.angle = angle;
+    m_desiredState.angle = angle;
     // Calculate the steer motor output from the steer PID controller.
     m_steerPIDOutput = m_steerPIDController.calculate(getSteerAngle(), MathUtil.angleModulus(angle.getRadians()));
     m_steerFeedForwardOutput = m_steerFeedForward.calculate(m_steerPIDController.getSetpoint().velocity);
@@ -236,6 +235,15 @@ public class Module {
   public void setSteerVoltage(double voltage) {
     m_steerMotor.setVoltage(voltage);
   }
+
+  /**
+   * Enables or disables the state deadband for this swerve module. 
+   * The state deadband determines if this module will stop drive and steer motors when inputted drive velocity is low. 
+   * It should be enabled for all regular driving, to prevent releasing the controls from setting the angles.
+   */
+  public void enableStateDeadband(boolean stateDeadband){
+    m_stateDeadband = stateDeadband;
+  }
   
   /**
    * Gets the drive position of the module in meters, scaled from the internal Falcon encoder.
@@ -243,7 +251,7 @@ public class Module {
    * @return module drive position in meters.
    */
   public double getDrivePosition() {
-      return m_driveEncoder.getDistance() * DriveConstants.kDriveGearRatio * 2 * Math.PI * DriveConstants.kWheelRadius;
+      return m_driveEncoder.getDistance();
   }
 
   /**
@@ -276,7 +284,7 @@ public class Module {
    * @return encoder's position in radians, from -pi to pi
    */
   public double getSteerAngle() {
-    return MathUtil.angleModulus(m_encoder.getAbsolutePosition() - m_offset);
+    return MathUtil.angleModulus(m_steerEncoder.getAbsolutePosition() - m_offset);
   }
 
   /**
@@ -284,7 +292,7 @@ public class Module {
    * @return the error in radians, from -pi to pi
    */
   public double getSteerAngleError() {
-    return MathUtil.angleModulus(getSteerAngle() - m_desieredState.speedMetersPerSecond);
+    return MathUtil.angleModulus(getSteerAngle() - m_desiredState.speedMetersPerSecond);
   }
 
   /**
@@ -303,20 +311,28 @@ public class Module {
     return m_driveEncoder.getRate();
   }
 
+  /**
+   * Gets the difference between the last set goal of the drive velocity and the current velocity.
+   * @return the error in m/s
+   */
   public double getDriveVelocityError() {
-    return m_desieredState.speedMetersPerSecond - getDriveVelocity();
+    return m_desiredState.speedMetersPerSecond - getDriveVelocity();
   }
 
-  public double selfFeedforwardCharacterazation() {
-    return m_driveEncoder.getRate();
-  }
-
+  /**
+   * Gets the drive velocity of the module, filtered by a median filter.
+   * @return the rate of the drive encoder, filtered by a median filter
+   */
   public double getDriveVelocityFiltered() {
     return m_driveVelocityMedianFilter.calculate(getDriveVelocity());
   }
 
+  /**
+   * Gets the steer velocity of the module.
+   * @return the velocity of the steer encoder
+   */
   public double getSteerVelocity() {
-    return m_encoder.getVelocity();
+    return m_steerEncoder.getVelocity();
   }
 
   /**
@@ -325,11 +341,20 @@ public class Module {
    * @param velocityFeedForward velocity feedforward value from Shuffleboard
    */
   public void setDriveFeedForwardValues(double staticFeedforward, double velocityFeedForward) {
+    m_steerFeedForwardKS = staticFeedforward;
+    m_steerFeedForwardKV = velocityFeedForward;
     m_driveFeedforward = new SimpleMotorFeedforward(staticFeedforward, velocityFeedForward);
   }
 
+  /**
+   * Update the steerFeedforward values from Shuffleboard.
+   * @param staticFeedforward static feedforward value from Shuffleboard
+   * @param velocityFeedForward velocity feedforward value from Shuffleboard
+   */
   public void setSteerFeedForwardValues(double staticFeedforward, double velocityFeedForward) {
-    m_steerFeedForward= new SimpleMotorFeedforward(staticFeedforward, velocityFeedForward);
+    m_steerFeedForwardKS = staticFeedforward;
+    m_steerFeedForwardKV = velocityFeedForward;
+    m_steerFeedForward = new SimpleMotorFeedforward(staticFeedforward, velocityFeedForward);
   }
   
   // Getter Methods
@@ -366,7 +391,7 @@ public class Module {
   }
 
   public WPI_CANCoder getEncoder() {
-    return m_encoder;
+    return m_steerEncoder;
   }
 
   public double getSteerFeedForwardOutput() {
@@ -376,6 +401,11 @@ public class Module {
   public double getSteerOutput() {
     return m_steerPIDOutput;
   }
+
+  /**
+   * Sets the optimize state for this swerve module.
+   * Optimizing the state means the module will not turn the steer motors more than 90 degrees for any one movement.
+   */
   public void setOptimize(Boolean setOptimize) {
     this.m_optimizeStates = setOptimize;
   }
@@ -396,40 +426,55 @@ public class Module {
     return m_steerMotor.getMotorOutputVoltage();
   }
 
-  public void periodic() {
-    // This method will be called once per scheduler run, mainly only used for simulation
-  }
-
-  public ModuleType getModuleType(){
+  public ModuleType getModuleType() {
     return m_moduleType;
   }
 
-  public double getDesieredVelocity(){
-    return m_desieredState.speedMetersPerSecond;
+  public double getDesiredVelocity() {
+    return m_desiredState.speedMetersPerSecond;
   }
 
-  public Rotation2d getDesieredAngle(){
-    return m_desieredState.angle;
+  public Rotation2d getDesiredAngle() {
+    return m_desiredState.angle;
+  }
+
+  public double getDriveFeedForwardKS() {
+    return m_driveFeedForwardKS;
+  }
+
+  public double getDriveFeedForwardKV() {
+    return m_driveFeedForwardKV;
+  }
+
+  public double getSteerFeedForwardKS() {
+    return m_steerFeedForwardKS;
   }
   
-  public void setupModulesShuffleboard(){
-    m_moduleTab.addNumber(m_moduleType.getAbbreviation() + " FL desired speed", () -> getDesieredVelocity());
+  public double getSteerFeedForwardKV() {
+    return m_steerFeedForwardKV;
+  }
+  
+  /**
+   * Sets up the Shuffleboard tab for the module.
+   */
+  public void setupModulesShuffleboard() {
+    m_moduleTab.addNumber(m_moduleType.getAbbreviation() + " desired speed", () -> getDesiredVelocity());
     // Drive PID output
-    m_moduleTab.addNumber(m_moduleType.getAbbreviation() + " FL PID Output", () -> getDrivePIDOutput());
+    m_moduleTab.addNumber(m_moduleType.getAbbreviation() + " PID Output", () -> getDrivePIDOutput());
     // get drive velocity
-    m_moduleTab.addNumber(m_moduleType.getAbbreviation() + " Vel FL Raw", () -> getDriveVelocity());
-    // drivePIDS
-    m_moduleTab.add(m_moduleType.getAbbreviation() + " Drive PID", getDrivePID());
-    // Median Filltered Velocity Values
-    m_moduleTab.addNumber(m_moduleType.getAbbreviation() + " Vel Filtered", () -> getDriveVelocityFiltered());
+    m_moduleTab.addNumber("Vel " + m_moduleType.getAbbreviation() + " Raw", () -> getDriveVelocity());
+    // drivePIDs
+    m_moduleTab.add("Drive PID " + m_moduleType.getAbbreviation(), getDrivePID());
+    // Median Filtered Velocity Values
+    m_moduleTab.addNumber("Vel " + m_moduleType.getAbbreviation() + " Filtered", () -> getDriveVelocityFiltered());
     // Desired Steer angles
-    m_moduleTab.addNumber(m_moduleType.getAbbreviation() + " Desired angle", () -> getDesieredAngle().getRadians());
+    m_moduleTab.addNumber(m_moduleType.getAbbreviation() + " desired angle", () -> getDesiredAngle().getRadians());
     // Steer angles
-    m_moduleTab.addNumber(m_moduleType.getAbbreviation() + " Angle", () -> getSteerAngle());
+    m_moduleTab.addNumber("Angle " + m_moduleType.getAbbreviation(), () -> getSteerAngle());
     // Steer Velocity
-    m_moduleTab.addNumber(m_moduleType.getAbbreviation() + " Steer Vel", () -> getSteerVelocity());
+    m_moduleTab.addNumber("Steer Vel " + m_moduleType.getAbbreviation(), () -> getSteerVelocity());
     //Steer PID
-    m_moduleTab.add(m_moduleType.getAbbreviation() + " Steer PID", getSteerPID());
+    m_moduleTab.add("Steer PID " + m_moduleType.getAbbreviation(), getSteerPID());
   }
 
 }

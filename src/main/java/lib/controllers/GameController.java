@@ -7,8 +7,8 @@ import java.util.function.BooleanSupplier;
 
 public class GameController extends Controller {
   // These are the different controller triggers
-  public final BooleanSupplier LEFT_TRIGGER_BUTTON = () -> get(GCAxis.LEFT_TRIGGER) > 0.5,
-      RIGHT_TRIGGER_BUTTON = () -> get(GCAxis.RIGHT_TRIGGER) > 0.5;
+  public final BooleanSupplier LEFT_TRIGGER_BUTTON = () -> get(Axis.LEFT_TRIGGER) > 0.5,
+      RIGHT_TRIGGER_BUTTON = () -> get(Axis.RIGHT_TRIGGER) > 0.5;
   public final Trigger ALL_UP = get(DPad.UP).or(get(DPad.UP_LEFT)).or(get(DPad.UP_RIGHT)),
       ALL_DOWN = get(DPad.DOWN).or(get(DPad.DOWN_LEFT)).or(get(DPad.DOWN_RIGHT)),
       ALL_LEFT = get(DPad.LEFT).or(get(DPad.UP_LEFT)).or(get(DPad.DOWN_LEFT)),
@@ -18,7 +18,7 @@ public class GameController extends Controller {
     super(port);
   }
 
-  public enum GCButton {
+  public enum Button {
     A(1),
     B(2),
     X(3),
@@ -32,12 +32,12 @@ public class GameController extends Controller {
 
     public final int id;
 
-    GCButton(final int id) {
+    Button(final int id) {
       this.id = id;
     }
   }
 
-  public enum GCAxis {
+  public enum Axis {
     LEFT_X(0),
     LEFT_Y(1),
     LEFT_TRIGGER(2),
@@ -47,7 +47,7 @@ public class GameController extends Controller {
 
     public final int id;
 
-    GCAxis(final int id) {
+    Axis(final int id) {
       this.id = id;
     }
   }
@@ -81,11 +81,11 @@ public class GameController extends Controller {
     }
   }
 
-  public JoystickButton get(GCButton button) {
+  public JoystickButton get(Button button) {
     return new JoystickButton(m_controller, button.id);
   }
 
-  public double get(GCAxis axis) {
+  public double get(Axis axis) {
     return m_controller.getRawAxis(axis.id);
   }
 

@@ -2,6 +2,9 @@ package frc.robot.util;
 
 import frc.robot.constants.OIConstants;
 
+/**
+ * Utility class for useful functions.
+ */
 public class Functions {
 
   /**
@@ -33,22 +36,14 @@ public class Functions {
     return deadband(input, OIConstants.kDeadband);
   }
 
-  public static double simpleDeadband(double input, double deadband){
-    if (Math.abs(input) <= deadband) {
-      return 0;
-    } else {
-      return input;
-    }
-  }
-
   /**
-   * An exponential function that maintains positive or negative.
+   * An exponential function that maintains positive or negative sign.
    * @param exponent the power to raise the base to
    * @param base the base which will be raised to the power
    * @return base to the power of exponent, maintaining sign of base
    */
   public static double expoMS(double base, double exponent) {
-    // weird stuff will happen if you don't put a number > 0
+    // weird stuff will happen if you don't put a number > 0 for controllers inputs
     double finVal = Math.pow(Math.abs(base), exponent);
     if (base < 0) {
       finVal *= -1;
@@ -56,13 +51,30 @@ public class Functions {
     return finVal;
   }
   
-  public static double calculateAngle(double x, double y){
+  /**
+   * calculates angle of the positive x direction to the origin to the point
+   * defaults to 0 if point given is (0,0)
+   * 
+   * @param x X coordinate
+   * @param y Y coordinate
+   * @return angle of points in radians 
+   * 
+   */
+  public static double calculateAngle(double x, double y) {
     if (x > 0) return Math.atan(y/x);
     if (x < 0) return Math.atan(y/x) + Math.PI;
     return Math.signum(y)* Math.PI/2;
   }
 
-  public static double calculateHypotenuse(double x, double y){
+  /**
+   * Calculates a points distance from the origin
+   * 
+   * @param x X coordinate
+   * @param y Y coordinate
+   * @return distance from (0,0)
+   * 
+   */
+  public static double calculateHypotenuse(double x, double y) {
     return Math.pow(Math.pow(x,2)+Math.pow(y,2), 0.5);
   }
   

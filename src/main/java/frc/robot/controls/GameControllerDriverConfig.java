@@ -8,39 +8,49 @@ import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.util.Functions;
 import lib.controllers.GameController;
-import lib.controllers.GameController.GCAxis;
-import lib.controllers.GameController.GCButton;
+import lib.controllers.GameController.Axis;
+import lib.controllers.GameController.Button;
 
+/**
+ * Driver controls for the generic game controller.
+ */
 public class GameControllerDriverConfig extends BaseDriverConfig {
-
-  private GameController driverGC = new GameController(OIConstants.kDriverJoy);
-
-  public GameControllerDriverConfig(Drivetrain drive, ShuffleboardTab controllerTab, boolean shuffleboardUpdates){
-    super(drive, controllerTab,shuffleboardUpdates);
+  
+  private final GameController kDriver = new GameController(OIConstants.kDriverJoy);
+  
+  public GameControllerDriverConfig(Drivetrain drive, ShuffleboardTab controllerTab, boolean shuffleboardUpdates) {
+    super(drive, controllerTab, shuffleboardUpdates);
   }
-
+  
+  @Override
   public void configureControls() { 
-    driverGC.get(GCButton.START).onTrue(new InstantCommand(() -> super.getDrivetrain().setPigeonYaw(DriveConstants.kStartingHeadingDegrees)));
-    driverGC.get(GCButton.A).whileTrue(new SetFormationX(super.getDrivetrain()));
+    kDriver.get(Button.START).onTrue(new InstantCommand(() -> super.getDrivetrain().setPigeonYaw(DriveConstants.kStartingHeadingDegrees)));
+    kDriver.get(Button.A).whileTrue(new SetFormationX(super.getDrivetrain()));
   }
-
+  
+  @Override
   public double getRawSideTranslation() { 
-    return driverGC.get(GCAxis.LEFT_X);
+    return kDriver.get(Axis.LEFT_X);
   }
-
+  
+  @Override
   public double getRawForwardTranslation() {
-    return driverGC.get(GCAxis.LEFT_Y);
+    return kDriver.get(Axis.LEFT_Y);
   }
+  
+  @Override
   public double getRawRotation() { 
-    return driverGC.get(GCAxis.RIGHT_X);
+    return kDriver.get(Axis.RIGHT_X);
   }
-
+  
+  @Override
   public double getRawHeadingAngle() { 
-    return Functions.calculateAngle(driverGC.get(GCAxis.RIGHT_X),-driverGC.get(GCAxis.RIGHT_Y))-Math.PI/2;
+    return Functions.calculateAngle(kDriver.get(Axis.RIGHT_X), -kDriver.get(Axis.RIGHT_Y)) - Math.PI/2;
   }
-
+  
+  @Override
   public double getRawHeadingMagnitude() { 
-    return Functions.calculateHypotenuse(driverGC.get(GCAxis.RIGHT_X),driverGC.get(GCAxis.RIGHT_Y));
+    return Functions.calculateHypotenuse(kDriver.get(Axis.RIGHT_X), kDriver.get(Axis.RIGHT_Y));
   }
-     
+  
 }
