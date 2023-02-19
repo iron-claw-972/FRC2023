@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 import frc.robot.constants.DriveConstants;
 import frc.robot.constants.ModuleConstants;
+import frc.robot.constants.VisionConstants;
 import frc.robot.util.LogManager;
 import frc.robot.util.Vision;
 
@@ -118,6 +119,8 @@ public class Drivetrain extends SubsystemBase {
     m_prevModule = m_modules[0];
     
     m_poseEstimator = new SwerveDrivePoseEstimator(m_kinematics, m_pigeon.getRotation2d(), getModulePositions(), m_robotPose);
+    m_poseEstimator.setVisionMeasurementStdDevs(VisionConstants.kBaseVisionPoseStdDevs);
+
     m_rotationController.enableContinuousInput(-Math.PI, Math.PI);
     DoubleSupplier[] poseSupplier = {() -> getPose().getX(), () -> getPose().getY(), () -> getPose().getRotation().getRadians()};
     LogManager.addDoubleArray("Pose2d", poseSupplier);
@@ -228,11 +231,22 @@ public class Drivetrain extends SubsystemBase {
       getModulePositions()
     );
     ArrayList<EstimatedRobotPose> estimatedPoses = m_vision.getEstimatedPoses(m_poseEstimator.getEstimatedPosition());
+    Translation2d currentEstimatedPoseTranslation = m_poseEstimator.getEstimatedPosition().getTranslation();
     for (int i = 0; i < estimatedPoses.size(); i++) {
       EstimatedRobotPose estimatedPose = estimatedPoses.get(i);
+      Translation2d closestTagPoseTranslation = new Translation2d();
+      for (int j = 0; j < estimatedPose.targetsUsed.size(); j++) {
+        Translation2d currentTagPoseTranslation = m_vision.getTagPose(estimatedPose.targetsUsed.get(j).getFiducialId()).toPose2d().getTranslation();
+        if (j == 0 || currentEstimatedPoseTranslation.getDistance(currentTagPoseTranslation) < currentEstimatedPoseTranslation.getDistance(closestTagPoseTranslation)) {
+          closestTagPoseTranslation = currentTagPoseTranslation;
+        }
+      }
       m_poseEstimator.addVisionMeasurement(
         estimatedPose.estimatedPose.toPose2d(),
-        Timer.getFPGATimestamp() - estimatedPose.timestampSeconds
+        estimatedPose.timestampSeconds,
+        VisionConstants.kBaseVisionPoseStdDevs.plus(
+          currentEstimatedPoseTranslation.getDistance(closestTagPoseTranslation) * VisionConstants.kVisionPoseStdDevFactor
+        )
       );
     }
   }

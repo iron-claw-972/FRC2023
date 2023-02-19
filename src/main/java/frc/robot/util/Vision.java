@@ -17,8 +17,8 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import frc.robot.constants.FieldConstants;
 import frc.robot.constants.VisionConstants;
 
 public class Vision {
@@ -35,10 +35,10 @@ public class Vision {
     m_shuffleboardTab = shuffleboardTab;
 
     try {
-      m_aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
-    } catch (IOException ex) {
-      m_aprilTagFieldLayout = new AprilTagFieldLayout(VisionConstants.kAprilTags, FieldConstants.kFieldLength, FieldConstants.kFieldWidth);
-      System.out.println("Could not find k2023ChargedUp.m_resourceFile: " + ex.getMessage());
+      m_aprilTagFieldLayout = AprilTagFields.k2023ChargedUp.loadAprilTagLayoutField();
+    } catch (IOException e) {
+      m_aprilTagFieldLayout = new AprilTagFieldLayout(VisionConstants.kAprilTags, VisionConstants.kFieldLength, VisionConstants.kFieldWidth);
+      DriverStation.reportWarning("Could not find k2023ChargedUp.m_resourceFile, check that GradleRIO is updated to at least 2023.2.1 in build.gradle",  e.getStackTrace());
     }
     m_aprilTagFieldLayout.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
 
@@ -62,6 +62,10 @@ public class Vision {
     return m_aprilTagFieldLayout;
   }
 
+  /**
+   * @param id AprilTag id (1-8)
+   * @return Pose3d of the AprilTag
+   */
   public Pose3d getTagPose(int id){
     return getAprilTagFieldLayout().getTagPose(id).get();
   }
@@ -72,7 +76,8 @@ public class Vision {
   
     public VisionCamera(String cameraName, Transform3d robotToCam) {
       camera = new PhotonCamera(cameraName);
-      photonPoseEstimator = new PhotonPoseEstimator(m_aprilTagFieldLayout, PoseStrategy.AVERAGE_BEST_TARGETS, camera, robotToCam);
+      photonPoseEstimator = new PhotonPoseEstimator(m_aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP, camera, robotToCam);
+      photonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
     }
   
     /**
