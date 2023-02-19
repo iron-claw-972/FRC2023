@@ -23,12 +23,7 @@ public class AlignToRow extends SequentialCommandGroup {
     addRequirements(drive);
     addCommands(
       new PathPlannerCommand(new ArrayList<PathPoint>(List.of(
-        new PathPoint(
-          m_drive.getPose().getTranslation(),
-          new Rotation2d(m_drive.getVelocity().getSecond()),
-          m_drive.getRotation2d(),
-          m_drive.getVelocity().getFirst()
-        ),
+        PathPoint.fromCurrentHolonomicState(m_drive.getPose(), m_drive.getChassisSpeeds()),
         // TODO
         new PathPoint(new Translation2d(), new Rotation2d(), new Rotation2d())
       )), m_drive)
