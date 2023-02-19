@@ -161,5 +161,9 @@ public class Elevator extends SubsystemBase {
     return m_elevatorPID.atSetpoint();
   }
 
+  public void setMotorPower(double power){
+    m_motor.set(power);
+  }
+
 }
 

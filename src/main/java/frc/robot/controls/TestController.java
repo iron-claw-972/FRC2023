@@ -2,9 +2,13 @@ package frc.robot.controls;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.arm.ExtendToPosition;
+import frc.robot.commands.elevator.MoveToHeight;
+import frc.robot.commands.elevator.ResetEncoderAtBottom;
 import frc.robot.constants.ArmConstants;
+import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.OIConstants;
+import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.Intake;
 import lib.controllers.GameController;
@@ -16,10 +20,12 @@ public class TestController {
   private GameController test = new GameController(OIConstants.kTestJoy);
   private FourBarArm m_arm;
   private Intake m_intake;
+  private Elevator m_elevator;
   
-  public TestController(FourBarArm arm, Intake intake){
+  public TestController(FourBarArm arm, Intake intake, Elevator elevator){
     m_arm = arm;
     m_intake = intake;
+    m_elevator = elevator;
   }
   
   public void configureControls() {
@@ -31,9 +37,15 @@ public class TestController {
     test.get(Button.B).onTrue(new ExtendToPosition(m_arm, ArmConstants.kShelfPosition));
     
     // intake controls
-    test.get(DPad.DOWN).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kIntakeSpeed), m_intake));
-    test.get(DPad.UP).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kOuttakeSpeed),m_intake));
-    test.get(DPad.LEFT).onTrue(new InstantCommand(() -> m_intake.stop(), m_intake));
+    // test.get(DPad.DOWN).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kIntakeSpeed), m_intake));
+    // test.get(DPad.UP).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kOuttakeSpeed),m_intake));
+    // test.get(DPad.LEFT).onTrue(new InstantCommand(() -> m_intake.stop(), m_intake));
+    
+    test.get(DPad.DOWN).onTrue(new InstantCommand(() -> m_elevator.setMotorPower(-0.01), m_intake));
+    test.get(DPad.UP).onTrue(new InstantCommand(() -> m_elevator.setMotorPower(0.01),m_intake));
+    test.get(DPad.LEFT).onTrue(new InstantCommand(() -> m_elevator.setMotorPower(0), m_intake));
+    
   }
+
 }
 

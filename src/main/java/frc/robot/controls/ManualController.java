@@ -1,8 +1,12 @@
 package frc.robot.controls;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.commands.elevator.MoveToHeight;
+import frc.robot.commands.elevator.ResetEncoderAtBottom;
+import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.OIConstants;
+import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.Intake;
 import lib.controllers.GameController;
@@ -14,10 +18,12 @@ public class ManualController {
   GameController m_manual = new GameController(OIConstants.kManualJoy);
   private FourBarArm m_arm;
   private Intake m_intake;
+  private Elevator m_elevator;
   
-  public ManualController(FourBarArm arm, Intake intake){
+  public ManualController(FourBarArm arm, Intake intake, Elevator elevator){
     m_arm = arm;
     m_intake = intake;
+    m_elevator = elevator;
   }
   
   public void configureControls() {
@@ -28,5 +34,20 @@ public class ManualController {
     m_manual.get(Button.Y).onTrue(new InstantCommand(() -> m_arm.setMotorPower(0.05)));
     m_manual.get(Button.X).onTrue(new InstantCommand(() -> m_arm.setMotorPower(-0.05)));
     m_manual.get(Button.B).onTrue(new InstantCommand(() -> m_arm.setMotorPower(0)));
+
+    //Move to max height
+    m_manual.get(m_manual.LEFT_TRIGGER_BUTTON).onTrue(new MoveToHeight(m_elevator, ElevatorConstants.kMaxHeight)); 
+    //Move to min height
+    m_manual.get(m_manual.RIGHT_TRIGGER_BUTTON).onTrue(new MoveToHeight(m_elevator, ElevatorConstants.kMinHeight)); 
+    //Calibrate elevator using inbuilt motor encoders
+    m_manual.get(DPad.DOWN).onTrue(new ResetEncoderAtBottom(m_elevator));
+    //TODO: calibrate elevator using absolute encoders(probably will not work yet as of 2/15/2023);
+    //move to bottom node height
+    m_manual.get(Button.A).onTrue(new MoveToHeight(m_elevator, ElevatorConstants.kHeightBottomNode));
+    //move to mid node height
+    m_manual.get(Button.B).onTrue(new MoveToHeight(m_elevator, ElevatorConstants.kHeightMiddleNode));
+    //move to top node height
+    m_manual.get(Button.Y).onTrue(new MoveToHeight(m_elevator, ElevatorConstants.kHeightTopNode));    
+  
   }
 }

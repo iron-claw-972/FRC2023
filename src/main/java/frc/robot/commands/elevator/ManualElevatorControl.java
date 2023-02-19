@@ -9,14 +9,16 @@ import frc.robot.subsystems.Elevator;
 
 public class ManualElevatorControl extends CommandBase {
   Elevator m_elevator; 
-  double m_currentElevatorPos; 
+  double m_currentElevatorPos;
+  Operator m_operator;
   /**
    * This command allows for manual control of the elevator. 
    * TODO: get manual control of all subsystems to be exclusive to a third controller
    * @param elevator
    */
-  public ManualElevatorControl(Elevator elevator) {
+  public ManualElevatorControl(Elevator elevator, Operator operator) {
     m_elevator = elevator; 
+    m_operator = operator;
     addRequirements(m_elevator);
   }
   @Override
@@ -26,12 +28,12 @@ public class ManualElevatorControl extends CommandBase {
   }
   @Override
   public void execute() {
-    if ((Operator.getClampedThrottleValue() > 0) || (Operator.getClampedThrottleValue() < 0)){
+    if ((m_operator.getClampedThrottleValue() > 0) || (m_operator.getClampedThrottleValue() < 0)){
       m_elevator.setEnabled(false); 
-      m_elevator.set(Operator.getClampedThrottleValue());
+      m_elevator.set(m_operator.getClampedThrottleValue());
     }
 
-    if(Operator.getClampedThrottleValue() == 0){
+    if(m_operator.getClampedThrottleValue() == 0){
       m_elevator.setEnabled(true); 
       m_currentElevatorPos = m_elevator.getHeight(); 
       m_elevator.setSetpoint(m_currentElevatorPos);
