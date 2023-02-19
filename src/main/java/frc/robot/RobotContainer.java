@@ -123,6 +123,7 @@ public class RobotContainer {
     loadCommandSchedulerShuffleboard();
     m_drive.setupDrivetrainShuffleboard();
     m_drive.setupModulesShuffleboard();
+    m_vision.setupVisionShuffleboard();
     m_driver.setupShuffleboard();
     
     addTestCommands();

@@ -70,6 +70,9 @@ public class Vision {
     return getAprilTagFieldLayout().getTagPose(id).get();
   }
 
+  public void setupVisionShuffleboard() {
+  }
+
   class VisionCamera {
     PhotonCamera camera;
     PhotonPoseEstimator photonPoseEstimator;
