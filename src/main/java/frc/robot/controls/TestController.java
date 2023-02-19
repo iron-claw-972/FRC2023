@@ -1,9 +1,5 @@
 package frc.robot.controls;
 
-import frc.robot.constants.ArmConstants;
-import frc.robot.constants.OIConstants;
-import lib.controllers.GameController;
-import lib.controllers.GameController.Button;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.arm.ExtendToPosition;
 import frc.robot.constants.ArmConstants;
@@ -11,6 +7,8 @@ import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.Intake;
+import lib.controllers.GameController;
+import lib.controllers.GameController.Button;
 import lib.controllers.GameController.DPad;
 
 public class TestController {

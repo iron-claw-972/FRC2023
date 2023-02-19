@@ -22,12 +22,11 @@ public class Robot extends TimedRobot {
   private Command m_autoCommand;
   private RobotContainer m_robotContainer;
 
-  public static final String kRobotId = "RobotId";
   public enum RobotId {
     Default, SwerveCompetition, SwerveTest,
     ClassBot1, ClassBot2, ClassBot3, ClassBot4
   };
-  private static RobotId robotId = RobotId.Default;
+  public static RobotId kRobotId = RobotId.Default;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -40,21 +39,24 @@ public class Robot extends TimedRobot {
     //   SimGUI: Persistent Values, Preferences, RobotId, then restart Simulation
     //     changes networktables.json, networktables.json.bck (both Untracked)
     // set the default preference to something safe
-    if (!Preferences.containsKey(kRobotId)) {
-      Preferences.setString(kRobotId, RobotId.Default.toString());
+    if (!Preferences.containsKey(kRobotId.name())) {
+      Preferences.setString(kRobotId.name(), RobotId.Default.toString());
     }
     // get the RobotId from Preferences
-    String strId = Preferences.getString(kRobotId, RobotId.Default.toString());
+    String strId = Preferences.getString(kRobotId.name(), RobotId.Default.toString());
     // match the string to an RobotId
     for (RobotId rid : RobotId.values()) {
       // does it match the preference string?
-      if (strId.equals(rid.toString())) {
+      if (strId.equals(rid.name())) {
         // yes, so it is the RobotId
-        robotId = rid;
+        kRobotId = rid;
       }
     }
+
+    // TODO: Remove this line when robot preferences are set up
+    kRobotId = RobotId.SwerveTest;
     // report the RobotId to the SmartDashboard
-    SmartDashboard.putString("Robot Identity", robotId.toString());
+    SmartDashboard.putString("Robot Identity", kRobotId.name());
 
     // build the RobotContainer
     m_robotContainer = new RobotContainer();
