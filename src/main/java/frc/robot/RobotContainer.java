@@ -33,7 +33,6 @@ import frc.robot.commands.test.TestSteerAngle;
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.controls.BaseDriverConfig;
 import frc.robot.controls.GameControllerDriverConfig;
-import frc.robot.controls.ManualController;
 import frc.robot.controls.Operator;
 import frc.robot.controls.TestController;
 import frc.robot.subsystems.Drivetrain;
@@ -42,6 +41,7 @@ import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.Intake;
 import frc.robot.util.PathGroupLoader;
 import frc.robot.util.Vision;
+import frc.robot.controls.ManualController;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -99,11 +99,11 @@ public class RobotContainer {
       m_arm = new FourBarArm();
       m_intake = new Intake();
 
-      m_operator = new Operator(m_arm, m_intake);
+      // m_operator = new Operator(m_arm, m_intake);
       m_testController = new TestController(m_arm, m_intake);
       m_manualController = new ManualController(m_arm, m_intake);
 
-      m_operator.configureControls();
+      // m_operator.configureControls();
       m_testController.configureControls();
       m_manualController.configureControls();
 
@@ -114,7 +114,7 @@ public class RobotContainer {
       m_arm = null;
       m_intake = null;
 
-      m_operator = null;
+      // m_operator = null;
       m_testController = null;
       m_manualController = null;
     }

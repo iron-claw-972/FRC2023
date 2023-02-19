@@ -11,6 +11,7 @@ import frc.robot.commands.arm.ExtendToPosition;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.FourBarArm;
+import frc.robot.subsystems.Intake;
 import frc.robot.util.Node;
 import lib.controllers.GameController;
 import lib.controllers.GameController.Button;
@@ -60,10 +61,6 @@ public class Operator {
     }
 }
 
-  public Operator(FourBarArm arm, Intake intake){
-      m_arm = arm;
-      m_intake = intake;
-  }
   
   /**
    * This is not currently used because we are using other controls
