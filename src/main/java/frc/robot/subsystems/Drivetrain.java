@@ -5,7 +5,9 @@ import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
+import edu.wpi.first.math.MatBuilder;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -27,6 +29,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.constants.swerve.ModuleConstants;
 import frc.robot.util.LogManager;
@@ -113,7 +116,7 @@ public class Drivetrain extends SubsystemBase {
     };
     m_prevModule = m_modules[0];
     
-    m_poseEstimator = new SwerveDrivePoseEstimator(m_kinematics, m_pigeon.getRotation2d(), getModulePositions(), m_robotPose);
+    m_poseEstimator = new SwerveDrivePoseEstimator(m_kinematics, m_pigeon.getRotation2d(), getModulePositions(), m_robotPose, new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02, 0.02, 0.01), new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.1, 0.1, 0.01));
     m_rotationController.enableContinuousInput(-Math.PI, Math.PI);
     DoubleSupplier[] poseSupplier = {() -> getPose().getX(), () -> getPose().getY(), () -> getPose().getRotation().getRadians()};
     LogManager.addDoubleArray("Pose2d", poseSupplier);
