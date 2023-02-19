@@ -67,7 +67,7 @@ public class RobotContainer {
 
   // Controllers are defined here
   private final BaseDriverConfig m_driver;
-  // private final Operator m_operator;
+  private final Operator m_operator;
   private final TestController m_testController;
   private final ManualController m_manualController;
 
@@ -90,11 +90,11 @@ public class RobotContainer {
       m_arm = new FourBarArm();
       m_intake = new Intake();
 
-      // m_operator = new Operator(m_arm, m_intake);
+      m_operator = new Operator(m_drive, m_arm, m_vision);
       m_testController = new TestController(m_arm, m_intake);
       m_manualController = new ManualController(m_arm, m_intake);
 
-      // m_operator.configureControls();
+      m_operator.configureControls();
       m_testController.configureControls();
       m_manualController.configureControls();
 
@@ -105,7 +105,7 @@ public class RobotContainer {
       m_arm = null;
       m_intake = null;
 
-      // m_operator = null;
+      m_operator = null;
       m_testController = null;
       m_manualController = null;
     }
@@ -117,7 +117,6 @@ public class RobotContainer {
     PathGroupLoader.loadPathGroups();
 
     m_driver.configureControls();
-    Operator.configureControls(m_drive, m_arm, m_vision);
 
     LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
     LiveWindow.setEnabled(false);

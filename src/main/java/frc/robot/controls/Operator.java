@@ -31,33 +31,41 @@ public class Operator {
   // Where the robot will score
   public static Node selectedNode = null;
 
-  private static GameController operator = new GameController(OIConstants.kOperatorJoy);
+  private GameController m_operator;
 
-  private static Vision vision;
+  private Drivetrain m_drive;
+  private FourBarArm m_arm;
+  private Vision m_vision;
 
-  public static void configureControls(Drivetrain drive, FourBarArm arm, Vision vision) {
-    Operator.vision=vision;
-
-    // operator.get(Button.A).whenPressed(new DoNothing());
-    operator.get(operator.LEFT_STICK_LEFT).onTrue(new InstantCommand(()->selectValue(0, 1)));
-    operator.get(operator.LEFT_STICK_UP).onTrue(new InstantCommand(()->selectValue(0, 2)));
-    operator.get(operator.LEFT_STICK_RIGHT).onTrue(new InstantCommand(()->selectValue(0, 3)));
-
-    operator.get(operator.RIGHT_STICK_LEFT).onTrue(new InstantCommand(()->selectValue(2, 1)));
-    operator.get(operator.RIGHT_STICK_UP).onTrue(new InstantCommand(()->selectValue(2, 2)));
-    operator.get(operator.RIGHT_STICK_RIGHT).onTrue(new InstantCommand(()->selectValue(2, 3)));
-
-    operator.get(Button.A).onTrue(new ParallelCommandGroup(new InstantCommand(()->selectValue(1, 1)), new ExtendToPosition(arm, ArmConstants.klowPosition)));
-    operator.get(Button.X).onTrue(new ParallelCommandGroup(new InstantCommand(()->selectValue(1, 2)), new ExtendToPosition(arm, ArmConstants.kmiddlePosition)));
-    operator.get(Button.Y).onTrue(new ParallelCommandGroup(new InstantCommand(()->selectValue(1, 3)), new ExtendToPosition(arm, ArmConstants.ktopPosition)));
-    
-    operator.get(Button.B).onTrue(new ExtendToPosition(arm, ArmConstants.kshelfPosition));
-    operator.get(Button.LB).onTrue(new ExtendToPosition(arm, ArmConstants.kinitialPosition));
+  public Operator(Drivetrain drive, FourBarArm arm, Vision vision){
+    m_drive=drive;
+    m_arm=arm;
+    m_vision=vision;
+    m_operator = new GameController(OIConstants.kOperatorJoy);
   }
 
-  private static void selectValue(int index, int value){
+  public void configureControls() {
+
+    // operator.get(Button.A).whenPressed(new DoNothing());
+    m_operator.get(m_operator.LEFT_STICK_LEFT).onTrue(new InstantCommand(()->selectValue(0, 1)));
+    m_operator.get(m_operator.LEFT_STICK_UP).onTrue(new InstantCommand(()->selectValue(0, 2)));
+    m_operator.get(m_operator.LEFT_STICK_RIGHT).onTrue(new InstantCommand(()->selectValue(0, 3)));
+
+    m_operator.get(m_operator.RIGHT_STICK_LEFT).onTrue(new InstantCommand(()->selectValue(2, 1)));
+    m_operator.get(m_operator.RIGHT_STICK_UP).onTrue(new InstantCommand(()->selectValue(2, 2)));
+    m_operator.get(m_operator.RIGHT_STICK_RIGHT).onTrue(new InstantCommand(()->selectValue(2, 3)));
+
+    m_operator.get(Button.A).onTrue(new ParallelCommandGroup(new InstantCommand(()->selectValue(1, 1)), new ExtendToPosition(m_arm, ArmConstants.klowPosition)));
+    m_operator.get(Button.X).onTrue(new ParallelCommandGroup(new InstantCommand(()->selectValue(1, 2)), new ExtendToPosition(m_arm, ArmConstants.kmiddlePosition)));
+    m_operator.get(Button.Y).onTrue(new ParallelCommandGroup(new InstantCommand(()->selectValue(1, 3)), new ExtendToPosition(m_arm, ArmConstants.ktopPosition)));
+    
+    m_operator.get(Button.B).onTrue(new ExtendToPosition(m_arm, ArmConstants.kshelfPosition));
+    m_operator.get(Button.LB).onTrue(new ExtendToPosition(m_arm, ArmConstants.kinitialPosition));
+  }
+
+  private void selectValue(int index, int value){
     selectValues[index] = value;
-    selectedNode = new Node(vision, DriverStation.getAlliance(), selectValues[1], selectValues[0]*3-3+selectValues[2]);
+    selectedNode = new Node(m_vision, DriverStation.getAlliance(), selectValues[1], selectValues[0]*3-3+selectValues[2]);
 }
 
   
@@ -70,7 +78,7 @@ public class Operator {
    * For example, up right left will select the center grid, top row, and left spot.
    * @param direction = Which DPad button is pressed
    */
-  public static void DPadPress(DPad direction) { 
+  public void DPadPress(DPad direction) { 
     if (direction==DPad.DOWN) {
       selectTime=1;
     } else {
