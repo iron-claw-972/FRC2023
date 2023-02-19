@@ -29,9 +29,4 @@ public class AlignToRow extends SequentialCommandGroup {
       )), m_drive)
     );
   }
-  
-  // @Override
-  // public void end(boolean interrupted) {
-  //   m_drive.drive(0.0, 0.0, 0.0, false);
-  // }
 }
