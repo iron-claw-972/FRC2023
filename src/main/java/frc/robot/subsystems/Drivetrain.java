@@ -17,7 +17,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
@@ -29,7 +28,6 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RobotContainer;
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.constants.swerve.ModuleConstants;
 import frc.robot.util.LogManager;
@@ -506,6 +504,10 @@ public class Drivetrain extends SubsystemBase {
       m_modules[2].getSteerFeedForwardKV(),
       m_modules[3].getSteerFeedForwardKV()
     };
+  }
+
+  public void printPose(){
+    System.out.printf("(%.3f, %.3f) at %.3f degrees\n", m_robotPose.getX(), m_robotPose.getY(), m_robotPose.getRotation().getDegrees());
   }
   
   public Double[] getDriveStaticFeedforwardArray() {

@@ -68,6 +68,11 @@ public class Vision {
     robotPoseEstimator = new RobotPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, camList);
   }
 
+  /**
+   * Finds and returns the april tag field layout
+   * If it can't find it, it uses the april tags in the constants
+   * @return The field layout
+  */
   public static AprilTagFieldLayout getTagFieldLayout() {
     AprilTagFieldLayout aprilTagFieldLayout;
     try {
@@ -105,9 +110,13 @@ public class Vision {
     robotPoseEstimator.setReferencePose(prevEstimatedRobotPose);
     Optional<Pair<Pose3d,Double>> r = robotPoseEstimator.update();
     return r;
-
 }
 
+/**
+ * Gets the pose as a Pose2d
+ * @param referencePose The reference pose
+ * @return The pose from vision as a Pose2d, null if it doesn't exist
+ */
 public static Pose2d getPose2d(Pose2d referencePose){
   Optional<Pair<Pose3d, Double>> p = getEstimatedGlobalPose(referencePose==null?drive.getPose():referencePose);
   if(p.isPresent() && p.get().getFirst() != null && p.get().getSecond() != null && p.get().getFirst().getX() > -10000 && p.get().getSecond() >= 0){
@@ -120,6 +129,11 @@ public static Pose2d getPose2d(Pose2d referencePose){
     return aprilTagFieldLayout;
   }
 
+  /**
+   * Returns the pose of an april tag
+   * @param id The id of the april tag
+   * @return The april tag pose as a pose3d
+   */
   public static Pose3d getTagPose(int id){
     return getAprilTagFieldLayout().getTagPose(id).get();
   }
