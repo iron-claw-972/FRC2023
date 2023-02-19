@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.controls.BaseDriverConfig;
 import frc.robot.subsystems.Drivetrain;
@@ -28,7 +30,7 @@ public class DefaultDriveCommand extends CommandBase {
     double ySpeed = m_driver.getSideTranslation();
     double rot = m_driver.getRotation();
 
-    m_drive.drive(xSpeed, ySpeed, rot, true);
+    m_drive.drive(DriverStation.getAlliance()==Alliance.Blue?xSpeed:-xSpeed, DriverStation.getAlliance()==Alliance.Blue?ySpeed:-ySpeed, rot, true);
   }
   
   @Override
