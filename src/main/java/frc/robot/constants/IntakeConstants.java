@@ -10,5 +10,7 @@ public final class IntakeConstants {
 
   public static final double kOuttakeSpeed = -0.3;
 
-  public static final double kGamePieceProximity = -1;
+  public static final double kGamePieceProximityCube = -1;
+
+  public static final double kGamePieceProximityCone = -1;
 }

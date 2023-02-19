@@ -18,8 +18,7 @@ import edu.wpi.first.wpilibj.util.Color;
 
 import com.revrobotics.ColorSensorV3;
 import com.revrobotics.ColorMatchResult;
-import com.revrobotics.ColorMatch;  
-
+import com.revrobotics.ColorMatch;
 
 public class Intake extends SubsystemBase {
 
@@ -27,7 +26,7 @@ public class Intake extends SubsystemBase {
   private final CANSparkMax rightMotor;
 
   private final I2C.Port i2cPort = I2C.Port.kOnboard;
-  private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort); 
+  private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
   private final ColorMatch m_colorMatcher = new ColorMatch();
   private final Color kYellowTarget = new Color(0.361, 0.524, 0.113);
   private final Color kPurpleTarget = new Color(0.102, 0, 0.204);
@@ -39,7 +38,7 @@ public class Intake extends SubsystemBase {
     rightMotor.restoreFactoryDefaults();
 
     m_colorMatcher.addColorMatch(kPurpleTarget);
-    m_colorMatcher.addColorMatch(kYellowTarget);  
+    m_colorMatcher.addColorMatch(kYellowTarget);
   }
 
   public void intake(double speed) {
@@ -53,16 +52,27 @@ public class Intake extends SubsystemBase {
   }
 
   public String getHeldObject() {
-    if (m_colorSensor.getProximity() <= IntakeConstants.kGamePieceProximity) {
-      Color curr = m_colorSensor.getColor();
-      ColorMatchResult res = m_colorMatcher.matchClosestColor(curr);
+    Color curr;
+    ColorMatchResult res;
+    if (m_colorSensor.getProximity() <= IntakeConstants.kGamePieceProximityCube) {
+      curr = m_colorSensor.getColor();
+      res = m_colorMatcher.matchClosestColor(curr);
       if (res.color == kPurpleTarget) {
         return "Cube";
       }
-      else if (res.color == kYellowTarget) {
+    }
+    if (m_colorSensor.getProximity() <= IntakeConstants.kGamePieceProximityCone) {
+      curr = m_colorSensor.getColor();
+      res = m_colorMatcher.matchClosestColor(curr);
+      if (res.color == kYellowTarget) {
         return "Cone";
       }
     }
+
     return "None";
+
   }
-} 
+  public Boolean isContained(){
+    return getHeldObject() != "None";
+  }
+}
