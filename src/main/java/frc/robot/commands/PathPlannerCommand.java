@@ -10,7 +10,6 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -35,23 +34,19 @@ public class PathPlannerCommand extends SequentialCommandGroup {
     if (pathIndex < 0 || pathIndex > pathGroup.size() - 1){
       throw new IndexOutOfBoundsException("Path index out of range"); 
     } 
-    PathPlannerTrajectory path = PathPlannerTrajectory.transformTrajectoryForAlliance(
-      pathGroup.get(pathIndex),
-      DriverStation.getAlliance()
-    );
+    PathPlannerTrajectory path = pathGroup.get(pathIndex);
     
     addCommands(
       (pathIndex == 0 && resetPose ? new InstantCommand(() -> drive.resetOdometry(path.getInitialHolonomicPose()), drive) : new DoNothing()),
       new PrintCommand("Number of paths: " + pathGroup.size()),
       new PPSwerveControllerCommand(
-        path, 
+        path,
         drive::getPose, // Pose supplier
-        drive.getKinematics(), // SwerveDriveKinematics
         drive.getXController(), // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
         drive.getYController(), // Y controller (usually the same values as X controller)
         drive.getRotationController(), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
-        drive::setModuleStates, // Module states consumer
-        //eventMap, // This argument is optional if you don't use event markers
+        drive::setChassisSpeeds, // ChassisSpeeds consumer
+        true,
         drive // Requires this drive subsystem
       )
     );
