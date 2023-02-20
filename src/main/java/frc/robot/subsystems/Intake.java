@@ -11,16 +11,20 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.constants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
+  public final double kIntakeSpeed = 0.3;
+  public final double kOuttakeSpeed = -0.3;
+
+  private final int kLeftMotorPort = 6;
+  private final int kRightMotorPort = 7;
 
   private final CANSparkMax leftMotor;
   private final CANSparkMax rightMotor;
 
   public Intake() {
-    leftMotor = new CANSparkMax(IntakeConstants.kLeftMotorPort, MotorType.kBrushless);
-    rightMotor = new CANSparkMax(IntakeConstants.kRightMotorPort, MotorType.kBrushless);
+    leftMotor = new CANSparkMax(kLeftMotorPort, MotorType.kBrushless);
+    rightMotor = new CANSparkMax(kRightMotorPort, MotorType.kBrushless);
     leftMotor.restoreFactoryDefaults();
     rightMotor.restoreFactoryDefaults();
   }

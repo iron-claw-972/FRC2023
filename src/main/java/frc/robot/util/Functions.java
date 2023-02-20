@@ -1,11 +1,10 @@
 package frc.robot.util;
 
-import frc.robot.constants.OIConstants;
-
 /**
  * Utility class for useful functions.
  */
 public class Functions {
+  private static final double kDeadband = 0.05;
 
   /**
    * Deadbands an input to [-1, -deadband], [deadband, 1], rescaling inputs to be linear from
@@ -33,7 +32,7 @@ public class Functions {
    * @return the input rescaled and to fit [-1, -kDeadband], [kDeadband, 1]
    */
   public static double deadband(double input) {
-    return deadband(input, OIConstants.kDeadband);
+    return deadband(input, kDeadband);
   }
 
   /**

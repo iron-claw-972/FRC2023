@@ -3,7 +3,6 @@ package frc.robot.commands.test.drive;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.constants.TestConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Module;
 import frc.robot.util.FeedForwardCharacterizationData;
@@ -12,6 +11,10 @@ import frc.robot.util.FeedForwardCharacterizationData;
  * Gathers feedforward data for the drivetrain's steer motors.
  */
 public class SteerFeedForwardCharacterizationSingle extends CommandBase {
+  private final double kSteerFeedForwardVoltageStep = 0.2;
+  private final double kSteerFeedForwardMaxVoltage = 6;
+  private final double kSteerFeedForwardAccelerationTimeBuffer = 0.5;
+  private final double kSteerFeedForwardRecordingTime = 2;
 
   private double m_voltage = 0;
   private FeedForwardCharacterizationData m_feedForwardCharacterizationData;
@@ -40,12 +43,12 @@ public class SteerFeedForwardCharacterizationSingle extends CommandBase {
     m_module.setSteerVoltage(m_voltage);
     
     // collect data after acceleration time buffer
-    if (m_timer.get() > TestConstants.kSteerFeedForwardAccelerationTimeBuffer) {
+    if (m_timer.get() > kSteerFeedForwardAccelerationTimeBuffer) {
       m_feedForwardCharacterizationData.add(m_module.getSteerVelocity(), m_voltage);
     }
     // if time past collection time move to increases voltage
-    if (m_timer.get() > TestConstants.kSteerFeedForwardAccelerationTimeBuffer + TestConstants.kSteerFeedForwardRecordingTime) {
-      m_voltage += TestConstants.kSteerFeedForwardVoltageStep;
+    if (m_timer.get() > kSteerFeedForwardAccelerationTimeBuffer + kSteerFeedForwardRecordingTime) {
+      m_voltage += kSteerFeedForwardVoltageStep;
       m_timer.reset();
       m_timer.start();
       System.out.println(m_voltage);
@@ -82,6 +85,6 @@ public class SteerFeedForwardCharacterizationSingle extends CommandBase {
   
   @Override
   public boolean isFinished() {
-    return m_voltage > TestConstants.kSteerFeedForwardMaxVoltage;
+    return m_voltage > kSteerFeedForwardMaxVoltage;
   }
 }

@@ -10,12 +10,13 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
-import frc.robot.constants.AutoConstants;
+import frc.robot.Constants;
 
 /**
  * Utility class for loading paths using pathplanner.
  */
 public class PathGroupLoader {
+  private static final String kTrajectoryDirectory = "pathplanner/"; // Pathplanner output folder should be src/main/deploy/pathplanner
 
   private static HashMap<String, List<PathPlannerTrajectory>> pathGroups = new HashMap<>();
 
@@ -26,13 +27,13 @@ public class PathGroupLoader {
    */
   public static void loadPathGroups() {
     double totalTime = 0;
-    File[] directoryListing = Filesystem.getDeployDirectory().toPath().resolve(AutoConstants.kTrajectoryDirectory).toFile().listFiles();
+    File[] directoryListing = Filesystem.getDeployDirectory().toPath().resolve(kTrajectoryDirectory).toFile().listFiles();
     if (directoryListing != null) {
       for (File file : directoryListing) {
         if (file.isFile() && file.getName().indexOf(".") != -1) {
           long startTime = System.nanoTime();
           String name = file.getName().substring(0, file.getName().indexOf("."));
-          pathGroups.put(name, PathPlanner.loadPathGroup(name, new PathConstraints(AutoConstants.kMaxAutoSpeed, AutoConstants.kMaxAutoAccel)));
+          pathGroups.put(name, PathPlanner.loadPathGroup(name, new PathConstraints(Constants.Auto.kMaxAutoSpeed, Constants.Auto.kMaxAutoAccel)));
           double time = (System.nanoTime() - startTime) / 1000000.0;
           totalTime += time;
           System.out.println("Processed file: " + file.getName() + ", took " + time + " milliseconds.");

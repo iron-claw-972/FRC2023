@@ -1,5 +1,7 @@
 package frc.robot;
 
+import java.sql.Driver;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -22,13 +24,6 @@ import frc.robot.commands.test.drive.SteerFeedForwardCharacterizationSingle;
 import frc.robot.commands.test.drive.TestDriveVelocity;
 import frc.robot.commands.test.drive.TestHeadingPID;
 import frc.robot.commands.test.drive.TestSteerAngle;
-import frc.robot.constants.VisionConstants;
-import frc.robot.constants.swerve.DriveConstants;
-import frc.robot.controls.BaseDriverConfig;
-import frc.robot.controls.GameControllerDriverConfig;
-import frc.robot.controls.ManualController;
-import frc.robot.controls.Operator;
-import frc.robot.controls.TestController;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.Intake;
@@ -62,49 +57,30 @@ public class RobotContainer {
   private final FourBarArm m_arm;
   private final Intake m_intake;
 
-  // Controllers are defined here
-  private final BaseDriverConfig m_driver;
-  private final Operator m_operator;
-  private final TestController m_testController;
-  private final ManualController m_manualController;
-
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    if (Robot.kRobotId == RobotId.SwerveTest) {
+      Constants.configureTestConstants();
+    }
 
-    // Update drive constants based off of robot type
-    DriveConstants.update();
-    VisionConstants.update();
-
-    m_vision = new Vision(m_visionTab, VisionConstants.kCameras);
+    m_vision = new Vision(m_visionTab, Constants.Vision.kCameras);
 
     // Create Drivetrain, because every robot will have a drivetrain
     m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab, m_vision);
-    m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
 
-    // If the robot is the competition robot, create the arm and intake
-    if (Robot.kRobotId == RobotId.SwerveCompetition) {
-
-      m_arm = new FourBarArm();
-      m_intake = new Intake();
-
-      m_operator = new Operator(m_arm, m_intake);
-      m_testController = new TestController(m_arm, m_intake);
-      m_manualController = new ManualController(m_arm, m_intake);
-
-      m_operator.configureControls();
-      m_testController.configureControls();
-      m_manualController.configureControls();
-
-    } else {
-
-      DriverStation.reportWarning("Not registering subsystems and controls due to incorrect robot", false);
-
-      m_arm = null;
-      m_intake = null;
-
-      m_operator = null;
-      m_testController = null;
-      m_manualController = null;
+    // Create controllers and subsystems based on robot type
+    switch (Robot.kRobotId) {
+      case SwerveCompetition:
+        m_arm = new FourBarArm();
+        m_intake = new Intake();
+        OI.configure(m_drive, m_intake, m_arm);
+        break;
+      case SwerveTest:
+        OI.configureDriverControls(m_drive);
+      default:
+        DriverStation.reportWarning("Not registering subsystems and controls due to incorrect robot", false);
+        m_arm = null;
+        m_intake = null;
     }
 
     // This is really annoying so it's disabled
@@ -113,22 +89,19 @@ public class RobotContainer {
     // load paths before auto starts
     PathGroupLoader.loadPathGroups();
 
-    m_driver.configureControls();
-
     LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
     LiveWindow.setEnabled(false);
-    
     
     autoChooserUpdate();
     loadCommandSchedulerShuffleboard();
     m_drive.setupDrivetrainShuffleboard();
     m_drive.setupModulesShuffleboard();
     m_vision.setupVisionShuffleboard();
-    m_driver.setupShuffleboard();
+    OI.setupShuffleboard(m_controllerTab);
     
     addTestCommands();
 
-    m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive, m_driver));
+    m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive));
   }
 
   /**

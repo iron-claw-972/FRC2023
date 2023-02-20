@@ -8,10 +8,25 @@ import com.revrobotics.SparkMaxAlternateEncoder;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.constants.ArmConstants;
 
 public class FourBarArm extends SubsystemBase {
+  private final int kMotorId = 5;
+
+  private final double kP = 1.0;
+  private final double kI = 0.0;
+  private final double kD = 0.0;
+  private final double kTolerance = Units.degreesToRadians(1);
+  private final double kMinMotorPower = -0.05;
+  private final double kMaxMotorPower = +0.05;
+
+  public final double kInitialPosition = 0.0;
+  public final double kShelfPosition = 0.4;
+  public final double kIntakePosition = 0.3;
+  public final double kMiddlePosition = 0.4;
+  public final double kTopPosition = 0.5;
+
   private final CANSparkMax m_motor;
   private final PIDController m_pid;
   private final RelativeEncoder m_encoder;
@@ -19,7 +34,7 @@ public class FourBarArm extends SubsystemBase {
 
   public FourBarArm() {
     // configure the motor
-    m_motor = new CANSparkMax(ArmConstants.kMotorId, MotorType.kBrushless);
+    m_motor = new CANSparkMax(kMotorId, MotorType.kBrushless);
     m_motor.setIdleMode(IdleMode.kBrake);
 
     // configure the encoder
@@ -35,11 +50,11 @@ public class FourBarArm extends SubsystemBase {
 
  
     // make the PID controller
-    m_pid = new PIDController(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD);
+    m_pid = new PIDController(kP, kI, kD);
     // set the PID controller's tolerance
-    m_pid.setTolerance(ArmConstants.kTolerance);
+    m_pid.setTolerance(kTolerance);
     // go to the initial position (use the class method)
-    setArmSetpoint(ArmConstants.kInitialPosition);
+    setArmSetpoint(kInitialPosition);
   }
 
   /**
@@ -75,7 +90,7 @@ public class FourBarArm extends SubsystemBase {
   }
 
   public void setMotorPower(double power){
-    m_motor.set(MathUtil.clamp(power, ArmConstants.kMinMotorPower, ArmConstants.kMaxMotorPower));
+    m_motor.set(MathUtil.clamp(power, kMinMotorPower, kMaxMotorPower));
   }
 
   public void setEnabled(boolean enable)  {

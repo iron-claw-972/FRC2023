@@ -1,7 +1,7 @@
 package frc.robot.commands.drive;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.controls.BaseDriverConfig;
+import frc.robot.OI;
 import frc.robot.subsystems.Drivetrain;
 
 /**
@@ -10,11 +10,9 @@ import frc.robot.subsystems.Drivetrain;
 public class DefaultDriveCommand extends CommandBase {
 
   private final Drivetrain m_drive;
-  private final BaseDriverConfig m_driver;
   
-  public DefaultDriveCommand(Drivetrain drive, BaseDriverConfig driver) {
+  public DefaultDriveCommand(Drivetrain drive) {
     m_drive = drive;
-    m_driver = driver;
     
     addRequirements(drive);
   }
@@ -26,10 +24,10 @@ public class DefaultDriveCommand extends CommandBase {
   
   @Override
   public void execute() {
-    m_driver.updateSettings();
-    double xSpeed = m_driver.getForwardTranslation();
-    double ySpeed = m_driver.getSideTranslation();
-    double rot = m_driver.getRotation();
+    OI.updateShuffleboard();
+    double xSpeed = OI.getForwardTranslation();
+    double ySpeed = OI.getSideTranslation();
+    double rot = OI.getRotation();
 
     m_drive.drive(xSpeed, ySpeed, rot, true);
   }

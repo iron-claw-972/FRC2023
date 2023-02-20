@@ -18,13 +18,38 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
-import frc.robot.constants.Constants;
-import frc.robot.constants.FalconConstants;
+import frc.robot.Constants;
 
 /**
  * Utility class for easy creation of motor controllers.
  */
 public class MotorFactory {
+  private static final int kFirmwareVersion = 5633; // version 22.1.1.0
+  private static final boolean kBreakOnWrongFirmware = false; // TODO: fix issue that make the robot break
+
+  /*
+   * Talon Stator / Supply Limits explanation
+   * Supply current is current that’s being drawn at the input bus voltage. Stator
+   * current is current that’s being drawn by the motor.
+   * Supply limiting (supported by Talon FX and SRX) is useful for preventing
+   * breakers from tripping in the PDP.
+   * Stator limiting (supported by Talon FX) is useful for limiting
+   * acceleration/heat.
+   */
+
+  // These are the default values
+
+  // Stator
+  private static final boolean kStatorLimitEnable = false; // enabled?
+  private static final double kStatorCurrentLimit = 100; // Limit(amp)
+  private static final double kStatorTriggerThreshold = 100; // Trigger Threshold(amp)
+  private static final double kStatorTriggerDuration = 0; // Trigger Threshold Time(s)
+
+  // Supply
+  private static final boolean kSupplyLimitEnable = false; // enabled?
+  private static final double kSupplyCurrentLimit = 40; // Limit(amp), current to hold after trigger hit
+  private static final double kSupplyTriggerThreshold = 55; // (amp), amps to activate trigger
+  private static final double kSupplyTriggerDuration = 3; // (s), how long after trigger before reducing
 
   private static int talonSRXDefaultContinuousLimit = 38;
   private static int kTalonSRXDefaultPeakLimit = 45;
@@ -149,10 +174,10 @@ public class MotorFactory {
 
     WPI_TalonFX talon = new WPI_TalonFX(id, CANBus);
 
-    if (RobotBase.isReal() && talon.getFirmwareVersion() != FalconConstants.kFirmwareVersion) {
+    if (RobotBase.isReal() && talon.getFirmwareVersion() != kFirmwareVersion) {
       String errorMessage = "TalonFX " + id + " firmware incorrect. Has " + talon.getFirmwareVersion()
-          + ", currently FalconConstants.java requires: " + FalconConstants.kFirmwareVersion;
-      if (FalconConstants.kBreakOnWrongFirmware) {
+          + ", currently java requires: " + kFirmwareVersion;
+      if (kBreakOnWrongFirmware) {
         DriverStation.reportError(errorMessage, true);
         throw new IOError(new IOException(errorMessage));
       } else {
@@ -162,7 +187,7 @@ public class MotorFactory {
 
     TalonFXConfiguration config = new TalonFXConfiguration();
 
-    // See explanations for Supply and Stator limiting in FalconConstants.java
+    // See explanations for Supply and Stator limiting in java
     config.statorCurrLimit = new StatorCurrentLimitConfiguration(StatorLimitEnable, StatorCurrentLimit,
         StatorTriggerThreshold, StatorTriggerDuration);
     config.supplyCurrLimit = new SupplyCurrentLimitConfiguration(SupplyLimitEnable, SupplyCurrentLimit,
@@ -178,7 +203,7 @@ public class MotorFactory {
 
     LogManager.addDouble("TalonFX/Current/" + talon.getDeviceID(), () -> talon.getStatorCurrent());
     LogManager.addDouble("TalonFX/Temperature/" + talon.getDeviceID(), () -> talon.getTemperature());
-    LogManager.addDouble("TalonFX/RPM/" + talon.getDeviceID(), () -> talon.getSelectedSensorVelocity() / FalconConstants.kResolution * 10 * 60);
+    LogManager.addDouble("TalonFX/RPM/" + talon.getDeviceID(), () -> talon.getSelectedSensorVelocity() / Constants.Falcon.kResolution * 10 * 60);
 
     return talon;
   }
@@ -191,10 +216,10 @@ public class MotorFactory {
    * @param CANBus the CAN bus the TalonFX is on. If connected to the rio it is "rio".
    */
   public static WPI_TalonFX createTalonFX(int id, String CANBus) {
-    return createTalonFXFull(id, CANBus, FalconConstants.kStatorLimitEnable, FalconConstants.kStatorCurrentLimit,
-        FalconConstants.kStatorTriggerThreshold, FalconConstants.kStatorTriggerDuration,
-        FalconConstants.kSupplyLimitEnable, FalconConstants.kSupplyCurrentLimit,
-        FalconConstants.kSupplyTriggerThreshold, FalconConstants.kSupplyTriggerDuration);
+    return createTalonFXFull(id, CANBus, kStatorLimitEnable, kStatorCurrentLimit,
+        kStatorTriggerThreshold, kStatorTriggerDuration,
+        kSupplyLimitEnable, kSupplyCurrentLimit,
+        kSupplyTriggerThreshold, kSupplyTriggerDuration);
   }
 
   /**
@@ -212,8 +237,8 @@ public class MotorFactory {
    */
   public static WPI_TalonFX createTalonFXSupplyLimit(int id, String CANBus, double currentLimit,
       double triggerThreshold, double triggerDuration) {
-    return createTalonFXFull(id, CANBus, FalconConstants.kStatorLimitEnable, FalconConstants.kStatorCurrentLimit,
-        FalconConstants.kStatorTriggerThreshold, FalconConstants.kStatorTriggerDuration, true, currentLimit,
+    return createTalonFXFull(id, CANBus, kStatorLimitEnable, kStatorCurrentLimit,
+        kStatorTriggerThreshold, kStatorTriggerDuration, true, currentLimit,
         triggerThreshold, triggerDuration);
   }
 
@@ -233,7 +258,7 @@ public class MotorFactory {
   public static WPI_TalonFX createTalonFXStatorLimit(int id, String CANBus, double currentLimit,
       double triggerThreshold, double triggerDuration) {
     return createTalonFXFull(id, CANBus, true, currentLimit, triggerThreshold, triggerDuration,
-        FalconConstants.kSupplyLimitEnable, FalconConstants.kSupplyCurrentLimit,
-        FalconConstants.kSupplyTriggerThreshold, FalconConstants.kSupplyTriggerDuration);
+        kSupplyLimitEnable, kSupplyCurrentLimit,
+        kSupplyTriggerThreshold, kSupplyTriggerDuration);
   }
 }

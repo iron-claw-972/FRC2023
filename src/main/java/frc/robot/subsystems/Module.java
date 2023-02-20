@@ -16,11 +16,8 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import frc.robot.constants.Constants;
-import frc.robot.constants.FalconConstants;
-import frc.robot.constants.swerve.DriveConstants;
-import frc.robot.constants.swerve.ModuleConstants;
-import frc.robot.constants.swerve.ModuleType;
+import frc.robot.Constants;
+import frc.robot.Constants.Drive.Mod;
 import frc.robot.util.LogManager;
 import frc.robot.util.MotorFactory;
 import lib.ctre_shims.TalonEncoder;
@@ -30,30 +27,43 @@ import lib.ctre_shims.TalonEncoder;
  */
 public class Module {
 
-  /**
-   * @param moduleConstants the constants for the module, found in {@link ModuleConstants}
-   * @param moduleTab the shuffleboard tab for the module
-   * @see ModuleConstants
-   */
-  public static Module create(ModuleConstants moduleConstants, ShuffleboardTab moduleTab) {
-    return new Module(
-      moduleConstants.getDrivePort(),
-      moduleConstants.getSteerPort(),
-      moduleConstants.getEncoderPort(),
-      moduleConstants.getSteerOffset(),
-      moduleConstants.getDriveKS(),
-      moduleConstants.getDriveKV(),
-      moduleConstants.getDriveP(),
-      moduleConstants.getDriveI(),
-      moduleConstants.getDriveD(),
-      moduleConstants.getSteerKS(),
-      moduleConstants.getSteerKV(),
-      moduleConstants.getSteerP(),
-      moduleConstants.getSteerI(),
-      moduleConstants.getSteerD(),
-      moduleConstants.getType(),
-      moduleTab
-    );
+  public enum ModuleType {
+    FRONT_LEFT, FRONT_RIGHT, BACK_LEFT, BACK_RIGHT, NONE;
+    
+    /**
+     * Gets the abbreviation for the swerve module type, ex: FL for FRONT_LEFT, BR for BACK_RIGHT.
+     * @return the abbreviation for the swerve module type.
+     */
+    public String getAbbreviation() {
+      switch (this) {
+        case FRONT_LEFT:
+          return "FL";
+        case FRONT_RIGHT:
+          return "FR";
+        case BACK_LEFT:
+          return "BL";
+        case BACK_RIGHT:
+          return "BR";
+        default:
+          return this.name();
+      }
+    }
+    
+    /**
+     * Gets the ID for the swerve module type.
+     * <p />
+     * IDs:
+     * 0 - FRONT_LEFT
+     * 1 - FRONT_RIGHT
+     * 2 - BACK_LEFT
+     * 3 - BACK_RIGHT
+     * @return the ID for the swerve module type.
+     */
+    public int getID() {
+      if (this == NONE)
+        return -1;
+      return this.ordinal();
+    }
   }
 
   private final WPI_TalonFX m_driveMotor;
@@ -90,28 +100,15 @@ public class Module {
 
   private ModuleType m_moduleType;
 
-  private Module(
-    int driveMotorPort,
-    int steerMotorPort,
-    int encoderPort,
-    double encoderOffset,
-    double driveFeedForwardKS,
-    double driveFeedForwardKV,
-    double driveP,
-    double driveI,
-    double driveD,
-    double steerFeedForwardKS,
-    double steerFeedForwardKV,
-    double steerP,
-    double steerI,
-    double steerD,
+  public Module(
+    Mod mod,
     ModuleType moduleType,
     ShuffleboardTab moduleTab
   ) {
     
     // TODO: The CANBus needs to be a constant because on the new 2023 bot, drive motors use Canivore, not rio
-    m_driveMotor = MotorFactory.createTalonFX(driveMotorPort, DriveConstants.kDriveMotorCAN);
-    m_steerMotor = MotorFactory.createTalonFX(steerMotorPort, DriveConstants.kSteerMotorCAN);
+    m_driveMotor = MotorFactory.createTalonFX(mod.kDrive, Constants.Drive.kDriveMotorCAN);
+    m_steerMotor = MotorFactory.createTalonFX(mod.kSteer, Constants.Drive.kSteerMotorCAN);
 
     m_moduleTab = moduleTab;
     m_moduleType = moduleType;
@@ -120,15 +117,15 @@ public class Module {
     m_steerMotor.setNeutralMode(NeutralMode.Brake);
 
     m_driveEncoder = new TalonEncoder(m_driveMotor);
-    m_steerEncoder = new WPI_CANCoder(encoderPort, DriveConstants.kSteerEncoderCAN);
+    m_steerEncoder = new WPI_CANCoder(mod.kEncoder, Constants.Drive.kSteerEncoderCAN);
 
-    m_drivePIDController = new PIDController(driveP, driveI,driveD);
+    m_drivePIDController = new PIDController(mod.kDriveP, mod.kDriveI, mod.kDriveD);
     m_steerPIDController = new ProfiledPIDController(
-      steerP,
-      steerI,
-      steerD,
+      mod.kSteerP,
+      mod.kSteerI,
+      mod.kSteerD,
       new TrapezoidProfile.Constraints(
-        DriveConstants.kMaxAngularSpeed, DriveConstants.kMaxAngularAccel));
+        Constants.Drive.kMaxAngularSpeed, Constants.Drive.kMaxAngularAccel));
 
     // reset encoder to factory defaults, reset position to the measurement of the
     // absolute encoder
@@ -141,13 +138,13 @@ public class Module {
     m_steerEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
     m_steerEncoder.configFeedbackCoefficient(2 * Math.PI / Constants.kCancoderResolution, "rad", SensorTimeBase.PerSecond);
 
-    m_offset = encoderOffset;
+    m_offset = mod.kSteerOffset;
 
     // Set the distance per pulse for the drive encoder. We can simply use the
     // distance traveled for one rotation of the wheel divided by the encoder
     // resolution.
     m_driveEncoder.setDistancePerPulse(
-        2 * Math.PI * DriveConstants.kWheelRadius / DriveConstants.kDriveGearRatio / FalconConstants.kResolution);
+        2 * Math.PI * Constants.Drive.kWheelRadius / Constants.Drive.kDriveGearRatio / 2048.0);
 
     // Limit the PID Controller's input range between -pi and pi and set the input
     // to be continuous. Factor in the offset amount.
@@ -157,10 +154,10 @@ public class Module {
 
     m_steerPIDController.reset(getSteerAngle()); // reset the PID, and the Trapezoid motion profile needs to know the starting state
 
-    m_driveFeedForwardKS = driveFeedForwardKS;
-    m_driveFeedForwardKV = driveFeedForwardKV;
-    m_steerFeedForwardKS = steerFeedForwardKS;
-    m_steerFeedForwardKV = steerFeedForwardKV;
+    m_driveFeedForwardKS = mod.kDriveKS;
+    m_driveFeedForwardKV = mod.kDriveKV;
+    m_steerFeedForwardKS = mod.kSteerKS;
+    m_steerFeedForwardKV = mod.kSteerKV;
 
     m_driveFeedforward = new SimpleMotorFeedforward(m_driveFeedForwardKS, m_driveFeedForwardKV);
     m_steerFeedForward = new SimpleMotorFeedforward(m_steerFeedForwardKS, m_steerFeedForwardKV);

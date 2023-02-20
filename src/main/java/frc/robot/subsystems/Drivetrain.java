@@ -20,15 +20,19 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.math.MatBuilder;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.Nat;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.constants.VisionConstants;
-import frc.robot.constants.swerve.DriveConstants;
-import frc.robot.constants.swerve.ModuleConstants;
+import frc.robot.Constants;
+import frc.robot.subsystems.Module.ModuleType;
 import frc.robot.util.LogManager;
 import frc.robot.util.Vision;
 
@@ -42,6 +46,16 @@ import frc.robot.util.Vision;
  * 4: Back right
  */
 public class Drivetrain extends SubsystemBase {
+  // How much to trust vision measurements normally
+  private final Matrix<N3, N1> kBaseVisionPoseStdDevs = new MatBuilder<>(Nat.N3(), Nat.N1()).fill(
+    0.9, // x in meters (default=0.9)
+    0.9, // y in meters (default=0.9)
+    0.9 // heading in radians (default=0.9)
+  );
+
+  // Increasing this makes pose estimation trust vision measurements less as distance from Apriltags increases
+  // This is how much is added to std dev for vision when closest visible Apriltag is 1 meter away
+  private final double kVisionPoseStdDevFactor = 0.1;
 
   public Vision m_vision;
 
@@ -49,14 +63,14 @@ public class Drivetrain extends SubsystemBase {
   public final Module[] m_modules;
   
   private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
-    new Translation2d(DriveConstants.kTrackWidth / 2, DriveConstants.kTrackWidth / 2),
-    new Translation2d(DriveConstants.kTrackWidth / 2, -DriveConstants.kTrackWidth / 2),
-    new Translation2d(-DriveConstants.kTrackWidth / 2, DriveConstants.kTrackWidth / 2),
-    new Translation2d(-DriveConstants.kTrackWidth / 2, -DriveConstants.kTrackWidth / 2)
+    new Translation2d(Constants.Drive.kTrackWidth / 2, Constants.Drive.kTrackWidth / 2),
+    new Translation2d(Constants.Drive.kTrackWidth / 2, -Constants.Drive.kTrackWidth / 2),
+    new Translation2d(-Constants.Drive.kTrackWidth / 2, Constants.Drive.kTrackWidth / 2),
+    new Translation2d(-Constants.Drive.kTrackWidth / 2, -Constants.Drive.kTrackWidth / 2)
   );
 
   // Pigeon
-  private final WPI_Pigeon2 m_pigeon = new WPI_Pigeon2(DriveConstants.kPigeon, DriveConstants.kPigeonCAN);
+  private final WPI_Pigeon2 m_pigeon = new WPI_Pigeon2(Constants.Drive.kPigeon, Constants.Drive.kPigeonCAN);
   private boolean m_hasResetYaw = false; // the initial yaw has been set 
 
   private double m_headingPIDOutput = 0;
@@ -71,7 +85,7 @@ public class Drivetrain extends SubsystemBase {
   // translation controllers have dummy constants that are just good enough to run the odometry test
   private final PIDController m_xController = new PIDController(0.1, 0, 0);
   private final PIDController m_yController = new PIDController(0.1, 0, 0);
-  private final PIDController m_rotationController = new PIDController(DriveConstants.kHeadingP, DriveConstants.kHeadingI, DriveConstants.kHeadingD);
+  private final PIDController m_rotationController = new PIDController(Constants.Drive.kHeadingP, Constants.Drive.kHeadingI, Constants.Drive.kHeadingD);
 
   //Shuffleboard
   private GenericEntry 
@@ -109,15 +123,15 @@ public class Drivetrain extends SubsystemBase {
     m_vision = vision;
     
     m_modules = new Module[] {
-      Module.create(ModuleConstants.FRONT_LEFT, m_swerveModulesTab),
-      Module.create(ModuleConstants.FRONT_RIGHT, m_swerveModulesTab),
-      Module.create(ModuleConstants.BACK_LEFT, m_swerveModulesTab),
-      Module.create(ModuleConstants.BACK_RIGHT, m_swerveModulesTab)
+      new Module(Constants.Drive.FL, ModuleType.FRONT_LEFT, swerveModulesTab),
+      new Module(Constants.Drive.FR, ModuleType.FRONT_RIGHT, swerveModulesTab),
+      new Module(Constants.Drive.BL, ModuleType.BACK_LEFT, swerveModulesTab),
+      new Module(Constants.Drive.BR, ModuleType.BACK_RIGHT, swerveModulesTab)
     };
     m_prevModule = m_modules[0];
     
     m_poseEstimator = new SwerveDrivePoseEstimator(m_kinematics, m_pigeon.getRotation2d(), getModulePositions(), new Pose2d());
-    m_poseEstimator.setVisionMeasurementStdDevs(VisionConstants.kBaseVisionPoseStdDevs);
+    m_poseEstimator.setVisionMeasurementStdDevs(kBaseVisionPoseStdDevs);
 
     m_rotationController.enableContinuousInput(-Math.PI, Math.PI);
     DoubleSupplier[] poseSupplier = {() -> getPose().getX(), () -> getPose().getY(), () -> getPose().getRotation().getRadians()};
@@ -171,7 +185,7 @@ public class Drivetrain extends SubsystemBase {
   }
   
   /**
-  * Resets the pigeon yaw, but only if it hasn't already been reset. Will reset it to {@link DriveConstants.kStartingHeadingDegrees}
+  * Resets the pigeon yaw, but only if it hasn't already been reset. Will reset it to {@link Constants.Drive.kStartingHeadingDegrees}
   *
   * @param force Will reset the yaw no matter what
   */
@@ -179,7 +193,7 @@ public class Drivetrain extends SubsystemBase {
     if (!m_hasResetYaw || force) {
       m_hasResetYaw = true;
       // TODO: reset the yaw to different angles depending on auto start position
-      setPigeonYaw(DriveConstants.kStartingHeadingDegrees);
+      setPigeonYaw(Constants.Drive.kStartingHeadingDegrees);
     }
   }
   
@@ -226,7 +240,7 @@ public class Drivetrain extends SubsystemBase {
    */
   public void setChassisSpeeds(ChassisSpeeds chassisSpeeds) {
     SwerveModuleState[] swerveModuleStates = m_kinematics.toSwerveModuleStates(chassisSpeeds);
-    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kMaxSpeed);
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.Drive.kMaxSpeed);
     setModuleStates(swerveModuleStates);
   }
 
@@ -265,8 +279,8 @@ public class Drivetrain extends SubsystemBase {
       m_poseEstimator.addVisionMeasurement(
         estimatedPose.estimatedPose.toPose2d(),
         estimatedPose.timestampSeconds,
-        VisionConstants.kBaseVisionPoseStdDevs.plus(
-          currentEstimatedPoseTranslation.getDistance(closestTagPoseTranslation) * VisionConstants.kVisionPoseStdDevFactor
+        kBaseVisionPoseStdDevs.plus(
+          currentEstimatedPoseTranslation.getDistance(closestTagPoseTranslation) * kVisionPoseStdDevFactor
         )
       );
     }

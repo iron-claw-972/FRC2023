@@ -2,9 +2,9 @@ package frc.robot.commands.test.drive;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.constants.TestConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Module;
 import frc.robot.util.TimeAccuracyTest;
@@ -13,6 +13,8 @@ import frc.robot.util.TimeAccuracyTest;
  * Attempts to set all four modules to a constant angle. Determines if the modules are able to reach the angle requested in a certain time.
  */
 public class TestSteerAngle extends CommandBase{
+  private final double kSteerAngleError = Units.degreesToRadians(1);
+  private final double kSteerAngleTimeError = 0.1; 
   
   private final Drivetrain m_drive;
   private final GenericEntry m_testEntry;
@@ -33,8 +35,8 @@ public class TestSteerAngle extends CommandBase{
       m_timeAccuracyTests[i] = new TimeAccuracyTest(
         () -> module.getDriveVelocityError(),
         () -> m_drive.getRequestedSteerVelocityEntry().getDouble(0),
-        TestConstants.kSteerAngleError,
-        TestConstants.kSteerAngleTimeError
+        kSteerAngleError,
+        kSteerAngleTimeError
       );
     }
   }

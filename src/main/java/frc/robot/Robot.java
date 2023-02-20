@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.constants.Constants;
 import frc.robot.util.LogManager;
 
 /**
@@ -55,7 +54,7 @@ public class Robot extends TimedRobot {
     }
 
     // TODO: Remove this line when someone is able to test whether or not preferences are working
-    kRobotId = RobotId.SwerveTest;
+    // kRobotId = RobotId.SwerveTest;
     // report the RobotId to the SmartDashboard
     SmartDashboard.putString("RobotID", kRobotId.name());
 

@@ -13,13 +13,13 @@ import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.constants.AutoConstants;
+import frc.robot.Constants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.util.PathGroupLoader;
 
 public class PathPlannerCommand extends SequentialCommandGroup {
   public PathPlannerCommand(ArrayList<PathPoint> waypoints, Drivetrain drive) {
-    this(PathPlanner.generatePath(new PathConstraints(AutoConstants.kMaxAutoSpeed, AutoConstants.kMaxAutoAccel), waypoints), drive);
+    this(PathPlanner.generatePath(new PathConstraints(Constants.Auto.kMaxAutoSpeed, Constants.Auto.kMaxAutoAccel), waypoints), drive);
   }
   
   public PathPlannerCommand(PathPlannerTrajectory path, Drivetrain drive){

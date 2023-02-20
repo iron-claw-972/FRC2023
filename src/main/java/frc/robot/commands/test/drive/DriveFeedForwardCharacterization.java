@@ -4,7 +4,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.constants.TestConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.util.FeedForwardCharacterizationData;
 
@@ -12,6 +11,10 @@ import frc.robot.util.FeedForwardCharacterizationData;
  * Gathers feedforward data for the drivetrain's drive motors.
  */
 public class DriveFeedForwardCharacterization extends CommandBase {
+  private final double kDriveFeedForwardVoltageStep = 0.2;
+  private final double kDriveFeedForwardMaxVoltage = 11;
+  private final double kDriveFeedForwardAccelerationTimeBuffer = 0.5;
+  private final double kDriveFeedForwardRecordingTime = 1.5;
 
   private double m_voltage = 0;
   private FeedForwardCharacterizationData[] m_feedForwardCharacterizationData;
@@ -45,14 +48,14 @@ public class DriveFeedForwardCharacterization extends CommandBase {
     m_drive.m_modules[2].setSteerAngle(new Rotation2d(Units.degreesToRadians(225)));
     m_drive.m_modules[3].setSteerAngle(new Rotation2d(Units.degreesToRadians(315)));
 
-    if (m_timer.get() > TestConstants.kDriveFeedForwardAccelerationTimeBuffer) {
+    if (m_timer.get() > kDriveFeedForwardAccelerationTimeBuffer) {
       for (int i=0; i<4; i++) {
         m_feedForwardCharacterizationData[i].add(m_drive.m_modules[i].getDriveVelocity(), m_voltage); 
       }
     }
 
-    if (m_timer.get() >= TestConstants.kDriveFeedForwardAccelerationTimeBuffer + TestConstants.kDriveFeedForwardRecordingTime) {
-      m_voltage += TestConstants.kDriveFeedForwardVoltageStep;
+    if (m_timer.get() >= kDriveFeedForwardAccelerationTimeBuffer + kDriveFeedForwardRecordingTime) {
+      m_voltage += kDriveFeedForwardVoltageStep;
       m_timer.reset();
       m_timer.start();
       System.out.println(m_voltage);
@@ -82,6 +85,6 @@ public class DriveFeedForwardCharacterization extends CommandBase {
   
   @Override
   public boolean isFinished() {
-    return m_voltage > TestConstants.kDriveFeedForwardMaxVoltage;
+    return m_voltage > kDriveFeedForwardMaxVoltage;
   }
 }

@@ -5,8 +5,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.constants.TestConstants;
-import frc.robot.constants.swerve.DriveConstants;
+import frc.robot.Constants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.util.TimeAccuracyTest;
 
@@ -14,6 +13,9 @@ import frc.robot.util.TimeAccuracyTest;
  * Attempts to change the heading of the chassis. Determines if the modules are able to reach the heading requested in a certain time.
  */
 public class TestHeadingPID extends CommandBase {
+
+  private final double kHeadingError = Units.degreesToRadians(1);
+  private final double kHeadingTimeError = 0.1;
   
   private final Drivetrain m_drive;
   private final GenericEntry m_testEntry;
@@ -31,8 +33,8 @@ public class TestHeadingPID extends CommandBase {
     m_timeAccuracyTest = new TimeAccuracyTest(
       () -> m_drive.getAngleHeading(),
       () -> m_drive.getRequestedHeadingEntry().getDouble(0),
-      TestConstants.kHeadingError,
-      TestConstants.kHeadingTimeError
+      kHeadingError,
+      kHeadingTimeError
     );
   }
   
@@ -40,7 +42,7 @@ public class TestHeadingPID extends CommandBase {
   public void execute() {
     double headingPIDOutput = m_drive.getRotationController().calculate(m_drive.getAngleHeading(), m_drive.getRequestedHeadingEntry().getDouble(0));
     // headingOutput is in rad/s. Need to convert to m/s by multiplying by radius
-    headingPIDOutput *= Math.sqrt(0.5) * DriveConstants.kTrackWidth;
+    headingPIDOutput *= Math.sqrt(0.5) * Constants.Drive.kTrackWidth;
     m_drive.setModuleStates(
     new SwerveModuleState[] {
       new SwerveModuleState(headingPIDOutput, new Rotation2d(Units.degreesToRadians(135))),

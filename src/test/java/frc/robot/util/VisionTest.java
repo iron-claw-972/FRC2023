@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import frc.robot.constants.VisionConstants;
+import frc.robot.Constants;
 
 public class VisionTest {
     /**
@@ -20,7 +20,7 @@ public class VisionTest {
         try {
             AprilTagFieldLayout aprilTagFieldLayout = AprilTagFields.k2023ChargedUp.loadAprilTagLayoutField();
             for (int i = 0; i < 8; i++) {
-                assertTrue(aprilTagFieldLayout.getTagPose(i + 1).get().equals(VisionConstants.kAprilTags.get(i).pose), "AprilTag " + Integer.toString(i + 1) + " doesn't match");
+                assertTrue(aprilTagFieldLayout.getTagPose(i + 1).get().equals(Constants.Vision.kAprilTags.get(i).pose), "AprilTag " + Integer.toString(i + 1) + " doesn't match");
             }
         } catch (IOException e) {
             fail("Could not load k2023ChargedUp file from WPILib, check that GradleRIO version >= 2023.2.1");
