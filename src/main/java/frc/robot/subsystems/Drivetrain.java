@@ -39,7 +39,7 @@ public class Drivetrain extends SubsystemBase {
 
   // This is left intentionally public
   public final Module[] m_modules;
-  
+
   private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
     new Translation2d(DriveConstants.kTrackWidth / 2, DriveConstants.kTrackWidth / 2),
     new Translation2d(DriveConstants.kTrackWidth / 2, -DriveConstants.kTrackWidth / 2),
@@ -77,6 +77,7 @@ public class Drivetrain extends SubsystemBase {
     m_steerStaticFeedforward,
     m_steerVelocityFeedforward,
     m_heading;
+   
   private ShuffleboardTab m_swerveModulesTab, m_drivetrainTab;
 
   private Double[] m_driveVelFeedForwardSaver = new Double[4];

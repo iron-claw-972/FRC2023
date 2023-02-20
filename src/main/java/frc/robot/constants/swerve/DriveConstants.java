@@ -121,8 +121,8 @@ public class DriveConstants {
       kDrivePFrontLeft = 2*2;
       kDriveIFrontLeft = 0;
       kDriveDFrontLeft = 0;
-      kSteerKSFrontLeft = 1;
-      kSteerKVFrontLeft = 0.5;
+      kSteerKSFrontLeft = 0.7380365018530551;
+      kSteerKVFrontLeft = 0.3777356557786064;
       kSteerPFrontLeft = 12;
       kSteerIFrontLeft = 0;
       kSteerDFrontLeft = 0;
@@ -136,8 +136,8 @@ public class DriveConstants {
       kDrivePFrontRight = 2*2;
       kDriveIFrontRight = 0;
       kDriveDFrontRight = 0;
-      kSteerKSFrontRight = 1;
-      kSteerKVFrontRight = 0.5;
+      kSteerKSFrontRight = 0.6206519356062554;
+      kSteerKVFrontRight = 0.36589750785689507;
       kSteerPFrontRight = 12;
       kSteerIFrontRight = 0;
       kSteerDFrontRight = 0;
@@ -166,8 +166,8 @@ public class DriveConstants {
       kDrivePBackRight = 2.2*2;
       kDriveIBackRight = 0;
       kDriveDBackRight = 0;
-      kSteerKSBackRight = 1;
-      kSteerKVBackRight = 0.5;
+      kSteerKSBackRight = 0.7506108061783936;
+      kSteerKVBackRight = 0.37750397997126794;
       kSteerPBackRight = 12;
       kSteerIBackRight = 0;
       kSteerDBackRight = 0;
