@@ -22,11 +22,11 @@ public class Operator {
    /**
    * Configures all of the operator controls.
    */
-  public static void configureControls(DeployingBar deployingBar, FourBarArm arm, Intake intake) {
+  public static void configureControls(FourBarArm arm, Intake intake, DeployingBar deployingBar) {
 
-    operator.get(Button.A).onTrue(new RotateDeployingBar(deployingBar, DeployingBarConstants.kMaxRotation));
-    operator.get(Button.B).onTrue(new RotateDeployingBar(deployingBar, DeployingBarConstants.kMinRotation));
-    
+    operator.get(Button.A).onTrue(new RotateDeployingBar(deployingBar, DeployingBarConstants.kStowPos));
+    operator.get(Button.B).onTrue(new RotateDeployingBar(deployingBar, DeployingBarConstants.kDeployPos));
+
     // elevator controls
     operator.get(Button.Y).onTrue(new ExtendToPosition(arm, ArmConstants.topPosition));
     operator.get(Button.X).onTrue(new ExtendToPosition(arm, ArmConstants.middlePosition));
