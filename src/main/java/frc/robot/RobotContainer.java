@@ -71,7 +71,7 @@ public class RobotContainer {
 
     // Create Drivetrain, because every robot will have a drivetrain
     m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab);
-    m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
+    m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, true);
 
     // If the robot is the competition robot, create the arm and intake
     if (Robot.kRobotId == RobotId.SwerveCompetition) {

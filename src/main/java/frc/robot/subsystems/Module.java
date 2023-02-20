@@ -463,6 +463,8 @@ public class Module {
     m_moduleTab.addNumber(m_moduleType.getAbbreviation() + " PID Output", () -> getDrivePIDOutput());
     // get drive velocity
     m_moduleTab.addNumber("Vel " + m_moduleType.getAbbreviation() + " Raw", () -> getDriveVelocity());
+    // get deisired drive velocity
+    m_moduleTab.addNumber("Desiered Vel " + m_moduleType.getAbbreviation(), ()-> getDesiredVelocity());
     // drivePIDs
     m_moduleTab.add("Drive PID " + m_moduleType.getAbbreviation(), getDrivePID());
     // Median Filtered Velocity Values

@@ -18,7 +18,7 @@ public class DriveConstants {
   public static double kDriveGearRatio = 6.75;
   public static double kSteerGearRatio = 21.43;
 
-  public static double kMaxSpeed = (FalconConstants.kMaxRpm / 60.0) * kDriveGearRatio * kWheelRadius * 2 * Math.PI;
+  public static double kMaxSpeed = (FalconConstants.kMaxRpm / 60.0) / kDriveGearRatio * kWheelRadius * 2 * Math.PI;
 
   // Need to convert tangential velocity (the m/s of the edge of the robot) to angular velocity (the radians/s of the robot)
   // To do so, divide by the radius. The radius is the diagonal of the square chassis, diagonal = sqrt(2) * side_length.
