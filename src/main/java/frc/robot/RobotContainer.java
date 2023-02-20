@@ -135,7 +135,9 @@ public class RobotContainer {
   public void autoChooserUpdate() {
     // add commands below with: m_autoCommand.addOption("Example", new ExampleCommand());
     m_autoCommand.setDefaultOption("Do Nothing", new PrintCommand("This will do nothing!"));
-    m_autoCommand.addOption("DriveSidwaysPath", new PathPlannerCommand(PathGroupLoader.getPathGroup("DriveSidewaysPath"), 0 ,m_drive, true));
+    m_autoCommand.addOption("DriveSidewaysPath", new PathPlannerCommand(PathGroupLoader.getPathGroup("DriveSidewaysPath"), 0 ,m_drive, true));
+    m_autoCommand.addOption("Odometry Test 1", new PathPlannerCommand(PathGroupLoader.getPathGroup("Odometry Test 1"), 0 ,m_drive, true));
+    m_autoCommand.addOption("Figure 8", new PathPlannerCommand(PathGroupLoader.getPathGroup("Figure 8"), 0 ,m_drive, true));
   
     
     m_autoTab.add("Auto Chooser", m_autoCommand);}
