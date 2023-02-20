@@ -59,8 +59,8 @@ public class Vision {
     return estimatedPoses;
   }
 
-  public Pose2d getPose2d(Pose2d referencePose){
-    ArrayList<EstimatedRobotPose> p = getEstimatedPoses(referencePose);
+  public Pose2d getPose2d(Pose2d referencePose, Pose2d robotPose){
+    ArrayList<EstimatedRobotPose> p = getEstimatedPoses(referencePose==null?robotPose:referencePose);
     Pose2d p2;
     if(p.size()==0){
       return null;

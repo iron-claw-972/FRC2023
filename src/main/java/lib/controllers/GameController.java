@@ -14,14 +14,6 @@ public class GameController extends Controller {
       ALL_LEFT = get(DPad.LEFT).or(get(DPad.UP_LEFT)).or(get(DPad.DOWN_LEFT)),
       ALL_RIGHT = get(DPad.RIGHT).or(get(DPad.UP_RIGHT)).or(get(DPad.DOWN_RIGHT));
 
-  public final BooleanSupplier LEFT_STICK_LEFT = () -> get(Axis.LEFT_X) < -0.75,
-      LEFT_STICK_RIGHT = () -> get(Axis.LEFT_X) > 0.75,
-      LEFT_STICK_UP = () -> get(Axis.LEFT_Y) < -0.75,
-      LEFT_STICK_DOWN = () -> get(Axis.LEFT_Y) > 0.75;
-  public final BooleanSupplier RIGHT_STICK_LEFT = () -> get(Axis.RIGHT_X) < -0.75,
-      RIGHT_STICK_RIGHT = () -> get(Axis.RIGHT_X) > 0.75,
-      RIGHT_STICK_UP = () -> get(Axis.RIGHT_Y) < -0.75,
-      RIGHT_STICK_DOWN = () -> get(Axis.RIGHT_Y) > 0.75;
 
   public GameController(int port) {
     super(port);

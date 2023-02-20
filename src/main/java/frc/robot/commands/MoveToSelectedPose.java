@@ -2,20 +2,18 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.controls.Operator;
 import frc.robot.subsystems.Drivetrain;
 
 /**
- * Default drive command. Drives robot using driver controls.
+ * Uses PID to make the robot go to a specific pose
  */
-public class MoveToPose extends CommandBase {
+public class MoveToSelectedPose extends CommandBase {
 
   private final Drivetrain m_drive;
-  private Pose2d m_pose;
   
-  public MoveToPose(Drivetrain drive, Pose2d pose) {
-    m_drive = drive;
-    m_pose = pose;
-    
+  public MoveToSelectedPose(Drivetrain drive) {
+    m_drive = drive;    
     addRequirements(drive);
   }
   
@@ -23,9 +21,9 @@ public class MoveToPose extends CommandBase {
   public void execute() {
     m_drive.setAllOptimize(true);
     
-    double x = m_pose.getX();
-    double y = m_pose.getY();
-    double rot = m_pose.getRotation().getRadians();
+    double x = Operator.selectedNode.scorePose.getX();
+    double y = Operator.selectedNode.scorePose.getY();
+    double rot = Operator.selectedNode.scorePose.getRotation().getRadians();
 
     m_drive.runChassisPID(x, y, rot);
   }

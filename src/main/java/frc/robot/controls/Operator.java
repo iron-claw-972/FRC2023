@@ -1,5 +1,7 @@
 package frc.robot.controls;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -13,6 +15,7 @@ import frc.robot.subsystems.FourBarArm;
 import frc.robot.util.Node;
 import frc.robot.util.Vision;
 import lib.controllers.GameController;
+import lib.controllers.GameController.Axis;
 import lib.controllers.GameController.Button;
 import lib.controllers.GameController.DPad;
 
@@ -48,13 +51,13 @@ public class Operator {
   public void configureControls() {
 
     // operator.get(Button.A).whenPressed(new DoNothing());
-    m_operator.get(m_operator.LEFT_STICK_LEFT).onTrue(new InstantCommand(()->selectValue(0, 1)));
-    m_operator.get(m_operator.LEFT_STICK_UP).onTrue(new InstantCommand(()->selectValue(0, 2)));
-    m_operator.get(m_operator.LEFT_STICK_RIGHT).onTrue(new InstantCommand(()->selectValue(0, 3)));
+    m_operator.get(LEFT_STICK_LEFT).onTrue(new InstantCommand(()->selectValue(0, 1)));
+    m_operator.get(LEFT_STICK_UP).onTrue(new InstantCommand(()->selectValue(0, 2)));
+    m_operator.get(LEFT_STICK_RIGHT).onTrue(new InstantCommand(()->selectValue(0, 3)));
 
-    m_operator.get(m_operator.RIGHT_STICK_LEFT).onTrue(new InstantCommand(()->selectValue(2, 1)));
-    m_operator.get(m_operator.RIGHT_STICK_UP).onTrue(new InstantCommand(()->selectValue(2, 2)));
-    m_operator.get(m_operator.RIGHT_STICK_RIGHT).onTrue(new InstantCommand(()->selectValue(2, 3)));
+    m_operator.get(RIGHT_STICK_LEFT).onTrue(new InstantCommand(()->selectValue(2, 1)));
+    m_operator.get(RIGHT_STICK_UP).onTrue(new InstantCommand(()->selectValue(2, 2)));
+    m_operator.get(RIGHT_STICK_RIGHT).onTrue(new InstantCommand(()->selectValue(2, 3)));
 
     m_operator.get(Button.A).onTrue(new ParallelCommandGroup(new InstantCommand(()->selectValue(1, 1)), new ExtendToPosition(m_arm, ArmConstants.klowPosition)));
     m_operator.get(Button.X).onTrue(new ParallelCommandGroup(new InstantCommand(()->selectValue(1, 2)), new ExtendToPosition(m_arm, ArmConstants.kmiddlePosition)));
@@ -67,9 +70,18 @@ public class Operator {
   public void selectValue(int index, int value){
     selectValues[index] = value;
     selectedNode = new Node(m_vision, DriverStation.getAlliance(), selectValues[1], selectValues[0]*3-3+selectValues[2]);
+    System.out.println(selectedNode.scorePose);
 }
 
-  
+private final BooleanSupplier LEFT_STICK_LEFT = () -> m_operator.get(Axis.LEFT_X) < -0.75,
+LEFT_STICK_RIGHT = () -> m_operator.get(Axis.LEFT_X) > 0.75,
+LEFT_STICK_UP = () -> m_operator.get(Axis.LEFT_Y) < -0.75,
+LEFT_STICK_DOWN = () -> m_operator.get(Axis.LEFT_Y) > 0.75;
+private final BooleanSupplier RIGHT_STICK_LEFT = () -> m_operator.get(Axis.RIGHT_X) < -0.75,
+RIGHT_STICK_RIGHT = () -> m_operator.get(Axis.RIGHT_X) > 0.75,
+RIGHT_STICK_UP = () -> m_operator.get(Axis.RIGHT_Y) < -0.75,
+RIGHT_STICK_DOWN = () -> m_operator.get(Axis.RIGHT_Y) > 0.75;
+
   /**
    * This is not currently used because we are using other controls
    * 

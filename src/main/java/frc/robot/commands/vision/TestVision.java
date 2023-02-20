@@ -50,7 +50,7 @@ public class TestVision extends CommandBase{
   @Override
   public void initialize(){
     m_encoderStart=getDist();
-    m_startPose=m_vision.getPose2d(m_currentPose);
+    m_startPose=m_vision.getPose2d(m_currentPose, m_drive.getPose());
   }
 
   /**
@@ -60,12 +60,12 @@ public class TestVision extends CommandBase{
   @Override
   public void execute(){
     m_drive.drive(m_speed, 0, 0, false);
-    if(m_vision.getPose2d(m_currentPose)==null){
+    if(m_vision.getPose2d(m_currentPose, m_drive.getPose())==null){
       m_endCounter++;
     }else{
       m_endCounter = 0;
       m_printCounter++;
-      m_currentPose = m_vision.getPose2d(m_currentPose);
+      m_currentPose = m_vision.getPose2d(m_currentPose, m_drive.getPose());
       m_encoderPosition = getDist();
       if(m_printCounter%printDelay==0){
         double dist1 = Math.abs(m_encoderPosition-m_encoderStart);
