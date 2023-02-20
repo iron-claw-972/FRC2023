@@ -15,13 +15,17 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import frc.robot.Robot.RobotId;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.PoseTransform;
 import frc.robot.commands.auto.PathPlannerCommand;
 import frc.robot.commands.test.*;
+import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.controls.BaseDriverConfig;
 import frc.robot.controls.GameControllerDriverConfig;
+import frc.robot.controls.ManualController;
 import frc.robot.controls.Operator;
+import frc.robot.controls.TestController;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.Intake;
@@ -47,16 +51,51 @@ public class RobotContainer {
   private final ShuffleboardTab m_testTab = Shuffleboard.getTab("Test");
 
   // The robot's subsystems are defined here...
-  private final Drivetrain m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab);
-  private final FourBarArm m_arm = new FourBarArm();
-  private final Intake m_intake = new Intake();
+  private final Drivetrain m_drive;
+  private final FourBarArm m_arm;
+  private final Intake m_intake;
 
   // Controllers are defined here
-  private final BaseDriverConfig m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
-  private final Operator m_operator = new Operator(m_arm, m_intake);
+  private final BaseDriverConfig m_driver;
+  private final Operator m_operator;
+  private final TestController m_testController;
+  private final ManualController m_manualController;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
+    // Update drive constants based off of robot type
+    DriveConstants.update();
+
+    // Create Drivetrain, because every robot will have a drivetrain
+    m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab);
+    m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
+
+    // If the robot is the competition robot, create the arm and intake
+    if (Robot.kRobotId == RobotId.SwerveCompetition) {
+
+      m_arm = new FourBarArm();
+      m_intake = new Intake();
+
+      m_operator = new Operator(m_arm, m_intake);
+      m_testController = new TestController(m_arm, m_intake);
+      m_manualController = new ManualController(m_arm, m_intake);
+
+      m_operator.configureControls();
+      m_testController.configureControls();
+      m_manualController.configureControls();
+
+    } else {
+
+      DriverStation.reportWarning("Not registering subsystems and controls due to incorrect robot", false);
+
+      m_arm = null;
+      m_intake = null;
+
+      m_operator = null;
+      m_testController = null;
+      m_manualController = null;
+    }
 
     // This is really annoying so it's disabled
     DriverStation.silenceJoystickConnectionWarning(true);
@@ -65,7 +104,6 @@ public class RobotContainer {
     PathGroupLoader.loadPathGroups();
 
     m_driver.configureControls();
-    m_operator.configureControls();
 
     LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
     LiveWindow.setEnabled(false);
@@ -79,7 +117,7 @@ public class RobotContainer {
     
     addTestCommands();
 
-    m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive,m_driver));
+    m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive, m_driver));
   }
 
   /**

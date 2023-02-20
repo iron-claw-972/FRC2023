@@ -22,9 +22,8 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.constants.Constants;
-import frc.robot.constants.DriveConstants;
-import frc.robot.constants.ModuleConstants;
+import frc.robot.constants.swerve.DriveConstants;
+import frc.robot.constants.swerve.ModuleConstants;
 import frc.robot.util.LogManager;
 
 /** 
@@ -40,7 +39,7 @@ public class Drivetrain extends SubsystemBase {
 
   // This is left intentionally public
   public final Module[] m_modules;
-  
+
   private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
     new Translation2d(DriveConstants.kTrackWidth / 2, DriveConstants.kTrackWidth / 2),
     new Translation2d(DriveConstants.kTrackWidth / 2, -DriveConstants.kTrackWidth / 2),
@@ -49,7 +48,7 @@ public class Drivetrain extends SubsystemBase {
   );
 
   // Pigeon
-  private final WPI_Pigeon2 m_pigeon = new WPI_Pigeon2(DriveConstants.kPigeon, Constants.kCanivoreCAN);
+  private final WPI_Pigeon2 m_pigeon = new WPI_Pigeon2(DriveConstants.kPigeon, DriveConstants.kPigeonCAN);
   private boolean m_hasResetYaw = false; // the initial yaw has been set 
 
   private double m_headingPIDOutput = 0;
@@ -103,10 +102,10 @@ public class Drivetrain extends SubsystemBase {
     m_swerveModulesTab = swerveModulesTab;
     
     m_modules = new Module[] {
-      Module.create(ModuleConstants.COMP_FL, m_swerveModulesTab),
-      Module.create(ModuleConstants.COMP_FR, m_swerveModulesTab),
-      Module.create(ModuleConstants.COMP_BL, m_swerveModulesTab),
-      Module.create(ModuleConstants.COMP_BR, m_swerveModulesTab)
+      Module.create(ModuleConstants.FRONT_LEFT, m_swerveModulesTab),
+      Module.create(ModuleConstants.FRONT_RIGHT, m_swerveModulesTab),
+      Module.create(ModuleConstants.BACK_LEFT, m_swerveModulesTab),
+      Module.create(ModuleConstants.BACK_RIGHT, m_swerveModulesTab)
     };
     m_prevModule = m_modules[0];
     
@@ -389,7 +388,7 @@ public class Drivetrain extends SubsystemBase {
 
     
     for (int i = 0; i < 4; i++) {
-      m_modules[i].setupModulesShuffleboard();
+      // m_modules[i].setupModulesShuffleboard();
     }
   }
 
