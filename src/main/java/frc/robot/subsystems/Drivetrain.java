@@ -362,7 +362,6 @@ public class Drivetrain extends SubsystemBase {
     
     m_drivetrainTab.addNumber("Estimated X pos (m)", ()-> m_odometry.getPoseMeters().getX());
     m_drivetrainTab.addNumber("Estimated Y pos (m)", ()-> m_odometry.getPoseMeters().getX());
-    m_drivetrainTab.addNumber("Estimated Theta (rads)", ()-> m_odometry.getPoseMeters().getRotation().getRadians());
     
     // add the controllers to shuffleboard for tuning
     m_drivetrainTab.add(getXController());
