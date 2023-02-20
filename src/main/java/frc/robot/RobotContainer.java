@@ -76,7 +76,10 @@ public class RobotContainer {
         OI.configure(m_drive, m_intake, m_arm);
         break;
       case SwerveTest:
+        m_arm = null;
+        m_intake = null;
         OI.configureDriverControls(m_drive);
+        break;
       default:
         DriverStation.reportWarning("Not registering subsystems and controls due to incorrect robot", false);
         m_arm = null;
