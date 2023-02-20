@@ -1,4 +1,4 @@
-package frc.robot.commands.test;
+package frc.robot.commands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -10,20 +10,18 @@ import frc.robot.subsystems.Drivetrain;
 /**
  * Tests the odometry of the robot by driving a certain distance and calculating the error.
  */
-public class OdometryTestCommand extends CommandBase {
+public class GoToPose extends CommandBase {
 
-  private final Drivetrain m_drive; 
+  private Drivetrain m_drive; 
   
-  private Pose2d m_startPose;
   private double m_startTime;
   private Pose2d m_finalPose;
-  private Transform2d m_distanceToMove;
   private Pose2d m_error;
   
-  public OdometryTestCommand(Drivetrain drive, Transform2d distanceToMove) {
+  public GoToPose(Drivetrain drive, Pose2d pose) {
     m_drive = drive; 
     // finalPose is position after robot moves from current position-- startPose-- by the values that are inputted-- distanceToMove
-    m_distanceToMove = distanceToMove;
+    m_finalPose = pose;
     
     addRequirements(drive);
   }
@@ -31,8 +29,6 @@ public class OdometryTestCommand extends CommandBase {
   @Override
   public void initialize() {
     m_startTime = Timer.getFPGATimestamp();
-    m_startPose = m_drive.getPose();
-    m_finalPose = m_startPose.transformBy(m_distanceToMove);
   }
   
   @Override

@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.commands.DefaultDriveCommand;
+import frc.robot.commands.PoseTransform;
 import frc.robot.commands.auto.PathPlannerCommand;
 import frc.robot.commands.test.*;
 import frc.robot.controls.BaseDriverConfig;
@@ -108,6 +109,9 @@ public class RobotContainer {
     m_testTab.add("Test Drive Velocity", new TestDriveVelocity(m_drive, testEntry));
     m_testTab.add("Heading PID", new TestHeadingPID(m_drive, testEntry));
     m_testTab.add("Steer angle", new TestSteerAngle(m_drive, testEntry));
+    m_testTab.add("Transform Pose", new PoseTransformTest(m_drive));
+    m_testTab.add("Go To Pose", new GoToPoseTest(m_drive));
+    m_testTab.add("Odometry Test", new PoseTransform(m_drive, new Transform2d(new Translation2d(1,1), new Rotation2d(Math.PI))));
     
   }
 
