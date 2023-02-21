@@ -458,7 +458,6 @@ public class Module {
    * Sets up the Shuffleboard tab for the module.
    */
   public void setupModulesShuffleboard() {
-    m_moduleTab.addNumber(m_moduleType.getAbbreviation() + " desired speed", () -> getDesiredVelocity());
     // Drive PID output
     m_moduleTab.addNumber(m_moduleType.getAbbreviation() + " PID Output", () -> getDrivePIDOutput());
     // get drive velocity
@@ -477,6 +476,8 @@ public class Module {
     m_moduleTab.addNumber("Steer Vel " + m_moduleType.getAbbreviation(), () -> getSteerVelocity());
     //Steer PID
     m_moduleTab.add("Steer PID " + m_moduleType.getAbbreviation(), getSteerPID());
+    // module pos
+    m_moduleTab.addNumber("Drive Pos " + m_moduleType.getAbbreviation(), ()-> getDrivePosition());
   }
 
 }
