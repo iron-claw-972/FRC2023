@@ -1,19 +1,18 @@
-package frc.robot.commands;
+package frc.robot.commands.deployingBar;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.DeployingBarConstants;
 import frc.robot.subsystems.DeployingBar;
 
-public class CalibrateEncoder extends CommandBase {
+public class RotateBottomLimitSwitch extends CommandBase {
   private final DeployingBar m_deployingBar;
   /**
    * Creates a new ExtendDeployingBar
    *
    * @param subsystem The subsystem used by this command.
    */
-  public CalibrateEncoder(DeployingBar deployingBar) {
+  public RotateBottomLimitSwitch(DeployingBar deployingBar) {
     m_deployingBar = deployingBar;
-    
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(deployingBar);
   }
@@ -21,17 +20,13 @@ public class CalibrateEncoder extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_deployingBar.setSpeed(DeployingBarConstants.kCalibrateSpeed);
+    m_deployingBar.setSpeed(DeployingBarConstants.kDeployBarSpeed);
   }
 
-  @Override
-  public void end(boolean interrupted) {
-    m_deployingBar.calibrateEncoder();
-  }
-  
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return m_deployingBar.atBottomLimitSwitch();
   }
+
 }
+

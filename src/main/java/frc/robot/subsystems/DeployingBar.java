@@ -23,58 +23,29 @@ import lib.ctre_shims.TalonEncoder;
 public class DeployingBar extends SubsystemBase {
 
   private final WPI_TalonFX m_motor;
-  private final PIDController m_pid;
-  private final TalonEncoder m_talonEncoder;
   private final DigitalInput m_topLimitSwitch;
   private final DigitalInput m_bottomLimitSwitch;
-  private boolean isEnabled;
+
 
   public DeployingBar() {
     m_motor = MotorFactory.createTalonFX(DeployingBarConstants.kMotor, Constants.kRioCAN);
     m_motor.setNeutralMode(NeutralMode.Brake);
     m_motor.setSafetyEnabled(true);
-    m_talonEncoder = new TalonEncoder(m_motor);
-    m_talonEncoder.reset();
-    m_talonEncoder.setDistancePerPulse(DeployingBarConstants.kTalonDistancePerPulse);
-    m_pid = new PIDController(DeployingBarConstants.kP, DeployingBarConstants.kI, DeployingBarConstants.kD);
-    m_pid.setTolerance(DeployingBarConstants.kTolerance);
     m_topLimitSwitch = new DigitalInput(DeployingBarConstants.kTopLimitSwitch);
     m_bottomLimitSwitch = new DigitalInput(DeployingBarConstants.kBottomLimitSwitch);
-    isEnabled = false;
-  }
-
-  @Override
-  public void periodic() {
-    if(isEnabled){
-        m_motor.set(ControlMode.PercentOutput, m_pid.calculate(m_talonEncoder.getDistance()));
-    }
-    else{
-      m_motor.set(ControlMode.PercentOutput, 0);
-    }
+  
   }
 
   public void setSpeed(double speed) {
     m_motor.set(ControlMode.PercentOutput, speed);
   }
 
-  public void setSetpoint(double setpoint){
-    m_pid.reset();
-    m_pid.setSetpoint(setpoint);
-  }
-
-  public void calibrateEncoder(){
-    DeployingBarConstants.kDeployPos = m_talonEncoder.getDistance();
-  }
-
-  public void setEnable(boolean enableStatus){
-    isEnabled = enableStatus;
-  }
-
   public boolean atBottomLimitSwitch(){
     return m_bottomLimitSwitch.get();
   }
-
-  public boolean atSetpoint(){
-    return m_pid.atSetpoint();
+  
+  public boolean atTopLimitSwitch(){
+    return m_topLimitSwitch.get();
   }
+
 }

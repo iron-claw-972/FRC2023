@@ -1,7 +1,7 @@
 package frc.robot.controls;
 
-import frc.robot.commands.RotateDeployingBar;
-import frc.robot.constants.DeployingBarConstants;
+import frc.robot.commands.deployingBar.RotateBottomLimitSwitch;
+import frc.robot.commands.deployingBar.RotateTopLimitSwitch;
 import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.DeployingBar;
@@ -26,8 +26,8 @@ public class Operator {
    * Configures all of the operator controls.
    */
   public void configureControls() {
-    operator.get(Button.A).onTrue(new RotateDeployingBar(m_deployingBar, DeployingBarConstants.kStowPos));
-    operator.get(Button.B).onTrue(new RotateDeployingBar(m_deployingBar, DeployingBarConstants.kDeployPos));
+    operator.get(Button.A).onTrue(new RotateTopLimitSwitch(m_deployingBar));
+    operator.get(Button.B).onTrue(new RotateBottomLimitSwitch(m_deployingBar));
 
   }
 }
