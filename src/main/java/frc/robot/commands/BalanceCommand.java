@@ -1,65 +1,61 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.constants.DriveConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.util.Functions;
 
 public class BalanceCommand extends CommandBase {
 
     private Drivetrain m_drive;
+    private final PIDController m_pid;
 
-    private double startAngle, endPoint;
+    private double m_currentAngle, m_output;
 
-    private boolean mode;
+    private boolean m_balanceMode;
  
     public BalanceCommand(Drivetrain drive) {
         m_drive = drive;
+        addRequirements(drive);
+        m_pid = new PIDController(DriveConstants.kBalanceP, DriveConstants.kBalanceI, DriveConstants.kBalanceD);
+        m_pid.setTolerance(DriveConstants.kBalanceTolerance);
     }
 
     /*
      * Determines the values of the vectors of pitch, yaw, and roll. 
      */
-    public void initialize()  {
-
-        endPoint = 0; //should be called setpoint
-        startAngle = Functions.calculateHypotenuse(m_drive.getAngleHeading(), Functions.calculateHypotenuse(m_drive.getPigeon().getPitch(), m_drive.getPigeon().getRoll()));
-        //^ this may be not right, and should be called every execute and calculate new angle
-
+    @Override
+    public void initialize() {
+        m_pid.setSetpoint(0);
         if(90 - m_drive.getAngleHeading() > m_drive.getAngleHeading())  { //Determines whether to use roll or pitch
-            mode = false;
+            m_balanceMode = false;
         }
-
         else  {
-            mode = true;
+            m_balanceMode = true;
         }
     }
 
-    /**
-     * Makes the robot wiggle around PID like until charge station is balanced. 
-     * ySpeed is zero for now, will add yaw at later pull request.
-     *  
-     */
-    public void execute()  {
-    
-      m_drive.m_balanceController.setTolerance(0.1);
-
-      if(mode)   {
-        m_drive.driveHeading(m_drive.m_balanceController.calculate(endPoint, startAngle), 0, 0, true);
-      }
-      else   {
-        m_drive.driveHeading(m_drive.m_balanceController.calculate(endPoint, startAngle), 0, 90, true);
-      }
+    @Override
+    public void execute() {
+        m_currentAngle = Functions.calculateHypotenuse(m_drive.getAngleHeading(), Functions.calculateHypotenuse(m_drive.getPigeon().getPitch(), m_drive.getPigeon().getRoll()));
+        m_output = MathUtil.clamp(m_pid.calculate(m_currentAngle, DriveConstants.kBalanceSetpoint), -DriveConstants.kBalanceMaxOutput, DriveConstants.kBalanceMaxOutput);
+        if(m_balanceMode) {
+            m_drive.driveHeading(m_output, 0, 0, true);
+        }
+        else {
+            m_drive.driveHeading(m_output, 0, 90, true);
+        }
     }
 
-    /**
-    * Checks to see if robot is within acceptable range to determine if it is balanced. 
-    * @return True if the robot is within range, false if it is not.
-    */
+    @Override
     public boolean isFinished() {
-        return m_drive.m_balanceController.atSetpoint();
+        return m_pid.atSetpoint();
     }
 
-    public void end()  {
+    @Override
+    public void end(boolean interrupted) {
         m_drive.stop();
     }
-}
+}   
