@@ -477,6 +477,8 @@ public class Module {
     m_moduleTab.addNumber("Steer Vel " + m_moduleType.getAbbreviation(), () -> getSteerVelocity());
     //Steer PID
     m_moduleTab.add("Steer PID " + m_moduleType.getAbbreviation(), getSteerPID());
+    // module pos
+    m_moduleTab.addNumber("Drive Pos " + m_moduleType.getAbbreviation(), ()-> getDrivePosition());
   }
 
 }

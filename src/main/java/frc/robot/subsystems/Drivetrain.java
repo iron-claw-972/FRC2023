@@ -124,8 +124,6 @@ public class Drivetrain extends SubsystemBase {
     updateDriveModuleFeedforwardShuffleboard();
 
     updateOdometry();
-    
-    m_fieldDisplay.setRobotPose(getPose());
   }
   
   /**
@@ -241,7 +239,7 @@ public class Drivetrain extends SubsystemBase {
   * Gets the current robot pose from the odometry.
   */
   public Pose2d getPose() {
-    return m_robotPose;
+    return m_odometry.getPoseMeters();
   }
   
   /**
@@ -360,7 +358,7 @@ public class Drivetrain extends SubsystemBase {
     m_drivetrainTab.addNumber("Gyro Z", () -> getAngularRate(2));
     
     m_drivetrainTab.addNumber("Estimated X pos (m)", ()-> m_odometry.getPoseMeters().getX());
-    m_drivetrainTab.addNumber("Estimated Y pos (m)", ()-> m_odometry.getPoseMeters().getX());
+    m_drivetrainTab.addNumber("Estimated Y pos (m)", ()-> m_odometry.getPoseMeters().getY());
     
     // add the controllers to shuffleboard for tuning
     m_drivetrainTab.add(getXController());
@@ -388,7 +386,7 @@ public class Drivetrain extends SubsystemBase {
 
     
     for (int i = 0; i < 4; i++) {
-      // m_modules[i].setupModulesShuffleboard();
+      m_modules[i].setupModulesShuffleboard();
     }
   }
 
