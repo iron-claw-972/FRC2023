@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.constants.Constants;
 import frc.robot.util.LogManager;
 
 /**
@@ -18,15 +19,15 @@ import frc.robot.util.LogManager;
  * project.
  */
 public class Robot extends TimedRobot {
+
   private Command m_autoCommand;
   private RobotContainer m_robotContainer;
 
-  public static final String kRobotId = "RobotId";
   public enum RobotId {
     Default, SwerveCompetition, SwerveTest,
     ClassBot1, ClassBot2, ClassBot3, ClassBot4
   };
-  private static RobotId robotId = RobotId.Default;
+  public static RobotId kRobotId = RobotId.Default;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -39,32 +40,35 @@ public class Robot extends TimedRobot {
     //   SimGUI: Persistent Values, Preferences, RobotId, then restart Simulation
     //     changes networktables.json, networktables.json.bck (both Untracked)
     // set the default preference to something safe
-    if (!Preferences.containsKey(kRobotId)) {
-      Preferences.setString(kRobotId, RobotId.Default.toString());
+    if (!Preferences.containsKey(kRobotId.name())) {
+      Preferences.setString(kRobotId.name(), RobotId.Default.toString());
     }
     // get the RobotId from Preferences
-    String strId = Preferences.getString(kRobotId, RobotId.Default.toString());
+    String strId = Preferences.getString(Constants.kRobotIdKey, RobotId.Default.toString());
     // match the string to an RobotId
     for (RobotId rid : RobotId.values()) {
       // does it match the preference string?
-      if (strId.equals(rid.toString())) {
+      if (strId.equals(rid.name())) {
         // yes, so it is the RobotId
-        robotId = rid;
+        kRobotId = rid;
       }
     }
+
+    // TODO: Remove this line when someone is able to test whether or not preferences are working
+    kRobotId = RobotId.SwerveTest;
     // report the RobotId to the SmartDashboard
-    SmartDashboard.putString("Robot Identity", robotId.toString());
+    SmartDashboard.putString("RobotID", kRobotId.name());
 
     // build the RobotContainer
     m_robotContainer = new RobotContainer();
   }
-
+ 
   /**
    * This function is called every robot packet, no matter the mode. Use this for items like
    * diagnostics that you want ran during disabled, autonomous, teleoperated and test.
    *
-   * <p>This runs after the mode specific periodic functions, but before LiveWindow and
-   * SmartDashboard integrated updating.
+   * <p>This runs after the mode specific periodic functions, but before
+   * LiveWindow and SmartDashboard integrated updating.
    */
   @Override
   public void robotPeriodic() {
@@ -77,7 +81,9 @@ public class Robot extends TimedRobot {
     LogManager.log();
   }
 
-  /** This function is called once each time the robot enters Disabled mode. */
+  /**
+   * This function is called once each time the robot enters Disabled mode.
+   */
   @Override
   public void disabledInit() {
     CommandScheduler.getInstance().cancelAll();
@@ -87,9 +93,15 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {}
 
-  /** This autonomous runs the autonomous command selected by your {@link Robot} class. */
+  /**
+   * This autonomous runs the autonomous command selected by your {@link RobotContainer} class.
+   */
   @Override
   public void autonomousInit() {
+
+    // When auto starts, we know the start position, so we should always reset the yaw to face the right way.
+    m_robotContainer.initDriveYaw(true);
+
     // Get the autonomous command.
     // This access is fast (about 14 microseconds) because the value is already resident in the Network Tables.
     // There was a problem last year because the operation also installed about over a dozen items (taking more than 20 ms).
@@ -101,13 +113,21 @@ public class Robot extends TimedRobot {
     }
   }
 
-  /** This function is called periodically during autonomous. */
+  /**
+   * This function is called periodically during autonomous.
+   */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+  }
+  
 
   /** This function is called once each time the robot enters Teleop mode. */
   @Override
   public void teleopInit() {
+
+    // If we enable teleop for the first time, we should reset the drive yaw. Mainly for testing.
+    m_robotContainer.initDriveYaw(false);
+
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -117,9 +137,12 @@ public class Robot extends TimedRobot {
     }
   }
 
-  /** This function is called periodically during operator control. */
+  /**
+   * This function is called periodically during operator control.
+   */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+  }
 
   /** This function is called once each time the robot enters Test mode. */
   @Override
@@ -128,7 +151,14 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().cancelAll();
   }
 
-  /** This function is called periodically during test mode. */
+  /**
+   * This function is called periodically during test mode.
+   */
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+  }
+
+  @Override
+  public void simulationPeriodic() {
+  }
 }

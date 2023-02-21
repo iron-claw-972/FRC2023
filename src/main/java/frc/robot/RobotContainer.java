@@ -1,5 +1,9 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
@@ -9,10 +13,21 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
-import frc.robot.commands.DoNothing;
-import frc.robot.controls.Driver;
+import frc.robot.Robot.RobotId;
+import frc.robot.commands.DefaultDriveCommand;
+import frc.robot.commands.test.CircleDrive;
+import frc.robot.commands.test.DriveFeedForwardCharacterization;
+import frc.robot.commands.test.OdometryTestCommand;
+import frc.robot.commands.test.SteerFeedForwardCharacterizationSingle;
+import frc.robot.commands.test.TestDriveVelocity;
+import frc.robot.commands.test.TestHeadingPID;
+import frc.robot.commands.test.TestSteerAngle;
+import frc.robot.constants.swerve.DriveConstants;
+import frc.robot.controls.BaseDriverConfig;
+import frc.robot.controls.GameControllerDriverConfig;
+import frc.robot.controls.ManualController;
 import frc.robot.controls.Operator;
-import frc.robot.controls.TestControls;
+import frc.robot.controls.TestController;
 import frc.robot.subsystems.DeployingBar;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.FourBarArm;
@@ -26,17 +41,67 @@ import frc.robot.util.PathGroupLoader;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+
+  // Shuffleboard auto chooser
+  private final SendableChooser<Command> m_autoCommand = new SendableChooser<>();
+
+  //shuffleboard tabs
+  private final ShuffleboardTab m_mainTab = Shuffleboard.getTab("Main");
+  private final ShuffleboardTab m_drivetrainTab = Shuffleboard.getTab("Drive");
+  private final ShuffleboardTab m_swerveModulesTab = Shuffleboard.getTab("Swerve Modules");
+  private final ShuffleboardTab m_autoTab = Shuffleboard.getTab("Auto");
+  private final ShuffleboardTab m_controllerTab = Shuffleboard.getTab("Controller");
+  private final ShuffleboardTab m_testTab = Shuffleboard.getTab("Test");
+
   // The robot's subsystems are defined here...
-  private final Drivetrain m_drive = new Drivetrain();
-  private final DeployingBar m_deployingBar = new DeployingBar();
-  private final FourBarArm m_arm = new FourBarArm();
-  private final Intake m_intake = new Intake();
- 
-  // Shuffleboard stuff
-  SendableChooser<Command> m_autoCommand = new SendableChooser<>();
+  private final Drivetrain m_drive;
+  private final FourBarArm m_arm;
+  private final Intake m_intake;
+  private final DeployingBar m_deployingBar;
+
+  // Controllers are defined here
+  private final BaseDriverConfig m_driver;
+  private final Operator m_operator;
+  private final TestController m_testController;
+  private final ManualController m_manualController;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
+    // Update drive constants based off of robot type
+    DriveConstants.update();
+
+    // Create Drivetrain, because every robot will have a drivetrain
+    m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab);
+    m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
+
+    // If the robot is the competition robot, create the arm and intake
+    if (Robot.kRobotId == RobotId.SwerveCompetition) {
+
+      m_arm = new FourBarArm();
+      m_intake = new Intake();
+      m_deployingBar = new DeployingBar();
+
+      m_operator = new Operator(m_arm, m_intake);
+      m_testController = new TestController(m_arm, m_intake);
+      m_manualController = new ManualController(m_arm, m_intake);
+
+      m_operator.configureControls();
+      m_testController.configureControls();
+      m_manualController.configureControls();
+
+    } else {
+
+      DriverStation.reportWarning("Not registering subsystems and controls due to incorrect robot", false);
+
+      m_arm = null;
+      m_intake = null;
+      m_deployingBar = null;
+
+      m_operator = null;
+      m_testController = null;
+      m_manualController = null;
+    }
 
     // This is really annoying so it's disabled
     DriverStation.silenceJoystickConnectionWarning(true);
@@ -44,18 +109,31 @@ public class RobotContainer {
     // load paths before auto starts
     PathGroupLoader.loadPathGroups();
 
-    Driver.configureControls(m_drive);
-    Operator.configureControls(m_arm, m_intake, m_deployingBar);
-    TestControls.configureControls(m_drive);
+    m_driver.configureControls();
 
     LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
     LiveWindow.setEnabled(false);
     
-    addTestCommands();
+    
     autoChooserUpdate();
     loadCommandSchedulerShuffleboard();
+    m_drive.setupDrivetrainShuffleboard();
+    m_drive.setupModulesShuffleboard();
+    m_driver.setupShuffleboard();
+    
+    addTestCommands();
+
+    m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive, m_driver));
   }
 
+  /**
+   * Resets the yaw of the pigeon, unless it has already been reset. Or use force to reset it no matter what.
+   * 
+   * @param force if the yaw should be reset even if it already has been reset since robot enable.
+   */
+  public void initDriveYaw(boolean force) {
+    m_drive.initializePigeonYaw(force);
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -70,8 +148,14 @@ public class RobotContainer {
    * Adds the test commands to shuffleboard so they can be run that way.
    */
   public void addTestCommands() {
-    ShuffleboardTab tab = Shuffleboard.getTab("Test");
-    tab.add("Do Nothing", new DoNothing());
+    GenericEntry testEntry = m_testTab.add("Test Results", false).getEntry();
+    m_testTab.add("Circle Drive", new CircleDrive(m_drive));
+    m_testTab.add("Drive FeedForward", new DriveFeedForwardCharacterization(m_drive));
+    m_testTab.add("Steer Single FeedForward", new SteerFeedForwardCharacterizationSingle(m_drive));
+    m_testTab.add("Test Drive Velocity", new TestDriveVelocity(m_drive, testEntry));
+    m_testTab.add("Heading PID", new TestHeadingPID(m_drive, testEntry));
+    m_testTab.add("Steer angle", new TestSteerAngle(m_drive, testEntry));
+    m_testTab.add("Odometry Test", new OdometryTestCommand(m_drive, new Transform2d(new Translation2d(1,1), new Rotation2d(Math.PI))));
   }
 
   /**
@@ -82,9 +166,8 @@ public class RobotContainer {
   public void autoChooserUpdate() {
     m_autoCommand.setDefaultOption("Do Nothing", new PrintCommand("This will do nothing!"));
     // add commands below with: m_autoCommand.addOption("Example", new ExampleCommand());
-
     
-    Shuffleboard.getTab("Auto").add("Auto Chooser", m_autoCommand);
+    m_autoTab.add("Auto Chooser", m_autoCommand);
   }
 
   /**
