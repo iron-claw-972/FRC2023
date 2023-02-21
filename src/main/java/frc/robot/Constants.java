@@ -125,10 +125,10 @@ public final class Constants {
 
     Drive.kDriveMotorCAN = kRioCAN;
 
-    Drive.FL = new Drive.Mod(1, 2, 3, 1.561, 0.61534, 4.45071*2, 2*2, 0, 0, 1, 0.5, 12, 0, 0);
-    Drive.FR = new Drive.Mod(4,  5, 6,  -2.764+Math.PI, 0.61283, 4.45431*2, 2*2, 0, 0, 1, 0.5, 12, 0, 0);
-    Drive.BL = new Drive.Mod(7, 8, 9,  0, 0.54150, 4.53909*2, 2*2, 0, 0, 1, 0.5, 12, 0, 0);
-    Drive.BR = new Drive.Mod(10, 11, 12,  2.73, 0.49599, 4.75897*2, 2.2*2, 0, 0, 1, 0.5, 12, 0, 0);
+    Drive.FL = new Drive.Mod(1, 2, 3, 1.561, 0.62042527623669, 2.183851574403252, 2*2, 0, 0, 1, 0.5, 12, 0, 0);
+    Drive.FR = new Drive.Mod(4,  5, 6,  -2.764+Math.PI, 0.567492987095757, 2.232057469169274, 2*2, 0, 0, 1, 0.5, 12, 0, 0);
+    Drive.BL = new Drive.Mod(7, 8, 9,  0, 0.515933693340089, 2.27916756192326, 2*2, 0, 0, 1, 0.5, 12, 0, 0);
+    Drive.BR = new Drive.Mod(10, 11, 12,  2.73, 0.451867383172388, 2.381672800543307, 2.2*2, 0, 0, 1, 0.5, 12, 0, 0);
       
     Vision.kCameras = new ArrayList<Pair<String, Transform3d>>(List.of(
       new Pair<String, Transform3d>(
