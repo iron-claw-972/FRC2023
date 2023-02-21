@@ -70,7 +70,7 @@ public class DeployingBar extends SubsystemBase {
     isEnabled = enableStatus;
   }
 
-  public boolean atLimitSwitch(){
+  public boolean atBottomLimitSwitch(){
     return m_bottomLimitSwitch.get();
   }
 

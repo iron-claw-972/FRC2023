@@ -4,14 +4,14 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.DeployingBarConstants;
 import frc.robot.subsystems.DeployingBar;
 
-public class CalibrateAbsoluteEncoder extends CommandBase {
+public class CalibrateEncoder extends CommandBase {
   private final DeployingBar m_deployingBar;
   /**
    * Creates a new ExtendDeployingBar
    *
    * @param subsystem The subsystem used by this command.
    */
-  public CalibrateAbsoluteEncoder(DeployingBar deployingBar) {
+  public CalibrateEncoder(DeployingBar deployingBar) {
     m_deployingBar = deployingBar;
     
     // Use addRequirements() here to declare subsystem dependencies.
@@ -32,6 +32,6 @@ public class CalibrateAbsoluteEncoder extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_deployingBar.atLimitSwitch();
+    return m_deployingBar.atBottomLimitSwitch();
   }
 }

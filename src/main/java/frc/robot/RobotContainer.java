@@ -82,7 +82,7 @@ public class RobotContainer {
       m_intake = new Intake();
       m_deployingBar = new DeployingBar();
 
-      m_operator = new Operator(m_arm, m_intake);
+      m_operator = new Operator(m_arm, m_intake, m_deployingBar);
       m_testController = new TestController(m_arm, m_intake);
       m_manualController = new ManualController(m_arm, m_intake);
 
