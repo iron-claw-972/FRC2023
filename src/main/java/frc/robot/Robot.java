@@ -61,9 +61,9 @@ public class Robot extends TimedRobot {
     }
     // get the RobotId string from the RoboRIO's Preferences
     String strId = Preferences.getString(Constants.kRobotIdKey, RobotId.Default.name());
-    // match that string to an RobotId by looking at all possible RobotId enums
+    // match that string to a RobotId by looking at all possible RobotId enums
     for (RobotId rid : RobotId.values()) {
-      // does the preference string match the preference string?
+      // does the preference string match the RobotId enum?
       if (strId.equals(rid.name())) {
         // yes, this instance is the desired RobotId
         kRobotId = rid;
