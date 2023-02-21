@@ -458,7 +458,6 @@ public class Module {
    * Sets up the Shuffleboard tab for the module.
    */
   public void setupModulesShuffleboard() {
-    m_moduleTab.addNumber(m_moduleType.getAbbreviation() + " desired speed", () -> getDesiredVelocity());
     // Drive PID output
     m_moduleTab.addNumber(m_moduleType.getAbbreviation() + " PID Output", () -> getDrivePIDOutput());
     // get drive velocity

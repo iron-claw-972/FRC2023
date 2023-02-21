@@ -92,9 +92,9 @@ public class DriveConstants {
   public static double kSteerDBackRight = 0;
 
   // heading PID
-  public static double kHeadingP= 4.6;
+  public static double kHeadingP= 4;
   public static double kHeadingI= 0;
-  public static double kHeadingD= 0.4;
+  public static double kHeadingD= 0;
 
   // CAN
   public static String kDriveMotorCAN = Constants.kCanivoreCAN;
@@ -115,7 +115,7 @@ public class DriveConstants {
       kDriveFrontLeft = 1;
       kSteerFrontLeft = 2;
       kEncoderFrontLeft = 3;
-      kSteerOffsetFrontLeft = 1.561;
+      kSteerOffsetFrontLeft = 1.570793151855469;
       kDriveKSFrontLeft = 0.62042527623669;
       kDriveKVFrontLeft = 2.183851574403252;
       kDrivePFrontLeft = 2*2;
@@ -130,7 +130,7 @@ public class DriveConstants {
       kDriveFrontRight = 4; 
       kSteerFrontRight = 5;
       kEncoderFrontRight = 6; 
-      kSteerOffsetFrontRight = -2.764+Math.PI;
+      kSteerOffsetFrontRight = -1.20724043995142;
       kDriveKSFrontRight = 0.567492987095757;
       kDriveKVFrontRight = 2.232057469169274;
       kDrivePFrontRight = 2*2;
@@ -145,7 +145,7 @@ public class DriveConstants {
       kDriveBackLeft = 7;
       kSteerBackLeft = 8;
       kEncoderBackLeft = 9; 
-      kSteerOffsetBackLeft = 0;
+      kSteerOffsetBackLeft = -0.032213531434536;
       kDriveKSBackLeft = 0.515933693340089;
       kDriveKVBackLeft = 2.27916756192326;
       kDrivePBackLeft = 2*2;
@@ -160,7 +160,7 @@ public class DriveConstants {
       kDriveBackRight = 10;
       kSteerBackRight = 11;
       kEncoderBackRight = 12; 
-      kSteerOffsetBackRight = 2.73;
+      kSteerOffsetBackRight = 2.7626938149333;
       kDriveKSBackRight = 0.451867383172388;
       kDriveKVBackRight = 2.381672800543307;
       kDrivePBackRight = 2.2*2;
