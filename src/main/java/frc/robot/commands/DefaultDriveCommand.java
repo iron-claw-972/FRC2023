@@ -30,7 +30,7 @@ public class DefaultDriveCommand extends CommandBase {
     double ySpeed = m_driver.getSideTranslation();
     double rot = m_driver.getRotation();
 
-    m_drive.drive(DriverStation.getAlliance()==Alliance.Blue?xSpeed:-xSpeed, DriverStation.getAlliance()==Alliance.Blue?ySpeed:-ySpeed, rot, true);
+    m_drive.drive(xSpeed, ySpeed, rot, true);
   }
   
   @Override
