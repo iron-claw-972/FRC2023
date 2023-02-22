@@ -25,10 +25,18 @@ public class MoveToHeight extends CommandBase {
     m_elevator.setSetpoint(m_targetHeight); 
     m_elevator.setEnabled(true);
   }
-  
+
+  @Override
+  public void end(boolean interrupted) {
+    System.out.println("MoveTOHeight Command has FINISHEDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"); 
+    
+   
+  }
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false; 
+    return m_elevator.atSetpoint(); 
+    
+   
   }
 }

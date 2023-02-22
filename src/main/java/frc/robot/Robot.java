@@ -40,8 +40,10 @@ public class Robot extends TimedRobot {
     //   SimGUI: Persistent Values, Preferences, RobotId, then restart Simulation
     //     changes networktables.json, networktables.json.bck (both Untracked)
     // set the default preference to something safe
-    if (!Preferences.containsKey(kRobotId.name())) {
-      Preferences.setString(kRobotId.name(), RobotId.Default.toString());
+    Preferences.setString(Constants.kRobotIdKey, RobotId.SwerveCompetition.toString());
+
+    if (!Preferences.containsKey(Constants.kRobotIdKey)) {
+      Preferences.setString(Constants.kRobotIdKey, RobotId.Default.toString());
     }
     // get the RobotId from Preferences
     String strId = Preferences.getString(Constants.kRobotIdKey, RobotId.Default.toString());
@@ -55,7 +57,7 @@ public class Robot extends TimedRobot {
     }
 
     // TODO: Remove this line when someone is able to test whether or not preferences are working
-    kRobotId = RobotId.SwerveTest;
+    //kRobotId = RobotId.SwerveTest;
     // report the RobotId to the SmartDashboard
     SmartDashboard.putString("RobotID", kRobotId.name());
 
@@ -126,7 +128,7 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
 
     // If we enable teleop for the first time, we should reset the drive yaw. Mainly for testing.
-    m_robotContainer.initDriveYaw(false);
+    //m_robotContainer.initDriveYaw(false);
 
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to

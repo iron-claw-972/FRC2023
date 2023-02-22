@@ -1,6 +1,7 @@
 package frc.robot.controls;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.commands.elevator.GetMaxHeight;
 import frc.robot.commands.elevator.MoveToHeight;
 import frc.robot.commands.elevator.ResetEncoderAtBottom;
 import frc.robot.constants.ElevatorConstants;
@@ -43,11 +44,15 @@ public class ManualController {
     m_manual.get(DPad.DOWN).onTrue(new ResetEncoderAtBottom(m_elevator));
     //TODO: calibrate elevator using absolute encoders(probably will not work yet as of 2/15/2023);
     //move to bottom node height
+    
     m_manual.get(Button.A).onTrue(new MoveToHeight(m_elevator, ElevatorConstants.kHeightBottomNode));
     //move to mid node height
     m_manual.get(Button.B).onTrue(new MoveToHeight(m_elevator, ElevatorConstants.kHeightMiddleNode));
     //move to top node height
-    m_manual.get(Button.Y).onTrue(new MoveToHeight(m_elevator, ElevatorConstants.kHeightTopNode));    
+    m_manual.get(Button.Y).onTrue(new MoveToHeight(m_elevator, ElevatorConstants.kHeightTopNode));   
+    
+   
+
   
   }
 }

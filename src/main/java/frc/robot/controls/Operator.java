@@ -34,9 +34,5 @@ public class Operator {
 
   }
 
-  public double getClampedThrottleValue() {
-    
-    return MathUtil.clamp(m_operator.get(Axis.LEFT_Y),-ElevatorConstants.kPowerLimit, ElevatorConstants.kPowerLimit);
-  }
 
 }

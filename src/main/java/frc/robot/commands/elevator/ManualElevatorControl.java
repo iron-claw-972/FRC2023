@@ -4,21 +4,22 @@
 package frc.robot.commands.elevator;
 
 import frc.robot.controls.Operator;
+import frc.robot.controls.TestController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Elevator;
 
 public class ManualElevatorControl extends CommandBase {
   Elevator m_elevator; 
   double m_currentElevatorPos;
-  Operator m_operator;
+  TestController m_testController;
   /**
    * This command allows for manual control of the elevator. 
    * TODO: get manual control of all subsystems to be exclusive to a third controller
    * @param elevator
    */
-  public ManualElevatorControl(Elevator elevator, Operator operator) {
+  public ManualElevatorControl(Elevator elevator, TestController testController) {
     m_elevator = elevator; 
-    m_operator = operator;
+    m_testController = testController;
     addRequirements(m_elevator);
   }
   @Override
@@ -28,12 +29,12 @@ public class ManualElevatorControl extends CommandBase {
   }
   @Override
   public void execute() {
-    if ((m_operator.getClampedThrottleValue() > 0) || (m_operator.getClampedThrottleValue() < 0)){
+    if ((m_testController.getClampedThrottleValue() > 0) || (m_testController.getClampedThrottleValue() < 0)){
       m_elevator.setEnabled(false); 
-      m_elevator.set(m_operator.getClampedThrottleValue());
+      m_elevator.set(m_testController.getClampedThrottleValue());
     }
 
-    if(m_operator.getClampedThrottleValue() == 0){
+    if(m_testController.getClampedThrottleValue() == 0){
       m_elevator.setEnabled(true); 
       m_currentElevatorPos = m_elevator.getHeight(); 
       m_elevator.setSetpoint(m_currentElevatorPos);

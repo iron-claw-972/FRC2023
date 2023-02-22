@@ -54,6 +54,7 @@ public class RobotContainer {
   private final ShuffleboardTab m_autoTab = Shuffleboard.getTab("Auto");
   private final ShuffleboardTab m_controllerTab = Shuffleboard.getTab("Controller");
   private final ShuffleboardTab m_testTab = Shuffleboard.getTab("Test");
+  private final ShuffleboardTab m_elevatorTab = Shuffleboard.getTab("Elevator");
 
   // The robot's subsystems are defined here...
   private Drivetrain m_drive;
@@ -74,23 +75,23 @@ public class RobotContainer {
     DriveConstants.update();
 
     // Create Drivetrain, because every robot will have a drivetrain
-    m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab);
-    m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
+    m_drive = null;//new Drivetrain(m_drivetrainTab, m_swerveModulesTab);
+    m_driver = null; //new GameControllerDriverConfig(m_drive, m_controllerTab, false);
 
     // If the robot is the competition robot, create the arm and intake
     if (Robot.kRobotId == RobotId.SwerveCompetition) {
 
-      m_arm = new FourBarArm();
-      m_intake = new Intake();
-      m_elevator = new Elevator();
+      m_arm = null; // new FourBarArm();
+      m_intake = null; // new Intake();
+      m_elevator = new Elevator(m_elevatorTab);
 
-      m_operator = new Operator(m_arm, m_intake);
+      m_operator = null; // new Operator(m_arm, m_intake);
       m_testController = new TestController(m_arm, m_intake, m_elevator);
-      m_manualController = new ManualController(m_arm, m_intake, m_elevator);
+      m_manualController = null; //new ManualController(m_arm, m_intake, m_elevator);
 
-      m_operator.configureControls();
+      // m_operator.configureControls();
       m_testController.configureControls();
-      m_manualController.configureControls();
+      // m_manualController.configureControls();
 
     } else {
 
@@ -110,21 +111,21 @@ public class RobotContainer {
     // load paths before auto starts
     PathGroupLoader.loadPathGroups();
 
-    m_driver.configureControls();
+    // m_driver.configureControls();
 
-    LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
-    LiveWindow.setEnabled(false);
+   // LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
+    //LiveWindow.setEnabled(false);
     
     
     autoChooserUpdate();
-    loadCommandSchedulerShuffleboard();
-    m_drive.setupDrivetrainShuffleboard();
-    m_drive.setupModulesShuffleboard();
-    m_driver.setupShuffleboard();
+    //loadCommandSchedulerShuffleboard();
+    // m_drive.setupDrivetrainShuffleboard();
+    // m_drive.setupModulesShuffleboard();
+    // m_driver.setupShuffleboard();
     
-    addTestCommands();
+    //addTestCommands();
 
-    m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive, m_driver));
+    // m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive, m_driver));
   }
 
   /**
@@ -156,7 +157,7 @@ public class RobotContainer {
     m_testTab.add("Test Drive Velocity", new TestDriveVelocity(m_drive, testEntry));
     m_testTab.add("Heading PID", new TestHeadingPID(m_drive, testEntry));
     m_testTab.add("Steer angle", new TestSteerAngle(m_drive, testEntry));
-    m_testTab.add("Odometry Test", new OdometryTestCommand(m_drive, new Transform2d(new Translation2d(1,1), new Rotation2d(Math.PI))));
+    m_testTab.add("Odometry Test", new OdometryTestCommand(m_drive, new Transform2d(new Translation2d(1,1), new Rotation2d(Math.PI))));  
   }
 
   /**
