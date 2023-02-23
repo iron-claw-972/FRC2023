@@ -23,13 +23,10 @@ public class BalanceCommand extends CommandBase {
         m_pid.setTolerance(DriveConstants.kBalanceTolerance);
     }
 
-    /*
-     * Determines the values of the vectors of pitch, yaw, and roll. 
-     */
     @Override
     public void initialize() {
         m_pid.setSetpoint(0);
-        if(90 - m_drive.getAngleHeading() > m_drive.getAngleHeading())  { //Determines whether to use roll or pitch
+        if(Math.abs(90 - m_drive.getAngleHeading()) > Math.PI/2)  { //Determines whether to use roll or pitch
             m_balanceMode = false;
         }
         else  {
@@ -39,13 +36,12 @@ public class BalanceCommand extends CommandBase {
 
     @Override
     public void execute() {
-        m_currentAngle = Functions.calculateHypotenuse(m_drive.getAngleHeading(), Functions.calculateHypotenuse(m_drive.getPigeon().getPitch(), m_drive.getPigeon().getRoll()));
         m_output = MathUtil.clamp(m_pid.calculate(m_currentAngle, DriveConstants.kBalanceSetpoint), -DriveConstants.kBalanceMaxOutput, DriveConstants.kBalanceMaxOutput);
         if(m_balanceMode) {
             m_drive.driveHeading(m_output, 0, 0, true);
         }
         else {
-            m_drive.driveHeading(m_output, 0, 90, true);
+            m_drive.driveHeading(m_output, 0, Math.PI, true);
         }
     }
 

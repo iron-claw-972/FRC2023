@@ -28,9 +28,8 @@ import frc.robot.constants.Constants;
 import frc.robot.constants.DriveConstants;
 import frc.robot.constants.ModuleConstants;
 import frc.robot.constants.OIConstants;
-import frc.robot.controls.GameControllerDriverConfig;
 import frc.robot.util.LogManager;
-import lib.controllers.GameController;
+
 
 /** 
  * Represents a swerve drive style drivetrain.
@@ -97,18 +96,12 @@ public class Drivetrain extends SubsystemBase {
   // modules needed to distinguish in chooser
   private Module m_prevModule;
 
-  GameControllerDriverConfig m_config = new GameControllerDriverConfig(null, m_drivetrainTab, m_hasResetYaw);
-
-  GameController m_Controller = new GameController(OIConstants.kDriverJoy);
-
   /**
    * Creates a new Swerve Style Drivetrain.
    * @param drivetrainTab the shuffleboard tab to display drivetrain data on
    * @param swerveModulesTab the shuffleboard tab to display module data on
    */
   public Drivetrain(ShuffleboardTab drivetrainTab, ShuffleboardTab swerveModulesTab) {
-
-    m_config.configureControls();
 
     LiveWindow.disableAllTelemetry();
     m_drivetrainTab = drivetrainTab;
@@ -139,8 +132,7 @@ public class Drivetrain extends SubsystemBase {
     updateOdometry();
     
     m_fieldDisplay.setRobotPose(getPose());
-     
-    }
+  }
 
   /**
    * 
@@ -280,11 +272,6 @@ public class Drivetrain extends SubsystemBase {
   */
   public double getAngleHeading() {
     return MathUtil.angleModulus(m_pigeon.getRotation2d().getRadians());
-  }
-
-  public Pigeon2 getPigeon()
-  {
-    return m_pigeon;
   }
   
   /**
