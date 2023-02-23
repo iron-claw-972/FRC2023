@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 /**
  * Mech2d representation of the robot mechanism and grid.
  * 
+ * <p> Make this a singleton.
+ * 
  * <p> Maintaining the Mech2d should be inexpensive: values should only be transmitted if they are changed,
  * only a few values are changed (distance, elevator length, and fourbar angle),
  * and those value only need to change rarely.
