@@ -17,16 +17,17 @@ public class Operator {
   private GameController operator = new GameController(OIConstants.kOperatorJoy);
   private FourBarArm m_arm;
   private Intake m_intake;
-
+  private Drivetrain m_drive;
   /**
    * Configures all of the operator controls.
    */
-  public Operator(FourBarArm arm, Intake intake){
+  public Operator(FourBarArm arm, Intake intake, Drivetrain drive){
     m_arm = arm;
     m_intake = intake;
+    m_drive = drive;
   }
 
-  public void configureControls(Drivetrain drive) {
+  public void configureControls() {
     
     // elevator controls
     operator.get(Button.Y).onTrue(new ExtendToPosition(m_arm, ArmConstants.kTopPosition));
@@ -40,6 +41,6 @@ public class Operator {
     operator.get(DPad.LEFT).onTrue(new InstantCommand(() -> m_intake.stop(), m_intake));
 
     // balance command
-    operator.get(Button.RB).onTrue(new BalanceCommand(drive));
+    operator.get(Button.RB).onTrue(new BalanceCommand(m_drive));
   }
 }
