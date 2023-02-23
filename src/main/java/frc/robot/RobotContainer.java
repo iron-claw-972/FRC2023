@@ -176,7 +176,7 @@ public class RobotContainer {
     m_autoCommand.addOption("DriveSidewaysPath", new PathPlannerCommand(PathGroupLoader.getPathGroup("DriveSidewaysPath"), 0 ,m_drive, true));
     m_autoCommand.addOption("Odometry Test 1", new PathPlannerCommand(PathGroupLoader.getPathGroup("Odometry Test 1"), 0 ,m_drive, true));
     m_autoCommand.addOption("Figure 8", new PathPlannerCommand(PathGroupLoader.getPathGroup("Figure 8"), 0 ,m_drive, true));
-  
+    m_autoCommand.addOption("To Center And Back", new PathPlannerCommand(PathGroupLoader.getPathGroup("To Center And Back"), 1, m_drive, true));
     
     m_autoTab.add("Auto Chooser", m_autoCommand);}
 
