@@ -10,8 +10,10 @@ import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Robot.RobotId;
 import frc.robot.commands.DefaultDriveCommand;
@@ -65,7 +67,7 @@ public class RobotContainer {
   private final ManualController m_manualController;
 
   /** The mech2d drawing of the robot. Use this instance to show the state of the robot. */
-  public Mechanism m_mechanism = new Mechanism();
+  public Mechanism m_mechanism = Mechanism.getInstance();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -124,6 +126,12 @@ public class RobotContainer {
     addTestCommands();
 
     m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive, m_driver));
+
+    // test Mechanism commands
+    SmartDashboard.putData("elevator down", new InstantCommand(() -> m_mechanism.setElevatorHeight(0.1)));
+    SmartDashboard.putData("elevator up", new InstantCommand(() -> m_mechanism.setElevatorHeight(1.2)));
+    SmartDashboard.putData("FB in", new InstantCommand(() -> m_mechanism.setFourBarAngle(150.0)));
+    SmartDashboard.putData("FB out", new InstantCommand(() -> m_mechanism.setFourBarAngle(0.0)));
   }
 
   /**

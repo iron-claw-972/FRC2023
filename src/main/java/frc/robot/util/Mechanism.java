@@ -6,13 +6,12 @@ import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 
 /**
  * Mech2d representation of the robot mechanism and grid.
  * 
- * <p> we could chain a lot of the construction.
+ * <p> The construction can be chained.
  * 
  * <p> Maintaining the Mech2d should be inexpensive: values should only be transmitted if they are changed,
  * only a few values are changed (distance, elevator length, and fourbar angle),
@@ -23,6 +22,9 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
  * <p> See https://docs.wpilib.org/en/stable/docs/software/dashboards/glass/mech2d-widget.html
  */
 public class Mechanism {
+    // the display (there is only one)
+    static private Mechanism m_instance = null;
+
     /* Mechanism2d canvas -- uses inches */
     Mechanism2d m_mech2d = new Mechanism2d(72, 96);
 
@@ -43,7 +45,7 @@ public class Mechanism {
     // the intake
     MechanismLigament2d m_intake;
 
-    public Mechanism() {
+    private Mechanism() {
         Color8Bit colorSpace = new Color8Bit(0, 0, 0);
         Color8Bit colorNode = new Color8Bit(0, 255, 0);
         Color8Bit colorElevator = new Color8Bit(255, 128, 128);
@@ -122,6 +124,20 @@ public class Mechanism {
     }
 
     /**
+     * There is only one display.
+     * @return
+     */
+    static public Mechanism getInstance() {
+        // if the instance has not been constructed
+        if (m_instance == null) {
+            // then make it
+            m_instance = new Mechanism();
+        }
+        
+        return m_instance;
+    }
+
+    /**
      * Set the distance of the robot from the grid.
      * @param dist
      */
@@ -152,7 +168,7 @@ public class Mechanism {
      */
     public void setFourBarAngle(double angle) {
         // restrict angle to -170, 0
-        double ang = MathUtil.clamp(angle, -170, 0);
+        double ang = MathUtil.clamp(angle, 0, 170);
 
         m_fb2.setAngle(ang);
         m_intake.setAngle(-ang);
