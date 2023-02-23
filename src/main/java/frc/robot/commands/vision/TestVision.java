@@ -70,8 +70,12 @@ public class TestVision extends CommandBase{
       m_encoderPosition = getDist();
       if(m_printCounter%printDelay==0){
         double dist1 = Math.abs(m_encoderPosition-m_encoderStart);
-        double dist2 = Math.sqrt(Math.pow(m_currentPose.getX()-m_startPose.getX(), 2) + Math.pow(m_currentPose.getY()-m_startPose.getY(), 2));
-        System.out.printf("\nEncoder distance: %.4f\nVision distance: %.4f\nDifference: %.4f\nPercent difference: %.4f%%\n", dist1, dist2, dist2-dist1, (dist2-dist1)/dist1*100);
+        double dist2 = Math.hypot(m_currentPose.getX()-m_startPose.getX(),
+          m_currentPose.getY()-m_startPose.getY());
+        System.out.printf("\nEncoder distance: %.4f\nVision distance: %.4f\n",
+          dist1, dist2);
+        System.out.printf("Difference: %.4f\nPercent difference: %.4f%%\n",
+          dist2-dist1, (dist2-dist1)/dist1*100);
       }
     }
   }
