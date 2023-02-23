@@ -31,6 +31,7 @@ import frc.robot.controls.TestController;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.Intake;
+import frc.robot.util.Mechanism;
 import frc.robot.util.PathGroupLoader;
 
 /**
@@ -62,6 +63,9 @@ public class RobotContainer {
   private final Operator m_operator;
   private final TestController m_testController;
   private final ManualController m_manualController;
+
+  /** The mech2d drawing of the robot. Use this instance to show the state of the robot. */
+  public Mechanism m_mechanism = new Mechanism();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {

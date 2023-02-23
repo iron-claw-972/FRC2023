@@ -54,8 +54,6 @@ public class Robot extends TimedRobot {
       }
     }
 
-    // TODO: Remove this line when someone is able to test whether or not preferences are working
-    kRobotId = RobotId.SwerveTest;
     // report the RobotId to the SmartDashboard
     SmartDashboard.putString("RobotID", kRobotId.name());
 
