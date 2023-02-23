@@ -104,9 +104,20 @@ public class Mechanism {
         // the root should be the center of the robot, but it is not right now
         // the deck of the robot should be off the ground.
         // The robot should be described in more detail.
+        // The Bumpers
+        MechanismLigament2d bumper1 = new MechanismLigament2d("bumper1", 13, 0);
+        MechanismLigament2d bumper2 = new MechanismLigament2d("bumper2", 13, 180);
+        m_root.append(bumper1);
+        m_root.append(bumper2);
+
         // make the elevator
-        m_elevator = new MechanismLigament2d("elevator", 50, 55, 3.0, colorElevator);
-        m_root.append(m_elevator);
+        // elevator is 10 inches high and 12 inches back
+        MechanismLigament2d spaceElevatorBack = new MechanismLigament2d("spaceEL", 12, 180, 0.2, colorSpace);
+        m_root.append(spaceElevatorBack);
+        MechanismLigament2d spaceElevatorUp = new MechanismLigament2d("elUp", 10, -90, 0.25, colorSpace);
+        spaceElevatorBack.append(spaceElevatorUp);
+        m_elevator = new MechanismLigament2d("elevator", 50, 55.0-90.0, 3.0, colorElevator);
+        spaceElevatorUp.append(m_elevator);
 
         // make the four bar (fake for now)
         MechanismLigament2d fb1 = new MechanismLigament2d("fb1", 12, -55, 3.0, colorFourBar);

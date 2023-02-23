@@ -32,6 +32,7 @@ import frc.robot.controls.TestController;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.Intake;
+import frc.robot.util.Mechanism;
 import frc.robot.util.PathGroupLoader;
 
 /**
