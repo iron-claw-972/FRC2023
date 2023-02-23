@@ -29,13 +29,13 @@ public class BalanceCommand extends CommandBase {
         m_inverted = 1;
 
         m_pid.setSetpoint(0);
-        if(Math.abs(Math.PI/2 - m_drive.getAngleHeading() % Math.PI) > Math.PI/4)  { //Determines whether to use roll or pitch
+        if(Math.abs(Math.PI/2 - Math.abs(m_drive.getAngleHeading())) > Math.PI/4)  { //Determines whether to use roll or pitch
             m_usePitch = false;
         }
         else  {
             m_usePitch = true;
         }
-        if(m_drive.getAngleHeading() > Math.PI)
+        if(m_drive.getAngleHeading() < 0)
         {
             m_inverted = -1;
         }
