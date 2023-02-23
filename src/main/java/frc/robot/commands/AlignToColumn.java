@@ -10,13 +10,13 @@ import frc.robot.controls.Operator;
 import frc.robot.subsystems.Drivetrain;
 
 /**
- * Go to 1-9 row in grid area
+ * Go to 1-9 column in grid area
  */
-public class AlignToRow extends SequentialCommandGroup {
+public class AlignToColumn extends SequentialCommandGroup {
 
   private final Drivetrain m_drive;
   
-  public AlignToRow(Drivetrain drive) {
+  public AlignToColumn(Drivetrain drive) {
     m_drive = drive;
     addRequirements(drive);
     addCommands(

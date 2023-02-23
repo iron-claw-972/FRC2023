@@ -2,7 +2,7 @@ package frc.robot.controls;
 
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.commands.AlignToRow;
+import frc.robot.commands.AlignToColumn;
 import frc.robot.commands.MoveToSelectedPose;
 import frc.robot.commands.SetFormationX;
 import frc.robot.constants.OIConstants;
@@ -30,7 +30,7 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
     kDriver.get(Button.A).whileTrue(new SetFormationX(super.getDrivetrain()));
 
     // This will be added/fixed in another PR
-    // kDriver.get(kDriver.RIGHT_TRIGGER_BUTTON).whileTrue(new AlignToRow(getDrivetrain()));
+    // kDriver.get(kDriver.RIGHT_TRIGGER_BUTTON).whileTrue(new AlignToColumn(getDrivetrain()));
     // kDriver.get(kDriver.RIGHT_TRIGGER_BUTTON).whileTrue(new MoveToSelectedPose(getDrivetrain()));
   }
   
