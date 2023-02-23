@@ -1,12 +1,11 @@
 package frc.robot.commands;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.controls.Operator;
 import frc.robot.subsystems.Drivetrain;
 
 /**
- * Uses PID to make the robot go to a specific pose
+ * Uses PID to make the robot go to the selected pose
  */
 public class MoveToSelectedPose extends CommandBase {
 
@@ -30,6 +29,6 @@ public class MoveToSelectedPose extends CommandBase {
   
   @Override
   public void end(boolean interrupted) {
-    m_drive.drive(0.0, 0.0, 0.0, false);
+    m_drive.stop();
   }
 }

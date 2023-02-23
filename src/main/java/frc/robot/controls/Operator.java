@@ -75,12 +75,10 @@ public class Operator {
 
 private final BooleanSupplier LEFT_STICK_LEFT = () -> m_operator.get(Axis.LEFT_X) < -0.75,
 LEFT_STICK_RIGHT = () -> m_operator.get(Axis.LEFT_X) > 0.75,
-LEFT_STICK_UP = () -> m_operator.get(Axis.LEFT_Y) < -0.75,
-LEFT_STICK_DOWN = () -> m_operator.get(Axis.LEFT_Y) > 0.75;
+LEFT_STICK_UP = () -> m_operator.get(Axis.LEFT_Y) < -0.75;
 private final BooleanSupplier RIGHT_STICK_LEFT = () -> m_operator.get(Axis.RIGHT_X) < -0.75,
 RIGHT_STICK_RIGHT = () -> m_operator.get(Axis.RIGHT_X) > 0.75,
-RIGHT_STICK_UP = () -> m_operator.get(Axis.RIGHT_Y) < -0.75,
-RIGHT_STICK_DOWN = () -> m_operator.get(Axis.RIGHT_Y) > 0.75;
+RIGHT_STICK_UP = () -> m_operator.get(Axis.RIGHT_Y) < -0.75;
 
   /**
    * This is not currently used because we are using other controls
