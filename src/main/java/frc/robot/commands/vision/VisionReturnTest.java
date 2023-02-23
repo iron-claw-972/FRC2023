@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.util.Vision;
 
-public class TestVision2 extends CommandBase{
+public class VisionReturnTest extends CommandBase{
   private Drivetrain m_drive;
   private Vision m_vision;
   private double m_encoderStart;
@@ -27,7 +27,7 @@ public class TestVision2 extends CommandBase{
    * @param distance How far it should move
    * @param drive The drivetrain
    */
-  public TestVision2(double speed, double distance, Drivetrain drive, Vision vision){
+  public VisionReturnTest(double speed, double distance, Drivetrain drive, Vision vision){
     addRequirements(drive);
     m_drive=drive;
     m_vision=vision;
@@ -57,8 +57,8 @@ public class TestVision2 extends CommandBase{
 
   /**
    * Moves the robot
-   * If it has moves farther than the specified distance, it turns around
-   * It stops when it can't see an April tag or it has passed its starting position
+   * If it has moved farther than the specified distance, it moves backward
+   * It stops when it can't see an April tag or it has reached its starting position
    */
   @Override
   public void execute(){
