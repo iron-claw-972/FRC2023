@@ -11,14 +11,14 @@ public class IntakeBottomPieceCommand extends SequentialCommandGroup{
     public IntakeBottomPieceCommand(){
     
         addCommands(
-        //deposit preloaded cone into high node of bottom grid
+        // deposit preloaded cone into high node of bottom grid
 
-        // **path not created yet, but have it drive to center
+        // **path not created yet, but have it drive to center (there is a structure of a path, but accuracy needs to be checked)
 
         // intake cone game piece
 
         // ** path not created yet, but have it drive back
-        
+
         // deposit cone high nodes in same grid
         );
             
