@@ -6,12 +6,13 @@ import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 
 /**
  * Mech2d representation of the robot mechanism and grid.
  * 
- * <p> Make this a singleton.
+ * <p> we could chain a lot of the construction.
  * 
  * <p> Maintaining the Mech2d should be inexpensive: values should only be transmitted if they are changed,
  * only a few values are changed (distance, elevator length, and fourbar angle),
@@ -25,8 +26,10 @@ public class Mechanism {
     /* Mechanism2d canvas -- uses inches */
     Mechanism2d m_mech2d = new Mechanism2d(72, 96);
 
-    // put the root at the bottom 24 inches from the left
-    MechanismRoot2d m_root = m_mech2d.getRoot("ChargedUp",24, 2);
+    // the root is nominally the center of the robot
+    //   put it at 18 inches
+    //   make ground level be 2 inches from the bottom.
+    MechanismRoot2d m_root = m_mech2d.getRoot("ChargedUp", 18, 2);
 
     // how far away the grid is from the root
     MechanismLigament2d m_distGrid;
@@ -34,11 +37,19 @@ public class Mechanism {
     // set the length of this element for the length of the elevator
     MechanismLigament2d m_elevator;
 
+    // the FourBar
+    MechanismLigament2d m_fb2;
+
+    // the intake
+    MechanismLigament2d m_intake;
+
     public Mechanism() {
         Color8Bit colorSpace = new Color8Bit(0, 0, 0);
-        Color8Bit colorNode = new Color8Bit(255, 255, 255);
+        Color8Bit colorNode = new Color8Bit(0, 255, 0);
         Color8Bit colorElevator = new Color8Bit(255, 128, 128);
         Color8Bit colorFourBar = new Color8Bit(255, 255, 0);
+        Color8Bit colorIntake = new Color8Bit(128, 128, 255);
+        Color8Bit colorShelf = new Color8Bit(255, 0, 0);
 
         // Build the grid
         // distance of the grid from the root
@@ -50,18 +61,38 @@ public class Mechanism {
         // connect it to the grid
         m_distGrid.append(front);
 
-        // move from root to the origin of the middle node
+        // details of the shelves are not clear to me. Fake for now
+        // move from front of grid to low shelf. Distance not clear.
+        MechanismLigament2d spaceShelf = new MechanismLigament2d("spaceShelf", 12, 0, 0.25, colorSpace);
+        m_distGrid.append(spaceShelf);
+        // the shelf is 1 foot 11.5 inches (23.5 inches) high
+        MechanismLigament2d riserLow = new MechanismLigament2d("lowRiser", 23.5, 90, 1.0, colorShelf);
+        spaceShelf.append(riserLow);
+        // unclear how deep the shelf is
+        MechanismLigament2d shelfLow = new MechanismLigament2d("shelfLow", 24, -90, 1.0, colorShelf);
+        riserLow.append(shelfLow);
+        // the high riser reaches to 2 feet 11.5 inches (35.5 inches - 23.5 inches = 12 inches)
+        MechanismLigament2d riserHigh = new MechanismLigament2d("riserHigh", 12, 90, 1.0, colorShelf);
+        shelfLow.append(riserHigh);
+        // unclear how deep the top shelf is
+        MechanismLigament2d shelfHigh = new MechanismLigament2d("shelfHi", 12, -90, 1.0, colorShelf);
+        riserHigh.append(shelfHigh);
+        // shelf ends at alliance wall
+        MechanismLigament2d wall = new MechanismLigament2d("wall", 36, 90, 4.0, colorShelf);
+        shelfHigh.append(wall);
+
+        // move from the grid to the origin of the middle node
         MechanismLigament2d spaceMiddle = new MechanismLigament2d("spaceMiddle", 22.75, 0.0, 0.25, colorSpace);
         m_distGrid.append(spaceMiddle);
-        // make the middle node
+        // make the middle node (2 feet 10 inches tall = 34 inches)
         MechanismLigament2d nodeMiddle = new MechanismLigament2d("nodeMiddle", 34.0, 90.0, 2.0, colorNode);
         // attach the middle node
         spaceMiddle.append(nodeMiddle);
 
-        // move from root to the origin of the high node
+        // move from front of grid to the origin of the high node
         MechanismLigament2d spaceHigh = new MechanismLigament2d("spaceHigh", 39.75,  0.0, 0.25, colorSpace);
         m_distGrid.append(spaceHigh);
-        // make the high node
+        // make the high node (3 feet 10 inches tall = 46 inches)
         MechanismLigament2d nodeHigh = new MechanismLigament2d("nodeHigh", 46.0, 90.0, 2.0, colorNode);
         // attach the high node
         spaceHigh.append(nodeHigh);
@@ -78,6 +109,13 @@ public class Mechanism {
         // make the four bar (fake for now)
         MechanismLigament2d fb1 = new MechanismLigament2d("fb1", 12, -55, 3.0, colorFourBar);
         m_elevator.append(fb1);
+        // moving part of the FourBar
+        m_fb2 = new MechanismLigament2d("fb2", 10, 150.0, 3.0, colorFourBar);
+        fb1.append(m_fb2);
+
+        // make the intake
+        m_intake = new MechanismLigament2d("intake", 10, -150.0, 4.0, colorIntake);
+        m_fb2.append(m_intake);
 
         // put the Mechanism2D on the dashboard
         SmartDashboard.putData("Mech2d", m_mech2d);
@@ -113,6 +151,10 @@ public class Mechanism {
      * @param angle
      */
     public void setFourBarAngle(double angle) {
+        // restrict angle to -170, 0
+        double ang = MathUtil.clamp(angle, -170, 0);
 
+        m_fb2.setAngle(ang);
+        m_intake.setAngle(-ang);
     }
 }
