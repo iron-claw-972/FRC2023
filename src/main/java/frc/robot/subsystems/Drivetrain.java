@@ -247,21 +247,30 @@ public class Drivetrain extends SubsystemBase {
   
   /** Updates the field relative position of the robot. */
   public void updateOdometry() {
+    // Updates pose based on encoders and gyro
     m_poseEstimator.update(
       m_pigeon.getRotation2d(),
       getModulePositions()
     );
+
+    // Updates pose based on vision
+    // An array list of poses returned by different cameras
     ArrayList<EstimatedRobotPose> estimatedPoses = m_vision.getEstimatedPoses(m_poseEstimator.getEstimatedPosition());
+    // The current position as a translation
     Translation2d currentEstimatedPoseTranslation = m_poseEstimator.getEstimatedPosition().getTranslation();
     for (int i = 0; i < estimatedPoses.size(); i++) {
       EstimatedRobotPose estimatedPose = estimatedPoses.get(i);
+      // The position of the closest april tag as a tranlsation
       Translation2d closestTagPoseTranslation = new Translation2d();
       for (int j = 0; j < estimatedPose.targetsUsed.size(); j++) {
+        // The position of the current april tag
         Translation2d currentTagPoseTranslation = m_vision.getTagPose(estimatedPose.targetsUsed.get(j).getFiducialId()).toPose2d().getTranslation();
+        // If the current april tag position is closer than the closest one, this makes makes it the closest
         if (j == 0 || currentEstimatedPoseTranslation.getDistance(currentTagPoseTranslation) < currentEstimatedPoseTranslation.getDistance(closestTagPoseTranslation)) {
           closestTagPoseTranslation = currentTagPoseTranslation;
         }
       }
+      // Adds the viison measurement for this camera
       m_poseEstimator.addVisionMeasurement(
         estimatedPose.estimatedPose.toPose2d(),
         estimatedPose.timestampSeconds,
