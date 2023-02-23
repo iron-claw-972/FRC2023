@@ -17,7 +17,9 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.constants.VisionConstants;
@@ -80,17 +82,20 @@ public class Vision {
    */
   public Pose2d getPose2d(Pose2d referencePose, Pose2d robotPose){
     ArrayList<EstimatedRobotPose> p = getEstimatedPoses(referencePose==null?robotPose:referencePose);
-    Pose2d p2;
+    Translation2d translation = new Translation2d();
+    double rotation = 0;
     if(p.size()==0){
       return null;
-    }else if(p.size()==1){
-      // If there is 1 thing in the array, p2 is that pose
-      p2=p.get(0).estimatedPose.toPose2d();
-    }else{
-      // If there are 2 things, p2 is the average between the 2
-      p2 = new Pose2d(p.get(0).estimatedPose.getX()/2+p.get(1).estimatedPose.getX()/2, p.get(0).estimatedPose.getY()/2+p.get(1).estimatedPose.getY()/2, new Rotation2d(p.get(0).estimatedPose.toPose2d().getRotation().getRadians()/2+p.get(1).estimatedPose.toPose2d().getRotation().getRadians()/2));
     }
-    return p2;
+    int posesUsed=0;
+    for(int i = 0; i < p.size(); i++){
+      if(p.get(i)!=null && p.get(i).estimatedPose!=null){
+        translation=translation.plus(p.get(i).estimatedPose.toPose2d().getTranslation());
+        rotation += p.get(i).estimatedPose.toPose2d().getRotation().getRadians();
+        posesUsed++;
+      }
+    }
+    return new Pose2d(translation.div(posesUsed), new Rotation2d(rotation/posesUsed));
   }
 
   public AprilTagFieldLayout getAprilTagFieldLayout(){
@@ -103,6 +108,10 @@ public class Vision {
    * @return Pose3d of the AprilTag
    */
   public Pose3d getTagPose(int id){
+    if(id < 1 || id > 8){
+      System.out.println("Tried to find the pose of april tag "+id);
+      return null;
+    }
     return getAprilTagFieldLayout().getTagPose(id).get();
   }
 

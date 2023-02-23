@@ -12,6 +12,7 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -264,7 +265,13 @@ public class Drivetrain extends SubsystemBase {
       Translation2d closestTagPoseTranslation = new Translation2d();
       for (int j = 0; j < estimatedPose.targetsUsed.size(); j++) {
         // The position of the current april tag
-        Translation2d currentTagPoseTranslation = m_vision.getTagPose(estimatedPose.targetsUsed.get(j).getFiducialId()).toPose2d().getTranslation();
+        Pose3d currentTagPose = m_vision.getTagPose(estimatedPose.targetsUsed.get(j).getFiducialId());
+        // If it can't find the april tag's pose, don't run the rest of the for loop for this tag
+        if(currentTagPose == null){
+          continue;
+        }
+        Translation2d currentTagPoseTranslation = currentTagPose.toPose2d().getTranslation();
+        
         // If the current april tag position is closer than the closest one, this makes makes it the closest
         if (j == 0 || currentEstimatedPoseTranslation.getDistance(currentTagPoseTranslation) < currentEstimatedPoseTranslation.getDistance(closestTagPoseTranslation)) {
           closestTagPoseTranslation = currentTagPoseTranslation;

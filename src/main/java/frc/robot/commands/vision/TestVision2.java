@@ -65,11 +65,12 @@ public class TestVision2 extends CommandBase{
   @Override
   public void execute(){
     m_drive.drive(m_direction*m_speed, 0, 0, false);
-    if(m_vision.getPose2d(m_currentPose, m_drive.getPose())==null){
+    Pose2d pose = m_vision.getPose2d(m_currentPose, m_drive.getPose());
+    if(pose==null){
       m_endCounter++;
     }else{
       m_endCounter = Math.max(0, m_endCounter-1);
-      m_currentPose = m_vision.getPose2d(m_currentPose, m_drive.getPose());
+      m_currentPose = pose;
       m_encoderPosition = getDist();
       double dist1 = Math.abs(m_encoderPosition-m_encoderStart);
       double dist2 = Math.sqrt(Math.pow(m_currentPose.getX()-m_startPose.getX(), 2) + Math.pow(m_currentPose.getY()-m_startPose.getY(), 2));
