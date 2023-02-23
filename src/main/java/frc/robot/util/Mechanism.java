@@ -33,29 +33,34 @@ public class Mechanism {
     MechanismLigament2d m_elevator;
 
     public Mechanism() {
+        Color8Bit colorSpace = new Color8Bit(0, 0, 0);
+        Color8Bit colorNode = new Color8Bit(255, 255, 255);
+        Color8Bit colorElevator = new Color8Bit(255, 128, 128);
+        Color8Bit colorFourBar = new Color8Bit(255, 255, 0);
+
         // Build the grid
         // distance of the grid from the root
         m_distGrid = new MechanismLigament2d("distGrid", 18, 0, 1.0, new Color8Bit(128, 128, 128));
         m_root.append(m_distGrid);
 
         // front of grid is 5 inches high
-        MechanismLigament2d front = new MechanismLigament2d("front", 5.0, 90.0, 2.0, new Color8Bit(255, 255, 255));
+        MechanismLigament2d front = new MechanismLigament2d("front", 5.0, 90.0, 2.0, colorNode);
         // connect it to the grid
         m_distGrid.append(front);
 
         // move from root to the origin of the middle node
-        MechanismLigament2d spaceMiddle = new MechanismLigament2d("spaceMiddle", 22.75, 0.0, 0.25, new Color8Bit(0, 0, 0));
+        MechanismLigament2d spaceMiddle = new MechanismLigament2d("spaceMiddle", 22.75, 0.0, 0.25, colorSpace);
         m_distGrid.append(spaceMiddle);
         // make the middle node
-        MechanismLigament2d nodeMiddle = new MechanismLigament2d("nodeMiddle", 34.0, 90.0, 2.0, new Color8Bit(255, 255, 255));
+        MechanismLigament2d nodeMiddle = new MechanismLigament2d("nodeMiddle", 34.0, 90.0, 2.0, colorNode);
         // attach the middle node
         spaceMiddle.append(nodeMiddle);
 
         // move from root to the origin of the high node
-        MechanismLigament2d spaceHigh = new MechanismLigament2d("spaceHigh", 39.75,  0.0, 0.25, new Color8Bit(0, 0, 0));
+        MechanismLigament2d spaceHigh = new MechanismLigament2d("spaceHigh", 39.75,  0.0, 0.25, colorSpace);
         m_distGrid.append(spaceHigh);
         // make the high node
-        MechanismLigament2d nodeHigh = new MechanismLigament2d("nodeHigh", 46.0, 90.0, 2.0, new Color8Bit(255, 255, 255));
+        MechanismLigament2d nodeHigh = new MechanismLigament2d("nodeHigh", 46.0, 90.0, 2.0, colorNode);
         // attach the high node
         spaceHigh.append(nodeHigh);
 
@@ -65,11 +70,11 @@ public class Mechanism {
         // the deck of the robot should be off the ground.
         // The robot should be described in more detail.
         // make the elevator
-        m_elevator = new MechanismLigament2d("elevator", 50, 55, 3.0, new Color8Bit(255, 128, 128));
+        m_elevator = new MechanismLigament2d("elevator", 50, 55, 3.0, colorElevator);
         m_root.append(m_elevator);
 
         // make the four bar (fake for now)
-        MechanismLigament2d fb1 = new MechanismLigament2d("fb1", 12, -55, 3, new Color8Bit(255, 255, 0));
+        MechanismLigament2d fb1 = new MechanismLigament2d("fb1", 12, -55, 3.0, colorFourBar);
         m_elevator.append(fb1);
 
         // put the Mechanism2D on the dashboard
