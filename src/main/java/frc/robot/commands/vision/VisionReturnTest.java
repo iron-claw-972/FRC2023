@@ -10,12 +10,13 @@ public class VisionReturnTest extends CommandBase{
   private Vision m_vision;
   private double m_encoderStart;
   private Pose2d m_startPose;
+  private Pose2d m_turnPose;
   private double m_encoderPosition;
   private Pose2d m_currentPose = null;
   private int m_endCounter = 0;
   private double m_speed;
   private int m_direction = 1;
-  private boolean m_turned = false;
+  private int m_turns;
   private double m_distanceToMove;
 
   //How many frames it has to not see anything to end the command
@@ -51,14 +52,14 @@ public class VisionReturnTest extends CommandBase{
     m_encoderStart=getDist();
     m_startPose=m_vision.getPose2d(m_currentPose, m_drive.getPose());
     m_direction=1;
-    m_turned=false;
+    m_turns=0;
     m_endCounter=0;
   }
 
   /**
    * Moves the robot
    * If it has moved farther than the specified distance, it moves backward
-   * It stops when it can't see an April tag or it has reached its starting position
+   * It then goes back to the initial pose
    */
   @Override
   public void execute(){
@@ -73,17 +74,27 @@ public class VisionReturnTest extends CommandBase{
       double dist1 = Math.abs(m_encoderPosition-m_encoderStart);
       double dist2 = Math.hypot(m_currentPose.getX()-m_startPose.getX(),
         m_currentPose.getY()-m_startPose.getY());
-      if(dist2>=m_distanceToMove&&m_direction==1){
+      if(dist2>=m_distanceToMove&&m_direction>0){
         System.out.printf("Encoder distance: %.4f\n", dist1);
         m_direction=-1;
-        m_turned=true;
+        m_turns=1;
+        m_turnPose=new Pose2d(m_currentPose.getTranslation(), m_currentPose.getRotation());
       }
-      if(m_turned && dist2 < 0.1){
+      if(m_turns>0){
+        double dist3 = m_currentPose.getTranslation().getDistance(m_turnPose.getTranslation());
+        if(Math.abs(dist3-m_distanceToMove)<0.1){
           m_endCounter+=2;
           m_drive.stop();
-      }
-      if(m_direction == -1 && dist2 > m_distanceToMove+0.5){
-        m_direction = 1;
+        }else if(dist3>m_distanceToMove && m_direction < 0){
+          m_direction *= -0.8;
+          m_turns++;
+        }else if(dist3<m_distanceToMove && m_direction > 0){
+          m_direction *= -0.8;
+          m_turns++;
+        }
+        if(m_turns>10){
+          m_endCounter+=2;
+        }
       }
     }
   }
