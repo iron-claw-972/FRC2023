@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -33,7 +32,6 @@ import frc.robot.controls.TestController;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.Intake;
-import frc.robot.util.Mechanism;
 import frc.robot.util.PathGroupLoader;
 
 /**
@@ -126,12 +124,6 @@ public class RobotContainer {
     addTestCommands();
 
     m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive, m_driver));
-
-    // test Mechanism commands
-    SmartDashboard.putData("elevator down", new InstantCommand(() -> m_mechanism.setElevatorHeight(0.1)));
-    SmartDashboard.putData("elevator up", new InstantCommand(() -> m_mechanism.setElevatorHeight(1.2)));
-    SmartDashboard.putData("FB in", new InstantCommand(() -> m_mechanism.setFourBarAngle(150.0)));
-    SmartDashboard.putData("FB out", new InstantCommand(() -> m_mechanism.setFourBarAngle(0.0)));
   }
 
   /**
