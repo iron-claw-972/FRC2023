@@ -94,7 +94,9 @@ public class VisionReturnTest extends CommandBase{
    */
   @Override
   public void end(boolean interrupted){
-    System.out.printf("\nVision distance: %.4f\nEncoder distance: %.4f\n", Math.sqrt(Math.pow(m_currentPose.getX()-m_startPose.getX(), 2) + Math.pow(m_currentPose.getY()-m_startPose.getY(), 2)), Math.abs(m_encoderPosition-m_encoderStart));
+    System.out.printf("\nVision distance: %.4f\nEncoder distance: %.4f\n",
+      Math.hypot(m_currentPose.getX()-m_startPose.getX(), m_currentPose.getY()-m_startPose.getY()),
+      Math.abs(m_encoderPosition-m_encoderStart));
     m_drive.stop();
   }
 
