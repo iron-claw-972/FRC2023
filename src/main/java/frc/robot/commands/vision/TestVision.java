@@ -24,6 +24,7 @@ public class TestVision extends CommandBase{
 
   /**
    * A command that moves and prints out distances
+   * It will stop when it can't see an april tag
    * @param speed What speed to move at
    * @param drive The drivetrain
    * @param vision The vision

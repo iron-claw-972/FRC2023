@@ -17,7 +17,6 @@ public class TestVision2 extends CommandBase{
   private int m_direction = 1;
   private boolean m_turned = false;
   private double m_distanceToMove;
-  private double m_closest;
 
   //How many frames it has to not see anything to end the command
   private static final int endDelay = 5;
@@ -54,7 +53,6 @@ public class TestVision2 extends CommandBase{
     m_direction=1;
     m_turned=false;
     m_endCounter=0;
-    m_closest=100;
   }
 
   /**
@@ -73,21 +71,19 @@ public class TestVision2 extends CommandBase{
       m_currentPose = pose;
       m_encoderPosition = getDist();
       double dist1 = Math.abs(m_encoderPosition-m_encoderStart);
-      double dist2 = Math.sqrt(Math.pow(m_currentPose.getX()-m_startPose.getX(), 2) + Math.pow(m_currentPose.getY()-m_startPose.getY(), 2));
+      double dist2 = Math.hypot(m_currentPose.getX()-m_startPose.getX(),
+        m_currentPose.getY()-m_startPose.getY());
       if(dist2>=m_distanceToMove&&m_direction==1){
         System.out.printf("Encoder distance: %.4f\n", dist1);
         m_direction=-1;
         m_turned=true;
-        // m_endCounter=1000;
       }
-      if(m_turned){
-        m_closest=Math.min(dist2, m_closest);
-        if(dist2-m_closest>0.05){
-          System.out.println(dist2);
-          System.out.println(m_closest);
+      if(m_turned && dist2 < 0.1){
           m_endCounter+=2;
           m_drive.stop();
-        }
+      }
+      if(m_direction == -1 && dist2 > m_distanceToMove+0.5){
+        m_direction = 1;
       }
     }
   }
