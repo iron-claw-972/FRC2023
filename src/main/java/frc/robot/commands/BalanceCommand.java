@@ -13,7 +13,9 @@ public class BalanceCommand extends CommandBase {
 
     private double m_currentAngle, m_output;
 
-    private boolean m_balanceMode;
+    private boolean m_usePitch;
+
+    private int m_inverted;
  
     public BalanceCommand(Drivetrain drive) {
         m_drive = drive;
@@ -24,23 +26,29 @@ public class BalanceCommand extends CommandBase {
 
     @Override
     public void initialize() {
+        m_inverted = 1;
+
         m_pid.setSetpoint(0);
-        if(Math.abs(90 - m_drive.getAngleHeading()) > Math.PI/2)  { //Determines whether to use roll or pitch
-            m_balanceMode = false;
+        if(Math.abs(Math.PI/2 - m_drive.getAngleHeading() % Math.PI) > Math.PI/4)  { //Determines whether to use roll or pitch
+            m_usePitch = false;
         }
         else  {
-            m_balanceMode = true;
+            m_usePitch = true;
+        }
+        if(m_drive.getAngleHeading() > Math.PI)
+        {
+            m_inverted = -1;
         }
     }
 
     @Override
     public void execute() {
         m_output = MathUtil.clamp(m_pid.calculate(m_currentAngle, DriveConstants.kBalanceSetpoint), -DriveConstants.kBalanceMaxOutput, DriveConstants.kBalanceMaxOutput);
-        if(m_balanceMode) {
-            m_drive.driveHeading(m_output, 0, 0, true);
+        if(m_usePitch) {
+            m_drive.driveHeading(m_output, 0, m_inverted*Math.PI/2, true);
         }
         else {
-            m_drive.driveHeading(m_output, 0, Math.PI, true);
+            m_drive.driveHeading(m_output, 0, 0, true);
         }
     }
 
