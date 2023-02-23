@@ -18,22 +18,18 @@ public class AutoRoutine1 extends SequentialCommandGroup{
     */
      
     private Drivetrain m_drive;
-
     private FourBarArm m_arm;
 
     private double armSetpoint;
 
-    //THE WAYPOINTS ARE GOOFY RN BC NOT SURE WHICH WAYPOINT IS WHERE ON FIELD. ASK ROBERTO LATER
     public AutoRoutine1(Drivetrain drive, GoToPose goTo, FourBarArm arm)  {
         m_drive = drive;
         m_arm = arm;
         addCommands(
-            new PathPlannerCommand(PathGroupLoader.getPathGroup("BottomSimpleLine1"), 0 ,m_drive, true),
             new ExtendToPosition(m_arm, armSetpoint),
-            new PathPlannerCommand(PathGroupLoader.getPathGroup("BottomSimpleLine2"), 0 ,m_drive, false),
+            //deposit
+            new PathPlannerCommand(PathGroupLoader.getPathGroup("BottomSimpleLine1"), 0 ,m_drive, true)
             //intake
-            new PathPlannerCommand(PathGroupLoader.getPathGroup("BottomSimpleLine3"), 0 ,m_drive, false)
-            //engage
         );
     }
 }
