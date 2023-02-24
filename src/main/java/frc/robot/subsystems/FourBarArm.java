@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -16,7 +17,8 @@ import frc.robot.util.LogManager;
 public class FourBarArm extends SubsystemBase {
   private final CANSparkMax m_motor;
   private final PIDController m_pid;
-  private final RelativeEncoder m_encoder;
+  //private final RelativeEncoder m_encoder;
+  private final DutyCycleEncoder m_absEncoder; 
   private final ArmFeedforward m_feedforward;
   private final ShuffleboardTab m_armTab;
   private boolean m_pidEnabled = false;
@@ -26,16 +28,18 @@ public class FourBarArm extends SubsystemBase {
     m_motor = new CANSparkMax(ArmConstants.kMotorId, MotorType.kBrushless);
     m_motor.setIdleMode(IdleMode.kBrake);
 
+    m_absEncoder = new DutyCycleEncoder(ArmConstants.kAbsEncoderId);
+
     // configure the encoder
     // TODO: use a kConstant instead of the 8192
-    m_encoder = m_motor.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, ArmConstants.kEncoderCountsPerRev);
+    //m_encoder = m_motor.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, ArmConstants.kEncoderCountsPerRev);
     // The RelativeEncoder reports angles in native revolutions by default.
     // See https://codedocs.revrobotics.com/java/com/revrobotics/relativeencoder
     // Change the encoder's reported value to radians (1 revolution = 2 pi radians).
-    m_encoder.setPositionConversionFactor(2*Math.PI);
+    //m_encoder.setPositionConversionFactor(2*Math.PI);
     // The RelativeEncoder reports RPM by default.
     // Change the velocity to radians per second (1 RPM = 2 pi radians / 60 seconds)
-    m_encoder.setVelocityConversionFactor(2.0 * Math.PI / 60.0);  
+    //m_encoder.setVelocityConversionFactor(2.0 * Math.PI / 60.0);  
 
  
     // make the PID controller
@@ -46,12 +50,12 @@ public class FourBarArm extends SubsystemBase {
     m_feedforward = new ArmFeedforward(0, ArmConstants.kG, 0);
 
     // go to the initial position (use the class method)
-    setArmSetpoint(ArmConstants.kInitialPosition);
+    //setArmSetpoint(ArmConstants.kInitialPosition);
 
     m_armTab = armTab;
 
-    LogManager.addDouble("Arm Angle", () -> m_encoder.getPosition());
-    LogManager.addDouble("Arm Velocity", () -> m_encoder.getVelocity());
+    //LogManager.addDouble("Arm Angle", () -> m_absEncoder.getPosition());
+    //LogManager.addDouble("Arm Velocity", () -> m_absEncoder.getVelocity());
     LogManager.addDouble("Arm Motor Power", () -> m_motor.get());
     LogManager.addDouble("Arm Setpoint", () -> m_pid.getSetpoint());
   }
@@ -71,12 +75,17 @@ public class FourBarArm extends SubsystemBase {
   public void periodic() {
     if(m_pidEnabled) {
       // calculate the PID power level
-      double pidPower = m_pid.calculate(m_encoder.getPosition());
+      
+      //double pidPower = m_pid.calculate(m_encoder.getPosition());
+      
       // calculate the feedforward power (nothing for now)
-      double feedforwardPower = m_feedforward.calculate(m_encoder.getPosition(), m_encoder.getVelocity());
-
+      
+      //double feedforwardPower = m_feedforward.calculate(m_encoder.getPosition(), m_encoder.getVelocity());
+      //feedforwardPower = 0; 
+      
       // set the motor power
-      setMotorPower(pidPower + feedforwardPower);
+      
+      //setMotorPower(pidPower + feedforwardPower);
     }
   }
 
@@ -89,8 +98,11 @@ public class FourBarArm extends SubsystemBase {
   }
 
   public void setUpArmShuffleboard() {
-    m_armTab.addNumber("Arm angle", () -> m_encoder.getPosition());
+    //m_armTab.addNumber("Arm angle", () -> m_encoder.getPosition());
     m_armTab.addNumber("Motor output", () -> m_motor.get());
+    m_armTab.addNumber("Abs getDistance(): ",()->m_absEncoder.getDistance());
+    m_armTab.addNumber("Abs getDistancePerRotation() : ",()->m_absEncoder.getDistancePerRotation());
+    m_armTab.addNumber("Abs getAbsolutePosition(): ",()->m_absEncoder.getAbsolutePosition());
     m_armTab.add("PID", m_pid);
     m_armTab.add(m_pid);
   }
