@@ -15,10 +15,10 @@ public class ArmConstants {
   public static final double kmaxMotorPower = +0.05;
 
   // TODO: distance values - TBD (fake values for now)
-  public static final double kinitialPosition = 0.0;
-  public static final double kshelfPosition = 0.4;
-  public static final double kintakePosition = 0.3;
+  public static final double kInitialPosition = 0.0;
+  public static final double kShelfPosition = 0.4;
+  public static final double kIntakePosition = 0.3;
   public static final double kmiddlePosition = 0.4;
   public static final double ktopPosition = 0.5;
-  public static final double klowPosition = kintakePosition;
+  public static final double klowPosition = kIntakePosition;
 }
