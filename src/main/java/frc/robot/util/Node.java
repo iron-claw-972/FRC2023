@@ -75,6 +75,6 @@ public class Node {
         // The pose of the node
         pose=new Pose3d(x, y, z, tag.getRotation());
         // The pose the robot goes to to score
-        scorePose=new Pose2d(tag.getX()+Units.inchesToMeters(14.25+VisionConstants.kgridDistance)*(alliance==Alliance.Red?-1:1), y, new Rotation2d(alliance==Alliance.Red?0:Math.PI));
+        scorePose=new Pose2d(tag.getX()+Units.inchesToMeters(14.25+VisionConstants.kGridDistance)*(alliance==Alliance.Red?-1:1), y, new Rotation2d(alliance==Alliance.Red?0:Math.PI));
     }
 }

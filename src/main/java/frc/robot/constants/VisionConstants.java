@@ -25,7 +25,7 @@ public class VisionConstants {
   ));
 
   //How far from the grid the robot should go to score in inches
-  public static double kgridDistance = 24;
+  public static double kGridDistance = 24;
 
 
   public static void update() {
