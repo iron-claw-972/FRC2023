@@ -50,7 +50,6 @@ public class AngleAlignTest extends CommandBase{
   @Override
   public void initialize(){
     m_angle = m_setpoint-2*Math.PI;
-    m_angle = getAngle();
   }
 
   /**

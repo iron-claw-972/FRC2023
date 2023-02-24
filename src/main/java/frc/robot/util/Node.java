@@ -43,9 +43,9 @@ public class Node {
   *  Grid column from left to right (1-9)
   */
   public Node(Vision vision, Alliance alliance, int row, int column){
-    this.alliance=alliance;
-    this.row=row;
-    this.column=column;
+    this.alliance = alliance;
+    this.row = row;
+    this.column = column;
     type = row==1?Types.HYBRID:column%3==2?Types.CUBE:Types.CONE;
     
     // Which April tag this node is closest to
