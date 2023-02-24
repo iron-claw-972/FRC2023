@@ -1,6 +1,6 @@
 package frc.robot.controls;
 
-import frc.robot.commands.RotateDeployingBar;
+import frc.robot.commands.deployingbar.RotateDeployingBar;
 import frc.robot.constants.DeployingBarConstants;
 import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.FourBarArm;
