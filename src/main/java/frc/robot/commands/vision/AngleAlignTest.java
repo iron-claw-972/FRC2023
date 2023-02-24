@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.util.Vision;
 
-public class Align extends CommandBase{
+public class AngleAlignTest extends CommandBase{
   private Drivetrain m_drive;
   private Vision m_vision;
   private double m_setpoint;
@@ -24,7 +24,7 @@ public class Align extends CommandBase{
    * @param angle The angle to go to
    * @param drive The drivetrain
    */
-  public Align(double angle, Drivetrain drive, Vision vision){
+  public AngleAlignTest(double angle, Drivetrain drive, Vision vision){
     addRequirements(drive);
     m_setpoint=angle;
     m_drive=drive;
