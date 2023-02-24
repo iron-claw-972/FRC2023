@@ -19,7 +19,7 @@ public class FourBarArm extends SubsystemBase {
 
   public FourBarArm() {
     // configure the motor
-    m_motor = new CANSparkMax(ArmConstants.kMotorID, MotorType.kBrushless);
+    m_motor = new CANSparkMax(ArmConstants.kMotorId, MotorType.kBrushless);
     m_motor.setIdleMode(IdleMode.kBrake);
 
     // configure the encoder
