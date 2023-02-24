@@ -38,6 +38,7 @@ public class Elevator extends SubsystemBase {
   private final ShuffleboardTab m_elevatorTab; 
   private double m_maxHeight; 
   private boolean m_enabled; 
+  private boolean m_isCalibrated = false; 
 
   public Elevator(ShuffleboardTab elevatorTab) {
     m_elevatorTab = elevatorTab; 
@@ -74,7 +75,7 @@ public class Elevator extends SubsystemBase {
      * Thus set the setpoint to 0, then atSetpoint() will be triggered, causing the 
      * ResetEncoderAtBottom() command to end
      */
-    if(m_enabled) {
+    if(m_enabled && m_isCalibrated) {
       double pid = m_elevatorPID.calculate(getHeight());
       double ff = m_elevatorFF.calculate(ElevatorConstants.kVelocity, ElevatorConstants.kAccel); 
       ff = 0; 
@@ -122,6 +123,11 @@ public class Elevator extends SubsystemBase {
   public void setEnabled(boolean isEnabled){
     m_enabled = isEnabled; 
   }
+
+  public void setIsCalibrated(){
+    m_isCalibrated = true; 
+  }
+
 
   public void setSetpoint(double setpoint){
     m_elevatorPID.setSetpoint(setpoint);

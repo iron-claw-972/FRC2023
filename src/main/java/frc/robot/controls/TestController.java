@@ -3,6 +3,7 @@ package frc.robot.controls;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.arm.ExtendToPosition;
+import frc.robot.commands.elevator.CalibrateElevator;
 import frc.robot.commands.elevator.GetMaxHeight;
 import frc.robot.commands.elevator.MoveToHeight;
 import frc.robot.commands.elevator.ResetEncoderAtBottom;
@@ -52,14 +53,15 @@ public class TestController {
     if (m_elevator != null) {
       //test.get(DPad.DOWN).onTrue(new InstantCommand(() -> m_elevator.setMotorPower(-0.1), m_elevator));
       //test.get(DPad.UP).onTrue(new InstantCommand(() -> m_elevator.setMotorPower(0.1),m_elevator));
+      
       test.get(DPad.LEFT).onTrue(new InstantCommand(() -> m_elevator.setMotorPower(0), m_elevator));
-      test.get(DPad.DOWN).onTrue(new ResetEncoderAtBottom(m_elevator));
-      test.get(DPad.UP).onTrue(new GetMaxHeight(m_elevator));
-    
+      test.get(DPad.DOWN).onTrue(new CalibrateElevator(m_elevator));
+      
+
       test.get(Button.A).onTrue(new MoveToHeight(m_elevator, ElevatorConstants.kHeightBottomNode));
-      //move to mid node height
+      // //move to mid node height
       test.get(Button.B).onTrue(new MoveToHeight(m_elevator, ElevatorConstants.kHeightMiddleNode));
-      //move to top node height
+      // //move to top node height
       test.get(Button.Y).onTrue(new MoveToHeight(m_elevator, ElevatorConstants.kHeightTopNode));   
       
 

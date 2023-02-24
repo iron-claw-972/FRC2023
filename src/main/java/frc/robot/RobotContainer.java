@@ -82,7 +82,7 @@ public class RobotContainer {
     if (Robot.kRobotId == RobotId.SwerveCompetition) {
 
       m_arm = null; // new FourBarArm();
-      m_intake = null; // new Intake();
+      m_intake = null; //new Intake();
       m_elevator = new Elevator(m_elevatorTab);
 
       m_operator = null; // new Operator(m_arm, m_intake);
