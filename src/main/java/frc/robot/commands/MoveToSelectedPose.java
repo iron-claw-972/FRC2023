@@ -1,6 +1,5 @@
 package frc.robot.commands;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.controls.Operator;
 import frc.robot.subsystems.Drivetrain;
@@ -30,6 +29,6 @@ public class MoveToSelectedPose extends CommandBase {
   
   @Override
   public void end(boolean interrupted) {
-    m_drive.drive(0.0, 0.0, 0.0, false);
+    m_drive.stop();
   }
 }
