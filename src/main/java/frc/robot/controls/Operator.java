@@ -12,6 +12,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.commands.arm.ExtendToPosition;
 import frc.robot.constants.ArmConstants;
 import frc.robot.subsystems.FourBarArm;
+import frc.robot.subsystems.Intake;
 import frc.robot.util.Node;
 import frc.robot.util.Vision;
 import lib.controllers.GameController;
@@ -39,11 +40,13 @@ public class Operator {
   private Drivetrain m_drive;
   private FourBarArm m_arm;
   private Vision m_vision;
+  private Intake m_intake;
 
-  public Operator(Drivetrain drive, FourBarArm arm, Vision vision){
+  public Operator(Drivetrain drive, FourBarArm arm, Vision vision, Intake intake){
     m_drive=drive;
     m_arm=arm;
     m_vision=vision;
+    m_intake=intake;
     m_operator = new GameController(OIConstants.kOperatorJoy);
     selectValue(0, 1);
   }
