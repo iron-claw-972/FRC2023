@@ -14,55 +14,85 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.IntakeConstants;
 
 import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.util.Color;
-
-import com.revrobotics.ColorSensorV3;
-import com.revrobotics.ColorMatchResult;
-import com.revrobotics.ColorMatch;  
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import com.revrobotics.Rev2mDistanceSensor;
+import com.revrobotics.Rev2mDistanceSensor.Port;
 
 
 public class Intake extends SubsystemBase {
 
-  private final CANSparkMax leftMotor;
-  private final CANSparkMax rightMotor;
+  private final CANSparkMax m_leftMotor;
+  private final CANSparkMax m_rightMotor;
+  private final ShuffleboardTab m_intakeTab;
+  private final double kConeThreshold = 420;
+  private final double kCubeThreshold = 69;
+  private final double kCubeTolerance = 5;
+  private boolean m_hasCone = false;
+  private boolean m_hasCube = false;
+  private double m_startTime = 0;
+  private final double kCubeTimeThreshold = 0; // seconds
+  private final Rev2mDistanceSensor m_distSensor = new Rev2mDistanceSensor(Port.kOnboard);
 
-  private final I2C.Port i2cPort = I2C.Port.kOnboard;
-  private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort); 
-  private final ColorMatch m_colorMatcher = new ColorMatch();
-  private final Color kYellowTarget = new Color(0.361, 0.524, 0.113);
-  private final Color kPurpleTarget = new Color(0.102, 0, 0.204);
+  public enum GamePiece {
+    CONE, CUBE, NONE
+  }
 
-  public Intake() {
-    leftMotor = new CANSparkMax(IntakeConstants.kLeftMotorPort, MotorType.kBrushless);
-    rightMotor = new CANSparkMax(IntakeConstants.kRightMotorPort, MotorType.kBrushless);
-    leftMotor.restoreFactoryDefaults();
-    rightMotor.restoreFactoryDefaults();
-
-    m_colorMatcher.addColorMatch(kPurpleTarget);
-    m_colorMatcher.addColorMatch(kYellowTarget);  
+  public Intake(ShuffleboardTab intakeTab) {
+    m_leftMotor = new CANSparkMax(IntakeConstants.kLeftMotorPort, MotorType.kBrushless);
+    m_rightMotor = new CANSparkMax(IntakeConstants.kRightMotorPort, MotorType.kBrushless);
+    m_leftMotor.restoreFactoryDefaults();
+    m_rightMotor.restoreFactoryDefaults();
+    m_intakeTab = intakeTab;
+    m_distSensor.setAutomaticMode(true);
+    setupShuffleboard();
   }
 
   public void intake(double speed) {
-    leftMotor.set(speed);
-    rightMotor.set(speed);
+    m_leftMotor.set(speed);
+    m_rightMotor.set(speed);
   }
 
-  public void stop() {
-    leftMotor.set(0);
-    rightMotor.set(0);
+  public void stopIntake() {
+    if(m_hasCone == true || m_hasCube == true){
+      m_leftMotor.set(0);
+      m_rightMotor.set(0);
+    }
   }
 
-  public String getHeldObject() {
-    if (m_colorSensor.getProximity() <= IntakeConstants.kGamePieceProximity) {
-      Color curr = m_colorSensor.getColor();
-      ColorMatchResult res = m_colorMatcher.matchClosestColor(curr);
-      if (res.color == kPurpleTarget) {
-        return "Cube";
+  @Override
+  public void periodic() {
+    double range = m_distSensor.getRange();
+    if (range == -1 || range > kCubeThreshold + kCubeTolerance) { // Empty intake
+      m_startTime = Timer.getFPGATimestamp();
+      m_hasCone = false;
+      m_hasCube = false;
+    } 
+    else if (range < kConeThreshold) { // Cone
+      m_hasCone = true;
+      m_hasCube = false;
+    } 
+    else if (range > kConeThreshold && range < kCubeThreshold + kCubeTolerance){ // Cube
+      if (Timer.getFPGATimestamp() + kCubeTimeThreshold >= m_startTime) {
+        m_hasCone = false;
+        m_hasCube = true;
       }
-      else if (res.color == kYellowTarget) {
-        return "Cone";
+      else {
+      m_startTime = Timer.getFPGATimestamp();
+      m_hasCone = false;
+      m_hasCube = false;
       }
     }
-    return "None";
   }
+
+  private void setupShuffleboard(){
+    m_intakeTab.addDouble("Proximity", m_distSensor::getRange);
+    m_intakeTab.addDouble("Timestamp", m_distSensor::getTimestamp);
+    // m_intakeTab.addBoolean("Has Cone", this::getCone);
+    // m_intakeTab.addBoolean("Has Cube", this::getCube);
+    // m_intakeTab.addBoolean("Is Contained", this::isContained);
+    // m_intakeTab.addDouble("Proximity", m_colorSensor::getProximity);
+    // m_intakeTab.addString("Color", this::getHexColor);
+  }
+  
 } 

@@ -50,6 +50,7 @@ public class RobotContainer {
   private final ShuffleboardTab m_swerveModulesTab = Shuffleboard.getTab("Swerve Modules");
   private final ShuffleboardTab m_autoTab = Shuffleboard.getTab("Auto");
   private final ShuffleboardTab m_controllerTab = Shuffleboard.getTab("Controller");
+  private final ShuffleboardTab m_intakeTab = Shuffleboard.getTab("Intake");
   private final ShuffleboardTab m_testTab = Shuffleboard.getTab("Test");
 
   // The robot's subsystems are defined here...
@@ -77,7 +78,7 @@ public class RobotContainer {
     if (Robot.kRobotId == RobotId.SwerveCompetition) {
 
       m_arm = new FourBarArm();
-      m_intake = new Intake();
+      m_intake = new Intake(m_intakeTab);
 
       m_operator = new Operator(m_arm, m_intake);
       m_testController = new TestController(m_arm, m_intake);
@@ -92,7 +93,7 @@ public class RobotContainer {
       DriverStation.reportWarning("Not registering subsystems and controls due to incorrect robot", false);
 
       m_arm = null;
-      m_intake = null;
+      m_intake = new Intake(m_intakeTab);
 
       m_operator = null;
       m_testController = null;

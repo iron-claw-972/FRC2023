@@ -20,6 +20,7 @@ public class Operator {
    * Configures all of the operator controls.
    */
   public void configureControls() {
+    
 
   }
 

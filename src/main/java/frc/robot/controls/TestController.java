@@ -30,10 +30,11 @@ public class TestController {
     test.get(Button.A).onTrue(new ExtendToPosition(m_arm, ArmConstants.kIntakePosition));
     test.get(Button.B).onTrue(new ExtendToPosition(m_arm, ArmConstants.kShelfPosition));
     
-    // intake controls
+    /* intake controls
     test.get(DPad.DOWN).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kIntakeSpeed), m_intake));
     test.get(DPad.UP).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kOuttakeSpeed),m_intake));
     test.get(DPad.LEFT).onTrue(new InstantCommand(() -> m_intake.stop(), m_intake));
+    */
   }
 }
 
