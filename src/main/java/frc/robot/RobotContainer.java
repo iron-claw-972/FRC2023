@@ -166,8 +166,8 @@ public class RobotContainer {
     m_testTab.add("Odometry Test", new OdometryTestCommand(m_drive, new Transform2d(new Translation2d(1,1), new Rotation2d(Math.PI))));
     m_testTab.add("Test vision (forward)", new TestVision(0.2, m_drive, m_vision));
     m_testTab.add("Test vision (backward)", new TestVision(-0.2, m_drive, m_vision));
-    m_testTab.add("Test vision 2 (forward)", new VisionReturnTest(0.2, 3, m_drive, m_vision));
-    m_testTab.add("Test vision 2 (backward)", new VisionReturnTest(-+ 0.2, 3, m_drive, m_vision));
+    m_testTab.add("Vision return test (forward)", new VisionReturnTest(0.2, 3, m_drive, m_vision));
+    m_testTab.add("Vision return test (backward)", new VisionReturnTest(-+ 0.2, 3, m_drive, m_vision));
     m_testTab.add("Align to 0 degrees", new Align(0, m_drive, m_vision));
     m_testTab.add("Align to 90 degrees", new Align(Math.PI/2, m_drive, m_vision));
     m_testTab.add("Align to -90 degrees", new Align(-Math.PI/2, m_drive, m_vision));
