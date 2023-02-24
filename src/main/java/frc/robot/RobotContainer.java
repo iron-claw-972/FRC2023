@@ -119,7 +119,7 @@ public class RobotContainer {
 
     m_drive.addTestCommands(testEntry);
 
-    m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive, m_driver));
+    m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive, m_driver));  
   }
 
   /**

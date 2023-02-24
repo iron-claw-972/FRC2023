@@ -9,7 +9,7 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
-import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -19,9 +19,10 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.util.PathGroupLoader;
 
 
-
 // Assuming this method is part of a drivetrain subsystem that provides the necessary methods
 public class PathPlannerCommand extends SequentialCommandGroup{
+
+    Alliance alliance;
     
     public PathPlannerCommand(ArrayList<PathPoint> waypoints, Drivetrain drive) {
         this(PathPlanner.generatePath(
@@ -44,9 +45,8 @@ public class PathPlannerCommand extends SequentialCommandGroup{
         if (pathIndex < 0 || pathIndex > pathGroup.size() - 1){
             throw new IndexOutOfBoundsException("Path index out of range"); 
         } 
-        PathPlannerTrajectory path = PathPlannerTrajectory.transformTrajectoryForAlliance(pathGroup.get(pathIndex),
-            DriverStation.getAlliance());
-
+        PathPlannerTrajectory path = pathGroup.get(pathIndex);
+    
         addCommands(
             (pathIndex == 0 && resetPose ? new InstantCommand(() -> drive.resetOdometry(path.getInitialHolonomicPose())) : new DoNothing()),
             new PrintCommand("Number of paths: " + pathGroup.size()),
@@ -58,12 +58,9 @@ public class PathPlannerCommand extends SequentialCommandGroup{
                 drive.getYController(), // Y controller (usually the same values as X controller)
                 drive.getRotationController(), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
                 drive::setModuleStates, // Module states consumer
-                //eventMap, // This argument is optional if you don't use event markers
+                true,
                 drive // Requires this drive subsystem
             )
         );
     }
-
-
-    
 }
