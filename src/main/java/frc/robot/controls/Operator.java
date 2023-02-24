@@ -1,7 +1,7 @@
 package frc.robot.controls;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.Button;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.arm.ExtendToPosition;
@@ -19,6 +19,7 @@ public class Operator {
   private FourBarArm m_arm;
   private Intake m_intake;
   private Drivetrain m_drive;
+
   /**
    * Configures all of the operator controls.
    */
@@ -29,14 +30,14 @@ public class Operator {
   }
 
   public void configureControls() {
-
+  
     // intake controls
     operator.get(DPad.DOWN).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kIntakeSpeed), m_intake));
     operator.get(DPad.UP).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kOuttakeSpeed),m_intake));
     operator.get(DPad.LEFT).onTrue(new InstantCommand(() -> m_intake.stop(), m_intake));
 
     // balance command
-    operator.get(DPad.RIGHT).onTrue(new BalanceCommand(m_drive));
+    operator.get(GameController.Button.RB).onTrue(new PrintCommand("TEST"));
   }
 
 }

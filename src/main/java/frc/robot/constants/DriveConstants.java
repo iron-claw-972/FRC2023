@@ -109,7 +109,7 @@ public class DriveConstants {
     public static final int kDriveFrontRight = 4; 
     public static final int kSteerFrontRight = 5;
     public static final int kEncoderFrontRight = 6; 
-    public static final double kSteerOffsetFrontRight = -2.764+Math.PI;
+    public static final double kSteerOffsetFrontRight = -1.6181;
     public static final double kDriveKSFrontRight = 0.61283*2;
     public static final double kDriveKVFrontRight = 4.45431*2;
     public static final double kDrivePFrontRight = 2*2;
@@ -165,5 +165,7 @@ public class DriveConstants {
     public static final double kBalanceMaxOutput = 0.5;
     public static final double kBalanceTolerance = 0.1;
     public static double kBalanceSetpoint = 0;
+
+    public static String kPigeonCAN;
 
 }

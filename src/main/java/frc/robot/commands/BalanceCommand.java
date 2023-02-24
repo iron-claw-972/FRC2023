@@ -3,6 +3,7 @@ package frc.robot.commands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.constants.DriveConstants;
 import frc.robot.subsystems.Drivetrain;
 
@@ -18,6 +19,7 @@ public class BalanceCommand extends CommandBase {
     private int m_inverted;
  
     public BalanceCommand(Drivetrain drive) {
+        
         m_drive = drive;
         addRequirements(drive);
         m_pid = new PIDController(DriveConstants.kBalanceP, DriveConstants.kBalanceI, DriveConstants.kBalanceD);

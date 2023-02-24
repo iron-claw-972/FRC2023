@@ -96,6 +96,11 @@ public class DriveConstants {
   public static double kHeadingI= 0;
   public static double kHeadingD= 0.4;
 
+  //balance PID
+  public static double kBalanceP= 0.3;
+  public static double kBalanceI= 0;
+  public static double kBalanceD= 0;
+
   // CAN
   public static String kDriveMotorCAN = Constants.kCanivoreCAN;
   public static String kSteerMotorCAN = Constants.kCanivoreCAN;
