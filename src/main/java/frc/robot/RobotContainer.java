@@ -22,7 +22,7 @@ import frc.robot.commands.test.SteerFeedForwardCharacterizationSingle;
 import frc.robot.commands.test.TestDriveVelocity;
 import frc.robot.commands.test.TestHeadingPID;
 import frc.robot.commands.test.TestSteerAngle;
-import frc.robot.commands.vision.Align;
+import frc.robot.commands.vision.AngleAlignTest;
 import frc.robot.commands.vision.TestVision;
 import frc.robot.commands.vision.VisionReturnTest;
 import frc.robot.constants.VisionConstants;
@@ -168,10 +168,10 @@ public class RobotContainer {
     m_testTab.add("Test vision (backward)", new TestVision(-0.2, m_drive, m_vision));
     m_testTab.add("Vision return test (forward)", new VisionReturnTest(0.2, 3, m_drive, m_vision));
     m_testTab.add("Vision return test (backward)", new VisionReturnTest(-+ 0.2, 3, m_drive, m_vision));
-    m_testTab.add("Align to 0 degrees", new Align(0, m_drive, m_vision));
-    m_testTab.add("Align to 90 degrees", new Align(Math.PI/2, m_drive, m_vision));
-    m_testTab.add("Align to -90 degrees", new Align(-Math.PI/2, m_drive, m_vision));
-    m_testTab.add("Align to 180 degrees", new Align(Math.PI, m_drive, m_vision));
+    m_testTab.add("Align to 0 degrees", new AngleAlignTest(0, m_drive, m_vision));
+    m_testTab.add("Align to 90 degrees", new AngleAlignTest(Math.PI/2, m_drive, m_vision));
+    m_testTab.add("Align to -90 degrees", new AngleAlignTest(-Math.PI/2, m_drive, m_vision));
+    m_testTab.add("Align to 180 degrees", new AngleAlignTest(Math.PI, m_drive, m_vision));
   }
 
   /**

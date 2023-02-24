@@ -26,9 +26,9 @@ public class AngleAlignTest extends CommandBase{
    */
   public AngleAlignTest(double angle, Drivetrain drive, Vision vision){
     addRequirements(drive);
-    m_setpoint=angle;
-    m_drive=drive;
-    m_vision=vision;
+    m_setpoint = angle;
+    m_drive = drive;
+    m_vision = vision;
   }
 
   private double getAngle(){
@@ -37,7 +37,7 @@ public class AngleAlignTest extends CommandBase{
     if(p.size()==0){
       return m_angle;
     }else if(p.size()==1){
-      p2=p.get(0).estimatedPose.toPose2d();
+      p2 = p.get(0).estimatedPose.toPose2d();
     }else{
       p2 = new Pose2d(p.get(0).estimatedPose.getX()/2+p.get(1).estimatedPose.getX()/2, p.get(0).estimatedPose.getY()/2+p.get(1).estimatedPose.getY()/2, new Rotation2d(p.get(0).estimatedPose.toPose2d().getRotation().getRadians()/2+p.get(1).estimatedPose.toPose2d().getRotation().getRadians()/2));
     }
@@ -49,8 +49,8 @@ public class AngleAlignTest extends CommandBase{
    */
   @Override
   public void initialize(){
-    m_angle=m_setpoint-2*Math.PI;
-    m_angle=getAngle();
+    m_angle = m_setpoint-2*Math.PI;
+    m_angle = getAngle();
   }
 
   /**
@@ -59,12 +59,12 @@ public class AngleAlignTest extends CommandBase{
    */
   @Override
   public void execute(){
-    m_angle=getAngle();
+    m_angle = getAngle();
     double a = m_angle;
     if(a<0&&m_setpoint>0){
-      a+=2*Math.PI;
+      a += 2*Math.PI;
     }else if(a>0&&m_setpoint<0){
-      a-=2*Math.PI;
+      a -= 2*Math.PI;
     }
     double speed = a>m_setpoint?-0.1:0.1;
     m_drive.drive(0, 0, -speed, false);
