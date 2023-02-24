@@ -120,14 +120,14 @@ public class Mechanism {
         spaceElevatorUp.append(m_elevator);
 
         // make the four bar (fake for now)
-        MechanismLigament2d fb1 = new MechanismLigament2d("fb1", 12, -55, 3.0, colorFourBar);
+        MechanismLigament2d fb1 = new MechanismLigament2d("fb1", 13.5, -55, 3.0, colorFourBar);
         m_elevator.append(fb1);
         // moving part of the FourBar
-        m_fb2 = new MechanismLigament2d("fb2", 10, 150.0, 3.0, colorFourBar);
+        m_fb2 = new MechanismLigament2d("fb2", 9.5, 150.0, 3.0, colorFourBar);
         fb1.append(m_fb2);
 
         // make the intake
-        m_intake = new MechanismLigament2d("intake", 10, -150.0, 4.0, colorIntake);
+        m_intake = new MechanismLigament2d("intake", 13.5, -150.0 * (32.0/48.0), 4.0, colorIntake);
         m_fb2.append(m_intake);
 
         // put the Mechanism2D on the dashboard
@@ -182,6 +182,7 @@ public class Mechanism {
         double ang = MathUtil.clamp(angle, 0, 170);
 
         m_fb2.setAngle(ang);
-        m_intake.setAngle(-ang);
+        // 32 tooth to  48 tooth
+        m_intake.setAngle(-ang * (32.0 / 48.0));
     }
 }
