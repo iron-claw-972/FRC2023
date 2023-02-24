@@ -114,8 +114,10 @@ public class RobotContainer {
     m_drive.setupDrivetrainShuffleboard();
     m_drive.setupModulesShuffleboard();
     m_driver.setupShuffleboard();
-    
-    addTestCommands();
+
+    GenericEntry testEntry = m_testTab.add("Test Results", false).getEntry();
+
+    m_drive.addTestCommands(testEntry);
 
     m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive, m_driver));
   }

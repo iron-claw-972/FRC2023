@@ -8,6 +8,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -17,11 +18,18 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commands.test.CircleDrive;
+import frc.robot.commands.test.DriveFeedForwardCharacterization;
+import frc.robot.commands.test.SteerFeedForwardCharacterizationSingle;
+import frc.robot.commands.test.TestDriveVelocity;
+import frc.robot.commands.test.TestHeadingPID;
+import frc.robot.commands.test.TestSteerAngle;
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.constants.swerve.ModuleConstants;
 import frc.robot.util.LogManager;
@@ -80,6 +88,7 @@ public class Drivetrain extends SubsystemBase {
     m_yPosEntry,
     m_headingEntry;
   private ShuffleboardTab m_swerveModulesTab, m_drivetrainTab;
+  private final ShuffleboardTab m_testTab = Shuffleboard.getTab("Test");
 
   private Double[] m_driveVelFeedForwardSaver = new Double[4];
   private Double[] m_driveStaticFeedForwardSaver = new Double[4];
@@ -116,6 +125,8 @@ public class Drivetrain extends SubsystemBase {
     
     m_fieldDisplay.setRobotPose(getPose());
     SmartDashboard.putData("Field", m_fieldDisplay);
+
+    
   }
 
   @Override
@@ -523,6 +534,19 @@ public class Drivetrain extends SubsystemBase {
     return m_moduleChooser;
   }
 
+   /**
+   * Adds the test commands to shuffleboard so they can be run that way.
+   */
+  public void addTestCommands(GenericEntry testEntry)  {
+    m_testTab.add("Circle Drive", new CircleDrive(this));
+    m_testTab.add("Drive FeedForward", new DriveFeedForwardCharacterization(this));
+    m_testTab.add("Steer Single FeedForward", new SteerFeedForwardCharacterizationSingle(this));
+    m_testTab.add("Test Drive Velocity", new TestDriveVelocity(this, testEntry));
+    m_testTab.add("Heading PID", new TestHeadingPID(this, testEntry));
+    m_testTab.add("Steer angle", new TestSteerAngle(this, testEntry));
+    //m_testTab.add("Odometry Test", new OdometryTestCommand(this, new Transform2d(new Translation2d(1,1), new Rotation2d(Math.PI))));
+  }
+
   /**
    * Sets up module chooser.
    */
@@ -532,5 +556,6 @@ public class Drivetrain extends SubsystemBase {
     m_moduleChooser.addOption("Back Left", m_modules[2]);
     m_moduleChooser.addOption("Back Right", m_modules[3]);
   }
+
 
 }
