@@ -27,7 +27,7 @@ public class Robot extends TimedRobot {
     Default, SwerveCompetition, SwerveTest,
     ClassBot1, ClassBot2, ClassBot3, ClassBot4
   };
-  private static RobotId robotId = RobotId.Default;
+  private static RobotId robotId = RobotId.SwerveTest;
 
   /**
    * This function is run when the robot is first started up and should be used for any

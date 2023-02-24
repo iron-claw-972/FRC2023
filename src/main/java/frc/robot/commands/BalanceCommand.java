@@ -35,8 +35,7 @@ public class BalanceCommand extends CommandBase {
         else  {
             m_usePitch = true;
         }
-        if(m_drive.getAngleHeading() < 0)
-        {
+        if(m_drive.getAngleHeading() < 0)  {
             m_inverted = -1;
         }
     }

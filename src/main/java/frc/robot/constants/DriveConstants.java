@@ -159,7 +159,7 @@ public class DriveConstants {
   public static final double kHeadingD = 0.4;
 
   //Balance Constants 
-    public static final double kBalanceP = 1.0;
+    public static final double kBalanceP = 0.3;
     public static final double kBalanceI = 0.0;
     public static final double kBalanceD = 0.0;
     public static final double kBalanceMaxOutput = 0.5;
