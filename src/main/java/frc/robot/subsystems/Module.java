@@ -18,13 +18,12 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.constants.Constants;
 import frc.robot.constants.FalconConstants;
+import frc.robot.constants.swerve.DriveConstants;
+import frc.robot.constants.swerve.ModuleConstants;
+import frc.robot.constants.swerve.ModuleType;
 import frc.robot.util.LogManager;
 import frc.robot.util.MotorFactory;
 import lib.ctre_shims.TalonEncoder;
-
-import frc.robot.constants.swerve.ModuleConstants;
-import frc.robot.constants.swerve.ModuleType;
-import frc.robot.constants.swerve.DriveConstants;
 
 /**
  * Represents a swerve module for a swerve drivetrain.
