@@ -20,16 +20,19 @@ public class AutoRoutine1 extends SequentialCommandGroup{
     private Drivetrain m_drive;
     private FourBarArm m_arm;
 
-    private double armSetpoint;
+    private double armSetpoint = Math.PI/6;
 
     public AutoRoutine1(Drivetrain drive, GoToPose goTo, FourBarArm arm)  {
         m_drive = drive;
         m_arm = arm;
+
         addCommands(
             new ExtendToPosition(m_arm, armSetpoint),
             //deposit
-            new PathPlannerCommand(PathGroupLoader.getPathGroup("BottomSimpleLine1"), 0 ,m_drive, true)
+            new PathPlannerCommand(PathGroupLoader.getPathGroup("BottomSimpleLine1"), 0 , m_drive, true),
             //intake
+            new PathPlannerCommand(PathGroupLoader.getPathGroup("BottomSimpleLine2"), 0 , m_drive, false)
+
         );
     }
 }
