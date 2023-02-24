@@ -117,11 +117,16 @@ public class Drivetrain extends SubsystemBase {
     };
     m_prevModule = m_modules[0];
     
-    m_poseEstimator = new SwerveDrivePoseEstimator(m_kinematics, m_pigeon.getRotation2d(), getModulePositions(), new Pose2d());
+    m_poseEstimator = new SwerveDrivePoseEstimator(m_kinematics,
+      m_pigeon.getRotation2d(),
+      getModulePositions(),
+      new Pose2d());
     m_poseEstimator.setVisionMeasurementStdDevs(VisionConstants.kBaseVisionPoseStdDevs);
 
     m_rotationController.enableContinuousInput(-Math.PI, Math.PI);
-    DoubleSupplier[] poseSupplier = {() -> getPose().getX(), () -> getPose().getY(), () -> getPose().getRotation().getRadians()};
+    DoubleSupplier[] poseSupplier = {() -> getPose().getX(),
+      () -> getPose().getY(),
+      () -> getPose().getRotation().getRadians()};
     LogManager.addDoubleArray("Pose2d", poseSupplier);
     
     m_fieldDisplay.setRobotPose(getPose());
