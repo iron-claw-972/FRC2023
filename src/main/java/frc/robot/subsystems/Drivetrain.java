@@ -119,14 +119,16 @@ public class Drivetrain extends SubsystemBase {
     };
     m_prevModule = m_modules[0];
     
-    m_poseEstimator = new SwerveDrivePoseEstimator(m_kinematics,
+    m_poseEstimator = new SwerveDrivePoseEstimator(
+      m_kinematics,
       m_pigeon.getRotation2d(),
       getModulePositions(),
       new Pose2d());
     m_poseEstimator.setVisionMeasurementStdDevs(VisionConstants.kBaseVisionPoseStdDevs);
 
     m_rotationController.enableContinuousInput(-Math.PI, Math.PI);
-    DoubleSupplier[] poseSupplier = {() -> getPose().getX(),
+    DoubleSupplier[] poseSupplier = {
+      () -> getPose().getX(),
       () -> getPose().getY(),
       () -> getPose().getRotation().getRadians()};
     LogManager.addDoubleArray("Pose2d", poseSupplier);
@@ -247,8 +249,8 @@ public class Drivetrain extends SubsystemBase {
    * @param rot the angle to move to, in radians
    */
   public void runChassisPID(double x, double y, double rot) {
-    double xSpeed = m_xController.calculate(m_poseEstimator.getEstimatedPosition().getTranslation().getX(), x);
-    double ySpeed = m_yController.calculate(m_poseEstimator.getEstimatedPosition().getTranslation().getY(), y);
+    double xSpeed = m_xController.calculate(m_poseEstimator.getEstimatedPosition().getX(), x);
+    double ySpeed = m_yController.calculate(m_poseEstimator.getEstimatedPosition().getY(), y);
     double rotRadians = m_rotationController.calculate(getAngleHeading(), rot);
     drive(xSpeed, ySpeed, rotRadians, true);
   }
