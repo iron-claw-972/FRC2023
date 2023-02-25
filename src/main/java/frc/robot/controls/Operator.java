@@ -9,6 +9,8 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.Intake;
 import lib.controllers.GameController;
+import lib.controllers.GameController.Button;
+import lib.controllers.GameController.DPad;
 
 public class Operator {
 
