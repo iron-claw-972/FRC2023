@@ -130,7 +130,7 @@ public class DriveConstants {
       kDriveFrontRight = 4; 
       kSteerFrontRight = 5;
       kEncoderFrontRight = 6; 
-      kSteerOffsetFrontLeft = -1.58+Math.PI;
+      kSteerOffsetFrontRight = 1.935+Math.PI;
       kDriveKSFrontRight = 0.61283;
       kDriveKVFrontRight = 4.45431*2;
       kDrivePFrontRight = 2*2;
@@ -145,7 +145,7 @@ public class DriveConstants {
       kDriveBackLeft = 7;
       kSteerBackLeft = 8;
       kEncoderBackLeft = 9; 
-      kSteerOffsetBackRight = -0.383494421839714+Math.PI;
+      kSteerOffsetBackLeft = -3.1415+Math.PI;
       kDriveKSBackLeft = 0.54150;
       kDriveKVBackLeft = 4.53909*2;
       kDrivePBackLeft = 2*2;
