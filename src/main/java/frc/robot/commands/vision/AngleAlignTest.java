@@ -2,6 +2,7 @@ package frc.robot.commands.vision;
 
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.function.Function;
 
 import org.photonvision.EstimatedRobotPose;
 
@@ -10,6 +11,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.util.Functions;
 import frc.robot.util.Vision;
 
 public class AngleAlignTest extends CommandBase{
@@ -39,7 +41,15 @@ public class AngleAlignTest extends CommandBase{
     }else if(p.size()==1){
       p2 = p.get(0).estimatedPose.toPose2d();
     }else{
-      p2 = new Pose2d(p.get(0).estimatedPose.getX()/2+p.get(1).estimatedPose.getX()/2, p.get(0).estimatedPose.getY()/2+p.get(1).estimatedPose.getY()/2, new Rotation2d(p.get(0).estimatedPose.toPose2d().getRotation().getRadians()/2+p.get(1).estimatedPose.toPose2d().getRotation().getRadians()/2));
+      p2 = new Pose2d(
+        p.get(0).estimatedPose.getX() / 2 + p.get(1).estimatedPose.getX() / 2, 
+        p.get(0).estimatedPose.getY() / 2 + p.get(1).estimatedPose.getY() / 2, 
+        new Rotation2d( Functions.modulusMidpoint(
+          p.get(0).estimatedPose.toPose2d().getRotation().getRadians(),
+          p.get(1).estimatedPose.toPose2d().getRotation().getRadians(),
+          -Math.PI, Math.PI
+        ))
+      );
     }
     return p2.getRotation().getRadians();
   }
