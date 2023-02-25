@@ -41,7 +41,8 @@ public class TestVision extends CommandBase{
   @Override
   public void initialize(){
     m_drive.enableVision(false);
-    m_visionStartTranslation = m_vision.getPose2d(m_currentPose, m_drive.getPose()).getTranslation();
+    m_currentPose = m_vision.getPose2d(null, m_drive.getPose());
+    m_visionStartTranslation = m_currentPose.getTranslation();
     m_driveStartTranslation = m_drive.getPose().getTranslation();
 
   }
@@ -53,21 +54,25 @@ public class TestVision extends CommandBase{
   @Override
   public void execute(){
     m_drive.drive(m_speed, 0, 0, false);
-    Pose2d pose = m_vision.getPose2d(m_currentPose, m_drive.getPose());
-    if(pose==null){
-      m_endCounter++;
-    }else{
+    Pose2d newestPose = m_vision.getPose2d(m_currentPose, m_drive.getPose());
+
+    if(newestPose != null){
+      //update current pose
+      m_currentPose = newestPose;
+      // reset command end counter
       m_endCounter = 0;
+      // print every few cycle
       m_printCounter++;
-      m_currentPose = pose;
       if(m_printCounter % printDelay == 0){
-        double dist1 = m_drive.getPose().getTranslation().getDistance(m_driveStartTranslation);
-        double dist2 = m_currentPose.getTranslation().getDistance(m_visionStartTranslation);
+        double driveDistance = m_drive.getPose().getTranslation().getDistance(m_driveStartTranslation);
+        double visionDistance = m_currentPose.getTranslation().getDistance(m_visionStartTranslation);
         System.out.printf("\nEncoder distance: %.4f\nVision distance: %.4f\n",
-          dist1, dist2);
+          driveDistance, visionDistance);
         System.out.printf("Difference: %.4f\nPercent difference: %.4f%%\n",
-          dist2 - dist1, (dist2 - dist1) / dist1 * 100);
-      }
+          visionDistance - driveDistance, (visionDistance - driveDistance) / driveDistance * 100);
+      } 
+    }else{
+      m_endCounter++;
     }
   }
 
