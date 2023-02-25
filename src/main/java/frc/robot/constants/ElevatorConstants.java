@@ -22,11 +22,22 @@ public class ElevatorConstants {
   public static final double kVelocity = 0.25; 
   public static final double kAccel = 0; 
 
+  // Game constants
+  /** Middle Node height (in meters) */
+  public static final double kMiddleNodeHeightCone = Units.inchesToMeters(24.5);
+  public static final double kTopNodeHeightCone = Units.inchesToMeters(46);
+  public static final double kMiddleNodeHeightCube = Units.inchesToMeters(23.5);
+  public static final double kTopNodeHeightCube = Units.inchesToMeters(46);
+  public static final double kShelfIntakeHeight = Units.inchesToMeters(37.375);
 
-  public static final double kHeightBottomNode = 0.2; //based on Arnav's calcs: 
-  public static final double kHeightMiddleNode = 0.3; //based on Arnav's calcs: 
-  public static final double kHeightTopNode = 1.0; //based on Arnav's calcs: 
-  public static final double kMaxHeight = 0.5; 
+  /** elevator travel distance in meters**/
+
+  public static final double kMiddleNodeHeightConeTravel = calculateElevatorPosition(kMiddleNodeHeightCone);
+  public static final double kTopNodeHeightConeTravel = calculateElevatorPosition(kTopNodeHeightCone);
+  public static final double kMiddleNodeHeightCubeTravel = calculateElevatorPosition(kMiddleNodeHeightCube);
+  public static final double kTopNodeHeightCubeTravel = calculateElevatorPosition(kTopNodeHeightCube);
+  public static final double kShelfIntakeHeightTravel = calculateElevatorPosition(kShelfIntakeHeight);
+
   public static final double kMinHeight = 0.0; 
 
   public static final double kGearRatio = (50.0/12.0)*(50.0/30.0)*(36.0/24.0); //TODO: put in actual GR
@@ -37,5 +48,14 @@ public class ElevatorConstants {
   public static final double kCalibrationPower = 0.2; 
   /** Normal full power level for the elevator motor. */
   public static final double kPowerLimit = 1; //1
+
+  /**
+   * Calculate the elevator extension.
+   * @param height height above the floor in meters.
+   * @returns elevator extension in meters.
+   */
+  private static double  calculateElevatorPosition(double height) {
+    return (height+Units.metersToInches(5.5))/(Math.sin(Math.toRadians(55))); 
+  }
 
 }

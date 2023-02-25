@@ -58,7 +58,7 @@ public class TestController {
       test.get(DPad.DOWN).onTrue(new CalibrateElevator(m_elevator));
       
 
-      test.get(Button.A).onTrue(new MoveToHeight(m_elevator, ElevatorConstants.kHeightBottomNode));
+      test.get(Button.A).onTrue(new MoveToHeight(m_elevator, ElevatorConstants.kHeight));
       // //move to mid node height
       test.get(Button.B).onTrue(new MoveToHeight(m_elevator, ElevatorConstants.kHeightMiddleNode));
       // //move to top node height

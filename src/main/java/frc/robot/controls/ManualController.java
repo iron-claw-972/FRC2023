@@ -36,21 +36,13 @@ public class ManualController {
     m_manual.get(Button.X).onTrue(new InstantCommand(() -> m_arm.setMotorPower(-0.05)));
     m_manual.get(Button.B).onTrue(new InstantCommand(() -> m_arm.setMotorPower(0)));
 
-    //Move to max height
-    m_manual.get(m_manual.LEFT_TRIGGER_BUTTON).onTrue(new MoveToHeight(m_elevator, ElevatorConstants.kMaxHeight)); 
     //Move to min height
     m_manual.get(m_manual.RIGHT_TRIGGER_BUTTON).onTrue(new MoveToHeight(m_elevator, ElevatorConstants.kMinHeight)); 
     //Calibrate elevator using inbuilt motor encoders
     m_manual.get(DPad.DOWN).onTrue(new ResetEncoderAtBottom(m_elevator));
     //TODO: calibrate elevator using absolute encoders(probably will not work yet as of 2/15/2023);
     //move to bottom node height
-    
-    m_manual.get(Button.A).onTrue(new MoveToHeight(m_elevator, ElevatorConstants.kHeightBottomNode));
-    //move to mid node height
-    m_manual.get(Button.B).onTrue(new MoveToHeight(m_elevator, ElevatorConstants.kHeightMiddleNode));
-    //move to top node height
-    m_manual.get(Button.Y).onTrue(new MoveToHeight(m_elevator, ElevatorConstants.kHeightTopNode));   
-    
+  
    
 
   
