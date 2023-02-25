@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Robot.RobotId;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.PoseTransform;
+import frc.robot.commands.auto.EngageBottomPath;
 import frc.robot.commands.auto.PathPlannerCommand;
 import frc.robot.commands.test.*;
 import frc.robot.constants.swerve.DriveConstants;
@@ -164,7 +165,6 @@ public class RobotContainer {
         ));
       }
     ));
-    
   }
 
   /**
@@ -179,7 +179,8 @@ public class RobotContainer {
     m_autoCommand.addOption("Odometry Test 1", new PathPlannerCommand(PathGroupLoader.getPathGroup("Odometry Test 1"), 0 ,m_drive, true));
     m_autoCommand.addOption("Figure 8", new PathPlannerCommand(PathGroupLoader.getPathGroup("Figure 8"), 0 ,m_drive, true));
     m_autoCommand.addOption("To Center And Back", new PathPlannerCommand(PathGroupLoader.getPathGroup("To Center And Back"), 0, m_drive, true));
-    
+    m_autoCommand.addOption("EngageBottomPath", new EngageBottomPath(m_drive));
+
     m_autoTab.add("Auto Chooser", m_autoCommand);}
 
   /**
