@@ -111,7 +111,10 @@ public class DriveConstants {
    * Updates the constants if the RobotId is not the competition robot.
    */
   public static void update() {
-    if (Robot.kRobotId == RobotId.SwerveTest) {
+    if (true){//Robot.kRobotId == RobotId.SwerveTest) {
+      // for (int i = 0 ; i< 5000; i++){
+      System.out.println("contsns switch");
+      // }
   
       kTrackWidth = Units.inchesToMeters(22.75); //22.75 swerve bot, 20.75 comp bot
   
@@ -120,9 +123,9 @@ public class DriveConstants {
       kDriveFrontLeft = 1;
       kSteerFrontLeft = 2;
       kEncoderFrontLeft = 3;
-      kSteerOffsetFrontLeft = 1.570793151855469;
-      kDriveKSFrontLeft = 0.62042527623669;
-      kDriveKVFrontLeft = 2.183851574403252;
+      kSteerOffsetFrontLeft = -1.58+Math.PI;
+      kDriveKSFrontLeft = 0.61534;
+      kDriveKVFrontLeft = 4.45071*2;
       kDrivePFrontLeft = 2*2;
       kDriveIFrontLeft = 0;
       kDriveDFrontLeft = 0;
@@ -135,9 +138,9 @@ public class DriveConstants {
       kDriveFrontRight = 4; 
       kSteerFrontRight = 5;
       kEncoderFrontRight = 6; 
-      kSteerOffsetFrontRight = -1.20724043995142;
-      kDriveKSFrontRight = 0.567492987095757;
-      kDriveKVFrontRight = 2.232057469169274;
+      kSteerOffsetFrontRight = 1.935+Math.PI;
+      kDriveKSFrontRight = 0.61283;
+      kDriveKVFrontRight = 4.45431*2;
       kDrivePFrontRight = 2*2;
       kDriveIFrontRight = 0;
       kDriveDFrontRight = 0;
@@ -150,9 +153,9 @@ public class DriveConstants {
       kDriveBackLeft = 7;
       kSteerBackLeft = 8;
       kEncoderBackLeft = 9; 
-      kSteerOffsetBackLeft = -0.032213531434536;
-      kDriveKSBackLeft = 0.515933693340089;
-      kDriveKVBackLeft = 2.27916756192326;
+      kSteerOffsetBackLeft = -3.1415+Math.PI;
+      kDriveKSBackLeft = 0.54150;
+      kDriveKVBackLeft = 4.53909*2;
       kDrivePBackLeft = 2*2;
       kDriveIBackLeft = 0;
       kDriveDBackLeft = 0;
@@ -165,9 +168,9 @@ public class DriveConstants {
       kDriveBackRight = 10;
       kSteerBackRight = 11;
       kEncoderBackRight = 12; 
-      kSteerOffsetBackRight = 2.7626938149333;
-      kDriveKSBackRight = 0.451867383172388;
-      kDriveKVBackRight = 2.381672800543307;
+      kSteerOffsetBackRight = -0.383494421839714+Math.PI;
+      kDriveKSBackRight = 0.49599;
+      kDriveKVBackRight = 4.75897*2;
       kDrivePBackRight = 2.2*2;
       kDriveIBackRight = 0;
       kDriveDBackRight = 0;
