@@ -20,19 +20,21 @@ public class SetFormationX extends CommandBase {
 
   @Override
   public void initialize() {
+    m_drive.enableStateDeadband(false);
   }
 
   @Override
   public void execute() {
     m_drive.setModuleStates(new SwerveModuleState[] {
-      new SwerveModuleState(0.01, new Rotation2d(Units.degreesToRadians(45))),
-      new SwerveModuleState(0.01, new Rotation2d(Units.degreesToRadians(-45))),
-      new SwerveModuleState(0.01, new Rotation2d(Units.degreesToRadians(-45))),
-      new SwerveModuleState(0.01, new Rotation2d(Units.degreesToRadians(45)))
+      new SwerveModuleState(0, new Rotation2d(Units.degreesToRadians(45))),
+      new SwerveModuleState(0, new Rotation2d(Units.degreesToRadians(-45))),
+      new SwerveModuleState(0, new Rotation2d(Units.degreesToRadians(-45))),
+      new SwerveModuleState(0, new Rotation2d(Units.degreesToRadians(45)))
     });
   }
 
   @Override
   public void end(boolean interrupted) {
+      m_drive.enableStateDeadband(true);
   }
 }

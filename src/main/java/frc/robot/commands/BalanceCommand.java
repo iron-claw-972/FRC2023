@@ -45,7 +45,7 @@ public class BalanceCommand extends CommandBase {
     @Override
     public void execute() {
 
-        m_output = MathUtil.clamp(m_pid.calculate(m_currentAngle, DriveConstants.kBalanceSetpoint), -DriveConstants.kBalanceMaxOutput, DriveConstants.kBalanceMaxOutput);
+        m_output = MathUtil.clamp(m_pid.calculate(m_currentAngle), -DriveConstants.kBalanceMaxOutput, DriveConstants.kBalanceMaxOutput);
         System.out.println(m_output);
         if(m_usePitch) {
             m_drive.driveHeading(m_output, 0, m_inverted*Math.PI/2, true);
