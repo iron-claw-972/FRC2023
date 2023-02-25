@@ -36,5 +36,5 @@ public class DefaultDriveCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_drive.drive(0.0, 0.0, 0.0, false);
-  }
+  } 
 }

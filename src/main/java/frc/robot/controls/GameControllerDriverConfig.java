@@ -2,6 +2,7 @@ package frc.robot.controls;
 
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.commands.BalanceCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.SetFormationX;
@@ -32,6 +33,8 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
   public void configureControls() { 
     kDriver.get(Button.START).onTrue(new InstantCommand(() -> super.getDrivetrain().setPigeonYaw(DriveConstants.kStartingHeadingDegrees)));
     kDriver.get(Button.A).whileTrue(new SetFormationX(super.getDrivetrain()));
+
+    kDriver.get(Button.RB).onTrue(new BalanceCommand(super.getDrivetrain()));
   }
   
   @Override

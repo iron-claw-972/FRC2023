@@ -16,12 +16,12 @@ public class ManualController {
   GameController m_manual = new GameController(OIConstants.kManualJoy);
   private FourBarArm m_arm;
   private Intake m_intake;
-  private Drivetrain m_drive;
   
-  public ManualController(FourBarArm arm, Intake intake, Drivetrain drive){
+  
+  public ManualController(FourBarArm arm, Intake intake){
     m_arm = arm;
     m_intake = intake;
-    m_drive = drive;
+    
   }
   
   public void configureControls() {
@@ -32,7 +32,5 @@ public class ManualController {
     m_manual.get(Button.Y).onTrue(new InstantCommand(() -> m_arm.setMotorPower(0.05)));
     m_manual.get(Button.X).onTrue(new InstantCommand(() -> m_arm.setMotorPower(-0.05)));
     m_manual.get(Button.B).onTrue(new InstantCommand(() -> m_arm.setMotorPower(0)));
-
-    m_manual.get(Button.RB).onTrue(new BalanceCommand(m_drive));
   }
 }

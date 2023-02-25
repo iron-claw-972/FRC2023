@@ -19,6 +19,7 @@ public class BalanceCommand extends CommandBase {
     private int m_inverted;
  
     public BalanceCommand(Drivetrain drive) {
+        
         m_drive = drive;
         addRequirements(drive);
         m_pid = new PIDController(DriveConstants.kBalanceP, DriveConstants.kBalanceI, DriveConstants.kBalanceD);
@@ -36,8 +37,7 @@ public class BalanceCommand extends CommandBase {
         else  {
             m_usePitch = true;
         }
-        if(m_drive.getAngleHeading() < 0)
-        {
+        if(m_drive.getAngleHeading() < 0)  {
             m_inverted = -1;
         }
     }
