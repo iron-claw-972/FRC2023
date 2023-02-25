@@ -6,10 +6,12 @@ import java.util.function.Function;
 
 import org.photonvision.EstimatedRobotPose;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.constants.TestConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.util.Functions;
 import frc.robot.util.Vision;
@@ -18,48 +20,20 @@ public class AngleAlignTest extends CommandBase{
   private Drivetrain m_drive;
   private Vision m_vision;
   private double m_setpoint;
-  private double m_angle;
+  private double m_mostRecentAngle;
   // private PIDController m_pid = new PIDController(1, 0.01, 0.1);
 
   /**
    * Aligns the robot to a specific angle
-   * @param angle The angle to go to
+   * @param targetAngle The angle to go to
    * @param drive The drivetrain
    */
-  public AngleAlignTest(double angle, Drivetrain drive, Vision vision){
+  public AngleAlignTest(double targetAngle, Drivetrain drive, Vision vision){
     addRequirements(drive);
-    m_setpoint = angle;
+    m_setpoint = targetAngle;
     m_drive = drive;
     m_vision = vision;
-  }
-
-  private double getAngle(){
-    ArrayList<EstimatedRobotPose> p = m_vision.getEstimatedPoses(m_drive.getPose());
-    Pose2d p2;
-    if(p.size()==0){
-      return m_angle;
-    }else if(p.size()==1){
-      p2 = p.get(0).estimatedPose.toPose2d();
-    }else{
-      p2 = new Pose2d(
-        p.get(0).estimatedPose.getX() / 2 + p.get(1).estimatedPose.getX() / 2, 
-        p.get(0).estimatedPose.getY() / 2 + p.get(1).estimatedPose.getY() / 2, 
-        new Rotation2d( Functions.modulusMidpoint(
-          p.get(0).estimatedPose.toPose2d().getRotation().getRadians(),
-          p.get(1).estimatedPose.toPose2d().getRotation().getRadians(),
-          -Math.PI, Math.PI
-        ))
-      );
-    }
-    return p2.getRotation().getRadians();
-  }
-
-  /**
-   * Initializes the command
-   */
-  @Override
-  public void initialize(){
-    m_angle = m_setpoint-2*Math.PI;
+    m_mostRecentAngle = m_setpoint + Math.PI;
   }
 
   /**
@@ -68,15 +42,9 @@ public class AngleAlignTest extends CommandBase{
    */
   @Override
   public void execute(){
-    m_angle = getAngle();
-    double a = m_angle;
-    if(a<0&&m_setpoint>0){
-      a += 2*Math.PI;
-    }else if(a>0&&m_setpoint<0){
-      a -= 2*Math.PI;
-    }
-    double speed = a>m_setpoint?-0.1:0.1;
-    m_drive.drive(0, 0, -speed, false);
+    m_mostRecentAngle = getAngle();
+    double speed = m_drive.getRotationController().calculate(m_mostRecentAngle, m_setpoint);
+    m_drive.drive(0, 0, speed, false);
   }
 
   /**
@@ -95,10 +63,22 @@ public class AngleAlignTest extends CommandBase{
    */
   @Override
   public boolean isFinished(){
-    double a = getAngle();
-    if(a<0&&m_setpoint>0){
-      a += 2*Math.PI;
+    return Math.abs(MathUtil.angleModulus( getAngle() - m_setpoint )) < TestConstants.kHeadingError;
+  }
+
+  private double getAngle(){
+    ArrayList<EstimatedRobotPose> estimatedPoses = m_vision.getEstimatedPoses(m_drive.getPose());
+    
+    if(estimatedPoses.size() == 1){
+      return estimatedPoses.get(0).estimatedPose.toPose2d().getRotation().getRadians();
     }
-    return Math.abs(a-m_setpoint)<Units.degreesToRadians(1);
+    if(estimatedPoses.size() == 2) {
+      return Functions.modulusMidpoint(
+          estimatedPoses.get(0).estimatedPose.toPose2d().getRotation().getRadians(),
+          estimatedPoses.get(1).estimatedPose.toPose2d().getRotation().getRadians(),
+          -Math.PI, Math.PI
+      );
+    }
+    return m_mostRecentAngle;
   }
 }
