@@ -23,9 +23,13 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commands.PoseTransform;
 import frc.robot.commands.test.CircleDrive;
 import frc.robot.commands.test.DriveFeedForwardCharacterization;
+import frc.robot.commands.test.GoToPoseTest;
+import frc.robot.commands.test.PoseTransformTest;
 import frc.robot.commands.test.SteerFeedForwardCharacterizationSingle;
 import frc.robot.commands.test.TestDriveVelocity;
 import frc.robot.commands.test.TestHeadingPID;
@@ -70,7 +74,7 @@ public class Drivetrain extends SubsystemBase {
   
   // PID Controllers
   // translation controllers have dummy constants that are just good enough to run the odometry test
-  private final PIDController m_xController = new PIDController(0.1, 0, 0);
+  private final PIDController m_xController = new PIDController(DriveConstants.kTranslationalP, DriveConstants.kTranslationalI, DriveConstants.kTranslationalD);
   private final PIDController m_yController = new PIDController(0.1, 0, 0);
   private final PIDController m_rotationController = new PIDController(DriveConstants.kHeadingP, DriveConstants.kHeadingI, DriveConstants.kHeadingD);
 
@@ -228,6 +232,7 @@ public class Drivetrain extends SubsystemBase {
       m_pigeon.getRotation2d(),
       getModulePositions()
     );
+    m_fieldDisplay.setRobotPose(m_odometry.getPoseMeters());
   }
   
   /**
@@ -544,6 +549,18 @@ public class Drivetrain extends SubsystemBase {
     m_testTab.add("Test Drive Velocity", new TestDriveVelocity(this, testEntry));
     m_testTab.add("Heading PID", new TestHeadingPID(this, testEntry));
     m_testTab.add("Steer angle", new TestSteerAngle(this, testEntry));
+    m_testTab.add("Transform Pose", new PoseTransformTest(this));
+    m_testTab.add("Go To Pose", new GoToPoseTest(this));
+    m_testTab.add("Odometry Test", new PoseTransform(this, new Transform2d(new Translation2d(1,1), new Rotation2d(Math.PI))));
+    m_testTab.add("Reset Pose", new InstantCommand(()-> {
+      this.resetOdometry(
+        new Pose2d(
+          this.getRequestedXPos().getDouble(0),
+          this.getRequestedYPos().getDouble(0), 
+          new Rotation2d(this.getRequestedHeadingEntry().getDouble(0))
+        ));
+      }
+    ));
     //m_testTab.add("Odometry Test", new OdometryTestCommand(this, new Transform2d(new Translation2d(1,1), new Rotation2d(Math.PI))));
   }
 
