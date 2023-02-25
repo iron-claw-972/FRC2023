@@ -57,7 +57,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putString("Robot Identity", robotId.toString());
 
     // build the RobotContainer
-    m_robotContainer = new RobotContainer();
+    m_robotContainer = new RobotContainer(robotId); 
   }
  
   /**
@@ -122,8 +122,10 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
 
-    // If we enable teleop for the first time, we should reset the drive yaw. Mainly for testing.
-    m_robotContainer.initDriveYaw(false);
+    if (robotId != RobotId.ClassBot2) {
+      // If we enable teleop for the first time, we should reset the drive yaw. Mainly for testing.
+      m_robotContainer.initDriveYaw(false);
+    }
 
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to

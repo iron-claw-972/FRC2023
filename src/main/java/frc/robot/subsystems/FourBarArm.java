@@ -68,4 +68,7 @@ public class FourBarArm extends SubsystemBase {
   public boolean reachedSetpoint() {
     return m_pid.atSetpoint();
   }
+
+  public void setupShuffleboard() {
+  }
 }
