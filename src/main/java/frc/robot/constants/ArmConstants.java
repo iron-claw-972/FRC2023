@@ -6,7 +6,7 @@ import edu.wpi.first.math.util.Units;
  * Container class for arm constants.
  */
 public class ArmConstants {
-  
+
   // TODO: arm ids - TBD (fake using 5 -- 1-4 have been taken)
   public static final int kMotorId = 5;
 
