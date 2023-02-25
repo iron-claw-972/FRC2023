@@ -57,9 +57,11 @@ public class VisionReturnTest extends CommandBase{
   @Override
   public void execute() {
     m_drive.drive(m_direction * m_speed, 0, 0, false);
+
     Pose2d pose = m_vision.getPose2d(m_currentPose, m_drive.getPose());
     if (pose == null) {
       m_endCounter++;
+
     } else {
       m_endCounter = Math.max(0, m_endCounter - 1);
       m_currentPose = pose;
