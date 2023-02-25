@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.constants.Constants;
 import frc.robot.util.LogManager;
 
 /**
@@ -22,12 +23,23 @@ public class Robot extends TimedRobot {
   private Command m_autoCommand;
   private RobotContainer m_robotContainer;
 
-  public static final String kRobotId = "RobotId";
+  /**
+   * Set of known Robot Names.
+   * <p>The name of a robot in the RoboRIO's persistent memory.
+   * At deploy time, that name is used to set the corresponding RobotId.
+   * <p>Note that the RobotId is determined at Deploy time.
+   */
   public enum RobotId {
-    Default, SwerveCompetition, SwerveTest,
+    Default,
+    SwerveCompetition, SwerveTest,
     ClassBot1, ClassBot2, ClassBot3, ClassBot4
   };
-  private static RobotId robotId = RobotId.Default;
+  /**
+   * The Robot Identity.
+   * <p><b>Note: kRobotId is not a constant.</b></p>
+   */
+  // assume a default robot identity
+  public static RobotId kRobotId = RobotId.Default;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -35,26 +47,30 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    // Determine the Robot Identity from Preferences
+    // Determine the Robot Identity from the RoboRIO's onboard Preferences
     // To Set the Robot Name
     //   SimGUI: Persistent Values, Preferences, RobotId, then restart Simulation
     //     changes networktables.json, networktables.json.bck (both Untracked)
-    // set the default preference to something safe
-    if (!Preferences.containsKey(kRobotId)) {
-      Preferences.setString(kRobotId, RobotId.Default.toString());
+    //   Uncomment the next line, set the desired RobotId, deploy, and then comment the line out
+    //     Preferences.setString(Constants.kRobotIdKey, RobotId.SwerveTest.name());
+    //
+    // check whether Preferences has an entry for the RobotId
+    if (!Preferences.containsKey(Constants.kRobotIdKey)) {
+      // There is no such key. Set it to the default identity.
+      Preferences.setString(Constants.kRobotIdKey, RobotId.Default.name());
     }
-    // get the RobotId from Preferences
-    String strId = Preferences.getString(kRobotId, RobotId.Default.toString());
-    // match the string to an RobotId
+    // get the RobotId string from the RoboRIO's Preferences
+    String strId = Preferences.getString(Constants.kRobotIdKey, RobotId.Default.name());
+    // match that string to a RobotId by looking at all possible RobotId enums
     for (RobotId rid : RobotId.values()) {
-      // does it match the preference string?
-      if (strId.equals(rid.toString())) {
-        // yes, so it is the RobotId
-        robotId = rid;
+      // does the preference string match the RobotId enum?
+      if (strId.equals(rid.name())) {
+        // yes, this instance is the desired RobotId
+        kRobotId = rid;
       }
     }
     // report the RobotId to the SmartDashboard
-    SmartDashboard.putString("Robot Identity", robotId.toString());
+    SmartDashboard.putString("RobotID", kRobotId.name());
 
     // build the RobotContainer
     m_robotContainer = new RobotContainer();
