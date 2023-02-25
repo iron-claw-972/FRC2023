@@ -8,6 +8,7 @@ import com.pathplanner.lib.PathPoint;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.controls.Operator;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.util.Node;
 
 /**
  * Go to 1-9 column in grid area
@@ -22,7 +23,7 @@ public class AlignToColumn extends SequentialCommandGroup {
     addCommands(
       new PathPlannerCommand(new ArrayList<PathPoint>(List.of(
         PathPoint.fromCurrentHolonomicState(m_drive.getPose(), m_drive.getChassisSpeeds()),
-        new PathPoint(Operator.selectedNode.scorePose.getTranslation(), Operator.selectedNode.scorePose.getRotation())
+        new PathPoint(new Node().scorePose.getTranslation(), new Node().scorePose.getRotation())
       )), m_drive)
     );
   }
