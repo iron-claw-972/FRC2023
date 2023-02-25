@@ -1,6 +1,7 @@
 package frc.robot.commands.vision;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.util.Vision;
@@ -8,9 +9,7 @@ import frc.robot.util.Vision;
 public class TestVision extends CommandBase{
   private Drivetrain m_drive;
   private Vision m_vision;
-  private double m_encoderStart;
-  private Pose2d m_startPose;
-  private double m_encoderPosition;
+  private Translation2d m_visionStartTranslation, m_driveStartTranslation;
   private Pose2d m_currentPose = null;
   private int m_endCounter = 0;
   private int m_printCounter=0;
@@ -36,22 +35,15 @@ public class TestVision extends CommandBase{
     m_vision=vision;
   }
 
-  private double getDist(){
-    return 
-      m_drive.m_modules[0].getDrivePosition()/4+
-      m_drive.m_modules[1].getDrivePosition()/4+
-      m_drive.m_modules[2].getDrivePosition()/4+
-      m_drive.m_modules[3].getDrivePosition()/4;
-  }
-
-
   /**
    * Initializes the command
    */
   @Override
   public void initialize(){
-    m_encoderStart=getDist();
-    m_startPose=m_vision.getPose2d(m_currentPose, m_drive.getPose());
+    m_drive.enableVision(false);
+    m_visionStartTranslation = m_vision.getPose2d(m_currentPose, m_drive.getPose()).getTranslation();
+    m_driveStartTranslation = m_drive.getPose().getTranslation();
+
   }
 
   /**
@@ -68,15 +60,13 @@ public class TestVision extends CommandBase{
       m_endCounter = 0;
       m_printCounter++;
       m_currentPose = pose;
-      m_encoderPosition = getDist();
-      if(m_printCounter%printDelay==0){
-        double dist1 = Math.abs(m_encoderPosition-m_encoderStart);
-        double dist2 = Math.hypot(m_currentPose.getX()-m_startPose.getX(),
-          m_currentPose.getY()-m_startPose.getY());
+      if(m_printCounter % printDelay == 0){
+        double dist1 = m_drive.getPose().getTranslation().getDistance(m_driveStartTranslation);
+        double dist2 = m_currentPose.getTranslation().getDistance(m_visionStartTranslation);
         System.out.printf("\nEncoder distance: %.4f\nVision distance: %.4f\n",
           dist1, dist2);
         System.out.printf("Difference: %.4f\nPercent difference: %.4f%%\n",
-          dist2-dist1, (dist2-dist1)/dist1*100);
+          dist2 - dist1, (dist2 - dist1) / dist1 * 100);
       }
     }
   }
@@ -87,6 +77,7 @@ public class TestVision extends CommandBase{
   */
   @Override
   public void end(boolean interrupted){
+    m_drive.enableVision(true);
     m_drive.stop();
   }
 
