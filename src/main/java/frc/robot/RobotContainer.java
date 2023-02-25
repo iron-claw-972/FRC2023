@@ -58,7 +58,7 @@ public class RobotContainer {
   private final Intake m_intake;
 
   // Controllers are defined here
-  private final BaseDriverConfig m_driver;
+  private final GameControllerDriverConfig m_driver;
   private final Operator m_operator;
   private final TestController m_testController;
   private final ManualController m_manualController;
