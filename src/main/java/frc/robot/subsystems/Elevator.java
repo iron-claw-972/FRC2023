@@ -66,6 +66,7 @@ public class Elevator extends SubsystemBase {
     
     //m_motor.setSafetyEnabled(true);
     setUpElevatorTab();
+    setSetpoint(0.5); 
   }
 
   @Override

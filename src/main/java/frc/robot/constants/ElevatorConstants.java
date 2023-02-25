@@ -47,7 +47,7 @@ public class ElevatorConstants {
 
   public static final double kCalibrationPower = 0.2; 
   /** Normal full power level for the elevator motor. */
-  public static final double kPowerLimit = 1; //1
+  public static final double kPowerLimit = 0.1; //1
 
   /**
    * Calculate the elevator extension.
