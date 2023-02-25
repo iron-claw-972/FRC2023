@@ -51,6 +51,7 @@ public class RobotContainer {
   private final ShuffleboardTab m_autoTab = Shuffleboard.getTab("Auto");
   private final ShuffleboardTab m_controllerTab = Shuffleboard.getTab("Controller");
   private final ShuffleboardTab m_testTab = Shuffleboard.getTab("Test");
+  private final ShuffleboardTab m_armTab = Shuffleboard.getTab("Arm");
 
   // The robot's subsystems are defined here...
   private final Drivetrain m_drive;
@@ -76,7 +77,7 @@ public class RobotContainer {
     // If the robot is the competition robot, create the arm and intake
     if (Robot.kRobotId == RobotId.SwerveCompetition) {
 
-      m_arm = new FourBarArm();
+      m_arm = new FourBarArm(m_armTab);
       m_intake = new Intake();
 
       m_operator = new Operator(m_arm, m_intake);
