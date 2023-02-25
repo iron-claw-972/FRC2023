@@ -262,15 +262,16 @@ public class Drivetrain extends SubsystemBase {
       m_pigeon.getRotation2d(),
       getModulePositions()
     );
-    if(m_visionEnabled){
-      // Updates pose based on vision
+
+    // Updates pose based on vision
+    if (m_visionEnabled){
       // An array list of poses returned by different cameras
       ArrayList<EstimatedRobotPose> estimatedPoses = m_vision.getEstimatedPoses(m_poseEstimator.getEstimatedPosition());
       // The current position as a translation
       Translation2d currentEstimatedPoseTranslation = m_poseEstimator.getEstimatedPosition().getTranslation();
       for (int i = 0; i < estimatedPoses.size(); i++) {
         EstimatedRobotPose estimatedPose = estimatedPoses.get(i);
-        // The position of the closest april tag as a tranlsation
+        // The position of the closest april tag as a translation
         Translation2d closestTagPoseTranslation = new Translation2d();
         for (int j = 0; j < estimatedPose.targetsUsed.size(); j++) {
           // The position of the current april tag
@@ -297,6 +298,7 @@ public class Drivetrain extends SubsystemBase {
       }
     }
   }
+  
   /**
   * Returns the angular rate from the pigeon.
   * 

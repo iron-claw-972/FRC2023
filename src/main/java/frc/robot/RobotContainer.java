@@ -22,7 +22,7 @@ import frc.robot.commands.test.SteerFeedForwardCharacterizationSingle;
 import frc.robot.commands.test.TestDriveVelocity;
 import frc.robot.commands.test.TestHeadingPID;
 import frc.robot.commands.test.TestSteerAngle;
-import frc.robot.commands.vision.AngleAlignTest;
+import frc.robot.commands.vision.TestVisionAlignment;
 import frc.robot.commands.vision.TestVisionDistance;
 import frc.robot.commands.vision.VisionReturnTest;
 import frc.robot.constants.VisionConstants;
@@ -121,7 +121,6 @@ public class RobotContainer {
     LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
     LiveWindow.setEnabled(false);
     
-    
     autoChooserUpdate();
     loadCommandSchedulerShuffleboard();
     m_drive.setupDrivetrainShuffleboard();
@@ -168,10 +167,10 @@ public class RobotContainer {
     m_testTab.add("Test vision (backward)", new TestVisionDistance(-0.2, m_drive, m_vision));
     m_testTab.add("Vision return test (forward)", new VisionReturnTest(0.2, 3, m_drive, m_vision));
     m_testTab.add("Vision return test (backward)", new VisionReturnTest(-+ 0.2, 3, m_drive, m_vision));
-    m_testTab.add("Align to 0 degrees", new AngleAlignTest(0, m_drive, m_vision));
-    m_testTab.add("Align to 90 degrees", new AngleAlignTest(Math.PI/2, m_drive, m_vision));
-    m_testTab.add("Align to -90 degrees", new AngleAlignTest(-Math.PI/2, m_drive, m_vision));
-    m_testTab.add("Align to 180 degrees", new AngleAlignTest(Math.PI, m_drive, m_vision));
+    m_testTab.add("Align to 0 degrees", new TestVisionAlignment(0, m_drive, m_vision));
+    m_testTab.add("Align to 90 degrees", new TestVisionAlignment(Math.PI/2, m_drive, m_vision));
+    m_testTab.add("Align to -90 degrees", new TestVisionAlignment(-Math.PI/2, m_drive, m_vision));
+    m_testTab.add("Align to 180 degrees", new TestVisionAlignment(Math.PI, m_drive, m_vision));
   }
 
   /**

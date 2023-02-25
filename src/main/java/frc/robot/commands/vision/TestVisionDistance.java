@@ -2,6 +2,7 @@ package frc.robot.commands.vision;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.util.Vision;
@@ -15,10 +16,10 @@ public class TestVisionDistance extends CommandBase{
   private int m_printCounter=0;
   private double m_speed;
 
-  //How many frames it has to not see anything to end the command
+  // How many rio cycles it has to not see anything to end the command
   private static final int endDelay = 5;
 
-  //How many frames it will wait between prints
+  // How many rio cycles it will wait between prints
   private static final int printDelay = 50;
 
   /**
@@ -30,9 +31,9 @@ public class TestVisionDistance extends CommandBase{
    */
   public TestVisionDistance(double speed, Drivetrain drive, Vision vision){
     addRequirements(drive);
-    m_drive=drive;
-    m_speed=speed;
-    m_vision=vision;
+    m_drive = drive;
+    m_speed = speed;
+    m_vision = vision;
   }
 
   /**
@@ -44,7 +45,6 @@ public class TestVisionDistance extends CommandBase{
     m_currentPose = m_vision.getPose2d(null, m_drive.getPose());
     m_visionStartTranslation = m_currentPose.getTranslation();
     m_driveStartTranslation = m_drive.getPose().getTranslation();
-
   }
 
   /**
@@ -56,6 +56,7 @@ public class TestVisionDistance extends CommandBase{
     m_drive.drive(m_speed, 0, 0, false);
     Pose2d newestPose = m_vision.getPose2d(m_currentPose, m_drive.getPose());
 
+    // If the camera can't see the apriltag
     if(newestPose != null){
       //update current pose
       m_currentPose = newestPose;
@@ -63,7 +64,7 @@ public class TestVisionDistance extends CommandBase{
       m_endCounter = 0;
       // print every few cycle
       m_printCounter++;
-      if(m_printCounter % printDelay == 0){
+      if (m_printCounter % printDelay == 0) {
         double driveDistance = m_drive.getPose().getTranslation().getDistance(m_driveStartTranslation);
         double visionDistance = m_currentPose.getTranslation().getDistance(m_visionStartTranslation);
         System.out.printf("\nEncoder distance: %.4f\nVision distance: %.4f\n",
@@ -71,7 +72,7 @@ public class TestVisionDistance extends CommandBase{
         System.out.printf("Difference: %.4f\nPercent difference: %.4f%%\n",
           visionDistance - driveDistance, (visionDistance - driveDistance) / driveDistance * 100);
       } 
-    }else{
+    } else {
       m_endCounter++;
     }
   }
@@ -92,6 +93,6 @@ public class TestVisionDistance extends CommandBase{
    */
   @Override
   public boolean isFinished(){
-    return m_endCounter>=endDelay;
+    return m_endCounter >= endDelay;
   }
 }
