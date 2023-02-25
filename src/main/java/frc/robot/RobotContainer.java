@@ -58,7 +58,7 @@ public class RobotContainer {
   private final Intake m_intake;
 
   // Controllers are defined here
-  private final BaseDriverConfig m_driver;
+  private final GameControllerDriverConfig m_driver;
   private final Operator m_operator;
   private final TestController m_testController;
   private final ManualController m_manualController;
@@ -71,7 +71,7 @@ public class RobotContainer {
 
     // Create Drivetrain, because every robot will have a drivetrain
     m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab);
-    m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
+    m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, true);
 
     // If the robot is the competition robot, create the arm and intake
     if (Robot.kRobotId == RobotId.SwerveCompetition) {
@@ -79,7 +79,7 @@ public class RobotContainer {
       m_arm = new FourBarArm();
       m_intake = new Intake();
 
-      m_operator = new Operator(m_arm, m_intake, m_drive);
+      m_operator = new Operator(m_arm, m_intake);
       m_testController = new TestController(m_arm, m_intake, m_drive);
       m_manualController = new ManualController(m_arm, m_intake);
 

@@ -18,7 +18,7 @@ public class DriveConstants {
   public static double kDriveGearRatio = 6.75;
   public static double kSteerGearRatio = 21.43;
 
-  public static double kMaxSpeed = (FalconConstants.kMaxRpm / 60.0) * kDriveGearRatio * kWheelRadius * 2 * Math.PI;
+  public static double kMaxSpeed = (FalconConstants.kMaxRpm / 60.0) / kDriveGearRatio * kWheelRadius * 2 * Math.PI;
 
   // Need to convert tangential velocity (the m/s of the edge of the robot) to angular velocity (the radians/s of the robot)
   // To do so, divide by the radius. The radius is the diagonal of the square chassis, diagonal = sqrt(2) * side_length.
@@ -123,7 +123,7 @@ public class DriveConstants {
       kDriveFrontLeft = 1;
       kSteerFrontLeft = 2;
       kEncoderFrontLeft = 3;
-      kSteerOffsetFrontLeft = 1.561;
+      kSteerOffsetFrontLeft = -1.58+Math.PI;
       kDriveKSFrontLeft = 0.61534;
       kDriveKVFrontLeft = 4.45071*2;
       kDrivePFrontLeft = 2*2;
@@ -138,7 +138,7 @@ public class DriveConstants {
       kDriveFrontRight = 4; 
       kSteerFrontRight = 5;
       kEncoderFrontRight = 6; 
-      kSteerOffsetFrontRight = -2.764+Math.PI;
+      kSteerOffsetFrontRight = 1.935+Math.PI;
       kDriveKSFrontRight = 0.61283;
       kDriveKVFrontRight = 4.45431*2;
       kDrivePFrontRight = 2*2;
@@ -153,7 +153,7 @@ public class DriveConstants {
       kDriveBackLeft = 7;
       kSteerBackLeft = 8;
       kEncoderBackLeft = 9; 
-      kSteerOffsetBackLeft = 0;
+      kSteerOffsetBackLeft = -3.1415+Math.PI;
       kDriveKSBackLeft = 0.54150;
       kDriveKVBackLeft = 4.53909*2;
       kDrivePBackLeft = 2*2;
@@ -168,7 +168,7 @@ public class DriveConstants {
       kDriveBackRight = 10;
       kSteerBackRight = 11;
       kEncoderBackRight = 12; 
-      kSteerOffsetBackRight = 2.73;
+      kSteerOffsetBackRight = -0.383494421839714+Math.PI;
       kDriveKSBackRight = 0.49599;
       kDriveKVBackRight = 4.75897*2;
       kDrivePBackRight = 2.2*2;
@@ -184,5 +184,4 @@ public class DriveConstants {
       kDriveMotorCAN = Constants.kRioCAN;
     }
   }
-
 }

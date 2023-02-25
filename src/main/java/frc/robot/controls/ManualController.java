@@ -21,6 +21,7 @@ public class ManualController {
   public ManualController(FourBarArm arm, Intake intake){
     m_arm = arm;
     m_intake = intake;
+    
   }
   
   public void configureControls() {
@@ -31,6 +32,5 @@ public class ManualController {
     m_manual.get(Button.Y).onTrue(new InstantCommand(() -> m_arm.setMotorPower(0.05)));
     m_manual.get(Button.X).onTrue(new InstantCommand(() -> m_arm.setMotorPower(-0.05)));
     m_manual.get(Button.B).onTrue(new InstantCommand(() -> m_arm.setMotorPower(0)));
-
   }
 }
