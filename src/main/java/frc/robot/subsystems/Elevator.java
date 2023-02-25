@@ -42,7 +42,7 @@ public class Elevator extends SubsystemBase {
 
   public Elevator(ShuffleboardTab elevatorTab) {
     m_elevatorTab = elevatorTab; 
-    m_motor = MotorFactory.createTalonFX(ElevatorConstants.kMotorPort, Constants.kRioCAN);
+    m_motor = MotorFactory.createTalonFX(ElevatorConstants.kMotorPort, Constants.kCanivoreCAN);
     m_motor.setInverted(true);
     m_motor.setNeutralMode(NeutralMode.Brake);
     m_talonEncoder = new TalonEncoder(m_motor); 

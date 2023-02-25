@@ -58,11 +58,11 @@ public class TestController {
       test.get(DPad.DOWN).onTrue(new CalibrateElevator(m_elevator));
       
 
-      test.get(Button.A).onTrue(new MoveToHeight(m_elevator, ElevatorConstants.kHeight));
+      //test.get(Button.A).onTrue(new MoveToHeight(m_elevator, ElevatorConstants.kHeight));
       // //move to mid node height
-      test.get(Button.B).onTrue(new MoveToHeight(m_elevator, ElevatorConstants.kHeightMiddleNode));
+      //test.get(Button.B).onTrue(new MoveToHeight(m_elevator, ElevatorConstants.kHeightMiddleNode));
       // //move to top node height
-      test.get(Button.Y).onTrue(new MoveToHeight(m_elevator, ElevatorConstants.kHeightTopNode));   
+      //test.get(Button.Y).onTrue(new MoveToHeight(m_elevator, ElevatorConstants.kHeightTopNode));   
       
 
     }
