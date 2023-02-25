@@ -40,50 +40,50 @@ public class VisionReturnTest extends CommandBase{
    * Initializes the command
    */
   @Override
-  public void initialize(){
+  public void initialize() {
     m_drive.enableVision(false);
     m_visionStartTranslation = m_vision.getPose2d(m_currentPose, m_drive.getPose()).getTranslation();
     m_driveStartTranslation = m_drive.getPose().getTranslation();
-    m_direction=1;
-    m_turns=0;
-    m_endCounter=0;
+    m_direction = 1;
+    m_turns = 0;
+    m_endCounter = 0;
   }
 
   /**
    * Moves the robot
    * If it has moved farther than the specified distance, it moves backward
    * It then goes back to the initial pose
-   */
+   */ 
   @Override
-  public void execute(){
+  public void execute() {
     m_drive.drive(m_direction * m_speed, 0, 0, false);
     Pose2d pose = m_vision.getPose2d(m_currentPose, m_drive.getPose());
-    if(pose == null){
+    if (pose == null) {
       m_endCounter++;
-    }else{
+    } else {
       m_endCounter = Math.max(0, m_endCounter - 1);
       m_currentPose = pose;
       double dist1 = m_drive.getPose().getTranslation().getDistance(m_driveStartTranslation);
       double dist2 = m_currentPose.getTranslation().getDistance(m_visionStartTranslation);
-      if(dist2 >= m_distanceToMove && m_direction > 0){
+      if (dist2 >= m_distanceToMove && m_direction > 0) {
         System.out.printf("Encoder distance: %.4f\n", dist1);
         m_direction = -1;
         m_turns = 1;
         m_turnPose=new Pose2d(m_currentPose.getTranslation(), m_currentPose.getRotation());
       }
-      if(m_turns>0){
+      if (m_turns>0) {
         double dist3 = m_currentPose.getTranslation().getDistance(m_turnPose.getTranslation());
-        if(Math.abs(dist3 - m_distanceToMove)<0.1){
+        if (Math.abs(dist3 - m_distanceToMove)<0.1) {
           m_endCounter += 2;
           m_drive.stop();
-        }else if(dist3 > m_distanceToMove && m_direction < 0){
+        } else if (dist3 > m_distanceToMove && m_direction < 0) {
           m_direction *= -0.8;
           m_turns++;
-        }else if(dist3 < m_distanceToMove && m_direction > 0){
+        } else if (dist3 < m_distanceToMove && m_direction > 0) {
           m_direction *= -0.8;
           m_turns++;
         }
-        if(m_turns > 10){
+        if (m_turns > 10) {
           m_endCounter += 2;
         }
       }
@@ -95,7 +95,7 @@ public class VisionReturnTest extends CommandBase{
    * @param interrupted If the command was interrupted
    */
   @Override
-  public void end(boolean interrupted){
+  public void end(boolean interrupted) {
     System.out.printf("\nVision distance: %.4f\nEncoder distance: %.4f\n",
       m_drive.getPose().getTranslation().getDistance(m_driveStartTranslation),
       m_currentPose.getTranslation().getDistance(m_visionStartTranslation)

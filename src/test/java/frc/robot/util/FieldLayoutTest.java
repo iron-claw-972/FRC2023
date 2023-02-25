@@ -18,37 +18,38 @@ import frc.robot.constants.VisionConstants;
  * To disable a test, annotate with Disabled
  */
 public class FieldLayoutTest {
-    private AprilTagFieldLayout fieldLayout;
+  
+  private AprilTagFieldLayout fieldLayout;
 
-    @BeforeEach
-    public void prepare() {
-        fieldLayout = new Vision(Shuffleboard.getTab("Vision"), VisionConstants.kCameras).getAprilTagFieldLayout();
-    }
+  @BeforeEach
+  public void prepare() {
+    fieldLayout = new Vision(Shuffleboard.getTab("Vision"), VisionConstants.kCameras).getAprilTagFieldLayout();
+  }
 
-    @AfterEach
-    public void cleanup() {}
+  @AfterEach
+  public void cleanup() {}
 
-    /**
-     * Test if the field layout exists
-     */
-    @Test
-    public void testExists() {
-        assertTrue(fieldLayout.getTagPose(1).isPresent());
-    }
+  /**
+   * Test if the field layout exists
+   */
+  @Test
+  public void testExists() {
+    assertTrue(fieldLayout.getTagPose(1).isPresent());
+  }
 
-    /**
-     * Test if blue April tags are to the left of red tags
-     */
-    @Test
-    public void testBlueOnLeft() {
-        assertTrue(fieldLayout.getTagPose(5).get().getX()<fieldLayout.getTagPose(1).get().getX());
-    }
+  /**
+   * Test if blue April tags are to the left of red tags
+   */
+  @Test
+  public void testBlueOnLeft() {
+    assertTrue(fieldLayout.getTagPose(5).get().getX()<fieldLayout.getTagPose(1).get().getX());
+  }
 
-    /**
-     * Test if April tag 2 is above April tag 1
-     */
-    @Test
-    public void test2Above1() {
-        assertTrue(fieldLayout.getTagPose(2).get().getY()>fieldLayout.getTagPose(1).get().getY());
-    }
+  /**
+   * Test if April tag 2 is above April tag 1
+   */
+  @Test
+  public void test2Above1() {
+    assertTrue(fieldLayout.getTagPose(2).get().getY()>fieldLayout.getTagPose(1).get().getY());
+  }
 }
