@@ -17,7 +17,6 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -81,17 +80,18 @@ public class Vision {
    * @return The pose of the robot, or null if it can't see april tags
    */
   public Pose2d getPose2d(Pose2d referencePose, Pose2d robotPose){
-    ArrayList<EstimatedRobotPose> p = getEstimatedPoses(referencePose==null?robotPose:referencePose);
+    ArrayList<EstimatedRobotPose> estimatedPoses = getEstimatedPoses(referencePose==null?robotPose:referencePose);
     Translation2d translation = new Translation2d();
     double rotation = 0;
-    if(p.size()==0){
+    if(estimatedPoses.size()==0){
       return null;
     }
+    //TODO: make sure this actually takeing hte average pose
     int posesUsed=0;
-    for(int i = 0; i < p.size(); i++){
-      if(p.get(i)!=null && p.get(i).estimatedPose!=null){
-        translation=translation.plus(p.get(i).estimatedPose.toPose2d().getTranslation());
-        rotation += p.get(i).estimatedPose.toPose2d().getRotation().getRadians();
+    for(int i = 0; i < estimatedPoses.size(); i++){
+      if(estimatedPoses.get(i)!=null && estimatedPoses.get(i).estimatedPose!=null){
+        translation=translation.plus(estimatedPoses.get(i).estimatedPose.toPose2d().getTranslation());
+        rotation += estimatedPoses.get(i).estimatedPose.toPose2d().getRotation().getRadians();
         posesUsed++;
       }
     }
