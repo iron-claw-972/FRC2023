@@ -6,9 +6,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxAlternateEncoder;
-import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ArmConstants;
@@ -17,19 +14,20 @@ import frc.robot.util.LogManager;
 public class FourBarArm extends SubsystemBase {
   private final CANSparkMax m_motor;
   private final PIDController m_pid;
-  //private final RelativeEncoder m_encoder;
   private final DutyCycleEncoder m_absEncoder; 
   private final ArmFeedforward m_feedforward;
   private final ShuffleboardTab m_armTab;
+
   private boolean m_pidEnabled = false;
 
   public FourBarArm(ShuffleboardTab armTab) {
     // configure the motor
     m_motor = new CANSparkMax(ArmConstants.kMotorId, MotorType.kBrushless);
-    m_motor.setIdleMode(IdleMode.kBrake);
+    //m_motor.setIdleMode(IdleMode.kBrake);
 
     m_absEncoder = new DutyCycleEncoder(ArmConstants.kAbsEncoderId);
 
+  
     // configure the encoder
     // TODO: use a kConstant instead of the 8192
     //m_encoder = m_motor.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, ArmConstants.kEncoderCountsPerRev);
@@ -58,6 +56,8 @@ public class FourBarArm extends SubsystemBase {
     //LogManager.addDouble("Arm Velocity", () -> m_absEncoder.getVelocity());
     LogManager.addDouble("Arm Motor Power", () -> m_motor.get());
     LogManager.addDouble("Arm Setpoint", () -> m_pid.getSetpoint());
+
+    setUpArmShuffleboard();
   }
 
   /**
@@ -65,10 +65,11 @@ public class FourBarArm extends SubsystemBase {
    * @param setpoint the desired arm position (in radians)
    */
   public void setArmSetpoint(double setpoint) {
+    double setpointLimited = MathUtil.clamp(setpoint, ArmConstants.kStowPosition, ArmConstants.kBottomPosition); 
     // set the PID integration error to zero.
     m_pid.reset();
     // set the PID desired position
-    m_pid.setSetpoint(setpoint);
+    m_pid.setSetpoint(setpointLimited);
   }
 
   @Override
@@ -76,7 +77,7 @@ public class FourBarArm extends SubsystemBase {
     if(m_pidEnabled) {
       // calculate the PID power level
       
-      //double pidPower = m_pid.calculate(m_encoder.getPosition());
+      double pidPower = m_pid.calculate(m_absEncoder.getDistance());
       
       // calculate the feedforward power (nothing for now)
       
@@ -85,7 +86,7 @@ public class FourBarArm extends SubsystemBase {
       
       // set the motor power
       
-      //setMotorPower(pidPower + feedforwardPower);
+      setMotorPower(pidPower);
     }
   }
 
@@ -103,11 +104,13 @@ public class FourBarArm extends SubsystemBase {
     m_armTab.addNumber("Abs getDistance(): ",()->m_absEncoder.getDistance());
     m_armTab.addNumber("Abs getDistancePerRotation() : ",()->m_absEncoder.getDistancePerRotation());
     m_armTab.addNumber("Abs getAbsolutePosition(): ",()->m_absEncoder.getAbsolutePosition());
+
     m_armTab.add("PID", m_pid);
-    m_armTab.add(m_pid);
   }
   
   public void setMotorPower(double power){
+    //m_motor.set(power); 
+    //System.out.println("set motor power for 4 bar arm  is being called AAAAAAAAAAAAABBBBBBBBBBBBBBBB");
     m_motor.set(MathUtil.clamp(power, ArmConstants.kMinMotorPower, ArmConstants.kMaxMotorPower));
   }
 

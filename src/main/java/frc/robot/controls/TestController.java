@@ -17,25 +17,27 @@ public class TestController {
   
   private GameController test = new GameController(OIConstants.kTestJoy);
   private FourBarArm m_arm;
-  private Intake m_intake;
+  //private Intake m_intake;
   
   public TestController(FourBarArm arm, Intake intake){
     m_arm = arm;
-    m_intake = intake;
+    //m_intake = intake;
   }
   
   public void configureControls() {
     
     // 4 bar arm controls
-    test.get(Button.Y).onTrue(new MoveArm(m_arm, ArmConstants.kTopPosition));
+    //test.get(DPad.DOWN).onTrue(new InstantCommand(() -> m_arm.setMotorPower(0.3)));
+
+    //test.get(Button.Y).onTrue(new MoveArm(m_arm, ArmConstants.kTopPosition));
     test.get(Button.X).onTrue(new MoveArm(m_arm, ArmConstants.kMiddlePosition));
     test.get(Button.A).onTrue(new MoveArm(m_arm, ArmConstants.kIntakePosition));
     test.get(Button.B).onTrue(new MoveArm(m_arm, ArmConstants.kShelfPosition));
     
     // intake controls
-    test.get(DPad.DOWN).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kIntakeSpeed), m_intake));
-    test.get(DPad.UP).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kOuttakeSpeed),m_intake));
-    test.get(DPad.LEFT).onTrue(new InstantCommand(() -> m_intake.stop(), m_intake));
+    // test.get(DPad.DOWN).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kIntakeSpeed), m_intake));
+    // test.get(DPad.UP).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kOuttakeSpeed),m_intake));
+    // test.get(DPad.LEFT).onTrue(new InstantCommand(() -> m_intake.stop(), m_intake));
 
   }
 }

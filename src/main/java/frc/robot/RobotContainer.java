@@ -52,15 +52,15 @@ public class RobotContainer {
   private final ShuffleboardTab m_armTab = Shuffleboard.getTab("Arm");
 
   // The robot's subsystems are defined here...
-  private final Drivetrain m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab);
-  private final FourBarArm m_arm = new FourBarArm(m_armTab);
-  private final Intake m_intake = new Intake();
+  private final Drivetrain m_drive = null; //new Drivetrain(m_drivetrainTab, m_swerveModulesTab);
+  private final FourBarArm m_arm;
+  private final Intake m_intake = null; //new Intake();
 
   // Controllers are defined here
-  private final BaseDriverConfig m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
-  private final Operator m_operator = new Operator(m_arm, m_intake);
-  private final TestController m_testController = new TestController(m_arm, m_intake);
-  private final ManualController m_manualController = new ManualController(m_arm, m_intake);
+  //private final BaseDriverConfig m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
+  //private final Operator m_operator = new Operator(m_arm, m_intake);
+  private final TestController m_testController;
+  //private final ManualController m_manualController = new ManualController(m_arm, m_intake);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -70,11 +70,12 @@ public class RobotContainer {
 
     // load paths before auto starts
     PathGroupLoader.loadPathGroups();
-
-    m_driver.configureControls();
-    m_operator.configureControls();
+    m_arm = new FourBarArm(m_armTab);
+    //m_driver.configureControls();
+    //m_operator.configureControls();
+    m_testController = new TestController(m_arm, m_intake);
     m_testController.configureControls();
-    m_manualController.configureControls();
+    //m_manualController.configureControls();
 
     LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
     LiveWindow.setEnabled(false);
@@ -82,15 +83,15 @@ public class RobotContainer {
     
     autoChooserUpdate();
     loadCommandSchedulerShuffleboard();
-    m_drive.setupDrivetrainShuffleboard();
-    m_drive.setupModulesShuffleboard();
-    m_driver.setupShuffleboard();
+    //m_drive.setupDrivetrainShuffleboard();
+    //m_drive.setupModulesShuffleboard();
+    //m_driver.setupShuffleboard();
 
-    m_arm.setUpArmShuffleboard();
+    //m_arm.setUpArmShuffleboard();
     
-    addTestCommands();
+    //addTestCommands();
 
-    m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive,m_driver));
+    //m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive,m_driver));
   }
 
   /**
