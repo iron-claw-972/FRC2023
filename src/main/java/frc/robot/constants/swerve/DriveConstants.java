@@ -100,6 +100,8 @@ public class DriveConstants {
   public static double kBalanceP= 0.3;
   public static double kBalanceI= 0;
   public static double kBalanceD= 0;
+  public static final double kBalanceMaxOutput = 0.5;
+  public static final double kBalanceTolerance = 0.1;
 
   // CAN
   public static String kDriveMotorCAN = Constants.kCanivoreCAN;
@@ -112,6 +114,7 @@ public class DriveConstants {
    */
   public static void update() {
     if (Robot.kRobotId == RobotId.SwerveTest) {
+      System.out.println("switched constants");
   
       kTrackWidth = Units.inchesToMeters(22.75); //22.75 swerve bot, 20.75 comp bot
   

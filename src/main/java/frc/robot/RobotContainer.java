@@ -80,8 +80,8 @@ public class RobotContainer {
       m_intake = new Intake();
 
       m_operator = new Operator(m_arm, m_intake, m_drive);
-      m_testController = new TestController(m_arm, m_intake);
-      m_manualController = new ManualController(m_arm, m_intake, m_drive);
+      m_testController = new TestController(m_arm, m_intake, m_drive);
+      m_manualController = new ManualController(m_arm, m_intake);
 
       m_operator.configureControls();
       m_testController.configureControls();

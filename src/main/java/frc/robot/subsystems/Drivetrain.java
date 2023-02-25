@@ -69,7 +69,6 @@ public class Drivetrain extends SubsystemBase {
   private final PIDController m_xController = new PIDController(0.1, 0, 0);
   private final PIDController m_yController = new PIDController(0.1, 0, 0);
   private final PIDController m_rotationController = new PIDController(DriveConstants.kHeadingP, DriveConstants.kHeadingI, DriveConstants.kHeadingD);
-  public final PIDController m_balanceController = new PIDController(DriveConstants.kBalanceP, DriveConstants.kBalanceI, DriveConstants.kBalanceD);
 
   //Shuffleboard
   private GenericEntry 

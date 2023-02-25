@@ -30,11 +30,6 @@ public class Operator {
   }
 
   public void configureControls() {
-  
-    // intake controls
-    operator.get(DPad.DOWN).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kIntakeSpeed), m_intake));
-    operator.get(DPad.UP).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kOuttakeSpeed),m_intake));
-    operator.get(DPad.LEFT).onTrue(new InstantCommand(() -> m_intake.stop(), m_intake));
 
     // balance command
     operator.get(GameController.Button.RB).onTrue(new PrintCommand("TEST"));

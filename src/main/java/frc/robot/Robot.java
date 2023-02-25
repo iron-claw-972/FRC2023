@@ -27,7 +27,12 @@ public class Robot extends TimedRobot {
     Default, SwerveCompetition, SwerveTest,
     ClassBot1, ClassBot2, ClassBot3, ClassBot4
   };
-  public static RobotId kRobotId = RobotId.Default;
+  /**
+   * The Robot Identity.
+   * <p><b>Note: kRobotId is not a constant.</b></p>
+   */
+  // assume a default robot identity
+  public static RobotId kRobotId = RobotId.SwerveTest;
 
   /**
    * This function is run when the robot is first started up and should be used for any
