@@ -91,7 +91,7 @@ public class RobotContainer {
       m_arm = new FourBarArm();
       m_intake = new Intake();
 
-      m_operator = new Operator(m_arm, m_intake);
+      m_operator = new Operator(m_drive, m_arm, m_vision, m_intake);
       m_testController = new TestController(m_arm, m_intake);
       m_manualController = new ManualController(m_arm, m_intake);
 

@@ -1,19 +1,36 @@
 package frc.robot.controls;
 
+import java.util.function.BooleanSupplier;
+
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import frc.robot.commands.arm.ExtendToPosition;
+import frc.robot.constants.ArmConstants;
 import frc.robot.constants.OIConstants;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.Intake;
 import frc.robot.util.Node;
 import frc.robot.util.Vision;
 import lib.controllers.GameController;
+import lib.controllers.GameController.Axis;
+import lib.controllers.GameController.Button;
 
 public class Operator {
 
   private GameController m_operator = new GameController(OIConstants.kOperatorJoy);
 
+  private Drivetrain m_drive;
   private FourBarArm m_arm;
   private Vision m_vision;
   private Intake m_intake;
+
+  // Values for selecting a node
+  private int[] selectValues = {1, 1, 1};
+
+  // The selected node where the robot will score
+  public static Node selectedNode = new Node();
 
   public Operator(Drivetrain drive, FourBarArm arm, Vision vision, Intake intake){
     m_drive=drive;
@@ -35,9 +52,9 @@ public class Operator {
     m_operator.get(RIGHT_STICK_RIGHT).onTrue(new InstantCommand(()->selectValue(2, 3)));
 
     // Makes the arm and elevator go to different heights
-    m_operator.get(Button.A).onTrue(new ParallelCommandGroup(new InstantCommand(()->selectValue(1, 1)), new ExtendToPosition(m_arm, ArmConstants.klowPosition)));
-    m_operator.get(Button.X).onTrue(new ParallelCommandGroup(new InstantCommand(()->selectValue(1, 2)), new ExtendToPosition(m_arm, ArmConstants.kmiddlePosition)));
-    m_operator.get(Button.Y).onTrue(new ParallelCommandGroup(new InstantCommand(()->selectValue(1, 3)), new ExtendToPosition(m_arm, ArmConstants.ktopPosition)));
+    m_operator.get(Button.A).onTrue(new ParallelCommandGroup(new InstantCommand(()->selectValue(1, 1)), new ExtendToPosition(m_arm, ArmConstants.kLowPosition)));
+    m_operator.get(Button.X).onTrue(new ParallelCommandGroup(new InstantCommand(()->selectValue(1, 2)), new ExtendToPosition(m_arm, ArmConstants.kMiddlePosition)));
+    m_operator.get(Button.Y).onTrue(new ParallelCommandGroup(new InstantCommand(()->selectValue(1, 3)), new ExtendToPosition(m_arm, ArmConstants.kTopPosition)));
     
     // Puts the arm and elevator in the initial position inside the robot
     m_operator.get(Button.LB).onTrue(new ExtendToPosition(m_arm, ArmConstants.kInitialPosition));
@@ -65,11 +82,11 @@ public class Operator {
 }
 
 private final BooleanSupplier LEFT_STICK_LEFT = () -> m_operator.get(Axis.LEFT_X) < -0.75,
-LEFT_STICK_RIGHT = () -> m_operator.get(Axis.LEFT_X) > 0.75,
-LEFT_STICK_UP = () -> m_operator.get(Axis.LEFT_Y) < -0.75;
+  LEFT_STICK_RIGHT = () -> m_operator.get(Axis.LEFT_X) > 0.75,
+  LEFT_STICK_UP = () -> m_operator.get(Axis.LEFT_Y) < -0.75;
 private final BooleanSupplier RIGHT_STICK_LEFT = () -> m_operator.get(Axis.RIGHT_X) < -0.75,
-RIGHT_STICK_RIGHT = () -> m_operator.get(Axis.RIGHT_X) > 0.75,
-RIGHT_STICK_UP = () -> m_operator.get(Axis.RIGHT_Y) < -0.75;
+  RIGHT_STICK_RIGHT = () -> m_operator.get(Axis.RIGHT_X) > 0.75,
+  RIGHT_STICK_UP = () -> m_operator.get(Axis.RIGHT_Y) < -0.75;
 
 
   /**

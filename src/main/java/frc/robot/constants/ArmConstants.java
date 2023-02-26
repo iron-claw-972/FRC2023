@@ -22,6 +22,8 @@ public class ArmConstants {
   public static final double kInitialPosition = 0.0;
   public static final double kShelfPosition = 0.4;
   public static final double kIntakePosition = 0.3;
+  // Currently, this should be the same as intake, but it might need to be changed
+  public static final double kLowPosition = kIntakePosition;
   public static final double kMiddlePosition = 0.4;
   public static final double kTopPosition = 0.5;
 }
