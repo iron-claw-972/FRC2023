@@ -92,14 +92,14 @@ public class DriveConstants {
   public static double kSteerDBackRight = 0;
 
   // heading PID
-  public static double kHeadingP= 4;
+  public static double kHeadingP= 1;//4
   public static double kHeadingI= 0;
   public static double kHeadingD= 0;
 
   //translational PID
-  public static double kTranslationalP = 4;
+  public static double kTranslationalP = 0.5;
   public static double kTranslationalI = 0;
-  public static double kTranslationalD = 0.4;
+  public static double kTranslationalD = 0;
 
   // CAN
   public static String kDriveMotorCAN = Constants.kCanivoreCAN;
@@ -146,7 +146,7 @@ public class DriveConstants {
       kDriveDFrontRight = 0;
       kSteerKSFrontRight = 0.6206519356062554;
       kSteerKVFrontRight = 0.36589750785689507;
-      kSteerPFrontRight = 13;
+      kSteerPFrontRight = 12;
       kSteerIFrontRight = 0;
       kSteerDFrontRight = 0;
       

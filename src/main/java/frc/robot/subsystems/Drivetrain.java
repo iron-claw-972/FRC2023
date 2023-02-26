@@ -329,7 +329,7 @@ public class Drivetrain extends SubsystemBase {
     m_pigeon.getRawGyro(rawGyros);
 
     // outputs in deg/s, so convert to rad/s
-    return Units.degreesToRadians(rawGyros[id]);
+    return rawGyros[id];
   }
   
   /**
