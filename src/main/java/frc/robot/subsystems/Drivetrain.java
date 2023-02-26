@@ -265,7 +265,6 @@ public class Drivetrain extends SubsystemBase {
 
     // Updates pose based on vision
     if (m_visionEnabled){
-
       //TODO: there is no reason to avrage all the messurments in drivetrain when there is a method to calculate it on it's own
 
       // An array list of poses returned by different cameras
@@ -299,6 +298,7 @@ public class Drivetrain extends SubsystemBase {
           )
         );
       }
+
     }
   }
   

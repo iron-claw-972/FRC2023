@@ -41,7 +41,7 @@ public class VisionReturnTest extends CommandBase{
   @Override
   public void initialize() {
     m_drive.enableVision(false);
-    m_currentPose = m_vision.getPose2d(null, m_drive.getPose());
+    m_currentPose = m_vision.getPose2d(m_drive.getPose());
     m_visionStartTranslation = m_currentPose.getTranslation();
     m_driveStartTranslation = m_drive.getPose().getTranslation();
   }

@@ -52,18 +52,6 @@ public class TestVisionAlignment extends CommandBase{
   }
 
   private double getAngle(){
-    ArrayList<EstimatedRobotPose> estimatedPoses = m_vision.getEstimatedPoses(m_drive.getPose());
-    
-    if (estimatedPoses.size() == 1) {
-      return estimatedPoses.get(0).estimatedPose.toPose2d().getRotation().getRadians();
-    }
-    if (estimatedPoses.size() == 2) {
-      return Functions.modulusMidpoint(
-        estimatedPoses.get(0).estimatedPose.toPose2d().getRotation().getRadians(),
-        estimatedPoses.get(1).estimatedPose.toPose2d().getRotation().getRadians(),
-        -Math.PI, Math.PI
-      );
-    }
-    return m_mostRecentAngle;
+    return m_vision.getPose2d(m_drive.getPose()).getRotation().getRadians();
   }
 }
