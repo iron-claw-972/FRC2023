@@ -97,9 +97,9 @@ public class DriveConstants {
   public static double kHeadingD= 0.4;
 
   //translational PID
-  public static double kTranslationalP = 4;
+  public static double kTranslationalP = 2.5;
   public static double kTranslationalI = 0;
-  public static double kTranslationalD = 0.4;
+  public static double kTranslationalD = 0;
 
   // CAN
   public static String kDriveMotorCAN = Constants.kCanivoreCAN;
