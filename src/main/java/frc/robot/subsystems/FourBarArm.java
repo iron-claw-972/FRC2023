@@ -26,8 +26,8 @@ public class FourBarArm extends SubsystemBase {
     //m_motor.setIdleMode(IdleMode.kBrake);
 
     m_absEncoder = new DutyCycleEncoder(ArmConstants.kAbsEncoderId);
+    m_absEncoder.setDistancePerRotation(2*Math.PI);
 
-  
     // configure the encoder
     // TODO: use a kConstant instead of the 8192
     //m_encoder = m_motor.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, ArmConstants.kEncoderCountsPerRev);
