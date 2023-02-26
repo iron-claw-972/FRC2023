@@ -320,6 +320,8 @@ public class Drivetrain extends SubsystemBase {
         );
       }
 
+      m_fieldDisplay.setRobotPose(m_poseEstimator.getEstimatedPosition());
+
     }
   }
   /**
@@ -460,6 +462,10 @@ public class Drivetrain extends SubsystemBase {
     m_drivetrainTab.add("yController", getYController());
     m_drivetrainTab.add("rotationController", getRotationController());
     
+    m_drivetrainTab.add("PP xController", getPathplannerXController());
+    m_drivetrainTab.add("PP yController", getPathplannerYController());
+    m_drivetrainTab.add("PP rotationController", getPathplannerRotationController());
+    
     // add angles
     m_drivetrainTab.addNumber("getAngle", () -> getAngleHeading());
     m_drivetrainTab.addNumber("heading PID output", () -> m_headingPIDOutput);
@@ -471,10 +477,6 @@ public class Drivetrain extends SubsystemBase {
     //m_drivetrainTab.addNumber("Estimated X pos (m)", ()-> m_odometry.getPoseMeters().getX());
     //m_drivetrainTab.addNumber("Estimated Y pos (m)", ()-> m_odometry.getPoseMeters().getY());
     
-    // add the controllers to shuffleboard for tuning
-    m_drivetrainTab.add(getXController());
-    m_drivetrainTab.add(getYController());
-    m_drivetrainTab.add(getRotationController());
   }
 
   /**
