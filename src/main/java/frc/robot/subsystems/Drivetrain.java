@@ -83,7 +83,7 @@ public class Drivetrain extends SubsystemBase {
   // PID Controllers
   // translation controllers have dummy constants that are just good enough to run the odometry test
   private final PIDController m_xController = new PIDController(DriveConstants.kTranslationalP, DriveConstants.kTranslationalI, DriveConstants.kTranslationalD);
-  private final PIDController m_yController = new PIDController(0.1, 0, 0);
+  private final PIDController m_yController = new PIDController(DriveConstants.kTranslationalP, DriveConstants.kTranslationalI, DriveConstants.kTranslationalD);
   private final PIDController m_rotationController = new PIDController(DriveConstants.kHeadingP, DriveConstants.kHeadingI, DriveConstants.kHeadingD);
 
   //Shuffleboard
