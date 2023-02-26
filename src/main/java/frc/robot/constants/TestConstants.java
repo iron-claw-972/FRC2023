@@ -3,7 +3,7 @@ package frc.robot.constants;
 import edu.wpi.first.math.util.Units;
 
 /**
- * Container class for testing constants.
+ * Container class for test constants.
  */
 public class TestConstants {
   

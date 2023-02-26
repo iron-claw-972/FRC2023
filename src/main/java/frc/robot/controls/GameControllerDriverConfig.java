@@ -45,7 +45,7 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
   
   @Override
   public double getRawHeadingAngle() { 
-    return Functions.calculateAngle(kDriver.get(Axis.RIGHT_X), -kDriver.get(Axis.RIGHT_Y)) - Math.PI/2;
+    return Math.atan2(kDriver.get(Axis.RIGHT_X), -kDriver.get(Axis.RIGHT_Y)) - Math.PI/2;
   }
   
   @Override
