@@ -1,9 +1,5 @@
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -13,14 +9,20 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Robot.RobotId;
 import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.commands.PoseTransform;
 import frc.robot.commands.auto.EngageBottomPath;
 import frc.robot.commands.auto.PathPlannerCommand;
-import frc.robot.commands.test.*;
+import frc.robot.commands.test.CircleDrive;
+import frc.robot.commands.test.DriveFeedForwardCharacterization;
+import frc.robot.commands.test.SteerFeedForwardCharacterizationSingle;
+import frc.robot.commands.test.TestDriveVelocity;
+import frc.robot.commands.test.TestHeadingPID;
+import frc.robot.commands.test.TestSteerAngle;
+import frc.robot.commands.vision.TestVisionAlignment;
+import frc.robot.commands.vision.TestVisionDistance;
+import frc.robot.constants.VisionConstants;
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.controls.BaseDriverConfig;
 import frc.robot.controls.GameControllerDriverConfig;
@@ -31,6 +33,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.Intake;
 import frc.robot.util.PathGroupLoader;
+import frc.robot.util.Vision;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -49,7 +52,11 @@ public class RobotContainer {
   private final ShuffleboardTab m_swerveModulesTab = Shuffleboard.getTab("Swerve Modules");
   private final ShuffleboardTab m_autoTab = Shuffleboard.getTab("Auto");
   private final ShuffleboardTab m_controllerTab = Shuffleboard.getTab("Controller");
+  private final ShuffleboardTab m_visionTab = Shuffleboard.getTab("Vision");
   private final ShuffleboardTab m_testTab = Shuffleboard.getTab("Test");
+  
+
+  private final Vision m_vision;
 
   // The robot's subsystems are defined here...
   private final Drivetrain m_drive;
@@ -67,9 +74,12 @@ public class RobotContainer {
 
     // Update drive constants based off of robot type
     DriveConstants.update();
+    VisionConstants.update();
+
+    m_vision = new Vision(m_visionTab, VisionConstants.kCameras);
 
     // Create Drivetrain, because every robot will have a drivetrain
-    m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab);
+    m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab, m_vision);
     m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
 
     // If the robot is the competition robot, create the arm and intake
@@ -109,12 +119,13 @@ public class RobotContainer {
     LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
     LiveWindow.setEnabled(false);
     
-    
     autoChooserUpdate();
     m_autoTab.add("Auto Chooser", m_autoCommand);
+    
     loadCommandSchedulerShuffleboard();
     m_drive.setupDrivetrainShuffleboard();
     m_drive.setupModulesShuffleboard();
+    m_vision.setupVisionShuffleboard();
     m_driver.setupShuffleboard();
 
     addTestCommands();
@@ -122,7 +133,7 @@ public class RobotContainer {
     m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive, m_driver));  
   }
 
-  /**
+  /** 
    * Resets the yaw of the pigeon, unless it has already been reset. Or use force to reset it no matter what.
    * 
    * @param force if the yaw should be reset even if it already has been reset since robot enable.
@@ -146,8 +157,18 @@ public class RobotContainer {
    */
   public void addTestCommands() {
     GenericEntry testEntry = m_testTab.add("Test Results", false).getEntry();
-    m_testTab.add("Cancel Test", new InstantCommand(()-> CommandScheduler.getInstance().cancelAll()));
-    m_drive.addTestCommands(testEntry);
+    m_testTab.add("Circle Drive", new CircleDrive(m_drive));
+    m_testTab.add("Drive FeedForward", new DriveFeedForwardCharacterization(m_drive));
+    m_testTab.add("Steer Single FeedForward", new SteerFeedForwardCharacterizationSingle(m_drive));
+    m_testTab.add("Test Drive Velocity", new TestDriveVelocity(m_drive, testEntry));
+    m_testTab.add("Heading PID", new TestHeadingPID(m_drive, testEntry));
+    m_testTab.add("Steer angle", new TestSteerAngle(m_drive, testEntry));
+    m_testTab.add("Test vision (forward)", new TestVisionDistance(0.2, m_drive, m_vision));
+    m_testTab.add("Test vision (backward)", new TestVisionDistance(-0.2, m_drive, m_vision));
+    m_testTab.add("Align to 0 degrees", new TestVisionAlignment(0, m_drive, m_vision));
+    m_testTab.add("Align to 90 degrees", new TestVisionAlignment(Math.PI/2, m_drive, m_vision));
+    m_testTab.add("Align to -90 degrees", new TestVisionAlignment(-Math.PI/2, m_drive, m_vision));
+    m_testTab.add("Align to 180 degrees", new TestVisionAlignment(Math.PI, m_drive, m_vision));
   }
 
   /**
@@ -165,7 +186,11 @@ public class RobotContainer {
     m_autoCommand.addOption("EngageBottomPath", new EngageBottomPath(m_drive));
     m_autoCommand.addOption("Drive out of Community", new PathPlannerCommand(PathGroupLoader.getPathGroup("Drive out of Community"), 0, m_drive, true));
 
+    m_autoCommand.addOption("BottomSimpleLine1", new PathPlannerCommand(PathGroupLoader.getPathGroup("Bottom Simple Line1"), 0 , m_drive, true)); //intake
+
   }
+    
+
 
   /**
    * Loads the command scheduler shuffleboard which will add event markers whenever a command finishes, ends, or is interrupted.

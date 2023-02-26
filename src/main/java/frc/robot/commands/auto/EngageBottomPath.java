@@ -21,10 +21,10 @@ public class EngageBottomPath extends SequentialCommandGroup{
 
         addCommands(
             //new ExtendToPosition(m_arm, armSetpoint), //deposit
-            new WaitCommand(2),
-            new PathPlannerCommand(PathGroupLoader.getPathGroup("Bottom Simple Line1"), 0 , m_drive, true), //intake
-            new WaitCommand(3),
-            new PathPlannerCommand(PathGroupLoader.getPathGroup("Bottom Simple Line2"), 0 , m_drive, false) //engage
+           // new WaitCommand(2),
+            new PathPlannerCommand(PathGroupLoader.getPathGroup("Bottom Simple Line1"), 0 , m_drive, true) //intake
+            //new WaitCommand(3)
+            //new PathPlannerCommand(PathGroupLoader.getPathGroup("Bottom Simple Line2"), 0 , m_drive, false) //engage
     
         );
     }
