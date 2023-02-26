@@ -57,6 +57,7 @@ public class RobotContainer {
   private final ShuffleboardTab m_controllerTab = Shuffleboard.getTab("Controller");
   private final ShuffleboardTab m_visionTab = Shuffleboard.getTab("Vision");
   private final ShuffleboardTab m_testTab = Shuffleboard.getTab("Test");
+  
 
   private final Vision m_vision;
 
@@ -122,6 +123,8 @@ public class RobotContainer {
     LiveWindow.setEnabled(false);
     
     autoChooserUpdate();
+    m_autoTab.add("Auto Chooser", m_autoCommand);
+
     loadCommandSchedulerShuffleboard();
     m_drive.setupDrivetrainShuffleboard();
     m_drive.setupModulesShuffleboard();
@@ -133,7 +136,7 @@ public class RobotContainer {
     m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive, m_driver));
   }
 
-  /**
+  /** 
    * Resets the yaw of the pigeon, unless it has already been reset. Or use force to reset it no matter what.
    * 
    * @param force if the yaw should be reset even if it already has been reset since robot enable.
@@ -148,6 +151,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+    autoChooserUpdate();
     return m_autoCommand.getSelected();
   }
 
@@ -181,7 +185,6 @@ public class RobotContainer {
     m_autoCommand.setDefaultOption("Do Nothing", new PrintCommand("This will do nothing!"));
     // add commands below with: m_autoCommand.addOption("Example", new ExampleCommand());
     
-    m_autoTab.add("Auto Chooser", m_autoCommand);
   }
 
   /**
