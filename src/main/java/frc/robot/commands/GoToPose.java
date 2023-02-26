@@ -22,6 +22,7 @@ public class GoToPose extends CommandBase {
   private Pose2d m_finalPose;
   private Pose2d m_error;
   private boolean m_relativeToRobot;
+  private boolean m_doNotEnd = false;
   
   public GoToPose(Drivetrain drive, boolean relativeToRobot){
     this(drive,
@@ -32,6 +33,7 @@ public class GoToPose extends CommandBase {
       ),
       relativeToRobot
     );
+    m_doNotEnd = true;
   }
 
   public GoToPose(Drivetrain drive, Pose2d pose, boolean relativeToRobot) {
@@ -61,12 +63,14 @@ public class GoToPose extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    // TODO: the current PID values don't allow the command to finish
+    if (m_doNotEnd) return false;
     double errorMarginMeters = TestConstants.kTranslationError;
-    double errorMarginRadians = Units.degreesToRadians(10);
+    double errorMarginRadians = TestConstants.kHeadingError;
     m_error = m_drive.getPose().relativeTo(m_finalPose);
     // if robot thinks its precision is < 0.1 to the target we inputted, it will stop, so then we can see how off it is
-    return Math.abs(m_error.getX()) < errorMarginMeters && Math.abs(m_error.getY()) < errorMarginMeters && Math.abs(m_error.getRotation().getRadians()) < errorMarginRadians;
+    return Math.abs(m_error.getX()) < errorMarginMeters &&
+      Math.abs(m_error.getY()) < errorMarginMeters && 
+      Math.abs(m_error.getRotation().getRadians()) < errorMarginRadians;
   }
 
   @Override
