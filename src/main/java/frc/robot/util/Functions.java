@@ -53,6 +53,7 @@ public class Functions {
   }
   
   /**
+   * @deprecated use Math.atan2(x,y)
    * calculates angle of the positive x direction to the origin to the point
    * defaults to 0 if point given is (0,0)
    * 

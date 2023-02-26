@@ -266,7 +266,7 @@ public class Drivetrain extends SubsystemBase {
 
     // Updates pose based on vision
     if (m_visionEnabled){
-      //TODO: there is no reason to average all the measurements in drivetrain when there is a method to calculate it on it's own
+      //TODO: there should be a cleaner way to prosses vision
 
       // An array list of poses returned by different cameras
       ArrayList<EstimatedRobotPose> estimatedPoses = m_vision.getEstimatedPoses(m_poseEstimator.getEstimatedPosition());
