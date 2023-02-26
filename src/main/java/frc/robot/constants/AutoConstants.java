@@ -9,5 +9,5 @@ public class AutoConstants {
   public static final String kTrajectoryDirectory = "pathplanner/";
 
   public static final double kMaxAutoSpeed = 4.0; // m/s
-  public static final double kMaxAutoAccel = 3.0; // m/s^2
+  public static final double kMaxAutoAccel = 2.0; // m/s^2
 }
