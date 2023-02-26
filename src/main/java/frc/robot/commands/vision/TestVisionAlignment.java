@@ -3,6 +3,7 @@ package frc.robot.commands.vision;
 import java.util.ArrayList;
 import org.photonvision.EstimatedRobotPose;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.TestConstants;
@@ -10,16 +11,15 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.util.Functions;
 import frc.robot.util.Vision;
 
-// TODO: COMMENTS!
 /**
- * 
+ * Command to test alignment using vision
+ * It only works if it can see an april tag at the setpoint
  */
 public class TestVisionAlignment extends CommandBase{
   private Drivetrain m_drive;
   private Vision m_vision;
   private double m_setpoint;
   private double m_mostRecentAngle;
-  // private PIDController m_pid = new PIDController(1, 0.01, 0.1);
 
   public TestVisionAlignment(double targetAngle, Drivetrain drive, Vision vision){
     addRequirements(drive);
@@ -54,8 +54,9 @@ public class TestVisionAlignment extends CommandBase{
   }
 
   private double getAngle(){
-    if (m_vision.getPose2d(m_drive.getPose()) != null) {
-      m_mostRecentAngle = m_vision.getPose2d(m_drive.getPose()).getRotation().getRadians();
+    Pose2d pose = m_vision.getPose2d(m_drive.getPose());
+    if (pose != null) {
+      m_mostRecentAngle = pose.getRotation().getRadians();
     }
     return m_mostRecentAngle;
   }

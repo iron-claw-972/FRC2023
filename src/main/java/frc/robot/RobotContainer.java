@@ -106,7 +106,8 @@ public class RobotContainer {
       m_arm = null;
       m_intake = null;
 
-      m_operator = null;
+      m_operator = new Operator(m_drive, m_arm, m_vision, m_intake);
+      m_operator.configureControls();
       m_testController = null;
       m_manualController = null;
     }
