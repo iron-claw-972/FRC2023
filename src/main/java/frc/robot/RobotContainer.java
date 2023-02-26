@@ -24,7 +24,6 @@ import frc.robot.commands.test.TestHeadingPID;
 import frc.robot.commands.test.TestSteerAngle;
 import frc.robot.commands.vision.TestVisionAlignment;
 import frc.robot.commands.vision.TestVisionDistance;
-import frc.robot.commands.vision.VisionReturnTest;
 import frc.robot.constants.VisionConstants;
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.controls.BaseDriverConfig;
@@ -165,8 +164,6 @@ public class RobotContainer {
     m_testTab.add("Odometry Test", new OdometryTestCommand(m_drive, new Transform2d(new Translation2d(1,1), new Rotation2d(Math.PI))));
     m_testTab.add("Test vision (forward)", new TestVisionDistance(0.2, m_drive, m_vision));
     m_testTab.add("Test vision (backward)", new TestVisionDistance(-0.2, m_drive, m_vision));
-    m_testTab.add("Vision return test (forward)", new VisionReturnTest(0.2, 3, m_drive, m_vision));
-    m_testTab.add("Vision return test (backward)", new VisionReturnTest(-0.2, 3, m_drive, m_vision));
     m_testTab.add("Align to 0 degrees", new TestVisionAlignment(0, m_drive, m_vision));
     m_testTab.add("Align to 90 degrees", new TestVisionAlignment(Math.PI/2, m_drive, m_vision));
     m_testTab.add("Align to -90 degrees", new TestVisionAlignment(-Math.PI/2, m_drive, m_vision));
