@@ -429,6 +429,9 @@ public class Module {
   public ModuleType getModuleType() {
     return m_moduleType;
   }
+  public int getId(){
+    return getModuleType().id;
+  }
 
   public double getDesiredVelocity() {
     return m_desiredState.speedMetersPerSecond;

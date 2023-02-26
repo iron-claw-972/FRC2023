@@ -47,11 +47,15 @@ public class DriveFeedForwardCharacterization extends CommandBase {
 
     if (m_timer.get() > TestConstants.kDriveFeedForwardAccelerationTimeBuffer) {
       for (int i=0; i<4; i++) {
-        m_feedForwardCharacterizationData[i].add(m_drive.m_modules[i].getDriveVelocity(), m_voltage); 
+        m_feedForwardCharacterizationData[i].add(
+          m_drive.m_modules[i].getDriveVelocity(), m_voltage
+        );
       }
     }
 
-    if (m_timer.get() >= TestConstants.kDriveFeedForwardAccelerationTimeBuffer + TestConstants.kDriveFeedForwardRecordingTime) {
+    if (m_timer.get() >= 
+      TestConstants.kDriveFeedForwardAccelerationTimeBuffer + 
+      TestConstants.kDriveFeedForwardRecordingTime) {
       m_voltage += TestConstants.kDriveFeedForwardVoltageStep;
       m_timer.reset();
       m_timer.start();
@@ -67,15 +71,27 @@ public class DriveFeedForwardCharacterization extends CommandBase {
     }
     
     for (int i = 0; i < 4; i++) {
-      m_drive.getDriveStaticFeedforwardArray()[i] = m_feedForwardCharacterizationData[i].getStatic();
-      m_drive.getDriveVelocityFeedforwardArray()[i] = m_feedForwardCharacterizationData[i].getVelocity();
-      System.out.println("Static " + i + ": " + m_feedForwardCharacterizationData[i].getStatic());
-      System.out.println("Velocity " + i + ": " + m_feedForwardCharacterizationData[i].getVelocity());
-      System.out.println("Variance " + i + ": " + m_feedForwardCharacterizationData[i].getVariance());
+      m_drive.getDriveStaticFeedforwardArray()[i] = 
+        m_feedForwardCharacterizationData[i].getStatic();
+      m_drive.getDriveVelocityFeedforwardArray()[i] = 
+        m_feedForwardCharacterizationData[i].getVelocity();
+      System.out.println("Static " + i + ": " + 
+        m_feedForwardCharacterizationData[i].getStatic()
+      );
+      System.out.println("Velocity " + i + ": " + 
+        m_feedForwardCharacterizationData[i].getVelocity()
+      );
+      System.out.println("Variance " + i + ": " + 
+        m_feedForwardCharacterizationData[i].getVariance()
+      );
     }
     
-    m_drive.getDriveStaticFeedforwardEntry().setDouble(m_drive.getDriveStaticFeedforwardArray()[m_drive.getModuleChooser().getSelected().getModuleType().getID()]);
-    m_drive.getDriveVelocityFeedforwardEntry().setDouble(m_drive.getDriveVelocityFeedforwardArray()[m_drive.getModuleChooser().getSelected().getModuleType().getID()]);
+    m_drive.getDriveStaticFeedforwardEntry().setDouble(
+      m_drive.getDriveStaticFeedforwardArray()[m_drive.getModuleChooser().getSelected().getId()]
+    );
+    m_drive.getDriveVelocityFeedforwardEntry().setDouble(
+      m_drive.getDriveVelocityFeedforwardArray()[m_drive.getModuleChooser().getSelected().getId()]
+    );
     
     m_drive.stop();
   }
