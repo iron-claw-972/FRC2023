@@ -73,10 +73,14 @@ public class Drivetrain extends SubsystemBase {
   private final Field2d m_fieldDisplay = new Field2d();
   
   // PID Controllers
-  // translation controllers have dummy constants that are just good enough to run the odometry test
   private final PIDController m_xController = new PIDController(DriveConstants.kTranslationalP, DriveConstants.kTranslationalI, DriveConstants.kTranslationalD);
-  private final PIDController m_yController = new PIDController(0.1, 0, 0);
+  private final PIDController m_yController = new PIDController(DriveConstants.kTranslationalP, DriveConstants.kTranslationalI, DriveConstants.kTranslationalD);
   private final PIDController m_rotationController = new PIDController(DriveConstants.kHeadingP, DriveConstants.kHeadingI, DriveConstants.kHeadingD);
+  
+  private final PIDController m_pathplannerXController = new PIDController(DriveConstants.kPathplannerTranslationalP, DriveConstants.kPathplannerTranslationalI, DriveConstants.kPathplannerTranslationalD);
+  private final PIDController m_pathplannerYController = new PIDController(DriveConstants.kPathplannerTranslationalP, DriveConstants.kPathplannerTranslationalI, DriveConstants.kPathplannerTranslationalD);
+  private final PIDController m_pathplannerRotationController = new PIDController(DriveConstants.kPathplannerHeadingP, DriveConstants.kPathplannerHeadingI, DriveConstants.kPathplannerHeadingD);
+
 
   //Shuffleboard
   private GenericEntry 
@@ -124,6 +128,7 @@ public class Drivetrain extends SubsystemBase {
     
     m_odometry = new SwerveDriveOdometry(m_kinematics, m_pigeon.getRotation2d(), getModulePositions(), m_robotPose);
     m_rotationController.enableContinuousInput(-Math.PI, Math.PI);
+    m_pathplannerRotationController.enableContinuousInput(-Math.PI, Math.PI);
     DoubleSupplier[] poseSupplier = {() -> getPose().getX(), () -> getPose().getY(), () -> getPose().getRotation().getRadians()};
     LogManager.addDoubleArray("Pose2d", poseSupplier);
     
@@ -349,6 +354,15 @@ public class Drivetrain extends SubsystemBase {
   }
   public PIDController getRotationController() {
     return m_rotationController;
+  }
+  public PIDController getPathplannerXController() {
+    return m_pathplannerXController;
+  }
+  public PIDController getPathplannerYController() {
+    return m_pathplannerYController;
+  }
+  public PIDController getPathplannerRotationController() {
+    return m_pathplannerRotationController;
   }
 
   /**
