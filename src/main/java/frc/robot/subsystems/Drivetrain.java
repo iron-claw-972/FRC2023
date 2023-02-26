@@ -130,7 +130,8 @@ public class Drivetrain extends SubsystemBase {
     DoubleSupplier[] poseSupplier = {
       () -> getPose().getX(),
       () -> getPose().getY(),
-      () -> getPose().getRotation().getRadians()};
+      () -> getPose().getRotation().getRadians()
+    };
     LogManager.addDoubleArray("Pose2d", poseSupplier);
     
     m_fieldDisplay.setRobotPose(getPose());
