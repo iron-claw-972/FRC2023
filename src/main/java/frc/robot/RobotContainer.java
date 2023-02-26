@@ -116,9 +116,7 @@ public class RobotContainer {
     m_drive.setupModulesShuffleboard();
     m_driver.setupShuffleboard();
 
-    GenericEntry testEntry = m_testTab.add("Test Results", false).getEntry();
-
-    m_drive.addTestCommands(testEntry);
+    addTestCommands();
 
     m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive, m_driver));  
   }
@@ -147,24 +145,7 @@ public class RobotContainer {
   public void addTestCommands() {
     GenericEntry testEntry = m_testTab.add("Test Results", false).getEntry();
     m_testTab.add("Cancel Test", new InstantCommand(()-> CommandScheduler.getInstance().cancelAll()));
-    m_testTab.add("Circle Drive", new CircleDrive(m_drive));
-    m_testTab.add("Drive FeedForward", new DriveFeedForwardCharacterization(m_drive));
-    m_testTab.add("Steer Single FeedForward", new SteerFeedForwardCharacterizationSingle(m_drive));
-    m_testTab.add("Test Drive Velocity", new TestDriveVelocity(m_drive, testEntry));
-    m_testTab.add("Heading PID", new TestHeadingPID(m_drive, testEntry));
-    m_testTab.add("Steer angle", new TestSteerAngle(m_drive, testEntry));
-    m_testTab.add("Transform Pose", new PoseTransformTest(m_drive));
-    m_testTab.add("Go To Pose", new GoToPoseTest(m_drive));
-    m_testTab.add("Odometry Test", new PoseTransform(m_drive, new Transform2d(new Translation2d(1,1), new Rotation2d(Math.PI))));
-    m_testTab.add("Reset Pose", new InstantCommand(()-> {
-      m_drive.resetOdometry(
-        new Pose2d(
-          m_drive.getRequestedXPos().getDouble(0),
-          m_drive.getRequestedYPos().getDouble(0), 
-          new Rotation2d(m_drive.getRequestedHeadingEntry().getDouble(0))
-        ));
-      }
-    ));
+    m_drive.addTestCommands(testEntry);
   }
 
   /**
@@ -180,6 +161,8 @@ public class RobotContainer {
     m_autoCommand.addOption("Figure 8", new PathPlannerCommand(PathGroupLoader.getPathGroup("Figure 8"), 0 ,m_drive, true));
     m_autoCommand.addOption("To Center And Back", new PathPlannerCommand(PathGroupLoader.getPathGroup("To Center And Back"), 0, m_drive, true));
     m_autoCommand.addOption("EngageBottomPath", new EngageBottomPath(m_drive));
+    m_autoCommand.addOption("BottomSimpleLine1", new PathPlannerCommand(PathGroupLoader.getPathGroup("Bottom Simple Line1"), 0 , m_drive, true)); //intake
+
 
     m_autoTab.add("Auto Chooser", m_autoCommand);}
 
