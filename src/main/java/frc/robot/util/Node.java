@@ -2,14 +2,11 @@ package frc.robot.util;
 
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.constants.Constants;
 import frc.robot.constants.FieldConstants;
-import frc.robot.constants.VisionConstants;
 
 /**
  * Class to store data about scoring locations
@@ -91,6 +88,7 @@ public class Node {
         y += 4.978;  
         break;
     }
+    y -= Constants.kRobotLengthWithBumpers / 2;
     scorePose = new Pose2d(x, y, new Rotation2d());
   }
 
