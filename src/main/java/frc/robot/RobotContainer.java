@@ -163,8 +163,8 @@ public class RobotContainer {
     m_autoCommand.addOption("EngageBottomPath", new EngageBottomPath(m_drive));
     m_autoCommand.addOption("BottomSimpleLine1", new PathPlannerCommand(PathGroupLoader.getPathGroup("Bottom Simple Line1"), 0 , m_drive, true)); //intake
 
-
     m_autoTab.add("Auto Chooser", m_autoCommand);}
+    
 
   /**
    * Loads the command scheduler shuffleboard which will add event markers whenever a command finishes, ends, or is interrupted.
