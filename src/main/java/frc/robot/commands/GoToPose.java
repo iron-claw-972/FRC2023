@@ -26,12 +26,12 @@ public class GoToPose extends CommandBase {
   
   /**
    * Returns a command that goes to a position based on shuffleboard inputs
-   * This version of the command will not end for the purpose of tunning
    * DO NOT USE IF SHUFFLEBOARD IS DISABLED 
    * @param drive drivetrain to be used for the command
    * @param relativeToRobot should pose be converted to a transformation
+   * @param doNotEnd should the robot not end for tunning purposes
    */
-  public GoToPose(Drivetrain drive, boolean relativeToRobot){
+  public GoToPose(Drivetrain drive, boolean relativeToRobot, boolean doNotEnd){
     this(drive,
       () -> new Pose2d(
         drive.getRequestedXPos().getDouble(0), 
@@ -40,9 +40,9 @@ public class GoToPose extends CommandBase {
       ),
       relativeToRobot
     );
-    m_doNotEnd = true;
+    m_doNotEnd = doNotEnd;
   }
-  
+
   /**
    * Returns a command that goes to a position
    * @param drive drivetrain to be used for the command
