@@ -165,7 +165,7 @@ public class Drivetrain extends SubsystemBase {
    */
   public Pair<Double, Double> getVelocity() {
     ChassisSpeeds chassisSpeeds = getChassisSpeeds();
-    return new Pair<Double, Double>(
+    return new Pair<>(
       Math.hypot(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond),
       Math.atan2(chassisSpeeds.vyMetersPerSecond, chassisSpeeds.vxMetersPerSecond)
     );
