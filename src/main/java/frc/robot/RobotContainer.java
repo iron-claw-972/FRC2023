@@ -166,7 +166,7 @@ public class RobotContainer {
     m_testTab.add("Test vision (forward)", new TestVisionDistance(0.2, m_drive, m_vision));
     m_testTab.add("Test vision (backward)", new TestVisionDistance(-0.2, m_drive, m_vision));
     m_testTab.add("Vision return test (forward)", new VisionReturnTest(0.2, 3, m_drive, m_vision));
-    m_testTab.add("Vision return test (backward)", new VisionReturnTest(-+ 0.2, 3, m_drive, m_vision));
+    m_testTab.add("Vision return test (backward)", new VisionReturnTest(-0.2, 3, m_drive, m_vision));
     m_testTab.add("Align to 0 degrees", new TestVisionAlignment(0, m_drive, m_vision));
     m_testTab.add("Align to 90 degrees", new TestVisionAlignment(Math.PI/2, m_drive, m_vision));
     m_testTab.add("Align to -90 degrees", new TestVisionAlignment(-Math.PI/2, m_drive, m_vision));
