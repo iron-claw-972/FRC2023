@@ -101,6 +101,15 @@ public class DriveConstants {
   public static double kTranslationalI = 0;
   public static double kTranslationalD = 0;
 
+  //The PIDs for PathPlanner Command
+  public static double kPathplannerHeadingP= 1;
+  public static double kPathplannerHeadingI= 0;
+  public static double kPathplannerHeadingD= 0;
+  
+  public static double kPathplannerTranslationalP = 2;
+  public static double kPathplannerTranslationalI = 0;
+  public static double kPathplannerTranslationalD = 0;
+
   // CAN
   public static String kDriveMotorCAN = Constants.kCanivoreCAN;
   public static String kSteerMotorCAN = Constants.kCanivoreCAN;

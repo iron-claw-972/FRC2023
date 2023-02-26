@@ -81,10 +81,14 @@ public class Drivetrain extends SubsystemBase {
   private final Field2d m_fieldDisplay = new Field2d();
   
   // PID Controllers
-  // translation controllers have dummy constants that are just good enough to run the odometry test
   private final PIDController m_xController = new PIDController(DriveConstants.kTranslationalP, DriveConstants.kTranslationalI, DriveConstants.kTranslationalD);
   private final PIDController m_yController = new PIDController(DriveConstants.kTranslationalP, DriveConstants.kTranslationalI, DriveConstants.kTranslationalD);
   private final PIDController m_rotationController = new PIDController(DriveConstants.kHeadingP, DriveConstants.kHeadingI, DriveConstants.kHeadingD);
+  
+  private final PIDController m_pathplannerXController = new PIDController(DriveConstants.kPathplannerTranslationalP, DriveConstants.kPathplannerTranslationalI, DriveConstants.kPathplannerTranslationalD);
+  private final PIDController m_pathplannerYController = new PIDController(DriveConstants.kPathplannerTranslationalP, DriveConstants.kPathplannerTranslationalI, DriveConstants.kPathplannerTranslationalD);
+  private final PIDController m_pathplannerRotationController = new PIDController(DriveConstants.kPathplannerHeadingP, DriveConstants.kPathplannerHeadingI, DriveConstants.kPathplannerHeadingD);
+
 
   //Shuffleboard
   private GenericEntry 
@@ -142,6 +146,7 @@ public class Drivetrain extends SubsystemBase {
     m_poseEstimator.setVisionMeasurementStdDevs(VisionConstants.kBaseVisionPoseStdDevs);
 
     m_rotationController.enableContinuousInput(-Math.PI, Math.PI);
+    m_pathplannerRotationController.enableContinuousInput(-Math.PI, Math.PI);
     DoubleSupplier[] poseSupplier = {
       () -> getPose().getX(),
       () -> getPose().getY(),
@@ -315,6 +320,8 @@ public class Drivetrain extends SubsystemBase {
         );
       }
 
+      m_fieldDisplay.setRobotPose(m_poseEstimator.getEstimatedPosition());
+
     }
   }
   /**
@@ -428,6 +435,15 @@ public class Drivetrain extends SubsystemBase {
   public PIDController getRotationController() {
     return m_rotationController;
   }
+  public PIDController getPathplannerXController() {
+    return m_pathplannerXController;
+  }
+  public PIDController getPathplannerYController() {
+    return m_pathplannerYController;
+  }
+  public PIDController getPathplannerRotationController() {
+    return m_pathplannerRotationController;
+  }
   public SwerveDriveKinematics getKinematics() {
     return m_kinematics;
   }
@@ -446,6 +462,10 @@ public class Drivetrain extends SubsystemBase {
     m_drivetrainTab.add("yController", getYController());
     m_drivetrainTab.add("rotationController", getRotationController());
     
+    m_drivetrainTab.add("PP xController", getPathplannerXController());
+    m_drivetrainTab.add("PP yController", getPathplannerYController());
+    m_drivetrainTab.add("PP rotationController", getPathplannerRotationController());
+    
     // add angles
     m_drivetrainTab.addNumber("getAngle", () -> getAngleHeading());
     m_drivetrainTab.addNumber("heading PID output", () -> m_headingPIDOutput);
@@ -457,10 +477,6 @@ public class Drivetrain extends SubsystemBase {
     //m_drivetrainTab.addNumber("Estimated X pos (m)", ()-> m_odometry.getPoseMeters().getX());
     //m_drivetrainTab.addNumber("Estimated Y pos (m)", ()-> m_odometry.getPoseMeters().getY());
     
-    // add the controllers to shuffleboard for tuning
-    m_drivetrainTab.add(getXController());
-    m_drivetrainTab.add(getYController());
-    m_drivetrainTab.add(getRotationController());
   }
 
   /**
