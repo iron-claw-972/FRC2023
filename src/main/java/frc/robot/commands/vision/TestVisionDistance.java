@@ -23,10 +23,10 @@ public class TestVisionDistance extends CommandBase{
 
   // TODO: Should these values be in a constant file?
   // How many seconds of not seeing april tag before ending the command
-  private static final int kEndDelay = 5;
+  private static final double kEndDelay = 0.25;
 
   // How many seconds between each data print
-  private static final int kPrintDelay = 3;
+  private static final double kPrintDelay = 0.25;
 
   public TestVisionDistance(double speed, Drivetrain drive, Vision vision){
     addRequirements(drive);
