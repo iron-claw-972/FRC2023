@@ -32,7 +32,7 @@ public class Vision {
 
   /**
    * Creates a new instance of Vision
-   * Sets up shuffleboard, field layout, and cameras
+   * Sets up field layout, and cameras
    * @param shuffleboardTab The vision shuffleboard tab
    * @param camList The list of camera names and their translation from the center of the robot
    */
@@ -96,7 +96,7 @@ public class Vision {
     if (estimatedPoses.size() == 2) {
       return new Pose2d(
         estimatedPoses.get(0).estimatedPose.toPose2d().getTranslation().plus(
-        estimatedPoses.get(0).estimatedPose.toPose2d().getTranslation()
+        estimatedPoses.get(1).estimatedPose.toPose2d().getTranslation()
         ).div(2),
 
         new Rotation2d(Functions.modulusMidpoint(
