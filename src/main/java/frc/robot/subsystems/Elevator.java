@@ -133,19 +133,12 @@ public class Elevator extends SubsystemBase {
   // }
 
   public boolean isBottom(){
-    if(m_bottomLimitSwitch.get() == false){
-      return true; 
-    } else{
-      return false; 
-    }
+    return !m_bottomLimitSwitch.get();
   }
 
   public boolean isTop(){
-    if(m_topLimitSwitch.get() == false){
-      return true; 
-    } else{
-      return false; 
-    }  }
+    return !m_topLimitSwitch.get();
+  }
 
   public void resetTalonEncoder(){
     m_talonEncoder.reset(); 
