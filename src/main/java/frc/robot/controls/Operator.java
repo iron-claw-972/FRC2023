@@ -5,6 +5,7 @@ import java.util.function.BooleanSupplier;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.commands.arm.ExtendToPosition;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.OIConstants;
@@ -16,6 +17,7 @@ import frc.robot.util.Vision;
 import lib.controllers.GameController;
 import lib.controllers.GameController.Axis;
 import lib.controllers.GameController.Button;
+import lib.controllers.GameController.DPad;
 
 public class Operator {
 
@@ -68,6 +70,9 @@ public class Operator {
     // Outtakes
     m_operator.get(m_operator.LEFT_TRIGGER_BUTTON).onTrue(new InstantCommand(()->m_intake.intake(-1)));
     m_operator.get(m_operator.LEFT_TRIGGER_BUTTON).onFalse(new InstantCommand(()->m_intake.stop()));
+
+    // Prints that operator controls are working
+    m_operator.get(DPad.UP).onTrue(new PrintCommand("Operator controls work"));
 
     // Extends the bar
     // These commands don't exist yet
