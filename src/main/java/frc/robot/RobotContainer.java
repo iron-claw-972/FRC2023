@@ -163,8 +163,8 @@ public class RobotContainer {
     m_testTab.add("Test Drive Velocity", new TestDriveVelocity(m_drive, testEntry));
     m_testTab.add("Heading PID", new TestHeadingPID(m_drive, testEntry));
     m_testTab.add("Steer angle", new TestSteerAngle(m_drive, testEntry));
-    m_testTab.add("Transform Pose", new GoToPose(m_drive, true));
-    m_testTab.add("Go To Pose", new GoToPose(m_drive, false));
+    m_testTab.add("Transform Pose", new GoToPose(m_drive, true, true));
+    m_testTab.add("Go To Pose", new GoToPose(m_drive, false, true));
     m_testTab.add("Odometry Test", new GoToPose(
         m_drive, 
         new Pose2d(new Translation2d(1,1), new Rotation2d(Math.PI)), 
