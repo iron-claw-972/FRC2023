@@ -83,13 +83,10 @@ public class GoToPose extends CommandBase {
   @Override
   public boolean isFinished() {
     if (m_doNotEnd) return false;
-    double errorMarginMeters = TestConstants.kTranslationError;
-    double errorMarginRadians = TestConstants.kHeadingError;
-    m_error = m_drive.getPose().relativeTo(m_finalPose);
-    // if robot thinks its precision is < 0.1 to the target we inputted, it will stop, so then we can see how off it is
-    return Math.abs(m_error.getX()) < errorMarginMeters &&
-      Math.abs(m_error.getY()) < errorMarginMeters && 
-      Math.abs(m_error.getRotation().getRadians()) < errorMarginRadians;
+    return 
+      m_drive.getPose().getTranslation().getDistance(m_finalPose.getTranslation()) 
+        < TestConstants.kTranslationError && 
+      Math.abs(m_error.getRotation().getRadians()) < TestConstants.kHeadingError;
   }
 
   @Override
