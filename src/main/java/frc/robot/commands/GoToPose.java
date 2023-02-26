@@ -3,6 +3,7 @@ package frc.robot.commands;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
@@ -20,23 +21,36 @@ public class GoToPose extends CommandBase {
   private double m_startTime;
   private Pose2d m_finalPose;
   private Pose2d m_error;
+  private boolean m_relativeToRobot;
   
-  public GoToPose(Drivetrain drive, Pose2d pose) {
-    m_drive = drive; 
-    // finalPose is position after robot moves from current position-- startPose-- by the values that are inputted-- distanceToMove
-    m_finalPose = pose;
-    addRequirements(drive);
+  public GoToPose(Drivetrain drive, boolean relativeToRobot){
+    this(drive,
+      () -> new Pose2d(
+        drive.getRequestedXPos().getDouble(0), 
+        drive.getRequestedYPos().getDouble(0), 
+        new Rotation2d(drive.getRequestedHeadingEntry().getDouble(0))
+      ),
+      relativeToRobot
+    );
   }
 
-  public GoToPose(Drivetrain drive, Supplier<Pose2d> poseSupplier) {
+  public GoToPose(Drivetrain drive, Pose2d pose, boolean relativeToRobot) {
+    this(drive, () -> pose, relativeToRobot);
+  }
+
+  public GoToPose(Drivetrain drive, Supplier<Pose2d> poseSupplier, boolean relativeToRobot) {
     m_drive = drive;
-    m_poseSupplier = poseSupplier;
     addRequirements(drive);
+    m_poseSupplier = poseSupplier;
+    m_relativeToRobot = relativeToRobot;
   }
   
   @Override
   public void initialize() {
-    if (m_poseSupplier != null) m_finalPose = m_poseSupplier.get();
+    m_finalPose = m_poseSupplier.get();
+    if (m_relativeToRobot) m_finalPose = m_drive.getPose().plus(
+      m_finalPose.minus(new Pose2d()) // the minus method is to make the pose a transform
+    );
     m_startTime = Timer.getFPGATimestamp();
   }
   

@@ -17,11 +17,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Robot.RobotId;
 import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.commands.PoseTransform;
+import frc.robot.commands.GoToPose;
 import frc.robot.commands.test.CircleDrive;
 import frc.robot.commands.test.DriveFeedForwardCharacterization;
-import frc.robot.commands.test.GoToPoseTest;
-import frc.robot.commands.test.PoseTransformTest;
 import frc.robot.commands.test.SteerFeedForwardCharacterizationSingle;
 import frc.robot.commands.test.TestDriveVelocity;
 import frc.robot.commands.test.TestHeadingPID;
@@ -165,9 +163,13 @@ public class RobotContainer {
     m_testTab.add("Test Drive Velocity", new TestDriveVelocity(m_drive, testEntry));
     m_testTab.add("Heading PID", new TestHeadingPID(m_drive, testEntry));
     m_testTab.add("Steer angle", new TestSteerAngle(m_drive, testEntry));
-    m_testTab.add("Transform Pose", new PoseTransformTest(m_drive));
-    m_testTab.add("Go To Pose", new GoToPoseTest(m_drive));
-    m_testTab.add("Odometry Test", new PoseTransform(m_drive, new Transform2d(new Translation2d(1,1), new Rotation2d(Math.PI))));
+    m_testTab.add("Transform Pose", new GoToPose(m_drive, true));
+    m_testTab.add("Go To Pose", new GoToPose(m_drive, false));
+    m_testTab.add("Odometry Test", new GoToPose(
+        m_drive, 
+        new Pose2d(new Translation2d(1,1), new Rotation2d(Math.PI)), 
+        true
+      ));
     m_testTab.add("Reset Pose", new InstantCommand(()-> {
       m_drive.resetOdometry(
         new Pose2d(
