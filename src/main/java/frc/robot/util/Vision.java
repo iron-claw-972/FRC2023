@@ -23,7 +23,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.constants.VisionConstants;
 
-// TODO: Personally, don't think that this class should be in the Util folder. Although it *isn't* a subsystem, it might be more suitable there
 public class Vision {
   // The field layout
   private AprilTagFieldLayout m_aprilTagFieldLayout;
