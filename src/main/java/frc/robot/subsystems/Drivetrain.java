@@ -76,7 +76,9 @@ public class Drivetrain extends SubsystemBase {
     m_driveVelocityFeedforward, 
     m_steerStaticFeedforward,
     m_steerVelocityFeedforward,
-    m_heading;
+    m_heading,
+    m_xPosEntry,
+    m_yPosEntry;
   private ShuffleboardTab m_swerveModulesTab, m_drivetrainTab;
 
   private Double[] m_driveVelFeedForwardSaver = new Double[4];
