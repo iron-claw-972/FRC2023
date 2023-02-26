@@ -29,10 +29,11 @@ public class TestVisionAlignment extends CommandBase{
     m_mostRecentAngle = m_setpoint + Math.PI;
   }
 
-  /**
-   * Turns the robot
-   * PID broke the classbot, so this doesn't use it
-   */
+  @Override
+  public void initialize() {
+    m_drive.getRotationController().reset();
+  }
+
   @Override
   public void execute() {
     m_mostRecentAngle = getAngle();
@@ -49,7 +50,7 @@ public class TestVisionAlignment extends CommandBase{
 
   @Override
   public boolean isFinished(){
-    return Math.abs(MathUtil.angleModulus(getAngle() - m_setpoint)) < TestConstants.kHeadingError;
+    return m_drive.getRotationController().atSetpoint();
   }
 
   private double getAngle(){
