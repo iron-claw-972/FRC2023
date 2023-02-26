@@ -12,7 +12,7 @@ public class ModuleTypeTest {
     @Test
     public void testEnums() {
         for (ModuleType mt : ModuleType.values()) {
-            // @SuppressWarnings("deprecated")
+            //@SuppressWarnings("deprecated")
             assertEquals(mt.id, mt.getID());
         }
     }
