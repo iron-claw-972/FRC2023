@@ -47,6 +47,7 @@ public class VisionConstants {
     }
   }
 
+  // TODO: check/tune vision weight
   // How much to trust vision measurements normally
   public static final Matrix<N3, N1> kBaseVisionPoseStdDevs = new MatBuilder<>(Nat.N3(), Nat.N1()).fill(
     0.9, // x in meters (default=0.9)
