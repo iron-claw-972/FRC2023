@@ -76,14 +76,11 @@ public class DriveFeedForwardCharacterization extends CommandBase {
       m_drive.getDriveVelocityFeedforwardArray()[i] = 
         m_feedForwardCharacterizationData[i].getVelocity();
       System.out.println("Static " + i + ": " + 
-        m_feedForwardCharacterizationData[i].getStatic()
-      );
+        m_feedForwardCharacterizationData[i].getStatic());
       System.out.println("Velocity " + i + ": " + 
-        m_feedForwardCharacterizationData[i].getVelocity()
-      );
+        m_feedForwardCharacterizationData[i].getVelocity());
       System.out.println("Variance " + i + ": " + 
-        m_feedForwardCharacterizationData[i].getVariance()
-      );
+        m_feedForwardCharacterizationData[i].getVariance());
     }
     
     m_drive.getDriveStaticFeedforwardEntry().setDouble(
