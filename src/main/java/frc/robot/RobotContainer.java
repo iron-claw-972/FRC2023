@@ -23,7 +23,6 @@ import frc.robot.commands.test.TestDriveVelocity;
 import frc.robot.commands.test.TestHeadingPID;
 import frc.robot.commands.test.TestSteerAngle;
 import frc.robot.constants.swerve.DriveConstants;
-import frc.robot.controls.BaseDriverConfig;
 import frc.robot.controls.GameControllerDriverConfig;
 import frc.robot.controls.ManualController;
 import frc.robot.controls.Operator;
