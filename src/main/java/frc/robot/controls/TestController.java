@@ -34,20 +34,16 @@ public class TestController {
   
   public void configureControls() {
     
-    // elevator controls
-    if (m_arm != null) {
+    //arm controls
       test.get(Button.Y).onTrue(new ExtendToPosition(m_arm, ArmConstants.kTopPosition));
       test.get(Button.X).onTrue(new ExtendToPosition(m_arm, ArmConstants.kMiddlePosition));
       test.get(Button.A).onTrue(new ExtendToPosition(m_arm, ArmConstants.kIntakePosition));
       test.get(Button.B).onTrue(new ExtendToPosition(m_arm, ArmConstants.kShelfPosition));
-    }
     
     // intake controls
-    if (m_intake != null) {
       test.get(DPad.DOWN).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kIntakeSpeed), m_intake));
       test.get(DPad.UP).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kOuttakeSpeed),m_intake));
       test.get(DPad.LEFT).onTrue(new InstantCommand(() -> m_intake.stop(), m_intake));
-    }
     
     // elevator controls
     if (m_elevator != null) {
