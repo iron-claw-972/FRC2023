@@ -11,13 +11,12 @@ public class VisionReturnTest extends CommandBase{
   private Vision m_vision;
   private Translation2d m_visionStartTranslation, m_driveStartTranslation;
   private Pose2d m_turnPose;
-  private double m_encoderPosition;
   private Pose2d m_currentPose = null;
-  private int m_endCounter = 0;
   private double m_speed;
-  private int m_direction = 1;
-  private int m_turns;
   private double m_distanceToMove;
+  private int m_endCounter = 0;
+  private int m_direction = 1;
+  private int m_turns = 0;
 
   //How many frames it has to not see anything to end the command
   private static final int endDelay = 5;
@@ -42,11 +41,9 @@ public class VisionReturnTest extends CommandBase{
   @Override
   public void initialize() {
     m_drive.enableVision(false);
-    m_visionStartTranslation = m_vision.getPose2d(m_currentPose, m_drive.getPose()).getTranslation();
+    m_currentPose = m_vision.getPose2d(null, m_drive.getPose());
+    m_visionStartTranslation = m_currentPose.getTranslation();
     m_driveStartTranslation = m_drive.getPose().getTranslation();
-    m_direction = 1;
-    m_turns = 0;
-    m_endCounter = 0;
   }
 
   /**
@@ -57,31 +54,41 @@ public class VisionReturnTest extends CommandBase{
   @Override
   public void execute() {
     m_drive.drive(m_direction * m_speed, 0, 0, false);
-
-    Pose2d pose = m_vision.getPose2d(m_currentPose, m_drive.getPose());
-    if (pose == null) {
-      m_endCounter++;
-
-    } else {
+    Pose2d newestPose = m_vision.getPose2d(m_currentPose, m_drive.getPose());
+    if(newestPose != null){
+      //update current pose
+      m_currentPose = newestPose;
+      //reduce end counter
       m_endCounter = Math.max(0, m_endCounter - 1);
-      m_currentPose = pose;
-      double dist1 = m_drive.getPose().getTranslation().getDistance(m_driveStartTranslation);
-      double dist2 = m_currentPose.getTranslation().getDistance(m_visionStartTranslation);
-      if (dist2 >= m_distanceToMove && m_direction > 0) {
-        System.out.printf("Encoder distance: %.4f\n", dist1);
+
+
+      double driveDistance = m_drive.getPose().getTranslation().getDistance(m_driveStartTranslation);
+      double visionDistance = m_currentPose.getTranslation().getDistance(m_visionStartTranslation);
+      
+      // if it is at or past the distance shifted and the direction is greater than 0  
+      if(visionDistance >= m_distanceToMove && m_direction > 0){
+        System.out.printf("Encoder distance: %.4f\n", driveDistance);
         m_direction = -1;
         m_turns = 1;
-        m_turnPose=new Pose2d(m_currentPose.getTranslation(), m_currentPose.getRotation());
+        //record pose at turn
+        m_turnPose = m_currentPose;
       }
-      if (m_turns>0) {
-        double dist3 = m_currentPose.getTranslation().getDistance(m_turnPose.getTranslation());
-        if (Math.abs(dist3 - m_distanceToMove)<0.1) {
+
+      //once you have turned more than once (turn > 1)
+      if(m_turns > 0){
+        //distance from last recorded turn pose
+        double distanceFromTurnPose = m_currentPose.getTranslation().getDistance(m_turnPose.getTranslation());
+        //if the difference between distance to move and distance from turn is
+        if(Math.abs(distanceFromTurnPose - m_distanceToMove)<0.1){
           m_endCounter += 2;
           m_drive.stop();
-        } else if (dist3 > m_distanceToMove && m_direction < 0) {
+        
+        // if to far from turn pose and direction negative
+        }else if(distanceFromTurnPose > m_distanceToMove && m_direction < 0){
           m_direction *= -0.8;
           m_turns++;
-        } else if (dist3 < m_distanceToMove && m_direction > 0) {
+        // if to close to turn pose and direction positive
+        }else if(distanceFromTurnPose < m_distanceToMove && m_direction > 0){
           m_direction *= -0.8;
           m_turns++;
         }
@@ -89,6 +96,8 @@ public class VisionReturnTest extends CommandBase{
           m_endCounter += 2;
         }
       }
+    }else{
+      m_endCounter++;
     }
   }
 
