@@ -127,7 +127,8 @@ public class Drivetrain extends SubsystemBase {
       m_kinematics,
       m_pigeon.getRotation2d(),
       getModulePositions(),
-      new Pose2d());
+      new Pose2d()
+    );
     m_poseEstimator.setVisionMeasurementStdDevs(VisionConstants.kBaseVisionPoseStdDevs);
 
     m_rotationController.enableContinuousInput(-Math.PI, Math.PI);
