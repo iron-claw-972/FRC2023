@@ -10,6 +10,10 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.util.Functions;
 import frc.robot.util.Vision;
 
+// TODO: COMMENTS!
+/**
+ * 
+ */
 public class TestVisionAlignment extends CommandBase{
   private Drivetrain m_drive;
   private Vision m_vision;
@@ -17,11 +21,6 @@ public class TestVisionAlignment extends CommandBase{
   private double m_mostRecentAngle;
   // private PIDController m_pid = new PIDController(1, 0.01, 0.1);
 
-  /**
-   * Aligns the robot to a specific angle
-   * @param targetAngle The angle to go to
-   * @param drive The drivetrain
-   */
   public TestVisionAlignment(double targetAngle, Drivetrain drive, Vision vision){
     addRequirements(drive);
     m_setpoint = targetAngle;
@@ -41,20 +40,12 @@ public class TestVisionAlignment extends CommandBase{
     m_drive.drive(0, 0, speed, false);
   }
 
-  /**
-   * Stops the robot and prints the final angle
-   * @param interrupted If the command was interrupted
-   */
   @Override
   public void end(boolean interrupted) {
     System.out.printf("\nExact angle: %.4f degrees\n", Units.radiansToDegrees(getAngle()));
     m_drive.stop();
   }
 
-  /**
-   * Determines if the angle is close enough (within 1 degree)
-   * @return If the command is finished
-   */
   @Override
   public boolean isFinished(){
     return Math.abs(MathUtil.angleModulus(getAngle() - m_setpoint)) < TestConstants.kHeadingError;
