@@ -54,7 +54,7 @@ public class Node {
           ? NodeType.CUBE
           : NodeType.CONE;
 
-    // The 
+    // Starting locations
     double x = (alliance == Alliance.Blue ? FieldConstants.kBlueAllianceNodeStartX : FieldConstants.kRedAllianceNodeStartX);
     double y = FieldConstants.kNodeStartY;
 
