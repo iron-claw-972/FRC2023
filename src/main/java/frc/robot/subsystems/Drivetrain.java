@@ -338,6 +338,8 @@ public class Drivetrain extends SubsystemBase {
   public void setupDrivetrainShuffleboard() {
     // inputs
     m_heading = m_drivetrainTab.add("Set Heading (-pi to pi)", 0).getEntry();
+    m_xPosEntry = m_drivetrainTab.add("Input X pos(m)",0).getEntry();
+    m_yPosEntry = m_drivetrainTab.add("Input Y pos(m)",0).getEntry();
     
     // add PID controllers
     m_drivetrainTab.add("xController", getXController());
@@ -352,7 +354,8 @@ public class Drivetrain extends SubsystemBase {
     m_drivetrainTab.addNumber("Gyro Y", () -> getAngularRate(1));
     m_drivetrainTab.addNumber("Gyro Z", () -> getAngularRate(2));
     
-    // m_drivetrainTab.add("odometry", m_odometry);
+    m_drivetrainTab.addNumber("Estimated X pos (m)", ()-> m_odometry.getPoseMeters().getX());
+    m_drivetrainTab.addNumber("Estimated Y pos (m)", ()-> m_odometry.getPoseMeters().getY());
     
     // add the controllers to shuffleboard for tuning
     m_drivetrainTab.add(getXController());
@@ -409,6 +412,12 @@ public class Drivetrain extends SubsystemBase {
   }
   public GenericEntry getSteerVelocityFeedforwardEntry() {
     return m_steerVelocityFeedforward;
+  }
+  public GenericEntry getRequestedXPos(){
+    return m_xPosEntry;
+  }
+  public GenericEntry getRequestedYPos(){
+    return m_yPosEntry;
   }
 
   /**
