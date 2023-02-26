@@ -42,6 +42,7 @@ public class TestVisionAlignment extends CommandBase{
 
   @Override
   public void end(boolean interrupted) {
+    //print vision angle
     System.out.printf("\nExact angle: %.4f degrees\n", Units.radiansToDegrees(getAngle()));
     m_drive.stop();
   }
@@ -52,6 +53,9 @@ public class TestVisionAlignment extends CommandBase{
   }
 
   private double getAngle(){
-    return m_vision.getPose2d(m_drive.getPose()).getRotation().getRadians();
+    if (m_vision.getPose2d(m_drive.getPose()) != null) {
+      m_mostRecentAngle = m_vision.getPose2d(m_drive.getPose()).getRotation().getRadians();
+    }
+    return m_mostRecentAngle;
   }
 }
