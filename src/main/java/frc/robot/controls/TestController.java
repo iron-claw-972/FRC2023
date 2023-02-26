@@ -25,8 +25,8 @@ public class TestController {
   public void configureControls() {
     
     // elevator controls
-    test.get(Button.Y).onTrue(new ExtendToPosition(m_arm, ArmConstants.ktopPosition));
-    test.get(Button.X).onTrue(new ExtendToPosition(m_arm, ArmConstants.kmiddlePosition));
+    test.get(Button.Y).onTrue(new ExtendToPosition(m_arm, ArmConstants.kTopPosition));
+    test.get(Button.X).onTrue(new ExtendToPosition(m_arm, ArmConstants.kMiddlePosition));
     test.get(Button.A).onTrue(new ExtendToPosition(m_arm, ArmConstants.kIntakePosition));
     test.get(Button.B).onTrue(new ExtendToPosition(m_arm, ArmConstants.kShelfPosition));
     

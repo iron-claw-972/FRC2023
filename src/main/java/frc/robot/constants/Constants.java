@@ -14,7 +14,6 @@ public final class Constants {
   public static final String kCanivoreCAN = "CANivore";
   public static final String kRioCAN = "rio";
 
-
-  // RobotId key in rio preferences
+  /** The key used to access the RobotId name in the RoboRIO's persistent memory. */
   public static final String kRobotIdKey = "RobotId";
 }

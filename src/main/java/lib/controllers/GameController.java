@@ -14,7 +14,6 @@ public class GameController extends Controller {
       ALL_LEFT = get(DPad.LEFT).or(get(DPad.UP_LEFT)).or(get(DPad.DOWN_LEFT)),
       ALL_RIGHT = get(DPad.RIGHT).or(get(DPad.UP_RIGHT)).or(get(DPad.DOWN_RIGHT));
 
-
   public GameController(int port) {
     super(port);
   }

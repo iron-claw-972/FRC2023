@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.controls.Operator;
 import frc.robot.constants.Constants;
 import frc.robot.util.LogManager;
 
@@ -22,14 +21,24 @@ import frc.robot.util.LogManager;
 public class Robot extends TimedRobot {
 
   private Command m_autoCommand;
-    
-
   private RobotContainer m_robotContainer;
 
+  /**
+   * Set of known Robot Names.
+   * <p>The name of a robot in the RoboRIO's persistent memory.
+   * At deploy time, that name is used to set the corresponding RobotId.
+   * <p>Note that the RobotId is determined at Deploy time.
+   */
   public enum RobotId {
-    Default, SwerveCompetition, SwerveTest,
+    Default,
+    SwerveCompetition, SwerveTest,
     ClassBot1, ClassBot2, ClassBot3, ClassBot4
   };
+  /**
+   * The Robot Identity.
+   * <p><b>Note: kRobotId is not a constant.</b></p>
+   */
+  // assume a default robot identity
   public static RobotId kRobotId = RobotId.Default;
 
   /**
@@ -38,27 +47,28 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    // Determine the Robot Identity from Preferences
+    // Determine the Robot Identity from the RoboRIO's onboard Preferences
     // To Set the Robot Name
     //   SimGUI: Persistent Values, Preferences, RobotId, then restart Simulation
     //     changes networktables.json, networktables.json.bck (both Untracked)
-    // set the default preference to something safe
-    if (!Preferences.containsKey(kRobotId.name())) {
-      Preferences.setString(kRobotId.name(), RobotId.Default.toString());
+    //   Uncomment the next line, set the desired RobotId, deploy, and then comment the line out
+    //     Preferences.setString(Constants.kRobotIdKey, RobotId.SwerveTest.name());
+    //
+    // check whether Preferences has an entry for the RobotId
+    if (!Preferences.containsKey(Constants.kRobotIdKey)) {
+      // There is no such key. Set it to the default identity.
+      Preferences.setString(Constants.kRobotIdKey, RobotId.Default.name());
     }
-    // get the RobotId from Preferences
-    String strId = Preferences.getString(Constants.kRobotIdKey, RobotId.Default.toString());
-    // match the string to an RobotId
+    // get the RobotId string from the RoboRIO's Preferences
+    String strId = Preferences.getString(Constants.kRobotIdKey, RobotId.Default.name());
+    // match that string to a RobotId by looking at all possible RobotId enums
     for (RobotId rid : RobotId.values()) {
-      // does it match the preference string?
+      // does the preference string match the RobotId enum?
       if (strId.equals(rid.name())) {
-        // yes, so it is the RobotId
+        // yes, this instance is the desired RobotId
         kRobotId = rid;
       }
     }
-
-    // TODO: Remove this line when someone is able to test whether or not preferences are working
-    kRobotId = RobotId.SwerveTest;
     // report the RobotId to the SmartDashboard
     SmartDashboard.putString("RobotID", kRobotId.name());
 
@@ -75,12 +85,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    Operator.selectTime--;
-    if(Operator.selectTime==0){
-      Operator.selectValues[0]=0;
-      Operator.selectValues[1]=0;
-      Operator.selectValues[2]=0;
-    }
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic

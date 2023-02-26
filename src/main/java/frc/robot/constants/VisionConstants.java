@@ -18,16 +18,21 @@ import edu.wpi.first.math.util.Units;
 import frc.robot.Robot;
 import frc.robot.Robot.RobotId;
 
-
-
+/**
+ * Container class for vision constants.
+ */
 public class VisionConstants {
-  public static ArrayList<Pair<String, Transform3d>> kCameras = new ArrayList<Pair<String, Transform3d>>(List.of(
-  ));
-
-  //How far from the grid the robot should go to score in inches
-  public static double kgridDistance = 24;
 
 
+  public static ArrayList<Pair<String, Transform3d>> kCameras = new ArrayList<>();
+
+  // How far from the grid the robot should go to score in inches
+  public static double kGridDistance = 24;
+
+  /**
+   * Update the camera list based on the robot id detected from rio preferences.
+   */
+  // TODO: Maybe we should move this to the if/else block in RobotContainer.java, where subsystems are initialized/not initialized based on robotid
   public static void update() {
     if (Robot.kRobotId == RobotId.SwerveTest) {
       kCameras = new ArrayList<Pair<String, Transform3d>>(List.of(
@@ -42,6 +47,7 @@ public class VisionConstants {
     }
   }
 
+  // TODO: check/tune vision weight
   // How much to trust vision measurements normally
   public static final Matrix<N3, N1> kBaseVisionPoseStdDevs = new MatBuilder<>(Nat.N3(), Nat.N1()).fill(
     0.9, // x in meters (default=0.9)
@@ -56,7 +62,7 @@ public class VisionConstants {
   public static final double kFieldLength = Units.inchesToMeters(54*12 + 3.25);
   public static final double kFieldWidth = Units.inchesToMeters(26*12 + 3.5);
 
-  //Array to use if it can't find the April tag field layout
+  // Array to use if it can't find the April tag field layout
   public static final ArrayList<AprilTag> kAprilTags = new ArrayList<AprilTag>(List.of(
     new AprilTag(1, new Pose3d(Units.inchesToMeters(610.77), Units.inchesToMeters( 42.19), Units.inchesToMeters(18.22), new Rotation3d(0.0, 0.0, Math.PI))),
     new AprilTag(2, new Pose3d(Units.inchesToMeters(610.77), Units.inchesToMeters(108.19), Units.inchesToMeters(18.22), new Rotation3d(0.0, 0.0, Math.PI))),

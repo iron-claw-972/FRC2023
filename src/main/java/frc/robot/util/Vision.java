@@ -17,7 +17,6 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -33,7 +32,7 @@ public class Vision {
 
   /**
    * Creates a new instance of Vision
-   * Sets up shuffleboard, field layout, and cameras
+   * Sets up field layout, and cameras
    * @param shuffleboardTab The vision shuffleboard tab
    * @param camList The list of camera names and their translation from the center of the robot
    */
@@ -76,26 +75,38 @@ public class Vision {
 
   /**
    * Gets the pose as a Pose2d
-   * @param referencePose The reference pose
-   * @param robotPose The robot pose, used if the reference pose is null
+   * @param referencePoses The reference poses in order of preference, null poses will be skipped
    * @return The pose of the robot, or null if it can't see april tags
    */
-  public Pose2d getPose2d(Pose2d referencePose, Pose2d robotPose){
-    ArrayList<EstimatedRobotPose> p = getEstimatedPoses(referencePose==null?robotPose:referencePose);
-    Translation2d translation = new Translation2d();
-    double rotation = 0;
-    if(p.size()==0){
-      return null;
-    }
-    int posesUsed=0;
-    for(int i = 0; i < p.size(); i++){
-      if(p.get(i)!=null && p.get(i).estimatedPose!=null){
-        translation=translation.plus(p.get(i).estimatedPose.toPose2d().getTranslation());
-        rotation += p.get(i).estimatedPose.toPose2d().getRotation().getRadians();
-        posesUsed++;
+  public Pose2d getPose2d(Pose2d... referencePoses){
+    Pose2d referencePose = new Pose2d();
+    for (Pose2d checkReferencePose:referencePoses){
+      if (checkReferencePose != null) {
+        referencePose = checkReferencePose;
+        break;
       }
     }
-    return new Pose2d(translation.div(posesUsed), new Rotation2d(rotation/posesUsed));
+    ArrayList<EstimatedRobotPose> estimatedPoses = getEstimatedPoses(referencePose);
+    Translation2d translation = new Translation2d();
+    double rotation = 0;
+    //TODO: VERY LOW PRIORITY FOR FUTURE ROBOTS, make this scalable to more than 2 camera
+
+    if (estimatedPoses.size() == 1) return estimatedPoses.get(0).estimatedPose.toPose2d();
+    
+    if (estimatedPoses.size() == 2) {
+      return new Pose2d(
+        estimatedPoses.get(0).estimatedPose.toPose2d().getTranslation().plus(
+        estimatedPoses.get(1).estimatedPose.toPose2d().getTranslation()
+        ).div(2),
+
+        new Rotation2d(Functions.modulusMidpoint(
+          estimatedPoses.get(0).estimatedPose.toPose2d().getRotation().getRadians(),
+          estimatedPoses.get(1).estimatedPose.toPose2d().getRotation().getRadians(),
+          -Math.PI, Math.PI
+        ))
+      );
+    }
+    return null;
   }
 
   public AprilTagFieldLayout getAprilTagFieldLayout(){
@@ -129,7 +140,12 @@ public class Vision {
      */
     public VisionCamera(String cameraName, Transform3d robotToCam) {
       camera = new PhotonCamera(cameraName);
-      photonPoseEstimator = new PhotonPoseEstimator(m_aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP, camera, robotToCam);
+      photonPoseEstimator = new PhotonPoseEstimator(
+        m_aprilTagFieldLayout, 
+        PoseStrategy.MULTI_TAG_PNP, 
+        camera, 
+        robotToCam
+      );
       photonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.CLOSEST_TO_REFERENCE_POSE);
     }
   

@@ -96,6 +96,8 @@ public class Drivetrain extends SubsystemBase {
   // modules needed to distinguish in chooser
   private Module m_prevModule;
 
+  boolean m_visionEnabled = true;
+
   /**
    * Creates a new Swerve Style Drivetrain.
    * @param drivetrainTab the shuffleboard tab to display drivetrain data on
@@ -117,11 +119,19 @@ public class Drivetrain extends SubsystemBase {
     };
     m_prevModule = m_modules[0];
     
-    m_poseEstimator = new SwerveDrivePoseEstimator(m_kinematics, m_pigeon.getRotation2d(), getModulePositions(), new Pose2d());
+    m_poseEstimator = new SwerveDrivePoseEstimator(
+      m_kinematics,
+      m_pigeon.getRotation2d(),
+      getModulePositions(),
+      new Pose2d());
     m_poseEstimator.setVisionMeasurementStdDevs(VisionConstants.kBaseVisionPoseStdDevs);
 
     m_rotationController.enableContinuousInput(-Math.PI, Math.PI);
-    DoubleSupplier[] poseSupplier = {() -> getPose().getX(), () -> getPose().getY(), () -> getPose().getRotation().getRadians()};
+    DoubleSupplier[] poseSupplier = {
+      () -> getPose().getX(),
+      () -> getPose().getY(),
+      () -> getPose().getRotation().getRadians()
+    };
     LogManager.addDoubleArray("Pose2d", poseSupplier);
     
     m_fieldDisplay.setRobotPose(getPose());
@@ -240,8 +250,8 @@ public class Drivetrain extends SubsystemBase {
    * @param rot the angle to move to, in radians
    */
   public void runChassisPID(double x, double y, double rot) {
-    double xSpeed = m_xController.calculate(m_poseEstimator.getEstimatedPosition().getTranslation().getX(), x);
-    double ySpeed = m_yController.calculate(m_poseEstimator.getEstimatedPosition().getTranslation().getY(), y);
+    double xSpeed = m_xController.calculate(m_poseEstimator.getEstimatedPosition().getX(), x);
+    double ySpeed = m_yController.calculate(m_poseEstimator.getEstimatedPosition().getY(), y);
     double rotRadians = m_rotationController.calculate(getAngleHeading(), rot);
     drive(xSpeed, ySpeed, rotRadians, true);
   }
@@ -255,36 +265,41 @@ public class Drivetrain extends SubsystemBase {
     );
 
     // Updates pose based on vision
-    // An array list of poses returned by different cameras
-    ArrayList<EstimatedRobotPose> estimatedPoses = m_vision.getEstimatedPoses(m_poseEstimator.getEstimatedPosition());
-    // The current position as a translation
-    Translation2d currentEstimatedPoseTranslation = m_poseEstimator.getEstimatedPosition().getTranslation();
-    for (int i = 0; i < estimatedPoses.size(); i++) {
-      EstimatedRobotPose estimatedPose = estimatedPoses.get(i);
-      // The position of the closest april tag as a tranlsation
-      Translation2d closestTagPoseTranslation = new Translation2d();
-      for (int j = 0; j < estimatedPose.targetsUsed.size(); j++) {
-        // The position of the current april tag
-        Pose3d currentTagPose = m_vision.getTagPose(estimatedPose.targetsUsed.get(j).getFiducialId());
-        // If it can't find the april tag's pose, don't run the rest of the for loop for this tag
-        if(currentTagPose == null){
-          continue;
+    if (m_visionEnabled){
+      //TODO: there should be a cleaner way to prosses vision
+
+      // An array list of poses returned by different cameras
+      ArrayList<EstimatedRobotPose> estimatedPoses = m_vision.getEstimatedPoses(m_poseEstimator.getEstimatedPosition());
+      // The current position as a translation
+      Translation2d currentEstimatedPoseTranslation = m_poseEstimator.getEstimatedPosition().getTranslation();
+      for (int i = 0; i < estimatedPoses.size(); i++) {
+        EstimatedRobotPose estimatedPose = estimatedPoses.get(i);
+        // The position of the closest april tag as a translation
+        Translation2d closestTagPoseTranslation = new Translation2d();
+        for (int j = 0; j < estimatedPose.targetsUsed.size(); j++) {
+          // The position of the current april tag
+          Pose3d currentTagPose = m_vision.getTagPose(estimatedPose.targetsUsed.get(j).getFiducialId());
+          // If it can't find the april tag's pose, don't run the rest of the for loop for this tag
+          if(currentTagPose == null){
+            continue;
+          }
+          Translation2d currentTagPoseTranslation = currentTagPose.toPose2d().getTranslation();
+          
+          // If the current april tag position is closer than the closest one, this makes makes it the closest
+          if (j == 0 || currentEstimatedPoseTranslation.getDistance(currentTagPoseTranslation) < currentEstimatedPoseTranslation.getDistance(closestTagPoseTranslation)) {
+            closestTagPoseTranslation = currentTagPoseTranslation;
+          }
         }
-        Translation2d currentTagPoseTranslation = currentTagPose.toPose2d().getTranslation();
-        
-        // If the current april tag position is closer than the closest one, this makes makes it the closest
-        if (j == 0 || currentEstimatedPoseTranslation.getDistance(currentTagPoseTranslation) < currentEstimatedPoseTranslation.getDistance(closestTagPoseTranslation)) {
-          closestTagPoseTranslation = currentTagPoseTranslation;
-        }
+        // Adds the vision measurement for this camera
+        m_poseEstimator.addVisionMeasurement(
+          estimatedPose.estimatedPose.toPose2d(),
+          estimatedPose.timestampSeconds,
+          VisionConstants.kBaseVisionPoseStdDevs.plus(
+            currentEstimatedPoseTranslation.getDistance(closestTagPoseTranslation) * VisionConstants.kVisionPoseStdDevFactor
+          )
+        );
       }
-      // Adds the viison measurement for this camera
-      m_poseEstimator.addVisionMeasurement(
-        estimatedPose.estimatedPose.toPose2d(),
-        estimatedPose.timestampSeconds,
-        VisionConstants.kBaseVisionPoseStdDevs.plus(
-          currentEstimatedPoseTranslation.getDistance(closestTagPoseTranslation) * VisionConstants.kVisionPoseStdDevFactor
-        )
-      );
+
     }
   }
   
@@ -591,6 +606,10 @@ public class Drivetrain extends SubsystemBase {
     m_moduleChooser.addOption("Front Right", m_modules[1]);
     m_moduleChooser.addOption("Back Left", m_modules[2]);
     m_moduleChooser.addOption("Back Right", m_modules[3]);
+  }
+
+  public void enableVision(boolean enabled) {
+     m_visionEnabled = enabled;
   }
 
 }

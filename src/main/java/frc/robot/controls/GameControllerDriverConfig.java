@@ -2,8 +2,6 @@ package frc.robot.controls;
 
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.commands.AlignToColumn;
-import frc.robot.commands.MoveToSelectedPose;
 import frc.robot.commands.SetFormationX;
 import frc.robot.constants.OIConstants;
 import frc.robot.constants.swerve.DriveConstants;
@@ -50,7 +48,7 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
   
   @Override
   public double getRawHeadingAngle() { 
-    return Functions.calculateAngle(kDriver.get(Axis.RIGHT_X), -kDriver.get(Axis.RIGHT_Y)) - Math.PI/2;
+    return Math.atan2(kDriver.get(Axis.RIGHT_X), -kDriver.get(Axis.RIGHT_Y)) - Math.PI/2;
   }
   
   @Override
