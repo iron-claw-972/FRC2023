@@ -98,27 +98,11 @@ public class Elevator extends SubsystemBase {
   }
 
   public void set(double power) {
-    if(isBottom()){
-      if(power >0 ){ 
-        m_motor.set(power); 
-      }else{
-        m_motor.set(0); 
-      }
+    if ( (isBottom() && power < 0) || (isTop() && power > 0) ){
+      m_motor.set(0); 
+    } else {
+      m_motor.set(power);
     }
-
-    else if(isTop()){
-      if(power<0){
-        m_motor.set(power); 
-      }else{
-        m_motor.set(0); 
-      }
-    }
-
-    else{
-      m_motor.set(power); 
-    }
-
-  
   }
   
   public void setEnabled(boolean isEnabled){
