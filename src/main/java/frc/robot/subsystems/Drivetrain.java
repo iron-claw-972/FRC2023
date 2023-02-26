@@ -74,9 +74,9 @@ public class Drivetrain extends SubsystemBase {
   
   // PID Controllers
   // translation controllers have dummy constants that are just good enough to run the odometry test
-  private final PIDController m_xController = new PIDController(0, 0, 0);
-  private final PIDController m_yController = new PIDController(0, 0, 0);
-  private final PIDController m_rotationController = new PIDController(0, 0, 0);
+  private final PIDController m_xController = new PIDController(DriveConstants.kTranslationalP, DriveConstants.kTranslationalI, DriveConstants.kTranslationalD);
+  private final PIDController m_yController = new PIDController(0.1, 0, 0);
+  private final PIDController m_rotationController = new PIDController(DriveConstants.kHeadingP, DriveConstants.kHeadingI, DriveConstants.kHeadingD);
 
   //Shuffleboard
   private GenericEntry 
@@ -232,11 +232,8 @@ public class Drivetrain extends SubsystemBase {
       m_pigeon.getRotation2d(),
       getModulePositions()
     );
-    m_fieldDisplay.setRobotPose(getPose());
   }
-  
   /**
-  * Returns the angular rate from the pigeon.
   * 
   * @param id 0 for x, 1 for y, 2 for z
   * @return the rate in rads/s from the pigeon
@@ -561,6 +558,7 @@ public class Drivetrain extends SubsystemBase {
         ));
       }
     ));
+    //m_testTab.add("Odometry Test", new OdometryTestCommand(this, new Transform2d(new Translation2d(1,1), new Rotation2d(Math.PI))));
   }
 
   /**

@@ -96,6 +96,11 @@ public class DriveConstants {
   public static double kHeadingI= 0;
   public static double kHeadingD= 0;
 
+  //translational PID
+  public static double kTranslationalP = 4;
+  public static double kTranslationalI = 0;
+  public static double kTranslationalD = 0.4;
+
   // CAN
   public static String kDriveMotorCAN = Constants.kCanivoreCAN;
   public static String kSteerMotorCAN = Constants.kCanivoreCAN;
