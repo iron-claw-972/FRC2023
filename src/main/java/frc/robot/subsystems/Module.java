@@ -108,8 +108,6 @@ public class Module {
     ModuleType moduleType,
     ShuffleboardTab moduleTab
   ) {
-    
-    // TODO: The CANBus needs to be a constant because on the new 2023 bot, drive motors use Canivore, not rio
     m_driveMotor = MotorFactory.createTalonFX(driveMotorPort, DriveConstants.kDriveMotorCAN);
     m_steerMotor = MotorFactory.createTalonFX(steerMotorPort, DriveConstants.kSteerMotorCAN);
 
