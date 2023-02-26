@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import java.util.function.Supplier;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.util.Units;
@@ -14,7 +16,7 @@ import frc.robot.subsystems.Drivetrain;
 public class GoToPose extends CommandBase {
 
   private Drivetrain m_drive; 
-  
+  private Supplier<Pose2d> m_poseSupplier;
   private double m_startTime;
   private Pose2d m_finalPose;
   private Pose2d m_error;
@@ -23,12 +25,18 @@ public class GoToPose extends CommandBase {
     m_drive = drive; 
     // finalPose is position after robot moves from current position-- startPose-- by the values that are inputted-- distanceToMove
     m_finalPose = pose;
-    
+    addRequirements(drive);
+  }
+
+  public GoToPose(Drivetrain drive, Supplier<Pose2d> poseSupplier) {
+    m_drive = drive;
+    m_poseSupplier = poseSupplier;
     addRequirements(drive);
   }
   
   @Override
   public void initialize() {
+    if (m_poseSupplier != null) m_finalPose = m_poseSupplier.get();
     m_startTime = Timer.getFPGATimestamp();
   }
   

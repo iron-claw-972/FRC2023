@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import java.util.function.Supplier;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.util.Units;
@@ -15,23 +17,32 @@ public class PoseTransform extends CommandBase {
 
   private Drivetrain m_drive; 
   
+  private Supplier<Transform2d> m_transformSupplier;
   private double m_startTime;
   private Pose2d m_finalPose;
-  private Transform2d m_distanceToMove;
+  private Transform2d m_transform;
   private Pose2d m_error;
   
   public PoseTransform(Drivetrain drive, Transform2d poseTransform) {
     m_drive = drive; 
     // finalPose is position after robot moves from current position-- startPose-- by the values that are inputted-- distanceToMove
-    m_distanceToMove = poseTransform;
+    m_transform = poseTransform;
     
+    addRequirements(drive);
+  }
+
+  public PoseTransform(Drivetrain drive, Supplier<Transform2d> transformSupplier) {
+    m_drive = drive; 
+    // finalPose is position after robot moves from current position-- startPose-- by the values that are inputted-- distanceToMove
+    m_transformSupplier = transformSupplier;
     addRequirements(drive);
   }
   
   @Override
   public void initialize() {
+    if (m_transformSupplier != null) m_transform = m_transformSupplier.get();
     m_startTime = Timer.getFPGATimestamp();
-    m_finalPose = m_drive.getPose().transformBy(m_distanceToMove);
+    m_finalPose = m_drive.getPose().transformBy(m_transform);
   }
   
   @Override
