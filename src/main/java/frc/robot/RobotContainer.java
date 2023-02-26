@@ -22,6 +22,9 @@ import frc.robot.commands.test.SteerFeedForwardCharacterizationSingle;
 import frc.robot.commands.test.TestDriveVelocity;
 import frc.robot.commands.test.TestHeadingPID;
 import frc.robot.commands.test.TestSteerAngle;
+import frc.robot.commands.vision.TestVisionAlignment;
+import frc.robot.commands.vision.TestVisionDistance;
+import frc.robot.constants.VisionConstants;
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.controls.BaseDriverConfig;
 import frc.robot.controls.GameControllerDriverConfig;
@@ -32,6 +35,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.Intake;
 import frc.robot.util.PathGroupLoader;
+import frc.robot.util.Vision;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -50,7 +54,10 @@ public class RobotContainer {
   private final ShuffleboardTab m_swerveModulesTab = Shuffleboard.getTab("Swerve Modules");
   private final ShuffleboardTab m_autoTab = Shuffleboard.getTab("Auto");
   private final ShuffleboardTab m_controllerTab = Shuffleboard.getTab("Controller");
+  private final ShuffleboardTab m_visionTab = Shuffleboard.getTab("Vision");
   private final ShuffleboardTab m_testTab = Shuffleboard.getTab("Test");
+
+  private final Vision m_vision;
 
   // The robot's subsystems are defined here...
   private final Drivetrain m_drive;
@@ -68,9 +75,12 @@ public class RobotContainer {
 
     // Update drive constants based off of robot type
     DriveConstants.update();
+    VisionConstants.update();
+
+    m_vision = new Vision(m_visionTab, VisionConstants.kCameras);
 
     // Create Drivetrain, because every robot will have a drivetrain
-    m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab);
+    m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab, m_vision);
     m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
 
     // If the robot is the competition robot, create the arm and intake
@@ -110,11 +120,11 @@ public class RobotContainer {
     LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
     LiveWindow.setEnabled(false);
     
-    
     autoChooserUpdate();
     loadCommandSchedulerShuffleboard();
     m_drive.setupDrivetrainShuffleboard();
     m_drive.setupModulesShuffleboard();
+    m_vision.setupVisionShuffleboard();
     m_driver.setupShuffleboard();
     
     addTestCommands();
@@ -152,6 +162,12 @@ public class RobotContainer {
     m_testTab.add("Heading PID", new TestHeadingPID(m_drive, testEntry));
     m_testTab.add("Steer angle", new TestSteerAngle(m_drive, testEntry));
     m_testTab.add("Odometry Test", new OdometryTestCommand(m_drive, new Transform2d(new Translation2d(1,1), new Rotation2d(Math.PI))));
+    m_testTab.add("Test vision (forward)", new TestVisionDistance(0.2, m_drive, m_vision));
+    m_testTab.add("Test vision (backward)", new TestVisionDistance(-0.2, m_drive, m_vision));
+    m_testTab.add("Align to 0 degrees", new TestVisionAlignment(0, m_drive, m_vision));
+    m_testTab.add("Align to 90 degrees", new TestVisionAlignment(Math.PI/2, m_drive, m_vision));
+    m_testTab.add("Align to -90 degrees", new TestVisionAlignment(-Math.PI/2, m_drive, m_vision));
+    m_testTab.add("Align to 180 degrees", new TestVisionAlignment(Math.PI, m_drive, m_vision));
   }
 
   /**
