@@ -235,6 +235,7 @@ public class Drivetrain extends SubsystemBase {
       m_pigeon.getRotation2d(),
       getModulePositions()
     );
+    m_fieldDisplay.setRobotPose(m_odometry.getPoseMeters());
   }
   
   /**
