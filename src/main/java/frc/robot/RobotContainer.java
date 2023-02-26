@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -12,12 +13,15 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Robot.RobotId;
 import frc.robot.commands.DefaultDriveCommand;
+import frc.robot.commands.PoseTransform;
 import frc.robot.commands.test.CircleDrive;
 import frc.robot.commands.test.DriveFeedForwardCharacterization;
-import frc.robot.commands.test.OdometryTestCommand;
+import frc.robot.commands.test.GoToPoseTest;
+import frc.robot.commands.test.PoseTransformTest;
 import frc.robot.commands.test.SteerFeedForwardCharacterizationSingle;
 import frc.robot.commands.test.TestDriveVelocity;
 import frc.robot.commands.test.TestHeadingPID;
@@ -151,7 +155,19 @@ public class RobotContainer {
     m_testTab.add("Test Drive Velocity", new TestDriveVelocity(m_drive, testEntry));
     m_testTab.add("Heading PID", new TestHeadingPID(m_drive, testEntry));
     m_testTab.add("Steer angle", new TestSteerAngle(m_drive, testEntry));
-    m_testTab.add("Odometry Test", new OdometryTestCommand(m_drive, new Transform2d(new Translation2d(1,1), new Rotation2d(Math.PI))));
+    m_testTab.add("Transform Pose", new PoseTransformTest(m_drive));
+    m_testTab.add("Go To Pose", new GoToPoseTest(m_drive));
+    m_testTab.add("Odometry Test", new PoseTransform(m_drive, new Transform2d(new Translation2d(1,1), new Rotation2d(Math.PI))));
+    m_testTab.add("Reset Pose", new InstantCommand(()-> {
+      m_drive.resetOdometry(
+        new Pose2d(
+          m_drive.getRequestedXPos().getDouble(0),
+          m_drive.getRequestedYPos().getDouble(0), 
+          new Rotation2d(m_drive.getRequestedHeadingEntry().getDouble(0))
+        ));
+      }
+    ));
+    //m_testTab.add("Odometry Test", new OdometryTestCommand(this, new Transform2d(new Translation2d(1,1), new Rotation2d(Math.PI))));
   }
 
   /**
