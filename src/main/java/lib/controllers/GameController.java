@@ -89,8 +89,8 @@ public class GameController extends Controller {
     return m_controller.getRawAxis(axis.id);
   }
 
-  public POVButton get(DPad dPad) {
-    return new POVButton(m_controller, dPad.angle);
+  public Trigger get(DPad dPad) {
+    return new Trigger(() -> m_controller.getPOV() == dPad.angle);
   }
 
   public Trigger get(BooleanSupplier condition) {
