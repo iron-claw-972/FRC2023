@@ -45,13 +45,8 @@ public class Intake extends SubsystemBase {
   }
 
   public void intake(double speed) {
-<<<<<<< HEAD
-    leftMotor.set(-speed);
-    rightMotor.set(speed);
-=======
     m_leftMotor.set(speed);
     m_rightMotor.set(speed);
->>>>>>> c9e3f046608a3a097d3562b1cdeb9000b0fc1552
   }
 
   public boolean containsGamePiece(){

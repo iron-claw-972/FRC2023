@@ -74,15 +74,11 @@ public class FourBarArm extends SubsystemBase {
     return m_pid.atSetpoint();
   }
 
-<<<<<<< HEAD
-  public void setupShuffleboard() {
-=======
   public void setMotorPower(double power){
     m_motor.set(MathUtil.clamp(power, ArmConstants.kMinMotorPower, ArmConstants.kMaxMotorPower));
   }
 
   public void setEnabled(boolean enable)  {
     m_enabled = enable;
->>>>>>> c9e3f046608a3a097d3562b1cdeb9000b0fc1552
   }
 }
