@@ -64,7 +64,7 @@ public class Node {
         y += 0.508;  
         break;
       case 2:
-        y += 1.056;;  
+        y += 1.056; 
         break;
       case 3:
         y += 1.613;  
@@ -88,7 +88,7 @@ public class Node {
         y += 4.978;  
         break;
     }
-    y -= Constants.kRobotLengthWithBumpers / 2;
+    y -= FieldConstants.kRobotOffsetY;
     scorePose = new Pose2d(x, y, new Rotation2d());
   }
 

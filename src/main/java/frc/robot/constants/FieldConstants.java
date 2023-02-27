@@ -13,6 +13,9 @@ public class FieldConstants {
   public static final double kBlueAllianceNodeStartX = kDistanceFromNodeTape + 4.379; // meters
   public static final double kRedAllianceNodeStartX = kBlueAllianceNodeStartX + 13.804 - kDistanceFromNodeTape; // meters
 
-  public static final double kNodeStartY = 0.569 + Constants.kRobotLengthWithBumpers / 2; // meters
+  public static final double kNodeStartY = 0.569; // meters
+
+  // TODO: This value needs to be tested to ensure functionality
+  public static final double kRobotOffsetY = Constants.kRobotLengthWithBumpers / 2; // meters
 
 }
