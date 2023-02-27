@@ -21,13 +21,18 @@ public class TestVisionDistance extends CommandBase{
   private final Timer m_endTimer = new Timer();
   private final Timer m_printTimer = new Timer();
 
-  // TODO: Should these values be in a constant file?
   // How many seconds of not seeing april tag before ending the command
   private static final double kEndDelay = 0.25;
 
   // How many seconds between each data print
-  private static final double kPrintDelay = 0.25;
+  private static final double kPrintDelay = 1;
 
+  /**
+   * Constructor for TestVisionDistance
+   * @param speed What speed to move at, negative if backward
+   * @param drive The drivetrain
+   * @param vision The vision
+   */
   public TestVisionDistance(double speed, Drivetrain drive, Vision vision){
     addRequirements(drive);
     m_drive = drive;
@@ -35,6 +40,9 @@ public class TestVisionDistance extends CommandBase{
     m_vision = vision;
   }
 
+  /**
+   * Starts the timers and siables vision for odometry
+   */
   @Override
   public void initialize(){
 
@@ -48,6 +56,9 @@ public class TestVisionDistance extends CommandBase{
     m_driveStartTranslation = m_drive.getPose().getTranslation();
   }
 
+  /**
+   * Drives the robot, finds the pose fromt he drivetrain and vision, and someimes prints the distances
+   */
   @Override
   public void execute(){
     m_drive.drive(m_speed, 0, 0, false);
@@ -60,7 +71,6 @@ public class TestVisionDistance extends CommandBase{
       // reset the timer
       m_endTimer.reset();
       // If kPrintDelay seconds have passed, print the data
-      // TODO: Consider using shuffleboard instead of printing
       if (m_printTimer.advanceIfElapsed(kPrintDelay)) {
         double driveDistance = m_drive.getPose().getTranslation().getDistance(m_driveStartTranslation);
         double visionDistance = m_currentPose.getTranslation().getDistance(m_visionStartTranslation);
@@ -74,12 +84,19 @@ public class TestVisionDistance extends CommandBase{
     }
   }
 
+  /**
+   * Re-enables vision and stops the robot
+   */
   @Override
   public void end(boolean interrupted){
     m_drive.enableVision(true);
     m_drive.stop();
   }
 
+  /**
+   * Returns if the command is finished
+   * @return If the end delay has elapsed
+   */
   @Override
   public boolean isFinished(){
     return m_endTimer.hasElapsed(kEndDelay);
