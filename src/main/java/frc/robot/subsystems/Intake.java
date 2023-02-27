@@ -34,10 +34,6 @@ public class Intake extends SubsystemBase {
   private final double kCubeTimeThreshold = 0; // seconds
   private final Rev2mDistanceSensor m_distSensor = new Rev2mDistanceSensor(Port.kOnboard);
 
-  public enum GamePiece {
-    CONE, CUBE, NONE
-  }
-
   public Intake(ShuffleboardTab intakeTab) {
     m_leftMotor = new CANSparkMax(IntakeConstants.kLeftMotorPort, MotorType.kBrushless);
     m_rightMotor = new CANSparkMax(IntakeConstants.kRightMotorPort, MotorType.kBrushless);
@@ -58,11 +54,13 @@ public class Intake extends SubsystemBase {
 >>>>>>> c9e3f046608a3a097d3562b1cdeb9000b0fc1552
   }
 
+  public boolean containsGamePiece(){
+    return m_hasCone || m_hasCube;
+  }
+
   public void stopIntake() {
-    if(m_hasCone == true || m_hasCube == true){
       m_leftMotor.set(0);
       m_rightMotor.set(0);
-    }
   }
 
   @Override
@@ -93,11 +91,6 @@ public class Intake extends SubsystemBase {
   private void setupShuffleboard(){
     m_intakeTab.addDouble("Proximity", m_distSensor::getRange);
     m_intakeTab.addDouble("Timestamp", m_distSensor::getTimestamp);
-    // m_intakeTab.addBoolean("Has Cone", this::getCone);
-    // m_intakeTab.addBoolean("Has Cube", this::getCube);
-    // m_intakeTab.addBoolean("Is Contained", this::isContained);
-    // m_intakeTab.addDouble("Proximity", m_colorSensor::getProximity);
-    // m_intakeTab.addString("Color", this::getHexColor);
   }
   
 } 
