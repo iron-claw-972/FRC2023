@@ -45,11 +45,7 @@ public class PistolController extends Controller {
   public double get(Axis axis) {
     return m_controller.getRawAxis(axis.id);
   }
-
-  public Trigger get(Trigger trigger) {
-    return trigger;
-  }
-
+  
   public Joystick get() {
     return m_controller;
   }

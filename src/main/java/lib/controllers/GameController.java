@@ -93,14 +93,6 @@ public class GameController extends Controller {
     return new Trigger(() -> m_controller.getPOV() == dPad.angle);
   }
 
-  public Trigger get(BooleanSupplier condition) {
-    return new Trigger(condition);
-  }
-
-  public Trigger get(Trigger trigger) {
-    return trigger;
-  }
-
   public Joystick get() {
     return m_controller;
   }
