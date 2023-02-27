@@ -88,7 +88,7 @@ public class Node {
         y += 4.978;  
         break;
     }
-    y -= FieldConstants.kRobotOffsetY;
+    y += FieldConstants.kRobotOffsetY * (alliance == Alliance.Blue ? 1 : -1);
     scorePose = new Pose2d(x, y, new Rotation2d());
   }
 
