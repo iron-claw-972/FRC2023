@@ -162,6 +162,7 @@ public class RobotContainer {
    */
   public void addTestCommands() {
     GenericEntry testEntry = m_testTab.add("Test Results", false).getEntry();
+    m_testTab.add("Cancel Command", new InstantCommand( () -> CommandScheduler.getInstance().cancelAll()));
     m_testTab.add("Circle Drive", new CircleDrive(m_drive));
     m_testTab.add("Drive FeedForward", new DriveFeedForwardCharacterization(m_drive));
     m_testTab.add("Steer Single FeedForward", new SteerFeedForwardCharacterizationSingle(m_drive));
