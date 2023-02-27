@@ -5,8 +5,6 @@ import frc.robot.commands.arm.ExtendToPosition;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.util.PathGroupLoader;
-import frc.robot.commands.auto.PathPlannerCommand;
-
 
 public class TwoPieceBottomPath extends SequentialCommandGroup{
     

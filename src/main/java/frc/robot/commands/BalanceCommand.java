@@ -2,13 +2,8 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-<<<<<<< Updated upstream
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-=======
-import edu.wpi.first.wpilibj2.command.CommandBase;
->>>>>>> Stashed changes
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.subsystems.Drivetrain;
 
@@ -22,17 +17,12 @@ public class BalanceCommand extends CommandBase {
     private boolean m_usePitch;
 
     private int m_inverted;
-<<<<<<< Updated upstream
 
     Timer timer = new Timer();
 
     public BalanceCommand(Drivetrain drive) {
 
         
-=======
- 
-    public BalanceCommand(Drivetrain drive) {
->>>>>>> Stashed changes
         
         m_drive = drive;
         addRequirements(drive);
@@ -58,7 +48,6 @@ public class BalanceCommand extends CommandBase {
 
     @Override
     public void execute() {
-<<<<<<< Updated upstream
         timer.start();
         m_currentAngle = m_drive.getPitch();
         m_output = MathUtil.clamp(m_pid.calculate(m_currentAngle), -DriveConstants.kBalanceMaxOutput, DriveConstants.kBalanceMaxOutput);
@@ -80,17 +69,6 @@ public class BalanceCommand extends CommandBase {
         }
        
         
-=======
-
-        m_output = MathUtil.clamp(m_pid.calculate(m_currentAngle), -DriveConstants.kBalanceMaxOutput, DriveConstants.kBalanceMaxOutput);
-        System.out.println(m_output);
-        if(m_usePitch) {
-            m_drive.driveHeading(m_output, 0, m_inverted*Math.PI/2, true);
-        }
-        else {
-            m_drive.driveHeading(m_output, 0, 0, true);
-        }
->>>>>>> Stashed changes
     }
 
     @Override

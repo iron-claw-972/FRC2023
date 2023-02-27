@@ -1,7 +1,6 @@
 package frc.robot.commands.test;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.TestConstants;
 import frc.robot.subsystems.Drivetrain;
