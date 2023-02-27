@@ -56,7 +56,7 @@ public class BalanceCommand extends CommandBase {
         }
         else {
             m_drive.driveHeading(-m_output, 0, 0, true);
-            if (timer.get() >= 0.5 && timer.get() <= 0.8)
+            if (timer.get() >= 0 && timer.get() <= DriveConstants.kBalanceTime)
             {
                 m_drive.stop();
                 timer.reset();

@@ -103,6 +103,9 @@ public class DriveConstants {
    public static final double kBalanceMaxOutput = 0.5;
    public static final double kBalanceTolerance = 0.1;
 
+   //balance timer
+   public static double kBalanceTime = 0.3;
+
   //translational PID
   public static double kTranslationalP = 0.25;
   public static double kTranslationalI = 0;
