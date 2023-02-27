@@ -52,8 +52,7 @@ public class FourBarArm extends SubsystemBase {
 
     m_armTab = armTab;
 
-    //LogManager.addDouble("Arm Angle", () -> m_absEncoder.getPosition());
-    //LogManager.addDouble("Arm Velocity", () -> m_absEncoder.getVelocity());
+    LogManager.addDouble("Arm Angle", () -> m_absEncoder.get());
     LogManager.addDouble("Arm Motor Power", () -> m_motor.get());
     LogManager.addDouble("Arm Setpoint", () -> m_pid.getSetpoint());
 
