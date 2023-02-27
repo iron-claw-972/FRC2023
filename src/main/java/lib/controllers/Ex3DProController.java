@@ -41,12 +41,34 @@ public class Ex3DProController extends Controller {
     }
   }
 
+  public enum Ex3DProHatSwitch {
+    UNPRESSED(-1),
+    UP(0),
+    UP_RIGHT(45),
+    RIGHT(90),
+    DOWN_RIGHT(135),
+    DOWN(180),
+    DOWN_LEFT(235),
+    LEFT(270),
+    UP_LEFT(315);
+
+    public final int angle;
+
+    Ex3DProHatSwitch(final int angle) {
+      this.angle = angle;
+    }
+  }
+
   public Trigger get(Ex3DProButton button) {
     return new Trigger(() -> m_controller.getRawButton(button.id));
   }
 
   public double get(Ex3DProAxis axis) {
     return m_controller.getRawAxis(axis.id);
+  }
+
+  public Trigger get(Ex3DProHatSwitch hatSwitch) {
+    return new Trigger(() -> m_controller.getPOV() == hatSwitch.angle);
   }
 
   public Joystick get() {
