@@ -22,7 +22,7 @@ public class GoOverChargeStation extends SequentialCommandGroup{
         initialPose = new Pose2d(0, 0, endRot);
         chargePose = new Pose2d(4, 0, endRot);
         rotatedPose = new Pose2d(0, 0, endRot);
-        gamePiecePose = new Pose2d(7.5, 0, endRot);
+        gamePiecePose = new Pose2d(6.5, 0, endRot);
         
         addCommands(
             new GoToPose(m_drive, rotatedPose),
