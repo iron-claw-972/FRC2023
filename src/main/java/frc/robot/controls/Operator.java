@@ -23,10 +23,10 @@ public class Operator {
   private Intake m_intake;
 
   public Operator(FourBarArm arm, Intake intake){
-      m_arm = arm;
-      m_intake = intake;
+    m_arm = arm;
+    m_intake = intake;
   }
-  
+
   /**
    * Configures all of the operator controls.
    */
