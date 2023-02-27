@@ -26,7 +26,6 @@ public class EngageNoPathplanner extends SequentialCommandGroup{
         chargePose = new Pose2d(2.54, -1.5, startRot);
         rightRotatedPose = new Pose2d(5, -1.75, rot);
 
-
         addCommands(
             new AlignWheelsToZero(m_drive),
             new GoToPose(m_drive, centerPose),
