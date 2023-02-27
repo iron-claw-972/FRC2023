@@ -69,7 +69,7 @@ public class RobotContainer {
   private final Drivetrain m_drive;
   private final FourBarArm m_arm;
   private final Intake m_intake;
-  private Elevator m_elevator;
+  private final Elevator m_elevator;
 
   // Controllers are defined here
   private final BaseDriverConfig m_driver;
@@ -111,6 +111,7 @@ public class RobotContainer {
 
       m_arm = null;
       m_intake = null;
+      m_elevator = null;
 
       m_operator = null;
       m_testController = null;
