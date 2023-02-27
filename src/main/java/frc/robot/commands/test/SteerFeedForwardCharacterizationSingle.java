@@ -44,7 +44,9 @@ public class SteerFeedForwardCharacterizationSingle extends CommandBase {
       m_feedForwardCharacterizationData.add(m_module.getSteerVelocity(), m_voltage);
     }
     // if time past collection time move to increases voltage
-    if (m_timer.get() > TestConstants.kSteerFeedForwardAccelerationTimeBuffer + TestConstants.kSteerFeedForwardRecordingTime) {
+    if (m_timer.get() > 
+      TestConstants.kSteerFeedForwardAccelerationTimeBuffer + 
+      TestConstants.kSteerFeedForwardRecordingTime) {
       m_voltage += TestConstants.kSteerFeedForwardVoltageStep;
       m_timer.reset();
       m_timer.start();
@@ -59,8 +61,10 @@ public class SteerFeedForwardCharacterizationSingle extends CommandBase {
     m_feedForwardCharacterizationData.process();
     
     //save and print Feed Forward values
-    m_drive.getSteerStaticFeedforwardArray()[m_module.getModuleType().getID()] = m_feedForwardCharacterizationData.getStatic();
-    m_drive.getSteerVelocityFeedforwardArray()[m_module.getModuleType().getID()] = m_feedForwardCharacterizationData.getVelocity();
+    m_drive.getSteerStaticFeedforwardArray()[m_module.getId()] = 
+      m_feedForwardCharacterizationData.getStatic();
+    m_drive.getSteerVelocityFeedforwardArray()[m_module.getId()] = 
+      m_feedForwardCharacterizationData.getVelocity();
     System.out.println("Static : " + m_feedForwardCharacterizationData.getStatic());
     System.out.println("Velocity : " + m_feedForwardCharacterizationData.getVelocity());
     System.out.println("Variance : " + m_feedForwardCharacterizationData.getVariance());
@@ -70,12 +74,12 @@ public class SteerFeedForwardCharacterizationSingle extends CommandBase {
     // update shuffleboard values.
     m_drive.getSteerStaticFeedforwardEntry().setDouble(
       m_drive.getSteerStaticFeedforwardArray()[
-        m_moduleChooser.getSelected().getModuleType().getID()
+        m_moduleChooser.getSelected().getId()
       ]
     );
     m_drive.getSteerVelocityFeedforwardEntry().setDouble(
       m_drive.getSteerVelocityFeedforwardArray()[
-          m_moduleChooser.getSelected().getModuleType().getID()
+          m_moduleChooser.getSelected().getId()
         ]
       );
   }
