@@ -68,7 +68,7 @@ public class Operator {
       m_arm==null?new DoNothing():new ExtendToPosition(m_arm, ArmConstants.kTopPosition)
     ));
           
-    if(m_arm!=null&&m_intake!=null){
+    if(m_arm!=null && m_intake!=null){
       // Puts the arm and elevator in the initial position inside the robot
       m_operator.get(Button.LB).onTrue(new ExtendToPosition(m_arm, ArmConstants.kInitialPosition));
       

@@ -29,7 +29,7 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
     kDriver.get(Button.A).whileTrue(new SetFormationX(super.getDrivetrain()));
 
     // kDriver.get(kDriver.RIGHT_TRIGGER_BUTTON).whileTrue(new AlignToColumn(getDrivetrain()));
-    kDriver.get(kDriver.RIGHT_TRIGGER_BUTTON).whileTrue(new MoveToSelectedPose(getDrivetrain()));
+    kDriver.get(Button.RB).whileTrue(new MoveToSelectedPose(getDrivetrain()));
   }
   
   @Override
