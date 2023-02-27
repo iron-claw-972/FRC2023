@@ -65,6 +65,9 @@ public class Drivetrain extends SubsystemBase {
   // Odometry
   private final SwerveDrivePoseEstimator m_poseEstimator;
 
+  // If the robot is driving over the charge station in auto
+  private boolean m_chargeStationAuto = false;
+
   // Displays the field with the robots estimated pose on it
   private final Field2d m_fieldDisplay = new Field2d();
   
@@ -291,13 +294,20 @@ public class Drivetrain extends SubsystemBase {
           }
         }
         // Adds the vision measurement for this camera
-        m_poseEstimator.addVisionMeasurement(
-          estimatedPose.estimatedPose.toPose2d(),
-          estimatedPose.timestampSeconds,
-          VisionConstants.kBaseVisionPoseStdDevs.plus(
-            currentEstimatedPoseTranslation.getDistance(closestTagPoseTranslation) * VisionConstants.kVisionPoseStdDevFactor
-          )
-        );
+        if(m_chargeStationAuto){
+          m_poseEstimator.addVisionMeasurement(
+            estimatedPose.estimatedPose.toPose2d(),
+            estimatedPose.timestampSeconds
+          );
+        }else{
+          m_poseEstimator.addVisionMeasurement(
+            estimatedPose.estimatedPose.toPose2d(),
+            estimatedPose.timestampSeconds,
+            VisionConstants.kBaseVisionPoseStdDevs.plus(
+              currentEstimatedPoseTranslation.getDistance(closestTagPoseTranslation) * VisionConstants.kVisionPoseStdDevFactor
+            )
+          );
+        }
       }
 
     }
@@ -395,6 +405,14 @@ public class Drivetrain extends SubsystemBase {
     for (int i = 0; i < 4; i++) {
       m_modules[i].setOptimize(optimizeSate);
     }
+  }
+
+  /**
+   * If this is set to true, it will trust vision more
+   * This is for if the robot moves over the charge station, which messes up odometry
+  */
+  public void setChargeStationAuto(boolean chargeStationAuto){
+    m_chargeStationAuto=chargeStationAuto;
   }
   
   /**

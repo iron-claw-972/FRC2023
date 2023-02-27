@@ -145,6 +145,10 @@ public class RobotContainer {
     m_drive.initializePigeonYaw(force);
   }
 
+  public void setChargeStationAuto(boolean chargeStationAuto){
+    m_drive.setChargeStationAuto(chargeStationAuto);
+  }
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *

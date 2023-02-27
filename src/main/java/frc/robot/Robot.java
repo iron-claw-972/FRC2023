@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.constants.Constants;
 import frc.robot.util.LogManager;
 
@@ -124,6 +125,10 @@ public class Robot extends TimedRobot {
     if (m_autoCommand != null) {
       m_autoCommand.schedule();
     }
+
+    // Makes it trust vision more if it goes over the charge station
+    // TODO: Change this to whatever commands do that
+    m_robotContainer.setChargeStationAuto(m_autoCommand instanceof DefaultDriveCommand);
   }
 
   /**
@@ -148,6 +153,9 @@ public class Robot extends TimedRobot {
     if (m_autoCommand != null) {
       m_autoCommand.cancel();
     }
+
+    // Trust vision normally in teleop
+    m_robotContainer.setChargeStationAuto(false);
   }
 
   /**
