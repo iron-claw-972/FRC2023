@@ -16,11 +16,14 @@ public class MoveToSelectedPose extends CommandBase {
     m_drive = drive;    
     addRequirements(drive);
   }
+
+  @Override
+  public void initialize(){
+    m_drive.setAllOptimize(true);
+  }
   
   @Override
   public void execute() {
-    m_drive.setAllOptimize(true);
-    
     double x = Operator.selectedNode.scorePose.getX();
     double y = Operator.selectedNode.scorePose.getY();
     double rot = Operator.selectedNode.scorePose.getRotation().getRadians();
