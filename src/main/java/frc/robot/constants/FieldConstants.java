@@ -12,7 +12,7 @@ public class FieldConstants {
   public static final double kDistanceFromNodeTape = 1.0 + DriveConstants.kRobotWidthWithBumpers / 2; // meters
 
   public static final double kBlueAllianceNodeStartX = kDistanceFromNodeTape + 4.379; // meters
-  public static final double kRedAllianceNodeStartX = kBlueAllianceNodeStartX + 13.804 - kDistanceFromNodeTape; // meters
+  public static final double kRedAllianceNodeStartX = kBlueAllianceNodeStartX + 13.804 - kDistanceFromNodeTape * 2; // meters
 
   public static final double kNodeStartY = 0.569; // meters
 
