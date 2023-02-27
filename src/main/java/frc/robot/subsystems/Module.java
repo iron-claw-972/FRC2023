@@ -427,6 +427,9 @@ public class Module {
   public ModuleType getModuleType() {
     return m_moduleType;
   }
+  public int getId(){
+    return getModuleType().id;
+  }
 
   public double getDesiredVelocity() {
     return m_desiredState.speedMetersPerSecond;
@@ -456,23 +459,23 @@ public class Module {
    * Sets up the Shuffleboard tab for the module.
    */
   public void setupModulesShuffleboard() {
-    m_moduleTab.addNumber(m_moduleType.getAbbreviation() + " desired speed", () -> getDesiredVelocity());
+    m_moduleTab.addNumber(m_moduleType.abbrev + " desired speed", () -> getDesiredVelocity());
     // Drive PID output
-    m_moduleTab.addNumber(m_moduleType.getAbbreviation() + " PID Output", () -> getDrivePIDOutput());
+    m_moduleTab.addNumber(m_moduleType.abbrev + " PID Output", () -> getDrivePIDOutput());
     // get drive velocity
-    m_moduleTab.addNumber("Vel " + m_moduleType.getAbbreviation() + " Raw", () -> getDriveVelocity());
+    m_moduleTab.addNumber("Vel " + m_moduleType.abbrev + " Raw", () -> getDriveVelocity());
     // drivePIDs
-    m_moduleTab.add("Drive PID " + m_moduleType.getAbbreviation(), getDrivePID());
+    m_moduleTab.add("Drive PID " + m_moduleType.abbrev, getDrivePID());
     // Median Filtered Velocity Values
-    m_moduleTab.addNumber("Vel " + m_moduleType.getAbbreviation() + " Filtered", () -> getDriveVelocityFiltered());
+    m_moduleTab.addNumber("Vel " + m_moduleType.abbrev + " Filtered", () -> getDriveVelocityFiltered());
     // Desired Steer angles
-    m_moduleTab.addNumber(m_moduleType.getAbbreviation() + " desired angle", () -> getDesiredAngle().getRadians());
+    m_moduleTab.addNumber(m_moduleType.abbrev + " desired angle", () -> getDesiredAngle().getRadians());
     // Steer angles
-    m_moduleTab.addNumber("Angle " + m_moduleType.getAbbreviation(), () -> getSteerAngle());
+    m_moduleTab.addNumber("Angle " + m_moduleType.abbrev, () -> getSteerAngle());
     // Steer Velocity
-    m_moduleTab.addNumber("Steer Vel " + m_moduleType.getAbbreviation(), () -> getSteerVelocity());
+    m_moduleTab.addNumber("Steer Vel " + m_moduleType.abbrev, () -> getSteerVelocity());
     //Steer PID
-    m_moduleTab.add("Steer PID " + m_moduleType.getAbbreviation(), getSteerPID());
+    m_moduleTab.add("Steer PID " + m_moduleType.abbrev, getSteerPID());
   }
 
 }
