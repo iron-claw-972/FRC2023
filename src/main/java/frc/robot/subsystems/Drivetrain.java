@@ -299,7 +299,7 @@ public class Drivetrain extends SubsystemBase {
         m_poseEstimator.addVisionMeasurement(
           estimatedPose.estimatedPose.toPose2d(),
           estimatedPose.timestampSeconds,
-          VisionConstants.kBaseVisionPoseStdDevs.plus(
+          VisionConstants.kBaseVisionPoseStdDevs.copy().plus(
             currentEstimatedPoseTranslation.getDistance(closestTagPoseTranslation) * VisionConstants.kVisionPoseStdDevFactor
           )
         );
