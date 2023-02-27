@@ -480,6 +480,8 @@ public class Drivetrain extends SubsystemBase {
     // add angles
     m_drivetrainTab.addNumber("getAngle", () -> getAngleHeading());
     m_drivetrainTab.addNumber("heading PID output", () -> m_headingPIDOutput);
+    m_drivetrainTab.addNumber("estimated X", () -> m_poseEstimator.getEstimatedPosition().getX());
+    m_drivetrainTab.addNumber("estimated Y", () -> m_poseEstimator.getEstimatedPosition().getY());
     m_drivetrainTab.addNumber("getPitch", () -> m_pigeon.getPitch());
     m_drivetrainTab.addNumber("getRoll", () -> m_pigeon.getRoll());
     m_drivetrainTab.addNumber("getYaw", () -> m_pigeon.getYaw());
