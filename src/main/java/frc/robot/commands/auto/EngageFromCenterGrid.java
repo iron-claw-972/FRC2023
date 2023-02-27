@@ -10,23 +10,20 @@ import frc.robot.subsystems.Drivetrain;
 public class EngageFromCenterGrid extends SequentialCommandGroup{
 
     private Drivetrain m_drive;
-    private Pose2d initialPose, poseCharge;
+    private Pose2d poseCharge;
     private Rotation2d startRot;
 
     public EngageFromCenterGrid(Drivetrain drive)  {
+        //DRIVES TO CHARGE STATION AND ENGAGES. STARTS FROM CENTER GRID
         m_drive = drive;
 
         startRot = new Rotation2d(0);
         
-        initialPose = new Pose2d(0, 0, startRot);
         poseCharge = new Pose2d(4, 0, startRot);
 
         addCommands(
             new GoToPose(m_drive, poseCharge),
             new BalanceCommand(m_drive)
-            //new WaitCommand(2),
-            //intake
-            //new GoToPose(m_drive, startPose)// it goes back to start position
 
         );
     }

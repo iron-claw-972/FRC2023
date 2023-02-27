@@ -21,11 +21,9 @@ public class BalanceCommand extends CommandBase {
     Timer timer = new Timer();
 
     public BalanceCommand(Drivetrain drive) {
-
-        
-        
         m_drive = drive;
         addRequirements(drive);
+
         m_pid = new PIDController(DriveConstants.kBalanceP, DriveConstants.kBalanceI, DriveConstants.kBalanceD);
         m_pid.setTolerance(DriveConstants.kBalanceTolerance);
     }
@@ -49,26 +47,22 @@ public class BalanceCommand extends CommandBase {
     @Override
     public void execute() {
         timer.start();
+
         m_currentAngle = m_drive.getPitch();
         m_output = MathUtil.clamp(m_pid.calculate(m_currentAngle), -DriveConstants.kBalanceMaxOutput, DriveConstants.kBalanceMaxOutput);
-        System.out.println(m_pid.calculate(m_currentAngle));
+    
         if(m_usePitch) {
             m_drive.driveHeading(-m_output, 0, m_inverted*Math.PI/2, true);
-            System.out.println("PITCHHHH");
         }
         else {
             m_drive.driveHeading(-m_output, 0, 0, true);
-            System.out.println(timer.get());
             if (timer.get() >= 0.5 && timer.get() <= 0.8)
             {
                 m_drive.stop();
                 timer.reset();
-                System.out.println("Test");
             }
 
         }
-       
-        
     }
 
     @Override
@@ -79,6 +73,5 @@ public class BalanceCommand extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         m_drive.stop();
-        //TODO: Make the wheels into X to prevent rolling off
     }
 }   

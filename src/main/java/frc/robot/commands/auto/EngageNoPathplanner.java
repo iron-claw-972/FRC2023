@@ -10,37 +10,27 @@ import frc.robot.subsystems.Drivetrain;
 public class EngageNoPathplanner extends SequentialCommandGroup{
 
     private Drivetrain m_drive;
-    private Pose2d midPose, startPose, endPose, initialPose, poseRight, poseCharge, endPoseNoRotate;
+    private Pose2d rightUnrotatedPose, chargePose, centerPose, rightRotatedPose;
     private Rotation2d rot, startRot;
 
     public EngageNoPathplanner(Drivetrain drive)  {
+        //DRIVES OUT OF COMMUNITY, THEN MOVES TO RIGHT AND BACK TO ENGAGE. THIS PATH IS FOR THE GRID POSITION CLOSEST TO BARRIER
         m_drive = drive;
 
         startRot = new Rotation2d(0);
         rot = new Rotation2d(Math.PI);
 
-        midPose = new Pose2d(2.54, 0, rot);
-        startPose = new Pose2d(2.54, 0, startRot);
-        endPose = new Pose2d(5.5, 0, rot);
-        endPoseNoRotate = new Pose2d(5.5, 0, startRot);
-        initialPose = new Pose2d(-.5,0, startRot);//it is -0.5 because for some reason when it is 0 it doesnt come back all the way
-        poseRight = new Pose2d(5, -1.75, startRot);
-        poseCharge = new Pose2d(2.54, -1.5, startRot);
+        centerPose = new Pose2d(5.5, 0, startRot);
+        rightUnrotatedPose = new Pose2d(5, -1.75, startRot);
+        chargePose = new Pose2d(2.54, -1.5, startRot);
+        rightRotatedPose = new Pose2d(5, -1.75, rot);
+
 
         addCommands(
-            //deposit
-            //new GoToPose(m_drive, startPose),
-            //new WaitCommand(2),
-            //new GoToPose(m_drive, midPose),
-            //new WaitCommand(2),
-            new GoToPose(m_drive, endPoseNoRotate), //it goes to the place we want it to
-            new GoToPose(m_drive, poseRight),
-            new GoToPose(m_drive, poseCharge),
+            new GoToPose(m_drive, centerPose),
+            new GoToPose(m_drive, rightUnrotatedPose),//alternatively could make it poseRightRotated, but this is untested
+            new GoToPose(m_drive, chargePose),
             new BalanceCommand(m_drive)
-            //new WaitCommand(2),
-            //intake
-            //new GoToPose(m_drive, startPose)// it goes back to start position
-
         );
     }
 }
