@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.commands.AlignWheelsToZero;
 import frc.robot.commands.GoToPose;
 import frc.robot.subsystems.Drivetrain;
 
@@ -24,6 +25,7 @@ public class AutoPathNoPlan extends SequentialCommandGroup{
         initialPose = new Pose2d(-.5,0, startRot);//it is -0.5 because for some reason when it is 0 it doesnt come back all the way
 
         addCommands(
+            new AlignWheelsToZero(m_drive),
             new GoToPose(m_drive, centerPose), 
             new WaitCommand(1),
             new GoToPose(m_drive, initialPose)

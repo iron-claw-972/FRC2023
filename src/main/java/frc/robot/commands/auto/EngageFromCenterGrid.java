@@ -3,6 +3,7 @@ package frc.robot.commands.auto;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.AlignWheelsToZero;
 import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.GoToPose;
 import frc.robot.subsystems.Drivetrain;
@@ -22,6 +23,7 @@ public class EngageFromCenterGrid extends SequentialCommandGroup{
         poseCharge = new Pose2d(4, 0, startRot);
 
         addCommands(
+            new AlignWheelsToZero(m_drive),
             new GoToPose(m_drive, poseCharge),
             new BalanceCommand(m_drive)
 
