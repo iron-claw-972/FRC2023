@@ -8,12 +8,19 @@ public class FieldConstants {
   public static final double kFieldWidth = Units.inchesToMeters(26*12 + 3.5); // meters
 
   // The distance from the node tape to the edge of the robot's bumpers, for node scoring
-  // TODO: 1.0 is just a dummy value at the moment, so this value needs to be changed to a proper value
-  public static final double kDistanceFromNodeTape = 1.0 + DriveConstants.kRobotWidthWithBumpers / 2; // meters
+  // TODO: After testing, this value might need to be tuned. Change the 0+ to however much the robot needs to be away from the node tape
+  public static final double kRobotDistanceFromNodeTape = 0 + DriveConstants.kRobotWidthWithBumpers / 2; // meters
 
-  public static final double kBlueAllianceNodeStartX = kDistanceFromNodeTape + 4.379; // meters
-  public static final double kRedAllianceNodeStartX = kBlueAllianceNodeStartX + 13.804 - kDistanceFromNodeTape * 2; // meters
+  // The locations of the node tape in the x axis, relative to the very bottom left corner of the entire field
+  public static final double kBlueNodeTapeLocX = 4.379; // meters
+  public static final double kRedNodeTapeLocX = 18.183; // meters
 
+  // The location that the robot should be at in the X axis
+  public static final double kBlueAllianceNodeStartX = kBlueNodeTapeLocX + kRobotDistanceFromNodeTape; // meters
+  // Subtract because the red alliance is on the opposite side of the field
+  public static final double kRedAllianceNodeStartX = kRedNodeTapeLocX - kRobotDistanceFromNodeTape; // meters
+
+  // The location of the field boundary in the y axis, relative to the very bottom left corner of the entire field
   public static final double kNodeStartY = 0.569; // meters
 
   // TODO: This value needs to be tested to ensure functionality, for node scoring
