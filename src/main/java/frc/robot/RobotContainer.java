@@ -57,20 +57,21 @@ public class RobotContainer {
   private final ShuffleboardTab m_controllerTab = Shuffleboard.getTab("Controller");
   private final ShuffleboardTab m_visionTab = Shuffleboard.getTab("Vision");
   private final ShuffleboardTab m_testTab = Shuffleboard.getTab("Test");
+  private final ShuffleboardTab m_intakeTab = Shuffleboard.getTab("Intake");
   
 
   private final Vision m_vision;
 
   // The robot's subsystems are defined here...
-  private final Drivetrain m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab);
-  private final FourBarArm m_arm = new FourBarArm();
-  private final Intake m_intake = new Intake();
+  private final Drivetrain m_drive;
+  private final FourBarArm m_arm;
+  private final Intake m_intake;
 
   // Controllers are defined here
-  private final BaseDriverConfig m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
+  private final BaseDriverConfig m_driver;
+  private final Operator m_operator;
   private final TestController m_testController;
   private final ManualController m_manualController;
-  private final Operator m_operator = new Operator(m_arm, m_intake);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -89,7 +90,7 @@ public class RobotContainer {
     if (Robot.kRobotId == RobotId.SwerveCompetition) {
 
       m_arm = new FourBarArm();
-      m_intake = new Intake();
+      m_intake = new Intake(m_intakeTab);
 
       m_operator = new Operator(m_arm, m_intake);
       m_testController = new TestController(m_arm, m_intake);
@@ -118,7 +119,6 @@ public class RobotContainer {
     PathGroupLoader.loadPathGroups();
 
     m_driver.configureControls();
-    m_operator.configureControls();
 
     LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
     LiveWindow.setEnabled(false);
@@ -134,34 +134,7 @@ public class RobotContainer {
     
     addTestCommands();
 
-    m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive,m_driver));
-
-    // Shuffleboard commands for FourBarArm subsystem
-m_arm.setDefaultCommand(
-  new RunCommand(() -> m_arm.moveArm(m_armJoystick.getY()), m_arm)
-      .addRequirements(m_arm)
-      .withName("Move Arm Joystick"));
-
-m_mainTab.add(m_arm);
-
-// Shuffleboard commands for Intake subsystem
-m_intake.setDefaultCommand(
-  new RunCommand(() -> m_intake.runIntake(m_intakeJoystick.getY()), m_intake)
-      .addRequirements(m_intake)
-      .withName("Run Intake Joystick"));
-
-m_mainTab.add(m_intake);
-
-// Shuffleboard commands for Drivetrain subsystem
-m_drive.setDefaultCommand(
-  new RunCommand(() -> m_drive.drive(m_driveJoystick.getY(), m_driveJoystick.getX()), m_drive)
-      .addRequirements(m_drive)
-      .withName("Drive Joystick"));
-
-m_mainTab.add(m_drive);
-
-
-    
+    m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive, m_driver));
   }
 
   /** 
