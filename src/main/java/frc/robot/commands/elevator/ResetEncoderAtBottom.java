@@ -17,7 +17,7 @@ public class ResetEncoderAtBottom extends CommandBase {
 
   @Override
   public void initialize() {
-    m_elevator.setEnabled(false); 
+    m_elevator.setPIDEnabled(false); 
   }
 
   @Override
@@ -35,7 +35,7 @@ public class ResetEncoderAtBottom extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_elevator.isBottom();
+    return m_elevator.isBottomSwitchTripped();
   }
 }
 

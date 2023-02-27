@@ -57,9 +57,9 @@ public class RobotContainer {
   private final ShuffleboardTab m_elevatorTab = Shuffleboard.getTab("Elevator");
 
   // The robot's subsystems are defined here...
-  private Drivetrain m_drive;
-  private FourBarArm m_arm;
-  private Intake m_intake;
+  private final Drivetrain m_drive;
+  private final FourBarArm m_arm;
+  private final Intake m_intake;
   private Elevator m_elevator;
 
   // Controllers are defined here

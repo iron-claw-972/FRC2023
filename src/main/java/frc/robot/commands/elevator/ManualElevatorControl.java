@@ -24,20 +24,20 @@ public class ManualElevatorControl extends CommandBase {
   }
   @Override
   public void initialize() {
-    m_elevator.setEnabled(false); 
+    m_elevator.setPIDEnabled(false); 
 
   }
   @Override
   public void execute() {
     if ((m_testController.getClampedThrottleValue() > 0) || (m_testController.getClampedThrottleValue() < 0)){
-      m_elevator.setEnabled(false); 
-      m_elevator.set(m_testController.getClampedThrottleValue());
+      m_elevator.setPIDEnabled(false); 
+      m_elevator.setSpeedMotorStopWhenLimSwitchesHit(m_testController.getClampedThrottleValue());
     }
 
     if(m_testController.getClampedThrottleValue() == 0){
-      m_elevator.setEnabled(true); 
-      m_currentElevatorPos = m_elevator.getHeight(); 
-      m_elevator.setSetpoint(m_currentElevatorPos);
+      m_elevator.setPIDEnabled(true); 
+      m_currentElevatorPos = m_elevator.getElevatorExtension(); 
+      m_elevator.setTargetHeight(m_currentElevatorPos);
     }
 
     

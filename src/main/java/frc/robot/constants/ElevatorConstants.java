@@ -3,11 +3,9 @@ package frc.robot.constants;
 import edu.wpi.first.math.util.Units;
 
 public class ElevatorConstants {
-  //TODO: Set everything to meters in whole robot code
   public static final int kMotorPort = 13;
   public static final int kTopLimitSwitchPort = 9;
   public static final int kBottomLimitSwitchPort = 8;
-  public static final int kAbsEncoderPort = 6;
 
   public static final double kP = 5;
   public static final double kI = 0.005;
@@ -32,15 +30,17 @@ public class ElevatorConstants {
 
   /** elevator travel distance in meters**/
 
-  public static final double kMiddleNodeHeightConeTravel = calculateElevatorPosition(kMiddleNodeHeightCone);
-  public static final double kTopNodeHeightConeTravel = calculateElevatorPosition(kTopNodeHeightCone);
-  public static final double kMiddleNodeHeightCubeTravel = calculateElevatorPosition(kMiddleNodeHeightCube);
-  public static final double kTopNodeHeightCubeTravel = calculateElevatorPosition(kTopNodeHeightCube);
-  public static final double kShelfIntakeHeightTravel = calculateElevatorPosition(kShelfIntakeHeight);
+  public static final double kMiddleNodeHeightConeExtension = 0.65 ;
+  public static final double kTopNodeHeightConeExtension = 1.36;
+  public static final double kHybridNodeOuttakeExtension = 0.14;
+  public static final double kGroundIntakeExtension = 0.14;
+  public static final double kMiddleNodeHeightCubeExtension = 0.1;
+  public static final double kTopNodeHeightCubeExtension = 0.1;
+  public static final double kShelfIntakeHeightExtension = 0.1;
 
-  public static final double kMinHeight = 0.0; 
+  public static final double kMinExtension = 0.0; 
 
-  public static final double kGearRatio = (50.0/12.0)*(50.0/30.0)*(36.0/24.0); //TODO: put in actual GR
+  public static final double kGearRatio = (50.0/12.0)*(50.0/30.0)*(36.0/24.0);
   public static final double kCordThicknessInches = 0.09;
   public static final double kSpoolRadius = Units.inchesToMeters(0.6875+kCordThicknessInches); 
   public static final double kDistPerPulse = 2.0 * Math.PI * kSpoolRadius / kGearRatio / FalconConstants.kResolution;
@@ -49,13 +49,5 @@ public class ElevatorConstants {
   /** Normal full power level for the elevator motor. */
   public static final double kPowerLimit = 0.1; //1
 
-  /**
-   * Calculate the elevator extension.
-   * @param height height above the floor in meters.
-   * @returns elevator extension in meters.
-   */
-  private static double  calculateElevatorPosition(double height) {
-    return (height+Units.metersToInches(5.5))/(Math.sin(Math.toRadians(55))); 
-  }
-
 }
+

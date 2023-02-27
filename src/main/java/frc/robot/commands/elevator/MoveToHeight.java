@@ -20,10 +20,9 @@ public class MoveToHeight extends CommandBase {
 
   @Override
   public void initialize(){
-    //set the elevator PID speed to be clamped within the correct range to get it to move faster
-    //This should be done already in ResetEncoderAtBottom() but just in case something happens it's here too. 
-    m_elevator.setSetpoint(m_targetHeight); 
-    m_elevator.setEnabled(true);
+    m_elevator.setTargetHeight(m_targetHeight); 
+    m_elevator.setPIDEnabled(true);
+    m_elevator.resetPID();
   }
 
   @Override

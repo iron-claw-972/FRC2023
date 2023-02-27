@@ -18,7 +18,7 @@ public class GetMaxHeight extends CommandBase {
 
   @Override
   public void initialize() {
-    m_elevator.setEnabled(false); 
+    m_elevator.setPIDEnabled(false); 
   }
 
   @Override
@@ -28,9 +28,10 @@ public class GetMaxHeight extends CommandBase {
   
   @Override
   public void end(boolean interrupted) {
-    m_elevator.setMaxHeight();
+    m_elevator.setElevatorExtension();
     m_elevator.setMotorPower(0); 
-    SmartDashboard.putNumber("Max Elevator Height", m_elevator.setMaxHeight());
+    SmartDashboard.putNumber("Max Elevator Height", m_elevator.setElevatorExtension());
+    m_elevator.setPIDEnabled(true);
 
 
   }
@@ -38,7 +39,7 @@ public class GetMaxHeight extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_elevator.isTop();
+    return m_elevator.isTopSwitchTripped();
   }
 }
 

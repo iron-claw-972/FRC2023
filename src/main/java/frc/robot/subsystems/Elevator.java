@@ -66,7 +66,7 @@ public class Elevator extends SubsystemBase {
     
     //m_motor.setSafetyEnabled(true);
     setUpElevatorTab();
-    setSetpoint(0.5); 
+    setTargetHeight(0); 
   }
 
   @Override
@@ -77,13 +77,13 @@ public class Elevator extends SubsystemBase {
      * ResetEncoderAtBottom() command to end
      */
     if(m_enabled && m_isCalibrated) {
-      double pid = m_elevatorPID.calculate(getHeight());
+      double pid = m_elevatorPID.calculate(getElevatorExtension());
       double ff = m_elevatorFF.calculate(ElevatorConstants.kVelocity, ElevatorConstants.kAccel); 
       ff = 0; 
       double pidClamped = MathUtil.clamp(pid, -ElevatorConstants.kPowerLimit, ElevatorConstants.kPowerLimit);
       double finalMotorPower = pidClamped + ff; 
       
-      set(finalMotorPower);
+      setSpeedMotorStopWhenLimSwitchesHit(finalMotorPower);
     } else {
       //m_motor.feed();
     }
@@ -97,15 +97,15 @@ public class Elevator extends SubsystemBase {
     m_bottomLimitSwitch.close(); 
   }
 
-  public void set(double power) {
-    if ( (isBottom() && power < 0) || (isTop() && power > 0) ){
+  public void setSpeedMotorStopWhenLimSwitchesHit(double power) {
+    if ( (isBottomSwitchTripped() && power < 0) || (isTopSwitchTripped() && power > 0) ){
       m_motor.set(0); 
     } else {
       m_motor.set(power);
     }
   }
   
-  public void setEnabled(boolean isEnabled){
+  public void setPIDEnabled(boolean isEnabled){
     m_enabled = isEnabled; 
   }
 
@@ -113,30 +113,19 @@ public class Elevator extends SubsystemBase {
     m_isCalibrated = true; 
   }
 
+  public void resetPID(){
+    m_elevatorPID.reset();
+  }
 
-  public void setSetpoint(double setpoint){
+  public void setTargetHeight(double setpoint){
     m_elevatorPID.setSetpoint(setpoint);
   }
 
-  // public boolean getBottomLimitSwitch(){
-  //  if(m_motor.getSensorCollection().isRevLimitSwitchClosed() == 0){
-  //   return true; 
-  //  }
-  //   return false; 
-  // }
-
-  // public boolean getTopLimitSwitch(){
-  //   if(m_motor.getSensorCollection().isFwdLimitSwitchClosed() == 0){
-  //    return true; 
-  //   }
-  //    return false; 
-  // }
-
-  public boolean isBottom(){
+  public boolean isBottomSwitchTripped(){
     return !m_bottomLimitSwitch.get();
   }
 
-  public boolean isTop(){
+  public boolean isTopSwitchTripped(){
     return !m_topLimitSwitch.get();
   }
 
@@ -145,20 +134,13 @@ public class Elevator extends SubsystemBase {
   }
  
   /**
-   * Determine the elevator height from the motor encoder.
-   * @return return height in meters
+   * Determine the elevator extension from the motor encoder.
+   * @return return extension in meters
    */
-  public double getHeight() {
+  public double getElevatorExtension() {
     return m_talonEncoder.getDistance(); 
   }
 
-  /**
-   * 
-   * Zero position is the value of the absolute encoder after the elevator
-   * hits the bottom limit switch. 
-   * @return return the absolute encoder's zero position in ticks. 
-   * 
-   */
   public boolean atSetpoint() {
     return m_elevatorPID.atSetpoint();
   }
@@ -167,16 +149,18 @@ public class Elevator extends SubsystemBase {
     m_motor.set(power);
   }
 
-  public double setMaxHeight(){
-    m_maxHeight = m_talonEncoder.getDistance();
+  public double setElevatorExtension(){
+    double m_maxHeight = m_talonEncoder.getDistance();
     return m_maxHeight;  
   }
 
   public void setUpElevatorTab(){
-    m_elevatorTab.addNumber("Elevator Height", ()->getHeight());
+    m_elevatorTab.addNumber("Elevator Height", () -> getElevatorExtension());
     m_elevatorTab.add(m_elevatorPID); 
-    m_elevatorTab.addBoolean("enabled", ()->m_enabled);
-    
+    m_elevatorTab.addBoolean("enabled", () -> m_enabled);
+    m_elevatorTab.addBoolean("topLimitSwitch", () -> isTopSwitchTripped() );
+    m_elevatorTab.addBoolean("bottomLimitSwitch", () -> isBottomSwitchTripped());
+
   }
 
 }
