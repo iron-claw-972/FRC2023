@@ -81,24 +81,16 @@ public class GameController extends Controller {
     }
   }
 
-  public JoystickButton get(Button button) {
-    return new JoystickButton(m_controller, button.id);
+  public Trigger get(Button button) {
+    return new Trigger(() -> m_controller.getRawButton(button.id));
   }
 
   public double get(Axis axis) {
     return m_controller.getRawAxis(axis.id);
   }
 
-  public POVButton get(DPad dPad) {
-    return new POVButton(m_controller, dPad.angle);
-  }
-
-  public Trigger get(BooleanSupplier condition) {
-    return new Trigger(condition);
-  }
-
-  public Trigger get(Trigger trigger) {
-    return trigger;
+  public Trigger get(DPad dPad) {
+    return new Trigger(() -> m_controller.getPOV() == dPad.angle);
   }
 
   public Joystick get() {
