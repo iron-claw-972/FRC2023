@@ -30,6 +30,7 @@ public class Operator {
   private Intake m_intake;
 
   // Values for selecting a node
+  // Grid, row, and column in the grid
   private int[] selectValues = {1, 1, 1};
 
   // The selected node where the robot will score
@@ -104,6 +105,11 @@ public class Operator {
 
   }
 
+  /**
+   * This function puts a number in selectValues and uses those values to select a node
+   * @param index Which item in the array to change (1 = grid, 2 = row, 3 = column in grid)
+   * @param value What value to set it to, between 1 and 3 (1 is left or bottom)
+   */
   public void selectValue(int index, int value){
     selectValues[index] = value;
     selectedNode = new Node(m_vision, DriverStation.getAlliance(), selectValues[1], selectValues[0]*3-3+selectValues[2]);
