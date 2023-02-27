@@ -85,6 +85,10 @@ public class GameController extends Controller {
     return new Trigger(() -> m_controller.getRawButton(button.id));
   }
 
+  public Trigger get(BooleanSupplier booleanSupplier) {
+    return new Trigger(() -> booleanSupplier.getAsBoolean());
+  }
+
   public double get(Axis axis) {
     return m_controller.getRawAxis(axis.id);
   }
