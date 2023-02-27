@@ -1,7 +1,6 @@
 package lib.controllers;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class PistolController extends Controller {
@@ -39,8 +38,8 @@ public class PistolController extends Controller {
     }
   }
 
-  public JoystickButton get(Button button) {
-    return new JoystickButton(m_controller, button.id);
+  public Trigger get(Button button) {
+    return new Trigger(() -> m_controller.getRawButton(button.id));
   }
 
   public double get(Axis axis) {

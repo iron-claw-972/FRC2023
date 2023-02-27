@@ -81,8 +81,8 @@ public class GameController extends Controller {
     }
   }
 
-  public JoystickButton get(Button button) {
-    return new JoystickButton(m_controller, button.id);
+  public Trigger get(Button button) {
+    return new Trigger(() -> m_controller.getRawButton(button.id));
   }
 
   public double get(Axis axis) {

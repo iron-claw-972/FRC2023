@@ -41,8 +41,8 @@ public class Ex3DProController extends Controller {
     }
   }
 
-  public JoystickButton get(Ex3DProButton button) {
-    return new JoystickButton(m_controller, button.id);
+  public Trigger get(Ex3DProButton button) {
+    return new Trigger(() -> m_controller.getRawButton(button.id));
   }
 
   public double get(Ex3DProAxis axis) {

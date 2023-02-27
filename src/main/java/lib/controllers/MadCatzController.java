@@ -60,8 +60,8 @@ public class MadCatzController extends Controller {
     }
   }
 
-  public JoystickButton get(MadCatzButton button) {
-    return new JoystickButton(m_controller, button.id);
+  public Trigger get(MadCatzButton button) {
+    return new Trigger(() -> m_controller.getRawButton(button.id));
   }
 
   public double get(MadCatzAxis axis) {
