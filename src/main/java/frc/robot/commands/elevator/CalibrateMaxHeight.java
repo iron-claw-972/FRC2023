@@ -4,14 +4,14 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.subsystems.Elevator;
 
-public class GetMaxHeight extends CommandBase {
+public class CalibrateMaxHeight extends CommandBase {
   Elevator m_elevator; 
   /**
    * Calibrate the elevator by resetting the encoder after it hits the bottom
    * limit switch. 
-   * @param elevator
+   * @param elevator, the elevator subsystem
    */
-  public GetMaxHeight(Elevator elevator) {
+  public CalibrateMaxHeight(Elevator elevator) {
     m_elevator = elevator; 
     addRequirements(m_elevator);
   }

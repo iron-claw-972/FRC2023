@@ -4,7 +4,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.arm.ExtendToPosition;
 import frc.robot.commands.elevator.CalibrateElevator;
-import frc.robot.commands.elevator.GetMaxHeight;
+import frc.robot.commands.elevator.CalibrateMaxHeight;
 import frc.robot.commands.elevator.MoveToHeight;
 import frc.robot.commands.elevator.ResetEncoderAtBottom;
 import frc.robot.constants.ArmConstants;

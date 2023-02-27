@@ -91,7 +91,7 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
 
-    // LogManager.log();
+    LogManager.log();
   }
 
   /**
@@ -139,7 +139,7 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
 
     // If we enable teleop for the first time, we should reset the drive yaw. Mainly for testing.
-    //m_robotContainer.initDriveYaw(false);
+    m_robotContainer.initDriveYaw(false);
 
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to

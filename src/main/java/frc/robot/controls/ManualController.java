@@ -1,7 +1,9 @@
 package frc.robot.controls;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.commands.elevator.GetMaxHeight;
+import frc.robot.commands.elevator.CalibrateMaxHeight;
 import frc.robot.commands.elevator.MoveToHeight;
 import frc.robot.commands.elevator.ResetEncoderAtBottom;
 import frc.robot.constants.ElevatorConstants;
@@ -37,7 +39,7 @@ public class ManualController {
     m_manual.get(Button.B).onTrue(new InstantCommand(() -> m_arm.setMotorPower(0)));
 
     //Move to min height
-    m_manual.get(m_manual.RIGHT_TRIGGER_BUTTON).onTrue(new MoveToHeight(m_elevator, ElevatorConstants.kMinExtension)); 
+    m_manual.get(Button.RB).onTrue(new MoveToHeight(m_elevator, ElevatorConstants.kMinExtension)); 
     //Calibrate elevator using inbuilt motor encoders
     m_manual.get(DPad.DOWN).onTrue(new ResetEncoderAtBottom(m_elevator));
     //TODO: calibrate elevator using absolute encoders(probably will not work yet as of 2/15/2023);
@@ -47,4 +49,9 @@ public class ManualController {
 
   
   }
+  public double getClampedThrottleValue() {
+    return m_manual.get(Button.LEFT_JOY); 
+  }
+  
+
 }

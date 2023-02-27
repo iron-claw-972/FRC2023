@@ -48,7 +48,6 @@ import frc.robot.util.Vision;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  //TODO: Did I define all the variables correctly? 
   // Shuffleboard auto chooser
   private final SendableChooser<Command> m_autoCommand = new SendableChooser<>();
 
@@ -69,7 +68,7 @@ public class RobotContainer {
   private final Drivetrain m_drive;
   private final FourBarArm m_arm;
   private final Intake m_intake;
-  private Elevator m_elevator;
+  private final Elevator m_elevator;
 
   // Controllers are defined here
   private final BaseDriverConfig m_driver;

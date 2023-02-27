@@ -3,6 +3,7 @@
 
 package frc.robot.commands.elevator;
 
+import frc.robot.controls.ManualController;
 import frc.robot.controls.Operator;
 import frc.robot.controls.TestController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -11,47 +12,32 @@ import frc.robot.subsystems.Elevator;
 public class ManualElevatorControl extends CommandBase {
   Elevator m_elevator; 
   double m_currentElevatorPos;
-  TestController m_testController;
+  ManualController m_manualController;
   /**
    * This command allows for manual control of the elevator. 
-   * TODO: get manual control of all subsystems to be exclusive to a third controller
-   * @param elevator
+   * @param elevator, the elevator subsystem. 
    */
-  public ManualElevatorControl(Elevator elevator, TestController testController) {
+  public ManualElevatorControl(Elevator elevator, ManualController manualController) {
     m_elevator = elevator; 
-    m_testController = testController;
+    m_manualController = manualController;
     addRequirements(m_elevator);
   }
+
   @Override
   public void initialize() {
     m_elevator.setPIDEnabled(false); 
-
   }
+
   @Override
   public void execute() {
-    if ((m_testController.getClampedThrottleValue() > 0) || (m_testController.getClampedThrottleValue() < 0)){
+    if ((m_manualController.getClampedThrottleValue() > 0) || (m_manualController.getClampedThrottleValue() < 0)){
       m_elevator.setPIDEnabled(false); 
-      m_elevator.setSpeedMotorStopWhenLimSwitchesHit(m_testController.getClampedThrottleValue());
+      m_elevator.setSpeedMotorStopWhenLimSwitchesHit(m_manualController.getClampedThrottleValue());
     }
-
-    if(m_testController.getClampedThrottleValue() == 0){
+    if(m_manualController.getClampedThrottleValue() == 0){
       m_elevator.setPIDEnabled(true); 
       m_currentElevatorPos = m_elevator.getElevatorExtension(); 
       m_elevator.setTargetHeight(m_currentElevatorPos);
     }
-
-    
-   
-  }
-
-  @Override
-  public void end(boolean interrupted) {
-    
-  }
-  
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false; 
   }
 }
