@@ -5,6 +5,7 @@ import java.util.function.DoubleSupplier;
 
 import org.photonvision.EstimatedRobotPose;
 
+import com.ctre.phoenix.sensors.Pigeon2;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
 import edu.wpi.first.math.MathUtil;
@@ -360,7 +361,17 @@ public class Drivetrain extends SubsystemBase {
   public Rotation2d getRotation2d() {
     return m_pigeon.getRotation2d(); 
   }
+
+  public double getPitch()  {
+    return m_pigeon.getPitch();
+  }
   
+  public double getRoll()  {
+    return m_pigeon.getRoll();
+  }
+  public double getYaw()  {
+    return m_pigeon.getYaw();
+  }  
   /**
   * Gets the angle heading from the pigeon.
   * 
@@ -469,10 +480,15 @@ public class Drivetrain extends SubsystemBase {
     // add angles
     m_drivetrainTab.addNumber("getAngle", () -> getAngleHeading());
     m_drivetrainTab.addNumber("heading PID output", () -> m_headingPIDOutput);
+    m_drivetrainTab.addNumber("getPitch", () -> m_pigeon.getPitch());
+    m_drivetrainTab.addNumber("getRoll", () -> m_pigeon.getRoll());
+    m_drivetrainTab.addNumber("getYaw", () -> m_pigeon.getYaw());
     
     m_drivetrainTab.addNumber("Gyro X", () -> getAngularRate(0));
     m_drivetrainTab.addNumber("Gyro Y", () -> getAngularRate(1));
     m_drivetrainTab.addNumber("Gyro Z", () -> getAngularRate(2));
+
+   
     
     //m_drivetrainTab.addNumber("Estimated X pos (m)", ()-> m_odometry.getPoseMeters().getX());
     //m_drivetrainTab.addNumber("Estimated Y pos (m)", ()-> m_odometry.getPoseMeters().getY());

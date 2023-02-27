@@ -85,7 +85,7 @@ public class DriveConstants {
   public static double kDrivePBackRight = 2.2*2;
   public static double kDriveIBackRight = 0;
   public static double kDriveDBackRight = 0;
-  public static double kSteerKSBackRight = 0.7151324607226578;
+  public static double kSteerKSBackRight = 0.7;
   public static double kSteerKVBackRight = 0.3731499810181726;
   public static double kSteerPBackRight = 14;
   public static double kSteerIBackRight = 0;
@@ -96,10 +96,17 @@ public class DriveConstants {
   public static double kHeadingI= 0;
   public static double kHeadingD= 0;
 
+   //balance PID
+   public static double kBalanceP= 0.01;
+   public static double kBalanceI= 0;
+   public static double kBalanceD= 0;
+   public static final double kBalanceMaxOutput = 0.5;
+   public static final double kBalanceTolerance = 0.1;
+
   //translational PID
-  public static double kTranslationalP = 0.5;
+  public static double kTranslationalP = 0.25;
   public static double kTranslationalI = 0;
-  public static double kTranslationalD = 0;
+  public static double kTranslationalD = 0;//0.001
 
   //The PIDs for PathPlanner Command
   public static double kPathplannerHeadingP= 1;

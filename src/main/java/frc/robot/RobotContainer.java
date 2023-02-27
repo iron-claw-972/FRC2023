@@ -16,6 +16,9 @@ import frc.robot.Robot.RobotId;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.auto.AutoPathNoPlan;
 import frc.robot.commands.auto.EngageBottomPath;
+import frc.robot.commands.auto.EngageFromCenterGrid;
+import frc.robot.commands.auto.EngageNoPathplanner;
+import frc.robot.commands.auto.GoOverChargeStation;
 import frc.robot.commands.auto.PathPlannerCommand;
 import frc.robot.commands.test.CircleDrive;
 import frc.robot.commands.test.DriveFeedForwardCharacterization;
@@ -199,7 +202,9 @@ public class RobotContainer {
     m_autoCommand.addOption("Drive out of Community", new PathPlannerCommand(PathGroupLoader.getPathGroup("Drive out of Community"), 0, m_drive, true));
     m_autoCommand.addOption("BottomSimpleLine1", new PathPlannerCommand(PathGroupLoader.getPathGroup("Bottom Simple Line1"), 0 , m_drive, true));
     m_autoCommand.addOption("AutoPathNoPlan", new AutoPathNoPlan(m_drive));
-
+    m_autoCommand.addOption("EngageNoPathplanner", new EngageNoPathplanner(m_drive));
+    m_autoCommand.addOption("EngageFromCenterGrid", new EngageFromCenterGrid(m_drive));
+    m_autoCommand.addOption("GoOverChargeStation", new GoOverChargeStation(m_drive));
    }
     
 
