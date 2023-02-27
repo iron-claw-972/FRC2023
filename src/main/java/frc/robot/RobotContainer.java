@@ -110,6 +110,7 @@ public class RobotContainer {
 
       m_arm = null;
       m_intake = null;
+      m_elevator = null;
 
       m_operator = null;
       m_testController = null;
