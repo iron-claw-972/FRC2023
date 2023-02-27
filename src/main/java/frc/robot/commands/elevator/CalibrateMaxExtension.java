@@ -4,14 +4,14 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.subsystems.Elevator;
 
-public class CalibrateMaxHeight extends CommandBase {
+public class CalibrateMaxExtension extends CommandBase {
   Elevator m_elevator; 
   /**
    * Calibrate the elevator by resetting the encoder after it hits the bottom
    * limit switch. 
    * @param elevator, the elevator subsystem
    */
-  public CalibrateMaxHeight(Elevator elevator) {
+  public CalibrateMaxExtension(Elevator elevator) {
     m_elevator = elevator; 
     addRequirements(m_elevator);
   }
@@ -30,7 +30,7 @@ public class CalibrateMaxHeight extends CommandBase {
   public void end(boolean interrupted) {
     m_elevator.setElevatorExtension();
     m_elevator.setMotorPower(0); 
-    SmartDashboard.putNumber("Max Elevator Height", m_elevator.setElevatorExtension());
+    SmartDashboard.putNumber("Max Elevator Extension", m_elevator.setElevatorExtension());
     m_elevator.setPIDEnabled(true);
 
 

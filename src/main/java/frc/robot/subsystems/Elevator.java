@@ -66,7 +66,7 @@ public class Elevator extends SubsystemBase {
     
     //m_motor.setSafetyEnabled(true);
     setUpElevatorTab();
-    setTargetHeight(0); 
+    setTargetExtension(0); 
   }
 
   @Override
@@ -117,7 +117,7 @@ public class Elevator extends SubsystemBase {
     m_elevatorPID.reset();
   }
 
-  public void setTargetHeight(double setpoint){
+  public void setTargetExtension(double setpoint){
     m_elevatorPID.setSetpoint(setpoint);
   }
 

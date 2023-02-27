@@ -4,7 +4,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.arm.ExtendToPosition;
-import frc.robot.commands.elevator.MoveToHeight;
+import frc.robot.commands.elevator.MoveToExtension;
 import frc.robot.commands.elevator.ResetEncoderAtBottom;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.ElevatorConstants;

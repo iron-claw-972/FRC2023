@@ -37,7 +37,7 @@ public class ManualElevatorControl extends CommandBase {
     if(m_manualController.getClampedThrottleValue() == 0){
       m_elevator.setPIDEnabled(true); 
       m_currentElevatorPos = m_elevator.getElevatorExtension(); 
-      m_elevator.setTargetHeight(m_currentElevatorPos);
+      m_elevator.setTargetExtension(m_currentElevatorPos);
     }
   }
 }

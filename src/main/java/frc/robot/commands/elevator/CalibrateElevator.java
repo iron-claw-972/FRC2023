@@ -13,7 +13,7 @@ public class CalibrateElevator extends SequentialCommandGroup {
   public CalibrateElevator(Elevator elevator) {
     addCommands(
       new ResetEncoderAtBottom(elevator), 
-      new CalibrateMaxHeight(elevator),
+      new CalibrateMaxExtension(elevator),
       new InstantCommand(()->elevator.setPIDEnabled(true)),
       new InstantCommand(() -> elevator.setIsCalibrated())
     );
