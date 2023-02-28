@@ -28,7 +28,6 @@ public class DeployingBar extends SubsystemBase {
   public DeployingBar() {
     m_motor = MotorFactory.createTalonFX(DeployingBarConstants.kMotor, Constants.kRioCAN);
     m_motor.setNeutralMode(NeutralMode.Brake);
-    m_motor.setSafetyEnabled(true);
     m_encoder = new TalonEncoder(m_motor);
     m_encoder.setDistancePerPulse(DeployingBarConstants.kDistancePerPulse);
     m_encoder.reset();
@@ -40,10 +39,6 @@ public class DeployingBar extends SubsystemBase {
   public void periodic() {
     if(isEnabled){
       m_motor.set(ControlMode.PercentOutput, m_pid.calculate(m_encoder.getDistance()));
-    }
-    else{
-      //m_motor.set(ControlMode.PercentOutput, 0);
-      m_motor.feed();
     }
   }
 

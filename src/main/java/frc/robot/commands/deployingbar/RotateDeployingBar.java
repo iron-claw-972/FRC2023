@@ -10,6 +10,7 @@ public class RotateDeployingBar extends CommandBase {
    * Creates a new RotateDeployingBar
    *
    * @param subsystem The subsystem used by this command.
+   * @param setpoint The pid setpoint used by this command.
    */
   public RotateDeployingBar(DeployingBar deployingBar, double setpoint) {
     m_deployingBar = deployingBar;
