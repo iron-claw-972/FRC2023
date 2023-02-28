@@ -86,6 +86,8 @@ public class RobotContainer {
     // Create Drivetrain, because every robot will have a drivetrain
     m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab, m_vision);
     m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
+    m_operator = new Operator(m_vision);
+    m_operator.configureControls();
 
     // If the robot is the competition robot, create the arm and intake
     if (Robot.kRobotId == RobotId.SwerveCompetition) {
@@ -94,13 +96,12 @@ public class RobotContainer {
       m_intake = new Intake();
       m_deployingBar = null;
 
-      m_operator = new Operator(m_drive, m_arm, m_vision, m_intake, m_deployingBar);
       m_testController = new TestController(m_arm, m_intake);
       m_manualController = new ManualController(m_arm, m_intake);
 
-      m_operator.configureControls();
-      //TODO: add back controls once deploying bar is installed
-      //m_operator.configureControls(m_deployingBar);
+      m_operator.configureControls(m_arm);
+      m_operator.configureControls(m_intake);
+      // m_operator.configureControls(m_deployingBar);
       m_testController.configureControls();
       m_manualController.configureControls();
 
@@ -112,8 +113,6 @@ public class RobotContainer {
       m_intake = null;
       m_deployingBar = null;
 
-      m_operator = new Operator(m_drive, m_arm, m_vision, m_intake, m_deployingBar);
-      m_operator.configureControls();
       m_testController = null;
       m_manualController = null;
     }
