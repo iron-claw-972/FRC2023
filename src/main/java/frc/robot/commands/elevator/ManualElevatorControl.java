@@ -26,9 +26,9 @@ public class ManualElevatorControl extends CommandBase {
 
   @Override
   public void execute() {
-    if (m_manualController.returnClampedLeftJoyValue() !=0){
+    if (m_manualController.getManualElevatorPower() !=0){
       m_elevator.setPIDEnabled(false); 
-      m_elevator.setMotorPower(m_manualController.returnClampedLeftJoyValue());
+      m_elevator.setMotorPower(m_manualController.getManualElevatorPower());
     }else{
       m_elevator.setPIDEnabled(true); 
       m_currentElevatorPos = m_elevator.getElevatorExtension(); 

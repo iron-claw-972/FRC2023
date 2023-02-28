@@ -64,11 +64,8 @@ public class Elevator extends SubsystemBase {
   @Override
   public void periodic() {
     if(m_enabled && m_isCalibrated) {
-      double pid = m_elevatorPID.calculate(getElevatorExtension(), MathUtil.clamp(m_elevatorPID.getSetpoint(), ElevatorConstants.kMinExtension, ElevatorConstants.kMaxExtension));
-      double pidClamped = MathUtil.clamp(pid, -ElevatorConstants.kPowerLimit, ElevatorConstants.kPowerLimit);
-      double finalMotorPower = pidClamped; 
-      
-      setMotorPower(finalMotorPower);
+      double pidPower = m_elevatorPID.calculate(getElevatorExtension(), MathUtil.clamp(m_elevatorPID.getSetpoint(), ElevatorConstants.kMinExtension, ElevatorConstants.kMaxExtension));
+      setMotorPower(pidPower);
     } else {
       //m_motor.feed();
     }
@@ -84,14 +81,15 @@ public class Elevator extends SubsystemBase {
   /**
    * Set the motor power while taking the limit switches into account. 
    * If the bottom limit switch is tripped, then the elevator is only allowed to move up. 
-   * If the top limit switch is tripped, then the elevator is inly allowed to move down. 
+   * If the top limit switch is tripped, then the elevator is inly allowed to move down.
+   * The motor power will also be clamped to the max power constant value.
    * @param power the power we want to give to the motor
    */
   public void setMotorPower(double power) {
     if ( (isBottomSwitchTripped() && power < 0) || (isTopSwitchTripped() && power > 0) ){
       m_motor.set(0); 
     } else {
-      m_motor.set(power);
+      m_motor.set(MathUtil.clamp(power, -ElevatorConstants.kPowerLimit, ElevatorConstants.kPowerLimit));
     }
   }
   

@@ -8,6 +8,7 @@ import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.Intake;
+import frc.robot.util.Functions;
 import lib.controllers.GameController;
 import lib.controllers.GameController.Axis;
 import lib.controllers.GameController.Button;
@@ -48,11 +49,7 @@ public class ManualController {
     }
     
   }
-  public double returnClampedLeftJoyValue() {
-    double joystick_value = m_manual.get(Axis.LEFT_Y); 
-    if(Math.abs(joystick_value) < 0.1){
-      return 0; 
-    }
-    return MathUtil.clamp(m_manual.get(Axis.LEFT_Y),-ElevatorConstants.kPowerLimit, ElevatorConstants.kPowerLimit);
+  public double getManualElevatorPower() {
+    return Functions.deadband(m_manual.get(Axis.LEFT_Y), OIConstants.kDeadband);
   }
 }
