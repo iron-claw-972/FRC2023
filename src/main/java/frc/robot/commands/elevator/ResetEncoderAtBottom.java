@@ -33,5 +33,3 @@ public class ResetEncoderAtBottom extends CommandBase {
     return m_elevator.isBottomSwitchTripped();
   }
 }
-
-
