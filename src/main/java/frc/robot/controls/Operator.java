@@ -9,9 +9,12 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.commands.arm.ExtendToPosition;
 import frc.robot.commands.DoNothing;
 import frc.robot.constants.ArmConstants;
+import frc.robot.commands.deployingbar.RotateDeployingBar;
+import frc.robot.constants.DeployingBarConstants;
 import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.FourBarArm;
+import frc.robot.subsystems.DeployingBar;
 import frc.robot.subsystems.Intake;
 import frc.robot.util.Node;
 import frc.robot.util.Vision;
@@ -28,6 +31,7 @@ public class Operator {
   private FourBarArm m_arm;
   private Vision m_vision;
   private Intake m_intake;
+  private DeployingBar m_deployingBar;
 
   // Values for selecting a node
   // Grid, row, and column in the grid
@@ -36,18 +40,20 @@ public class Operator {
   // The selected node where the robot will score
   public static Node selectedNode = new Node();
 
-  public Operator(Drivetrain drive, FourBarArm arm, Vision vision, Intake intake){
+  public Operator(Drivetrain drive, FourBarArm arm, Vision vision, Intake intake, DeployingBar deployingBar){
     m_drive = drive;
     m_arm = arm;
     m_vision = vision;
     m_intake = intake;
+    m_deployingBar = deployingBAr;
     m_operator = new GameController(OIConstants.kOperatorJoy);
     selectValue(0, 1);
   }
-
+  
   /**
-   * Configures all of the operator controls.
+   * Configures the operator controls for the deploying Bar.
    */
+
   public void configureControls() {
     // Selects which grid to score in
     m_operator.get(LEFT_STICK_LEFT).onTrue(new InstantCommand(() -> selectValue(0, 1)));
@@ -98,9 +104,8 @@ public class Operator {
       m_operator.get(m_operator.LEFT_TRIGGER_BUTTON).onTrue(new InstantCommand(() -> m_intake.intake(-1)));
       m_operator.get(m_operator.LEFT_TRIGGER_BUTTON).onFalse(new InstantCommand(() -> m_intake.stop()));
       // Extends the bar
-      // These commands don't exist yet
-      // m_operator.get(Button.B).onTrue(new ExtendBar());
-      // m_operator.get(Button.B).onFalse(new RetractBar());
+      m_operator.get(Button.B).onTrue(new RotateDeployingBar(m_deployingBar, DeployingBarConstants.kMaxRotation));
+      m_operator.get(Button.B).onFalse(new RotateDeployingBar(m_deployingBar, DeployingBarConstants.kMinRotation));
     }
 
     // Prints that operator controls are working
