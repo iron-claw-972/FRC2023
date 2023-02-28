@@ -1,20 +1,35 @@
 package frc.robot.commands.elevator;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.constants.ElevatorConstants;
 import frc.robot.subsystems.Elevator;
 
-public class CalibrateElevator extends SequentialCommandGroup {
+public class CalibrateElevator extends CommandBase {
+  
+  private final Elevator m_elevator; 
   
   /**
-   * Sequential command group that runs the commands {@link ResetEncoderAtBottom} and {@link CalibrateMaxExtension} to calibrate the elevator.
+   * First part of calibration sequence. Resets the elevator by resetting the encoder after it hits the bottom limit switch. 
    */
   public CalibrateElevator(Elevator elevator) {
-    addCommands(
-      new ResetEncoderAtBottom(elevator), 
-      //new CalibrateMaxExtension(elevator),
-      new InstantCommand(() -> elevator.setPIDEnabled(true)),
-      new InstantCommand(() -> elevator.setIsCalibrated())
-    );
+    m_elevator = elevator; 
+    addRequirements(m_elevator);
+  }
+
+  @Override
+  public void initialize() {
+    m_elevator.setPIDEnabled(false); 
+    m_elevator.setMotorPower(-ElevatorConstants.kCalibrationPower); 
+  }
+
+  @Override
+  public void end(boolean interrupted) {
+    m_elevator.resetTalonEncoder();
+    m_elevator.setMotorPower(0); 
+  }
+  
+  @Override
+  public boolean isFinished() {
+    return m_elevator.isBottomSwitchTripped();
   }
 }
