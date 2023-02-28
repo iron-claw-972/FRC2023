@@ -27,10 +27,10 @@ public class ToCenterAndBack extends SequentialCommandGroup{
         initialPose = new Pose2d(-.5,0, startRot);//it is -0.5 to account for significant error in which it did not come back all the way
 
         addCommands(
-            new SimplePresetSteerAngles(m_drive),
-            new GoToPose(m_drive, centerPose), 
-            new WaitCommand(1),
-            new GoToPose(m_drive, initialPose)
+            new SimplePresetSteerAngles(m_drive), //pre align wheels reduce rotation time
+            new GoToPose(m_drive, centerPose), // drives in to the center for mobility points
+            // new WaitCommand(1), // wait to ensure correct stopping (for testing)
+            new GoToPose(m_drive, initialPose) // return next to grid
            
         );
     }
