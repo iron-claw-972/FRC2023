@@ -130,10 +130,7 @@ public class DriveConstants {
    * Updates the constants if the RobotId is not the competition robot.
    */
   public static void update() {
-    if (true){//Robot.kRobotId == RobotId.SwerveTest) {
-      // for (int i = 0 ; i< 5000; i++){
-      System.out.println("contsns switch");
-      // }
+    if (Robot.kRobotId == RobotId.SwerveTest) {
   
       kTrackWidth = Units.inchesToMeters(22.75); //22.75 swerve bot, 20.75 comp bot
   
