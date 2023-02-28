@@ -318,13 +318,12 @@ public class Drivetrain extends SubsystemBase {
           )
         );
       }
-
       m_fieldDisplay.setRobotPose(m_poseEstimator.getEstimatedPosition());
-
     }
   }
+  
   /**
-  * 
+  * Returns the angular rate from the pigeon.
   * @param id 0 for x, 1 for y, 2 for z
   * @return the rate in rads/s from the pigeon
   */
@@ -335,7 +334,7 @@ public class Drivetrain extends SubsystemBase {
     m_pigeon.getRawGyro(rawGyros);
 
     // outputs in deg/s, so convert to rad/s
-    return rawGyros[id];
+    return Units.degreesToRadians(rawGyros[id]);
   }
   
   /**
@@ -488,8 +487,6 @@ public class Drivetrain extends SubsystemBase {
     m_drivetrainTab.addNumber("Gyro Y", () -> getAngularRate(1));
     m_drivetrainTab.addNumber("Gyro Z", () -> getAngularRate(2));
 
-   
-    
     //m_drivetrainTab.addNumber("Estimated X pos (m)", ()-> m_odometry.getPoseMeters().getX());
     //m_drivetrainTab.addNumber("Estimated Y pos (m)", ()-> m_odometry.getPoseMeters().getY());
     
