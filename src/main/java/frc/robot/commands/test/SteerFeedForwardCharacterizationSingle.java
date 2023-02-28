@@ -23,6 +23,7 @@ public class SteerFeedForwardCharacterizationSingle extends CommandBase {
 
   public SteerFeedForwardCharacterizationSingle(Drivetrain drive) {
     m_drive = drive;
+    m_moduleChooser = drive.getModuleChooser();
     addRequirements(drive);
   }
   

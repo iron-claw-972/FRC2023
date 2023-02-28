@@ -138,6 +138,7 @@ public class RobotContainer {
     m_drive.setupModulesShuffleboard();
     m_vision.setupVisionShuffleboard();
     m_driver.setupShuffleboard();
+    m_vision.logging();
     
     addTestCommands();
 
