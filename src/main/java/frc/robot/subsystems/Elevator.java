@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 import frc.robot.constants.ElevatorConstants;
+import frc.robot.util.LogManager;
 import frc.robot.util.MotorFactory;
 import lib.ctre_shims.TalonEncoder;
 
@@ -53,7 +54,7 @@ public class Elevator extends SubsystemBase {
     addChild("Bottom Limit",m_bottomLimitSwitch);
 
 
-    LogManager.addDouble("Elevator/error", () -> getError());
+    //LogManager.addDouble("Elevator/error", () -> getError());
     
     //m_motor.setSafetyEnabled(true);
     setUpElevatorTab();

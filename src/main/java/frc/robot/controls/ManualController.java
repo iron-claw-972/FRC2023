@@ -42,9 +42,9 @@ public class ManualController {
     
     if(m_elevator != null){
       //Move to min height
-      m_manual.get(Button.RB).onTrue(new MoveToExtension(m_elevator, ElevatorConstants.kMinExtension)); 
+      //m_manual.get(Button.RB).onTrue(new MoveToExtension(m_elevator, ElevatorConstants.kMinExtension)); 
       //Calibrate elevator using inbuilt motor encoders
-      m_manual.get(DPad.DOWN).onTrue(new ResetEncoderAtBottom(m_elevator));
+      //m_manual.get(DPad.DOWN).onTrue(new ResetEncoderAtBottom(m_elevator));
       //TODO: calibrate elevator using absolute encoders(probably will not work yet as of 2/15/2023);
       //move to bottom node height
     }
