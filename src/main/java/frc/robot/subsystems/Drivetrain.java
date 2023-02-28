@@ -43,7 +43,6 @@ import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.constants.swerve.ModuleConstants;
 import frc.robot.util.LogManager;
 import frc.robot.util.Vision;
-
 /** 
  * Represents a swerve drive style drivetrain.
  * 

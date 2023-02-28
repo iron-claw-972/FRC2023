@@ -13,7 +13,9 @@ public class GoOverChargeStation extends SequentialCommandGroup{
     private Drivetrain m_drive;
     private Pose2d chargePose, gamePiecePose;
     private Rotation2d startRot;
-
+    /*
+     * drives to game piece then back to charge station then finally balances on charge station.
+     */
     public GoOverChargeStation(Drivetrain drive)  {
         m_drive = drive;
 
