@@ -9,7 +9,10 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.constants.VisionConstants;
 
-/**Class to store data about scoring locations*/
+/**
+ * Class to store data about scoring locations
+ * Stores location of node relative to driver's perspective
+*/
 public class NodeLegecy {
   // Possible node types
   public enum Types {CONE, CUBE, HYBRID};

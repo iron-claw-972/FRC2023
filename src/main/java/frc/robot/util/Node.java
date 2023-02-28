@@ -8,7 +8,7 @@ import frc.robot.constants.FieldConstants;
 
 /**
  * Class to store data about scoring locations
- * Unlike the other Node class, columns are measured from field border to barrier instead of left to right
+ * positions are stored from field border to barrier instead of left to right
  */
 public class Node {
 
@@ -39,7 +39,7 @@ public class Node {
    * @param row
    *  row it's in (1 = bottom, 2 = middle, 3 = top)
    * @param column
-   *  column from field boundary to other boundary (1 to 9)
+   *  column from field boundary to loading zone (1 to 9)
    */
   public Node(Vision vision, Alliance alliance, int row, int column) {
 
@@ -54,8 +54,14 @@ public class Node {
           : NodeType.CONE;
 
     // Starting locations
-    double x = (alliance == Alliance.Blue ? FieldConstants.kBlueAllianceNodeStartX : FieldConstants.kRedAllianceNodeStartX);
+    double x = (alliance == Alliance.Blue ? 
+      FieldConstants.kBlueAllianceNodeStartX : 
+      FieldConstants.kRedAllianceNodeStartX
+    );
     double y = FieldConstants.kNodeStartY;
+
+    // add or subtract Robot offset from node tape
+    x += FieldConstants.kRobotOffsetX * (alliance == Alliance.Blue ? 1 : -1);
 
     // Distance from the field boundary to the boundary separating the grid and loading zone
     switch (column) {
@@ -87,7 +93,6 @@ public class Node {
         y += 4.978;  
         break;
     }
-    x += FieldConstants.kRobotOffsetX * (alliance == Alliance.Blue ? 1 : -1);
     scorePose = new Pose2d(x, y, new Rotation2d());
   }
 }

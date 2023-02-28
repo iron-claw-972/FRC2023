@@ -95,17 +95,18 @@ public class Vision {
     
     if (estimatedPoses.size() == 2) {
       return new Pose2d(
-        estimatedPoses.get(0).estimatedPose.toPose2d().getTranslation().plus(
-          estimatedPoses.get(1).estimatedPose.toPose2d().getTranslation()
-          ).div(2),
+        estimatedPoses.get(0).estimatedPose.toPose2d().getTranslation()
+          .plus(estimatedPoses.get(1).estimatedPose.toPose2d().getTranslation())
+          .div(2),
           
           new Rotation2d(Functions.modulusMidpoint(
             estimatedPoses.get(0).estimatedPose.toPose2d().getRotation().getRadians(),
             estimatedPoses.get(1).estimatedPose.toPose2d().getRotation().getRadians(),
             -Math.PI, Math.PI
-            ))
-            );
-          }
+          )
+        )
+      );
+    }
           
     //TODO: VERY LOW PRIORITY FOR FUTURE ROBOTS, make the rotation average work with more than 2 cameras
     // for(int i = 0; i < estimatedPoses.size(); i ++){
