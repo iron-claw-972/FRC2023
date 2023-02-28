@@ -17,8 +17,8 @@ public class Operator {
    * Configures the operator controls for the deploying Bar.
    */
   public void configureControls(DeployingBar deployingBar) {
-    operator.get(Button.A).onTrue(new RotateDeployingBar(deployingBar, DeployingBarConstants.kMaxRotation));
-    operator.get(Button.B).onTrue(new RotateDeployingBar(deployingBar, DeployingBarConstants.kMinRotation));
+    operator.get(Button.A).onTrue(new RotateDeployingBar(deployingBar, DeployingBarConstants.kStowRotation));
+    operator.get(Button.B).onTrue(new RotateDeployingBar(deployingBar, DeployingBarConstants.kDeployedRotation));
   }
 
   /**
