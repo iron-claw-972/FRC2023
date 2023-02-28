@@ -179,7 +179,6 @@ public class RobotContainer {
     m_testTab.add("Cancel Command", new InstantCommand( () -> CommandScheduler.getInstance().cancelAll()));
     m_drive.addTestCommands(m_testTab, testEntry);
     m_vision.addTestCommands(m_testTab, testEntry, m_drive);
-
   }
 
   /**
@@ -200,10 +199,7 @@ public class RobotContainer {
     m_autoCommand.addOption("EngageNoPathplanner", new EngageNoPathplanner(m_drive));
     m_autoCommand.addOption("EngageFromCenterGrid", new EngageFromCenterGrid(m_drive));
     m_autoCommand.addOption("GoOverChargeStation", new GoOverChargeStation(m_drive));
-    
    }
-    
-
 
   /**
    * Loads the command scheduler shuffleboard which will add event markers whenever a command finishes, ends, or is interrupted.

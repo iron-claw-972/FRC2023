@@ -11,10 +11,14 @@ import frc.robot.subsystems.Drivetrain;
 public class AlignWheelsToZero extends CommandBase{
   
   private final Drivetrain m_drive;
+  private double angle;
 
-  public AlignWheelsToZero(Drivetrain drive) {
+  public AlignWheelsToZero(Drivetrain drive, double angle) {
     m_drive = drive;
     addRequirements(m_drive);
+  }
+  AlignWheelsToZero(Drivetrain drive, Rotation2d angle){
+    this(drive, angle.getRadians());
   }
 
   @Override
@@ -26,10 +30,10 @@ public class AlignWheelsToZero extends CommandBase{
   @Override
   public void execute() {
     m_drive.setModuleStates(new SwerveModuleState[] {
-      new SwerveModuleState(0, new Rotation2d(0)),
-      new SwerveModuleState(0, new Rotation2d(0)),
-      new SwerveModuleState(0, new Rotation2d(0)),
-      new SwerveModuleState(0, new Rotation2d(0))
+      new SwerveModuleState(0, new Rotation2d(angle)),
+      new SwerveModuleState(0, new Rotation2d(angle)),
+      new SwerveModuleState(0, new Rotation2d(angle)),
+      new SwerveModuleState(0, new Rotation2d(angle))
     });
   }
   
