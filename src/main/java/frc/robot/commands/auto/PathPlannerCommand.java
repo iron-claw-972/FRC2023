@@ -54,9 +54,9 @@ public class PathPlannerCommand extends SequentialCommandGroup{
                 path, 
                 drive::getPose, // Pose supplier
                 drive.getKinematics(), // SwerveDriveKinematics
-                drive.getPathplannerXController(), // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
-                drive.getPathplannerYController(), // Y controller (usually the same values as X controller)
-                drive.getPathplannerRotationController(), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+                drive.getPathplannerXController(), // X controller can't normal PID as pathplanner has Feed Forward 
+                drive.getPathplannerYController(), // Y controller can't normal PID as pathplanner has Feed Forward 
+                drive.getPathplannerRotationController(), // Rotation controller can't normal PID as pathplanner has Feed Forward 
                 drive::setModuleStates, // Module states consumer
                 true,
                 drive // Requires this drive subsystem
