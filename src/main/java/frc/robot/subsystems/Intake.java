@@ -31,6 +31,9 @@ public class Intake extends SubsystemBase {
   private boolean m_hasCube = false;
   private double m_startTime = 0;
 
+  private double m_range = -1;
+  private double m_timestamp = -1;
+
   public Intake(ShuffleboardTab intakeTab) {
     m_leftMotor = new CANSparkMax(IntakeConstants.kLeftMotorPort, MotorType.kBrushless);
     m_rightMotor = new CANSparkMax(IntakeConstants.kRightMotorPort, MotorType.kBrushless);
@@ -38,6 +41,7 @@ public class Intake extends SubsystemBase {
     m_rightMotor.restoreFactoryDefaults();
     m_intakeTab = intakeTab;
     m_distSensor.setAutomaticMode(true);
+    m_distSensor.setEnabled(true);
     setupShuffleboard();
   }
 
@@ -57,32 +61,51 @@ public class Intake extends SubsystemBase {
 
   @Override
   public void periodic() {
-    double range = m_distSensor.getRange();
-    if (range == -1 || range > IntakeConstants.kCubeDistanceThreshold + IntakeConstants.kCubeDistanceTolerance) { // Empty intake
-      m_startTime = Timer.getFPGATimestamp();
-      m_hasCone = false;
-      m_hasCube = false;
-    } 
-    else if (range < IntakeConstants.kConeDistanceThreshold) { // Cone
-      m_hasCone = true;
-      m_hasCube = false;
-    } 
-    else if (range > IntakeConstants.kConeDistanceThreshold && range < IntakeConstants.kCubeDistanceThreshold + IntakeConstants.kCubeDistanceTolerance){ // Cube
-      if (Timer.getFPGATimestamp() + IntakeConstants.kCubeTimeThreshold >= m_startTime) {
+
+    if (m_distSensor.isRangeValid()) {
+      double range = m_distSensor.getRange();
+
+      if (range == -1 || range > IntakeConstants.kCubeDistanceThreshold + IntakeConstants.kCubeDistanceTolerance) { // Empty intake
+        m_startTime = Timer.getFPGATimestamp();
         m_hasCone = false;
-        m_hasCube = true;
+        m_hasCube = false;
+      } 
+      else if (range < IntakeConstants.kConeDistanceThreshold) { // Cone
+        m_hasCone = true;
+        m_hasCube = false;
+      } 
+      else if (range > IntakeConstants.kConeDistanceThreshold && range < IntakeConstants.kCubeDistanceThreshold + IntakeConstants.kCubeDistanceTolerance){ // Cube
+        if (Timer.getFPGATimestamp() + IntakeConstants.kCubeTimeThreshold >= m_startTime) {
+          m_hasCone = false;
+          m_hasCube = true;
+        }
+        else {
+        m_startTime = Timer.getFPGATimestamp();
+        m_hasCone = false;
+        m_hasCube = false;
+        }
       }
-      else {
-      m_startTime = Timer.getFPGATimestamp();
-      m_hasCone = false;
-      m_hasCube = false;
-      }
+    }
+
+    if (m_distSensor.isRangeValid()) {
+      m_timestamp = m_distSensor.getTimestamp();
+      m_range = m_distSensor.GetRange();
     }
   }
 
-  private void setupShuffleboard(){
-    m_intakeTab.addDouble("Proximity", m_distSensor::getRange);
-    m_intakeTab.addDouble("Timestamp", m_distSensor::getTimestamp);
+  public double getRange() {
+    return m_range;
+  }
+
+  public double getTimestamp() {
+    return m_timestamp;
+  }
+
+
+
+  private void setupShuffleboard() {
+    m_intakeTab.addDouble("Proximity", this::getRange);
+    m_intakeTab.addDouble("Timestamp", this::getTimestamp);
   }
   
 } 
