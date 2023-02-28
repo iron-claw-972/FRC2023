@@ -32,8 +32,7 @@ public class EngageNoPathplanner extends SequentialCommandGroup{
         leftUnrotatedPose = new Pose2d(5, 1.75, startRot);
 
         addCommands(
-            new SimplePresetSteerAngles(m_drive),
-            new GoToPose(m_drive, centerPose),
+            new GoToPose(m_drive, centerPose), // go to center area for mobility points
             new GoToPose(m_drive, rightUnrotatedPose),//alternatively could make it poseRightRotated, but this is untested
             new GoToPose(m_drive, chargePose),//if starting on left side of charge station, use left pose instead
             new BalanceCommand(m_drive)
