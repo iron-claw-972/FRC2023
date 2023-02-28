@@ -1,6 +1,5 @@
 package frc.robot.controls;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.arm.ExtendToPosition;
 import frc.robot.commands.elevator.CalibrateElevator;
@@ -13,7 +12,6 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.Intake;
 import lib.controllers.GameController;
-import lib.controllers.GameController.Axis;
 import lib.controllers.GameController.Button;
 import lib.controllers.GameController.DPad;
 
@@ -50,18 +48,6 @@ public class TestController {
       test.get(Button.A).onTrue(new MoveToExtension(m_elevator, ElevatorConstants.kMiddleNodeHeightExtension));
       test.get(Button.B).onTrue(new MoveToExtension(m_elevator, ElevatorConstants.kTopNodeHeightExtension));
       test.get(Button.Y).onTrue(new MoveToExtension(m_elevator, ElevatorConstants.kMinExtension));
-
     }
-    
-    }
-
-  public double returnClampedLeftJoyValue() {
-    double joystick_value = test.get(Axis.LEFT_Y); 
-    if(Math.abs(joystick_value) < 0.1){
-      return 0; 
-    }
-    return MathUtil.clamp(test.get(Axis.LEFT_Y),-ElevatorConstants.kPowerLimit, ElevatorConstants.kPowerLimit);
   }
-
-
 }
