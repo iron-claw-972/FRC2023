@@ -32,7 +32,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commands.GoToPose;
-import frc.robot.commands.PoseTransform;
 import frc.robot.commands.test.CircleDrive;
 import frc.robot.commands.test.DriveFeedForwardCharacterization;
 import frc.robot.commands.test.GoToPoseTest;
@@ -688,7 +687,7 @@ public class Drivetrain extends SubsystemBase {
         new Pose2d(new Translation2d(1,1), new Rotation2d(Math.PI)), 
         true
       ));
-    m_testTab.add("Reset Pose", new InstantCommand(()-> {
+    testTab.add("Reset Pose", new InstantCommand(()-> {
       this.resetOdometry(
         new Pose2d(
           this.getRequestedXPos().getDouble(0),

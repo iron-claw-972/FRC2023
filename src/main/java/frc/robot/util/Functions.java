@@ -62,6 +62,7 @@ public class Functions {
    * @return angle of points in radians 
    * 
    */
+  @Deprecated
   public static double calculateAngle(double x, double y) {
     if (x > 0) return Math.atan(y/x);
     if (x < 0) return Math.atan(y/x) + Math.PI;

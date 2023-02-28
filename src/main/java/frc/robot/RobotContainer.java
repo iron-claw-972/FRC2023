@@ -169,7 +169,7 @@ public class RobotContainer {
   public void addTestCommands() {
     GenericEntry testEntry = m_testTab.add("Test Results", false).getEntry();
     m_testTab.add("Cancel Command", new InstantCommand( () -> CommandScheduler.getInstance().cancelAll()));
-    m_drive.addTestCommands(testEntry);
+    m_drive.addTestCommands(m_testTab, testEntry);
     m_vision.addTestCommands(m_testTab, testEntry, m_drive);
 
   }
