@@ -48,6 +48,8 @@ public class ElevatorConstants {
   /* Leison was here*/
   public static final double kPowerLimit = 0.5; //1
 
+  public static final double kTolerance = 0.03;
+
   public static double heightToElevatorExtension(double height){
     return (height - Units.inchesToMeters(10.5))/Math.sin(Units.degreesToRadians(55)); 
   }

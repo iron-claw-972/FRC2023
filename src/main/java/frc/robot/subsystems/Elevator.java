@@ -44,21 +44,16 @@ public class Elevator extends SubsystemBase {
     addChild("motor", m_motor);
    
     m_elevatorPID = new PIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD);
-    //m_elevatorTab.add("pid",m_elevatorPID);
-    //m_elevatorTab.addNumber("",()-> getHeight());
-    m_elevatorPID.setTolerance(0.03);
+    m_elevatorPID.setTolerance(ElevatorConstants.kTolerance);
 
     m_topLimitSwitch = new DigitalInput(ElevatorConstants.kTopLimitSwitchPort); 
     m_bottomLimitSwitch = new DigitalInput(ElevatorConstants.kBottomLimitSwitchPort); 
     addChild("Upper Limit",m_topLimitSwitch);
     addChild("Bottom Limit",m_bottomLimitSwitch);
 
-
     LogManager.addDouble("Elevator/error", () -> getError());
     
-    //m_motor.setSafetyEnabled(true);
     setUpElevatorTab();
-    //setTargetExtension(0.1); 
   }
 
   @Override
@@ -66,8 +61,6 @@ public class Elevator extends SubsystemBase {
     if(m_enabled && m_isCalibrated) {
       double pidPower = m_elevatorPID.calculate(getElevatorExtension(), MathUtil.clamp(m_elevatorPID.getSetpoint(), ElevatorConstants.kMinExtension, ElevatorConstants.kMaxExtension));
       setMotorPower(pidPower);
-    } else {
-      //m_motor.feed();
     }
   }
 
@@ -154,7 +147,6 @@ public class Elevator extends SubsystemBase {
     m_elevatorTab.addBoolean("enabled", () -> m_enabled);
     m_elevatorTab.addBoolean("topLimitSwitch", () -> isTopSwitchTripped() );
     m_elevatorTab.addBoolean("bottomLimitSwitch", () -> isBottomSwitchTripped());
-
   }
 }
 
