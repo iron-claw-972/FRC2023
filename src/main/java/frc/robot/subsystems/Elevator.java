@@ -66,7 +66,6 @@ public class Elevator extends SubsystemBase {
 
   public void close() {
     // close the ports
-    //TODO: Is there any way to close the ports of the limit switches attached to the motor? 
     m_topLimitSwitch.close(); 
     m_bottomLimitSwitch.close(); 
   }
@@ -79,28 +78,28 @@ public class Elevator extends SubsystemBase {
    * @param power the power we want to give to the motor
    */
   public void setMotorPower(double power) {
-    if ( (isBottomSwitchTripped() && power < 0) || (isTopSwitchTripped() && power > 0) ){
+    if ((isBottomSwitchTripped() && power < 0) || (isTopSwitchTripped() && power > 0)) {
       m_motor.set(0); 
     } else {
       m_motor.set(MathUtil.clamp(power, -ElevatorConstants.kPowerLimit, ElevatorConstants.kPowerLimit));
     }
   }
   
-  public void setPIDEnabled(boolean isEnabled){
+  public void setPIDEnabled(boolean isEnabled) {
     m_enabled = isEnabled; 
   }
 
-  public void setIsCalibrated(){
+  public void setIsCalibrated() {
     m_isCalibrated = true; 
   }
 
-  public void setTargetExtension(double setpoint){
-    if(setpoint > ElevatorConstants.kMaxExtension){
+  public void setTargetExtension(double setpoint) {
+    if(setpoint > ElevatorConstants.kMaxExtension) {
       System.out.println("SETPOINT IS MORE THAN THE MAX EXTENSION!!!!!!!!!!!"); 
       return; 
     }
 
-    if(setpoint <0){
+    if(setpoint <0) {
       System.out.println("SETPOINT IS LESS THAN THE MIN EXTENSION!!!!!!!!!!!"); 
       return; 
     }
@@ -109,15 +108,15 @@ public class Elevator extends SubsystemBase {
     m_elevatorPID.reset(); 
   }
 
-  public boolean isBottomSwitchTripped(){
+  public boolean isBottomSwitchTripped() {
     return !m_bottomLimitSwitch.get();
   }
 
-  public boolean isTopSwitchTripped(){
+  public boolean isTopSwitchTripped() {
     return !m_topLimitSwitch.get();
   }
 
-  public void resetTalonEncoder(){
+  public void resetTalonEncoder() {
     m_talonEncoder.reset(); 
   }
  
@@ -141,7 +140,7 @@ public class Elevator extends SubsystemBase {
     return getElevatorExtension() - m_elevatorPID.getSetpoint();
   }
 
-  public void setUpElevatorTab(){
+  public void setUpElevatorTab() {
     m_elevatorTab.addNumber("Elevator Height", () -> getElevatorExtension());
     m_elevatorTab.add(m_elevatorPID); 
     m_elevatorTab.addBoolean("enabled", () -> m_enabled);

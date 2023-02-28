@@ -17,7 +17,7 @@ public class MoveToExtension extends CommandBase {
   }
 
   @Override
-  public void initialize(){
+  public void initialize() {
     m_elevator.setTargetExtension(m_targetExtension); 
     m_elevator.setPIDEnabled(true);
   }

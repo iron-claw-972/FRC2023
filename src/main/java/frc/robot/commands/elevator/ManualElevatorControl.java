@@ -8,7 +8,6 @@ public class ManualElevatorControl extends CommandBase {
   
   private final Elevator m_elevator; 
   private final ManualController m_manualController;
-  private double m_currentElevatorPos;
   
   /**
    * Enables manual control of the elevator.
@@ -26,13 +25,12 @@ public class ManualElevatorControl extends CommandBase {
 
   @Override
   public void execute() {
-    if (m_manualController.getManualElevatorPower() !=0){
+    if (m_manualController.getManualElevatorPower() !=0) {
       m_elevator.setPIDEnabled(false); 
       m_elevator.setMotorPower(m_manualController.getManualElevatorPower());
-    }else{
-      m_elevator.setPIDEnabled(true); 
-      m_currentElevatorPos = m_elevator.getElevatorExtension(); 
-      m_elevator.setTargetExtension(m_currentElevatorPos);
+    } else {
+      m_elevator.setPIDEnabled(true);
+      m_elevator.setTargetExtension(m_elevator.getElevatorExtension());
     }
   }
 }

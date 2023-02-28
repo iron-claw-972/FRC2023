@@ -50,7 +50,7 @@ public class ElevatorConstants {
 
   public static final double kTolerance = 0.03;
 
-  public static double heightToElevatorExtension(double height){
+  public static double heightToElevatorExtension(double height) {
     return (height - Units.inchesToMeters(10.5))/Math.sin(Units.degreesToRadians(55)); 
   }
 }
