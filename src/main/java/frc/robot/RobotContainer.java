@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Robot.RobotId;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.auto.AutoPathNoPlan;
-import frc.robot.commands.auto.EngageBottomPath;
 import frc.robot.commands.auto.EngageFromCenterGrid;
 import frc.robot.commands.auto.EngageNoPathplanner;
 import frc.robot.commands.auto.GoOverChargeStation;
@@ -163,6 +162,7 @@ public class RobotContainer {
    */
   public void addTestCommands() {
     GenericEntry testEntry = m_testTab.add("Test Results", false).getEntry();
+    m_testTab.add("Cancel Command", new InstantCommand( () -> CommandScheduler.getInstance().cancelAll()));
     m_testTab.add("Circle Drive", new CircleDrive(m_drive));
     m_testTab.add("Drive FeedForward", new DriveFeedForwardCharacterization(m_drive));
     m_testTab.add("Steer Single FeedForward", new SteerFeedForwardCharacterizationSingle(m_drive));
@@ -198,7 +198,6 @@ public class RobotContainer {
     m_autoCommand.addOption("Odometry Test 1", new PathPlannerCommand(PathGroupLoader.getPathGroup("Odometry Test 1"), 0 ,m_drive, true));
     m_autoCommand.addOption("Figure 8", new PathPlannerCommand(PathGroupLoader.getPathGroup("Figure 8"), 0 ,m_drive, true));
     m_autoCommand.addOption("To Center And Back", new PathPlannerCommand(PathGroupLoader.getPathGroup("To Center And Back"), 0, m_drive, true));
-    m_autoCommand.addOption("EngageBottomPath", new EngageBottomPath(m_drive));
     m_autoCommand.addOption("Drive out of Community", new PathPlannerCommand(PathGroupLoader.getPathGroup("Drive out of Community"), 0, m_drive, true));
     m_autoCommand.addOption("BottomSimpleLine1", new PathPlannerCommand(PathGroupLoader.getPathGroup("Bottom Simple Line1"), 0 , m_drive, true));
     m_autoCommand.addOption("AutoPathNoPlan", new AutoPathNoPlan(m_drive));
