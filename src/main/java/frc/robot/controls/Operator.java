@@ -1,20 +1,9 @@
 package frc.robot.controls;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.commands.arm.ExtendToPosition;
-import frc.robot.commands.elevator.MoveToExtension;
-import frc.robot.commands.elevator.ResetEncoderAtBottom;
-import frc.robot.constants.ArmConstants;
-import frc.robot.constants.ElevatorConstants;
-import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.OIConstants;
-import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.Intake;
 import lib.controllers.GameController;
-import lib.controllers.GameController.Axis;
 
 public class Operator {
 
@@ -33,6 +22,4 @@ public class Operator {
   public void configureControls() {
 
   }
-
-
 }

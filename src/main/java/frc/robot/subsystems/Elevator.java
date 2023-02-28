@@ -6,11 +6,6 @@
 /*----------------------------------------------------------------------------*/
 
 package frc.robot.subsystems;
-import java.util.logging.LogManager;
-
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
-import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
@@ -18,9 +13,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 import frc.robot.constants.ElevatorConstants;
@@ -44,7 +37,6 @@ public class Elevator extends SubsystemBase {
     m_elevatorTab = elevatorTab; 
     m_motor = MotorFactory.createTalonFX(ElevatorConstants.kMotorPort, Constants.kCanivoreCAN);
     m_motor.setInverted(true);
-    m_motor.setNeutralMode(NeutralMode.Brake);
     m_talonEncoder = new TalonEncoder(m_motor); 
     m_talonEncoder.setDistancePerPulse(ElevatorConstants.kDistPerPulse);
     addChild("motor", m_motor);
@@ -71,11 +63,6 @@ public class Elevator extends SubsystemBase {
 
   @Override
   public void periodic() {
-    /**
-     * If we hit the bottom limit switch, then we must be at the zero position.
-     * Thus set the setpoint to 0, then atSetpoint() will be triggered, causing the 
-     * ResetEncoderAtBottom() command to end
-     */
     if(m_enabled && m_isCalibrated) {
       double pid = m_elevatorPID.calculate(getElevatorExtension());
       double ff = m_elevatorFF.calculate(ElevatorConstants.kVelocity, ElevatorConstants.kAccel); 
@@ -87,7 +74,6 @@ public class Elevator extends SubsystemBase {
     } else {
       //m_motor.feed();
     }
-
   }
 
   public void close() {

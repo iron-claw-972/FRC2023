@@ -4,8 +4,6 @@
 package frc.robot.commands.elevator;
 
 import frc.robot.controls.ManualController;
-import frc.robot.controls.Operator;
-import frc.robot.controls.TestController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Elevator;
 
@@ -30,11 +28,11 @@ public class ManualElevatorControl extends CommandBase {
 
   @Override
   public void execute() {
-    if ((m_manualController.getClampedThrottleValue() > 0) || (m_manualController.getClampedThrottleValue() < 0)){
+    if ((m_manualController.getClampedElevatorThrottleValue() > 0) || (m_manualController.getClampedElevatorThrottleValue() < 0)){
       m_elevator.setPIDEnabled(false); 
-      m_elevator.setSpeedMotorStopWhenLimSwitchesHit(m_manualController.getClampedThrottleValue());
+      m_elevator.setSpeedMotorStopWhenLimSwitchesHit(m_manualController.getClampedElevatorThrottleValue());
     }
-    if(m_manualController.getClampedThrottleValue() == 0){
+    if(m_manualController.getClampedElevatorThrottleValue() == 0){
       m_elevator.setPIDEnabled(true); 
       m_currentElevatorPos = m_elevator.getElevatorExtension(); 
       m_elevator.setTargetExtension(m_currentElevatorPos);
