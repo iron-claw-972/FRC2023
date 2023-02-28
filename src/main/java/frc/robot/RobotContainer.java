@@ -100,7 +100,6 @@ public class RobotContainer {
       m_operator = new Operator(m_deployingBar);
       m_testController = new TestController(m_arm, m_intake, m_elevator);
       m_manualController = new ManualController(m_arm, m_intake, m_elevator);
-      m_deployingBar = null;
 
       m_operator.configureControls(m_intake);
       m_operator.configureControls(m_arm);
