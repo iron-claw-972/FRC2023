@@ -16,7 +16,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.DeployingBar;
 import frc.robot.subsystems.Intake;
-import frc.robot.util.Node;
+import frc.robot.util.NodeLegecy;
 import frc.robot.util.Vision;
 import lib.controllers.GameController;
 import lib.controllers.GameController.Axis;
@@ -38,7 +38,7 @@ public class Operator {
   private int[] selectValues = {1, 1, 1};
 
   // The selected node where the robot will score
-  public static Node selectedNode = new Node();
+  public static NodeLegecy selectedNode = new NodeLegecy();
 
   public Operator(Drivetrain drive, FourBarArm arm, Vision vision, Intake intake, DeployingBar deployingBar){
     m_drive = drive;
@@ -120,7 +120,7 @@ public class Operator {
    */
   public void selectValue(int index, int value){
     selectValues[index] = value;
-    selectedNode = new Node(m_vision, DriverStation.getAlliance(), selectValues[1], selectValues[0]*3-3+selectValues[2]);
+    selectedNode = new NodeLegecy(m_vision, DriverStation.getAlliance(), selectValues[1], selectValues[0]*3-3+selectValues[2]);
   }
 
   private final BooleanSupplier 
