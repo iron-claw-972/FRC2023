@@ -19,18 +19,13 @@ public class ResetEncoderAtBottom extends CommandBase {
   @Override
   public void initialize() {
     m_elevator.setPIDEnabled(false); 
-  }
-
-  @Override
-  public void execute(){
     m_elevator.setMotorPower(-ElevatorConstants.kCalibrationPower); 
   }
-  
+
   @Override
   public void end(boolean interrupted) {
     m_elevator.resetTalonEncoder();
     m_elevator.setMotorPower(0); 
-
   }
   
   @Override
