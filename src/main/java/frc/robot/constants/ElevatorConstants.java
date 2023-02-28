@@ -23,7 +23,7 @@ public class ElevatorConstants {
   public static final double kShelfIntakeHeight = Units.inchesToMeters(37.375);
 
   /** elevator travel distance in meters**/
-  public static final double kMiddleNodeHeightConeExtension = 0.69; // heightToElevatorExtension(kMiddleNodeHeightCone);
+  public static final double kMiddleNodeHeightConeExtension = 0.68; // heightToElevatorExtension(kMiddleNodeHeightCone);
   public static final double kTopNodeHeightConeExtension = 1.39; //1.39 // heightToElevatorExtension(kTopNodeHeightCone);
   
   public static final double kMiddleNodeHeightCubeExtension = heightToElevatorExtension(kMiddleNodeHeightCube);
