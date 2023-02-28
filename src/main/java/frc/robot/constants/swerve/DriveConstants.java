@@ -39,7 +39,7 @@ public class DriveConstants {
   public static double kSteerOffsetFrontLeft = 0.058291152119637;//-3.060285486280918+Math.PI;
   public static double kDriveKSFrontLeft = 0.5309532917741253;
   public static double kDriveKVFrontLeft = 2.3335800153688133;
-  public static double kDrivePFrontLeft = 2*2;
+  public static double kDrivePFrontLeft = 5.5;
   public static double kDriveIFrontLeft = 0;
   public static double kDriveDFrontLeft = 0;
   public static double kSteerKSFrontLeft = 0.7799787873000478;
@@ -54,7 +54,7 @@ public class DriveConstants {
   public static double kSteerOffsetFrontRight = -2.994324445724487;//-3.001994334161282;
   public static double kDriveKSFrontRight = 0.705225250399035;
   public static double kDriveKVFrontRight = 2.1932870453571005;
-  public static double kDrivePFrontRight = 2*2;
+  public static double kDrivePFrontRight = 5.5;
   public static double kDriveIFrontRight = 0;
   public static double kDriveDFrontRight = 0;
   public static double kSteerKSFrontRight = 0.7922475586517754;
@@ -69,7 +69,7 @@ public class DriveConstants {
   public static double kSteerOffsetBackLeft = -2.540267050266266;//0.650406539440155+Math.PI;
   public static double kDriveKSBackLeft = 0.486459484740409;
   public static double kDriveKVBackLeft = 2.4125110222062958;
-  public static double kDrivePBackLeft = 2*2;
+  public static double kDrivePBackLeft = 5.5;
   public static double kDriveIBackLeft = 0;
   public static double kDriveDBackLeft = 0;
   public static double kSteerKSBackLeft = 0.7858221245795006;
@@ -84,7 +84,7 @@ public class DriveConstants {
   public static double kSteerOffsetBackRight = 2.626169800758362;//2.771897681057453;
   public static double kDriveKSBackRight = 0.6282516293779395;
   public static double kDriveKVBackRight = 2.2812532747924257;
-  public static double kDrivePBackRight = 2.2*2;
+  public static double kDrivePBackRight = 5.5;
   public static double kDriveIBackRight = 0;
   public static double kDriveDBackRight = 0;
   public static double kSteerKSBackRight = 0.7914079268516959;
