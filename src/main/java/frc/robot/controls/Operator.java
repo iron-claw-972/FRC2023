@@ -45,7 +45,7 @@ public class Operator {
     m_arm = arm;
     m_vision = vision;
     m_intake = intake;
-    m_deployingBar = deployingBAr;
+    m_deployingBar = deployingBar;
     m_operator = new GameController(OIConstants.kOperatorJoy);
     selectValue(0, 1);
   }
