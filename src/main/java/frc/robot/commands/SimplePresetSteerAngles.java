@@ -13,13 +13,27 @@ public class SimplePresetSteerAngles extends CommandBase{
   private final Drivetrain m_drive;
   private Rotation2d m_rotation;
 
+  /**
+   * sets the angle of module steer to 0 to remove initial turn time and drift
+   * @param drive drivetrain to be used
+   */
   public SimplePresetSteerAngles(Drivetrain drive) {
     this(drive, new Rotation2d());
   }
+  /**
+   * sets the angle of module steer to a angle to remove initial turn time and drift
+   * @param angle angle to set module steer to in radians
+   * @param drive drivetrain to be used
+   */
   public SimplePresetSteerAngles(Drivetrain drive, double angle) {
     this(drive, new Rotation2d(angle));
   }
-  SimplePresetSteerAngles(Drivetrain drive, Rotation2d rotation){
+  /**
+   * sets the angle of module steer to a angle to remove initial turn time and drift
+   * @param rotation rotation to set module steer to
+   * @param drive drivetrain to be used
+   */
+  public SimplePresetSteerAngles(Drivetrain drive, Rotation2d rotation){
     m_drive = drive;
     m_rotation = rotation;
     addRequirements(m_drive);
