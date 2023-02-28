@@ -52,6 +52,10 @@ public class TestController {
     }
 
   public double returnClampedLeftJoyValue() {
+    double joystick_value = test.get(Axis.LEFT_Y); 
+    if(Math.abs(joystick_value) < 0.1){
+      return 0; 
+    }
     return MathUtil.clamp(test.get(Axis.LEFT_Y),-ElevatorConstants.kPowerLimit, ElevatorConstants.kPowerLimit);
   }
 

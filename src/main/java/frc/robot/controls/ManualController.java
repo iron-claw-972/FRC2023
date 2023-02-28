@@ -44,6 +44,10 @@ public class ManualController {
     //move to bottom node height
   }
   public double returnClampedLeftJoyValue() {
-    return MathUtil.clamp(m_manual.get(Axis.LEFT_Y), -ElevatorConstants.kPowerLimit,ElevatorConstants.kPowerLimit);   
+    double joystick_value = m_manual.get(Axis.LEFT_Y); 
+    if(Math.abs(joystick_value) < 0.1){
+      return 0; 
+    }
+    return MathUtil.clamp(m_manual.get(Axis.LEFT_Y),-ElevatorConstants.kPowerLimit, ElevatorConstants.kPowerLimit);
   }
 }
