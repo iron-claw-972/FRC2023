@@ -27,9 +27,6 @@ public class MoveToSelectedPose extends CommandBase {
     double x = Operator.selectedNode.scorePose.getX();
     double y = Operator.selectedNode.scorePose.getY();
     double rot = Operator.selectedNode.scorePose.getRotation().getRadians();
-
-    System.out.printf("Moving to (%.2f, %.2f) at %.2f degrees", x, y, Units.radiansToDegrees(rot));
-
     m_drive.runChassisPID(x, y, rot);
   }
   
