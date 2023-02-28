@@ -31,6 +31,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commands.GoToPose;
 import frc.robot.commands.PoseTransform;
 import frc.robot.commands.test.CircleDrive;
 import frc.robot.commands.test.DriveFeedForwardCharacterization;
@@ -129,7 +130,6 @@ public class Drivetrain extends SubsystemBase {
     m_yPosEntry,
     m_headingEntry;
   private ShuffleboardTab m_swerveModulesTab, m_drivetrainTab;
-  private final ShuffleboardTab m_testTab = Shuffleboard.getTab("Test");
 
   private Double[] m_driveVelFeedForwardSaver = new Double[4];
   private Double[] m_driveStaticFeedForwardSaver = new Double[4];
@@ -674,16 +674,20 @@ public class Drivetrain extends SubsystemBase {
    /**
    * Adds the test commands to shuffleboard so they can be run that way.
    */
-  public void addTestCommands(GenericEntry testEntry)  {
-    m_testTab.add("Circle Drive", new CircleDrive(this));
-    m_testTab.add("Drive FeedForward", new DriveFeedForwardCharacterization(this));
-    m_testTab.add("Steer Single FeedForward", new SteerFeedForwardCharacterizationSingle(this));
-    m_testTab.add("Test Drive Velocity", new TestDriveVelocity(this, testEntry));
-    m_testTab.add("Heading PID", new TestHeadingPID(this, testEntry));
-    m_testTab.add("Steer angle", new TestSteerAngle(this, testEntry));
-    m_testTab.add("Transform Pose", new PoseTransformTest(this));
-    m_testTab.add("Go To Pose", new GoToPoseTest(this));
-    m_testTab.add("Odometry Test", new PoseTransform(this, new Transform2d(new Translation2d(1,1), new Rotation2d(Math.PI))));
+  public void addTestCommands(ShuffleboardTab testTab, GenericEntry testEntry)  {
+    testTab.add("Circle Drive", new CircleDrive(this));
+    testTab.add("Drive FeedForward", new DriveFeedForwardCharacterization(this));
+    testTab.add("Steer Single FeedForward", new SteerFeedForwardCharacterizationSingle(this));
+    testTab.add("Test Drive Velocity", new TestDriveVelocity(this, testEntry));
+    testTab.add("Heading PID", new TestHeadingPID(this, testEntry));
+    testTab.add("Steer angle", new TestSteerAngle(this, testEntry));
+    testTab.add("Transform Pose", new GoToPose(this, true, true));
+    testTab.add("Go To Pose", new GoToPose(this, false, true));
+    testTab.add("Odometry Test", new GoToPose(
+        this, 
+        new Pose2d(new Translation2d(1,1), new Rotation2d(Math.PI)), 
+        true
+      ));
     m_testTab.add("Reset Pose", new InstantCommand(()-> {
       this.resetOdometry(
         new Pose2d(
@@ -693,7 +697,6 @@ public class Drivetrain extends SubsystemBase {
         ));
       }
     ));
-    //m_testTab.add("Odometry Test", new OdometryTestCommand(this, new Transform2d(new Translation2d(1,1), new Rotation2d(Math.PI))));
   }
 
   /**

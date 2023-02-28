@@ -169,34 +169,9 @@ public class RobotContainer {
   public void addTestCommands() {
     GenericEntry testEntry = m_testTab.add("Test Results", false).getEntry();
     m_testTab.add("Cancel Command", new InstantCommand( () -> CommandScheduler.getInstance().cancelAll()));
-    m_testTab.add("Circle Drive", new CircleDrive(m_drive));
-    m_testTab.add("Drive FeedForward", new DriveFeedForwardCharacterization(m_drive));
-    m_testTab.add("Steer Single FeedForward", new SteerFeedForwardCharacterizationSingle(m_drive));
-    m_testTab.add("Test Drive Velocity", new TestDriveVelocity(m_drive, testEntry));
-    m_testTab.add("Heading PID", new TestHeadingPID(m_drive, testEntry));
-    m_testTab.add("Steer angle", new TestSteerAngle(m_drive, testEntry));
-    m_testTab.add("Transform Pose", new GoToPose(m_drive, true, true));
-    m_testTab.add("Go To Pose", new GoToPose(m_drive, false, true));
-    m_testTab.add("Odometry Test", new GoToPose(
-        m_drive, 
-        new Pose2d(new Translation2d(1,1), new Rotation2d(Math.PI)), 
-        true
-      ));
-    m_testTab.add("Reset Pose", new InstantCommand(()-> {
-      m_drive.resetOdometry(
-        new Pose2d(
-          m_drive.getRequestedXPos().getDouble(0),
-          m_drive.getRequestedYPos().getDouble(0), 
-          new Rotation2d(m_drive.getRequestedHeadingEntry().getDouble(0))
-        ));
-      }
-    ));
-    m_testTab.add("Test vision (forward)", new TestVisionDistance(0.2, m_drive, m_vision));
-    m_testTab.add("Test vision (backward)", new TestVisionDistance(-0.2, m_drive, m_vision));
-    m_testTab.add("Align to 0 degrees", new TestVisionAlignment(0, m_drive, m_vision));
-    m_testTab.add("Align to 90 degrees", new TestVisionAlignment(Math.PI/2, m_drive, m_vision));
-    m_testTab.add("Align to -90 degrees", new TestVisionAlignment(-Math.PI/2, m_drive, m_vision));
-    m_testTab.add("Align to 180 degrees", new TestVisionAlignment(Math.PI, m_drive, m_vision));
+    m_drive.addTestCommands(testEntry);
+    m_vision.addTestCommands(m_testTab, testEntry, m_drive);
+
   }
 
   /**
