@@ -13,7 +13,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.IntakeConstants;
 
-import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import com.revrobotics.Rev2mDistanceSensor;
@@ -58,12 +57,13 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
     double range = m_distSensor.getRange();
-    if (range == -1 || range > IntakeConstants.kCubeDistanceThreshold + IntakeConstants.kCubeDistanceTolerance) { // Empty intake
-      m_startTime = Timer.getFPGATimestamp();
+    // Empty intake
+    if (range == -1 || range > IntakeConstants.kCubeDistanceThreshold + IntakeConstants.kCubeDistanceTolerance) {
       m_hasCone = false;
       m_hasCube = false;
     } 
-    else if (range < IntakeConstants.kConeDistanceThreshold) { // Cone
+    // Cone
+    else if (range < IntakeConstants.kConeDistanceThreshold) {
       m_hasCone = true;
       m_hasCube = false;
     } 
@@ -84,5 +84,5 @@ public class Intake extends SubsystemBase {
     m_intakeTab.addDouble("Proximity", m_distSensor::getRange);
     m_intakeTab.addDouble("Timestamp", m_distSensor::getTimestamp);
   }
-  
-} 
+
+}
