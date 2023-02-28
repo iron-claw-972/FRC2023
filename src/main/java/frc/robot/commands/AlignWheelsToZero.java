@@ -15,6 +15,7 @@ public class AlignWheelsToZero extends CommandBase{
 
   public AlignWheelsToZero(Drivetrain drive, double angle) {
     m_drive = drive;
+    this.angle=angle;
     addRequirements(m_drive);
   }
   AlignWheelsToZero(Drivetrain drive, Rotation2d angle){
