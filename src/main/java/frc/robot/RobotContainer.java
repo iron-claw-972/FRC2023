@@ -34,6 +34,7 @@ import frc.robot.controls.Operator;
 import frc.robot.controls.TestController;
 import frc.robot.subsystems.DeployingBar;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.Intake;
 import frc.robot.util.PathGroupLoader;
@@ -58,6 +59,7 @@ public class RobotContainer {
   private final ShuffleboardTab m_controllerTab = Shuffleboard.getTab("Controller");
   private final ShuffleboardTab m_visionTab = Shuffleboard.getTab("Vision");
   private final ShuffleboardTab m_testTab = Shuffleboard.getTab("Test");
+  private final ShuffleboardTab m_elevatorTab = Shuffleboard.getTab("Elevator");
   
 
   private final Vision m_vision;
@@ -66,6 +68,7 @@ public class RobotContainer {
   private final Drivetrain m_drive;
   private final FourBarArm m_arm;
   private final Intake m_intake;
+  private final Elevator m_elevator;
   private final DeployingBar m_deployingBar;
 
   // Controllers are defined here
@@ -94,10 +97,11 @@ public class RobotContainer {
 
       m_arm = new FourBarArm();
       m_intake = new Intake();
-      m_deployingBar = null;
+      m_elevator = new Elevator(m_elevatorTab);
+      m_deployingBar = null; 
 
-      m_testController = new TestController(m_arm, m_intake);
-      m_manualController = new ManualController(m_arm, m_intake);
+      m_testController = new TestController(m_arm, m_intake, m_elevator);
+      m_manualController = new ManualController(m_arm, m_intake, m_elevator);
 
       m_operator.configureControls(m_arm);
       m_operator.configureControls(m_intake);
@@ -111,6 +115,7 @@ public class RobotContainer {
 
       m_arm = null;
       m_intake = null;
+      m_elevator = null;
       m_deployingBar = null;
 
       m_testController = null;

@@ -79,7 +79,7 @@ public class Operator {
       new InstantCommand(() -> selectValue(1, 3)),
       new ExtendToPosition(arm, ArmConstants.kTopPosition)
     ));
-          
+
     // Puts the arm and elevator in the initial position inside the robot
     m_operator.get(Button.LB).onTrue(new ExtendToPosition(arm, ArmConstants.kInitialPosition));
       
