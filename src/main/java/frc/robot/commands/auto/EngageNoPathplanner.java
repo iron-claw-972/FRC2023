@@ -14,8 +14,11 @@ public class EngageNoPathplanner extends SequentialCommandGroup{
     private Pose2d rightUnrotatedPose, chargePose, centerPose, rightRotatedPose, leftRotatedPose, leftUnrotatedPose;
     private Rotation2d rot, startRot;
 
+    /**
+     * Drives out of community, then toward charge station laterally and then drives back to engage. Can be done on either side of drivestation. 
+     * @param drive drivetrain
+     */
     public EngageNoPathplanner(Drivetrain drive)  {
-        //DRIVES OUT OF COMMUNITY, THEN MOVES TO RIGHT AND BACK TO ENGAGE. THIS PATH IS FOR THE GRID POSITION CLOSEST TO BARRIER
         m_drive = drive;
 
         startRot = new Rotation2d(0);

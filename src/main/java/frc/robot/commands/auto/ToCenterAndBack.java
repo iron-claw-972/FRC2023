@@ -8,14 +8,16 @@ import frc.robot.commands.AlignWheelsToZero;
 import frc.robot.commands.GoToPose;
 import frc.robot.subsystems.Drivetrain;
 
-public class AutoPathNoPlan extends SequentialCommandGroup{
+public class ToCenterAndBack extends SequentialCommandGroup{
 
     private Drivetrain m_drive;
     private Pose2d centerPose, initialPose;
     private Rotation2d rot, startRot;
-
-    public AutoPathNoPlan(Drivetrain drive)  {
-        //DRIVES TO CENTER LINE, THEN DRIVES BACK. CAN BE DONE ON EITHER SIDE OF CHARGE STATION
+    /**
+     * Drives to center line, then drives back. Can be done on either side of drivestation. 
+     * @param drive drivetrain
+     */
+    public ToCenterAndBack(Drivetrain drive)  {
         m_drive = drive;
         
         startRot = new Rotation2d(0);
