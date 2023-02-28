@@ -53,8 +53,8 @@ public class Elevator extends SubsystemBase {
 
     LogManager.addDouble("Elevator/error", () -> getError());
     LogManager.addDouble("Elevator/extension", () -> getExtension());
-    LogManager.addBool("Elevator/bottomLimitSwitch", () -> isBottomSwitchTripped());
-    LogManager.addBool("Elevator/topLimitSwitch", () -> isTopSwitchTripped());
+    LogManager.addBoolean("Elevator/bottomLimitSwitch", () -> isBottomSwitchTripped());
+    LogManager.addBoolean("Elevator/topLimitSwitch", () -> isTopSwitchTripped());
     
     setUpElevatorTab();
   }

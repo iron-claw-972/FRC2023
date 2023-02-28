@@ -25,13 +25,13 @@ public class LogManager {
   // These are array lists of log entry classes from WPI. appending to a log entry automatically adds to the log file.
   private static ArrayList<DoubleLogEntry> doubleLogs = new ArrayList<>();
   private static ArrayList<DoubleArrayLogEntry> doubleArrayLogs = new ArrayList<>();
-  private static ArrayList<BooleanLogEntry> boolLogs = new ArrayList<>();
+  private static ArrayList<BooleanLogEntry> booleanLogs = new ArrayList<>();
   private static ArrayList<IntegerLogEntry> intLogs = new ArrayList<>();
 
   // These are the suppliers, or functions that return values. This is how the values are accessed.
   private static ArrayList<DoubleSupplier> doubleValues = new ArrayList<>();
   private static ArrayList<DoubleSupplier[]> doubleArrayValues = new ArrayList<>();
-  private static ArrayList<BooleanSupplier> boolValues = new ArrayList<>();
+  private static ArrayList<BooleanSupplier> booleanValues = new ArrayList<>();
   private static ArrayList<IntSupplier> intValues = new ArrayList<>();
 
   // These are the log entries that are not updated periodically, they just receive individual values.
@@ -148,27 +148,27 @@ public class LogManager {
   }
 
   /**
-   * Starts logging a bool from a function. This should only be called once in an initialization, the supplier will be periodically
-   * called for values. If your value is not always there, consider using the other addBool() that takes a single value at a time.
+   * Starts logging a boolean from a function. This should only be called once in an initialization, the supplier will be periodically
+   * called for values. If your value is not always there, consider using the other addBoolean() that takes a single value at a time.
    * 
    * @param name The name of the log. Use / to create subdirectories, and keep names unique.
    * @param logged A boolean supplier of the value to be logged. Can be created by using a lambda on a function that returns a boolean.
    */
-  public static void addBool(String name, BooleanSupplier logged) {
+  public static void addBoolean(String name, BooleanSupplier logged) {
     BooleanLogEntry BooleanLog = new BooleanLogEntry(log, name);
-    boolLogs.add(BooleanLog);
-    boolValues.add(logged);
+    booleanLogs.add(BooleanLog);
+    booleanValues.add(logged);
   }
 
   /**
-   * Logs a single boolean to the log. Do not use with the other addBool() that takes a bool supplier.
+   * Logs a single boolean to the log. Do not use with the other addBoolean() that takes a boolean supplier.
    * This will only log the value once, so it should be called periodically or when needed. If you have a function that consistently 
-   * returns values, it may be easier to use the bool supplier log.
+   * returns values, it may be easier to use the boolean supplier log.
    * 
    * @param name The name of the log. Use / to create subdirectories, and keep names unique.
    * @param value the value to be logged.
    */
-  public static void addBool(String name, boolean value) {
+  public static void addBoolean(String name, boolean value) {
     if (individualBooleanLogs.containsKey(name)) {
       individualBooleanLogs.get(name).append(value);
     } else {
@@ -194,8 +194,8 @@ public class LogManager {
     for (int i = 0; i < intLogs.size(); i++) {
       intLogs.get(i).append(intValues.get(i).getAsInt());
     }
-    for (int i = 0; i < boolLogs.size(); i++) {
-      boolLogs.get(i).append(boolValues.get(i).getAsBoolean());
+    for (int i = 0; i < booleanLogs.size(); i++) {
+      booleanLogs.get(i).append(booleanValues.get(i).getAsBoolean());
     }
   }
 }
