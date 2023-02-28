@@ -25,7 +25,8 @@ import frc.robot.Robot.RobotId;
  * Container class for vision constants.
  */
 public class VisionConstants {
-
+  // How far fromt he grid the robot should be to score in inches
+  public static double kGridDistance = 24;
 
   public static ArrayList<Pair<String, Transform3d>> kCameras = new ArrayList<>();
 
