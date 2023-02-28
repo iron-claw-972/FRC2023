@@ -50,8 +50,7 @@ public class Elevator extends SubsystemBase {
     addChild("Bottom Limit",m_bottomLimitSwitch);
 
 
-    //TODO: log, addDouble doesn't work. 
-    //LogManager.addDouble("Elevator/error", () -> {return m_pid.getSetpoint() - getElevatorHeight();});
+    LogManager.addDouble("Elevator/error", () -> getError());
     
     //m_motor.setSafetyEnabled(true);
     setUpElevatorTab();
@@ -127,6 +126,14 @@ public class Elevator extends SubsystemBase {
 
   public boolean atSetpoint() {
     return m_elevatorPID.atSetpoint();
+  }
+
+  /**
+   * @return the error, in meters, from the current PID setpoint. If the PID is disabled, then the error is zero. Positive error indicates it is above the desired position.
+   */
+  public double getError() {
+    if (!m_enabled) return 0;
+    return getElevatorExtension() - m_elevatorPID.getSetpoint();
   }
 
   public void setUpElevatorTab(){

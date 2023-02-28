@@ -7,6 +7,7 @@ public class ElevatorConstants {
   public static final int kTopLimitSwitchPort = 9;
   public static final int kBottomLimitSwitchPort = 8;
 
+  // TODO: better tune this.
   public static final double kP = 1.2;
   public static final double kI = 0.3;
   public static final double kD = 0.0;
@@ -33,8 +34,8 @@ public class ElevatorConstants {
 
   public static final double kShelfIntakeHeightExtension = heightToElevatorExtension(kShelfIntakeHeight); 
 
-  public static final double kMaxExtension = 1.3; 
-  public static final double kMinExtension = 0.0; 
+  public static final double kMaxExtension = 1.3;
+  public static final double kMinExtension = 0.0;
 
   public static final double kGearRatio = (50.0/12.0)*(50.0/30.0)*(36.0/24.0);
   public static final double kCordThicknessInches = 0.125;
