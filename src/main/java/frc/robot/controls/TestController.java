@@ -4,9 +4,6 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.arm.ExtendToPosition;
 import frc.robot.commands.elevator.CalibrateElevator;
-import frc.robot.commands.elevator.CalibrateMaxExtension;
-import frc.robot.commands.elevator.MoveToExtension;
-import frc.robot.commands.elevator.ResetEncoderAtBottom;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.IntakeConstants;
@@ -35,15 +32,15 @@ public class TestController {
   public void configureControls() {
     
     //arm controls
-      test.get(Button.Y).onTrue(new ExtendToPosition(m_arm, ArmConstants.kTopPosition));
-      test.get(Button.X).onTrue(new ExtendToPosition(m_arm, ArmConstants.kMiddlePosition));
-      test.get(Button.A).onTrue(new ExtendToPosition(m_arm, ArmConstants.kIntakePosition));
-      test.get(Button.B).onTrue(new ExtendToPosition(m_arm, ArmConstants.kShelfPosition));
+    test.get(Button.Y).onTrue(new ExtendToPosition(m_arm, ArmConstants.kTopPosition));
+    test.get(Button.X).onTrue(new ExtendToPosition(m_arm, ArmConstants.kMiddlePosition));
+    test.get(Button.A).onTrue(new ExtendToPosition(m_arm, ArmConstants.kIntakePosition));
+    test.get(Button.B).onTrue(new ExtendToPosition(m_arm, ArmConstants.kShelfPosition));
     
     // intake controls
-      test.get(DPad.DOWN).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kIntakeSpeed), m_intake));
-      test.get(DPad.UP).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kOuttakeSpeed),m_intake));
-      test.get(DPad.LEFT).onTrue(new InstantCommand(() -> m_intake.stop(), m_intake));
+    test.get(DPad.DOWN).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kIntakeSpeed), m_intake));
+    test.get(DPad.UP).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kOuttakeSpeed),m_intake));
+    test.get(DPad.LEFT).onTrue(new InstantCommand(() -> m_intake.stop(), m_intake));
     
     // elevator controls
     if (m_elevator != null) {
@@ -53,22 +50,17 @@ public class TestController {
       test.get(DPad.LEFT).onTrue(new InstantCommand(() -> m_elevator.setMotorPower(0), m_elevator));
       test.get(DPad.DOWN).onTrue(new CalibrateElevator(m_elevator));
       
-
       //test.get(Button.A).onTrue(new MoveToHeight(m_elevator, ElevatorConstants.kHeight));
       // //move to mid node height
       //test.get(Button.B).onTrue(new MoveToHeight(m_elevator, ElevatorConstants.kHeightMiddleNode));
       // //move to top node height
       //test.get(Button.Y).onTrue(new MoveToHeight(m_elevator, ElevatorConstants.kHeightTopNode));   
-      
-
     }
-    
   }
-  public double getClampedThrottleValue() {
-    
+
+  public double getClampedElevatorThrottleValue() {
     return MathUtil.clamp(test.get(Axis.LEFT_Y),-ElevatorConstants.kPowerLimit, ElevatorConstants.kPowerLimit);
   }
-  
 
 }
 

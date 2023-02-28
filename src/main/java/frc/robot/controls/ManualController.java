@@ -2,7 +2,6 @@ package frc.robot.controls;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.commands.elevator.CalibrateMaxExtension;
 import frc.robot.commands.elevator.MoveToExtension;
 import frc.robot.commands.elevator.ResetEncoderAtBottom;
 import frc.robot.constants.ElevatorConstants;
@@ -17,7 +16,6 @@ import lib.controllers.GameController.Button;
 import lib.controllers.GameController.DPad;
 
 public class ManualController {
-  
   GameController m_manual = new GameController(OIConstants.kManualJoy);
   private FourBarArm m_arm;
   private Intake m_intake;
@@ -44,14 +42,8 @@ public class ManualController {
     m_manual.get(DPad.DOWN).onTrue(new ResetEncoderAtBottom(m_elevator));
     //TODO: calibrate elevator using absolute encoders(probably will not work yet as of 2/15/2023);
     //move to bottom node height
-  
-   
-
-  
   }
-  public double getClampedThrottleValue() {
+  public double getClampedElevatorThrottleValue() {
     return MathUtil.clamp(m_manual.get(Axis.LEFT_Y), -ElevatorConstants.kPowerLimit,ElevatorConstants.kPowerLimit);   
   }
-  
-
 }
