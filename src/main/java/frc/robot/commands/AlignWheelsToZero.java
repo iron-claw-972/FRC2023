@@ -26,10 +26,10 @@ public class AlignWheelsToZero extends CommandBase{
   @Override
   public void execute() {
     m_drive.setModuleStates(new SwerveModuleState[] {
-      new SwerveModuleState(0, new Rotation2d(m_drive.getRequestedSteerAngleEntry().getDouble(0))),
-      new SwerveModuleState(0, new Rotation2d(m_drive.getRequestedSteerAngleEntry().getDouble(0))),
-      new SwerveModuleState(0, new Rotation2d(m_drive.getRequestedSteerAngleEntry().getDouble(0))),
-      new SwerveModuleState(0, new Rotation2d(m_drive.getRequestedSteerAngleEntry().getDouble(0)))
+      new SwerveModuleState(0, new Rotation2d(0)),
+      new SwerveModuleState(0, new Rotation2d(0)),
+      new SwerveModuleState(0, new Rotation2d(0)),
+      new SwerveModuleState(0, new Rotation2d(0))
     });
   }
   

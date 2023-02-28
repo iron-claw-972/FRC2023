@@ -12,15 +12,15 @@ public class EngageFromCenterGrid extends SequentialCommandGroup{
 
     private Drivetrain m_drive;
     private Pose2d poseCharge;
-    private Rotation2d startRot;
 
+    /*
+     * Drives to charge station and engages. Starts in center grid. 
+     */
     public EngageFromCenterGrid(Drivetrain drive)  {
-        //DRIVES TO CHARGE STATION AND ENGAGES. STARTS FROM CENTER GRID
-        m_drive = drive;
-
-        startRot = new Rotation2d(0);
         
-        poseCharge = new Pose2d(4, 0, startRot);
+        m_drive = drive;
+        
+        poseCharge = new Pose2d(4, 0, new Rotation2d(0));
 
         addCommands(
             new AlignWheelsToZero(m_drive),

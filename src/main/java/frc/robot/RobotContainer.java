@@ -14,13 +14,14 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Robot.RobotId;
 import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.commands.auto.AutoPathNoPlan;
+import frc.robot.commands.auto.ToCenterAndBack;
 import frc.robot.commands.auto.EngageFromCenterGrid;
 import frc.robot.commands.auto.EngageNoPathplanner;
 import frc.robot.commands.auto.GoOverChargeStation;
 import frc.robot.commands.auto.PathPlannerCommand;
 import frc.robot.commands.test.CircleDrive;
 import frc.robot.commands.test.DriveFeedForwardCharacterization;
+import frc.robot.commands.test.GoToPoseTest;
 import frc.robot.commands.test.SteerFeedForwardCharacterizationSingle;
 import frc.robot.commands.test.TestDriveVelocity;
 import frc.robot.commands.test.TestHeadingPID;
@@ -88,7 +89,7 @@ public class RobotContainer {
     m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
 
     // If the robot is the competition robot, create the arm and intake
-    if (Robot.kRobotId == RobotId.SwerveTest) {
+    if (Robot.kRobotId == RobotId.SwerveCompetition) {
 
       m_arm = new FourBarArm();
       m_intake = new Intake();
@@ -175,6 +176,7 @@ public class RobotContainer {
     m_testTab.add("Align to 90 degrees", new TestVisionAlignment(Math.PI/2, m_drive, m_vision));
     m_testTab.add("Align to -90 degrees", new TestVisionAlignment(-Math.PI/2, m_drive, m_vision));
     m_testTab.add("Align to 180 degrees", new TestVisionAlignment(Math.PI, m_drive, m_vision));
+    m_testTab.add("GoToPoseTest", new GoToPoseTest(m_drive));
     m_testTab.add("Reset Pose", new InstantCommand(()-> {
       m_drive.resetOdometry(new Pose2d(
         m_drive.getRequestedXPos().getDouble(0),
@@ -200,10 +202,11 @@ public class RobotContainer {
     m_autoCommand.addOption("To Center And Back", new PathPlannerCommand(PathGroupLoader.getPathGroup("To Center And Back"), 0, m_drive, true));
     m_autoCommand.addOption("Drive out of Community", new PathPlannerCommand(PathGroupLoader.getPathGroup("Drive out of Community"), 0, m_drive, true));
     m_autoCommand.addOption("BottomSimpleLine1", new PathPlannerCommand(PathGroupLoader.getPathGroup("Bottom Simple Line1"), 0 , m_drive, true));
-    m_autoCommand.addOption("AutoPathNoPlan", new AutoPathNoPlan(m_drive));
+    m_autoCommand.addOption("AutoPathNoPlan", new ToCenterAndBack(m_drive));
     m_autoCommand.addOption("EngageNoPathplanner", new EngageNoPathplanner(m_drive));
     m_autoCommand.addOption("EngageFromCenterGrid", new EngageFromCenterGrid(m_drive));
     m_autoCommand.addOption("GoOverChargeStation", new GoOverChargeStation(m_drive));
+    
    }
     
 

@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.AlignWheelsToZero;
 import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.GoToPose;
-import frc.robot.commands.ModuleAnglesFromTrajectory;
 import frc.robot.subsystems.Drivetrain;
 
 public class GoOverChargeStation extends SequentialCommandGroup{
@@ -21,7 +20,7 @@ public class GoOverChargeStation extends SequentialCommandGroup{
         startRot = new Rotation2d(0);
         
         chargePose = new Pose2d(4, 0, startRot);
-        gamePiecePose = new Pose2d(6.5, 0, startRot);
+        gamePiecePose = new Pose2d(6, 0, startRot);//6.5 previously, was too much. will define precise values with more testing
         
         addCommands(
             new AlignWheelsToZero(m_drive),
