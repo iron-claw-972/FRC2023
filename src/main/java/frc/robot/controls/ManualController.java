@@ -2,8 +2,6 @@ package frc.robot.controls;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.commands.elevator.MoveToExtension;
-import frc.robot.commands.elevator.ResetEncoderAtBottom;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.OIConstants;
