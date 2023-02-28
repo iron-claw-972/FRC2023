@@ -54,7 +54,7 @@ public class Elevator extends SubsystemBase {
     addChild("Bottom Limit",m_bottomLimitSwitch);
 
 
-    //LogManager.addDouble("Elevator/error", () -> getError());
+    LogManager.addDouble("Elevator/error", () -> getError());
     
     //m_motor.setSafetyEnabled(true);
     setUpElevatorTab();
