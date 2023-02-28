@@ -80,13 +80,16 @@ public class RobotContainer {
 
       m_arm = new FourBarArm();
       m_intake = new Intake();
-      m_deployingBar = new DeployingBar();
+      m_deployingBar = null;
 
-      m_operator = new Operator(m_arm, m_intake, m_deployingBar);
+      m_operator = new Operator();
       m_testController = new TestController(m_arm, m_intake);
       m_manualController = new ManualController(m_arm, m_intake);
 
-      m_operator.configureControls();
+      m_operator.configureControls(m_intake);
+      m_operator.configureControls(m_arm);
+      //TODO: add back controls once deploying bar is installed
+      //m_operator.configureControls(m_deployingBar);
       m_testController.configureControls();
       m_manualController.configureControls();
 

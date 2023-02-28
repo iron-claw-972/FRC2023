@@ -12,21 +12,26 @@ import lib.controllers.GameController.Button;
 public class Operator {
 
   private GameController operator = new GameController(OIConstants.kOperatorJoy);
-  private FourBarArm m_arm;
-  private Intake m_intake;
-  private DeployingBar m_deployingBar;
-
-  public Operator(FourBarArm arm, Intake intake, DeployingBar deployingBar){
-      m_arm = arm;
-      m_intake = intake;
-      m_deployingBar = deployingBar;
-  }
   
   /**
-   * Configures all of the operator controls.
+   * Configures the operator controls for the deploying Bar.
    */
-  public void configureControls() {
-    operator.get(Button.A).onTrue(new RotateDeployingBar(m_deployingBar, DeployingBarConstants.kMaxRotation));
-    operator.get(Button.B).onTrue(new RotateDeployingBar(m_deployingBar, DeployingBarConstants.kMinRotation));
+  public void configureControls(DeployingBar deployingBar) {
+    operator.get(Button.A).onTrue(new RotateDeployingBar(deployingBar, DeployingBarConstants.kMaxRotation));
+    operator.get(Button.B).onTrue(new RotateDeployingBar(deployingBar, DeployingBarConstants.kMinRotation));
+  }
+
+  /**
+   * Configures the operator controls for the arm.
+   */
+  public void configureControls(FourBarArm arm) {
+
+  }
+
+  /**
+   * Configures the operator controls for the intake.
+   */
+  public void configureControls(Intake intake) {
+
   }
 }
