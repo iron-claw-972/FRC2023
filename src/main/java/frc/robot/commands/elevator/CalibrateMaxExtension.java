@@ -5,11 +5,11 @@ import frc.robot.constants.ElevatorConstants;
 import frc.robot.subsystems.Elevator;
 
 public class CalibrateMaxExtension extends CommandBase {
-  Elevator m_elevator; 
+  
+  private final Elevator m_elevator; 
+  
   /**
-   * Calibrate the elevator by resetting the encoder after it hits the bottom
-   * limit switch. 
-   * @param elevator, the elevator subsystem
+   * Calibrate the elevator by resetting the encoder after it hits the bottom limit switch.
    */
   public CalibrateMaxExtension(Elevator elevator) {
     m_elevator = elevator; 
@@ -32,15 +32,13 @@ public class CalibrateMaxExtension extends CommandBase {
     m_elevator.setMotorPower(0); 
     SmartDashboard.putNumber("Max Elevator Extension", m_elevator.setElevatorExtension());
     m_elevator.setPIDEnabled(true);
-
-
   }
   
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return m_elevator.isTopSwitchTripped();
   }
+
 }
 
 

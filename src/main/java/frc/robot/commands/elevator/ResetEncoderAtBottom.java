@@ -1,14 +1,15 @@
 package frc.robot.commands.elevator;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.subsystems.Elevator;
 
 public class ResetEncoderAtBottom extends CommandBase {
-  Elevator m_elevator; 
+  
+  private final Elevator m_elevator; 
+  
   /**
-   * First part of calibration sequence -- reset the elevator by resetting the encoder after it hits the bottom
-   * limit switch. 
-   * @param elevator
+   * First part of calibration sequence. Resets the elevator by resetting the encoder after it hits the bottom limit switch. 
    */
   public ResetEncoderAtBottom(Elevator elevator) {
     m_elevator = elevator; 
@@ -32,7 +33,6 @@ public class ResetEncoderAtBottom extends CommandBase {
 
   }
   
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return m_elevator.isBottomSwitchTripped();

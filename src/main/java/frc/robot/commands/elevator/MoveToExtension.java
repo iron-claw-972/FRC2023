@@ -3,13 +3,13 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Elevator;
 
 public class MoveToExtension extends CommandBase {
-  Elevator m_elevator; 
-  double m_targetExtension; 
+  
+  private final Elevator m_elevator; 
+  private final double m_targetExtension; 
+  
   /**
-   * 
-   * @param elevator The elevator subsystem
-   * @param targetExtension The target elevator extension required 
-   **/
+   * Moves the elevator to a specific extension point.
+   */
   public MoveToExtension(Elevator elevator, double targetExtension) {
     m_elevator = elevator; 
     m_targetExtension = targetExtension; 
@@ -22,4 +22,5 @@ public class MoveToExtension extends CommandBase {
     m_elevator.setPIDEnabled(true);
     m_elevator.resetPID();
   }
+
 }

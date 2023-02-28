@@ -4,8 +4,12 @@ import frc.robot.constants.IntakeConstants;
 import frc.robot.subsystems.Intake;
 
 public class IntakeCone extends CommandBase {
-  Intake m_intake; 
-
+  
+  private final Intake m_intake; 
+  
+  /**
+   * Runs the intake subsystem to intake a cone.
+   */
   public IntakeCone(Intake intake) {
     m_intake = intake; 
     addRequirements(m_intake);
