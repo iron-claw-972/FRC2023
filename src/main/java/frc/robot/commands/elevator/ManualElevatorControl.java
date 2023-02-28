@@ -1,5 +1,3 @@
-//TODO: Need to figure out a way to ovverride the constant PID adjustment happening in Elevator.java subsystem to run this command
-
 package frc.robot.commands.elevator;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
