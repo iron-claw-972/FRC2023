@@ -173,12 +173,12 @@ public class RobotContainer {
   public void autoChooserUpdate() {
     // add commands below with: m_autoCommand.addOption("Example", new ExampleCommand());
     m_autoCommand.setDefaultOption("Do Nothing", new PrintCommand("This will do nothing!"));
-    m_autoCommand.addOption("DriveSidewaysPath", new PathPlannerCommand(PathGroupLoader.getPathGroup("DriveSidewaysPath"), 0 ,m_drive, true));
-    m_autoCommand.addOption("Odometry Test 1", new PathPlannerCommand(PathGroupLoader.getPathGroup("Odometry Test 1"), 0 ,m_drive, true));
-    m_autoCommand.addOption("Figure 8", new PathPlannerCommand(PathGroupLoader.getPathGroup("Figure 8"), 0 ,m_drive, true));
-    m_autoCommand.addOption("To Center And Back", new PathPlannerCommand(PathGroupLoader.getPathGroup("To Center And Back"), 0, m_drive, true));
-    m_autoCommand.addOption("Drive out of Community", new PathPlannerCommand(PathGroupLoader.getPathGroup("Drive out of Community"), 0, m_drive, true));
-    m_autoCommand.addOption("BottomSimpleLine1", new PathPlannerCommand(PathGroupLoader.getPathGroup("Bottom Simple Line1"), 0 , m_drive, true));
+    m_autoCommand.addOption("DriveSidewaysPath", new PathPlannerCommand("DriveSidewaysPath", 0, m_drive));
+    m_autoCommand.addOption("Odometry Test 1", new PathPlannerCommand("Odometry Test 1", 0, m_drive));
+    m_autoCommand.addOption("Figure 8", new PathPlannerCommand("Figure 8", 0, m_drive));
+    m_autoCommand.addOption("To Center And Back", new PathPlannerCommand("To Center And Back", 0, m_drive));
+    m_autoCommand.addOption("Drive out of Community", new PathPlannerCommand("Drive out of Community", 0, m_drive));
+    m_autoCommand.addOption("BottomSimpleLine1", new PathPlannerCommand("Bottom Simple Line1", 0, m_drive));
     m_autoCommand.addOption("AutoPathNoPlan", new ToCenterAndBack(m_drive));
     m_autoCommand.addOption("EngageNoPathplanner", new EngageNoPathplanner(m_drive));
     m_autoCommand.addOption("EngageFromCenterGrid", new EngageFromCenterGrid(m_drive));
