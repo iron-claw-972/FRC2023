@@ -11,7 +11,7 @@ import frc.robot.subsystems.Drivetrain;
 public class EngageNoPathplanner extends SequentialCommandGroup{
 
     private Drivetrain m_drive;
-    private Pose2d rightUnrotatedPose, chargePose, centerPose, rightRotatedPose;
+    private Pose2d rightUnrotatedPose, chargePose, centerPose, rightRotatedPose, leftRotatedPose, leftUnrotatedPose;
     private Rotation2d rot, startRot;
 
     public EngageNoPathplanner(Drivetrain drive)  {
@@ -22,15 +22,17 @@ public class EngageNoPathplanner extends SequentialCommandGroup{
         rot = new Rotation2d(Math.PI);
 
         centerPose = new Pose2d(5.5, 0, startRot);
-        rightUnrotatedPose = new Pose2d(5, -1.75, startRot);
         chargePose = new Pose2d(2.54, -1.5, startRot);
         rightRotatedPose = new Pose2d(5, -1.75, rot);
+        rightUnrotatedPose = new Pose2d(5, -1.75, startRot);
+        leftRotatedPose = new Pose2d(5, 1.75, rot);
+        leftUnrotatedPose = new Pose2d(5, 1.75, startRot);
 
         addCommands(
             new AlignWheelsToZero(m_drive),
             new GoToPose(m_drive, centerPose),
             new GoToPose(m_drive, rightUnrotatedPose),//alternatively could make it poseRightRotated, but this is untested
-            new GoToPose(m_drive, chargePose),
+            new GoToPose(m_drive, chargePose),//if starting on left side of charge station, use left pose instead
             new BalanceCommand(m_drive)
         );
     }

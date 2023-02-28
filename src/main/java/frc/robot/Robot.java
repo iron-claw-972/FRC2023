@@ -39,7 +39,7 @@ public class Robot extends TimedRobot {
    * <p><b>Note: kRobotId is not a constant.</b></p>
    */
   // assume a default robot identity
-  public static RobotId kRobotId = RobotId.SwerveTest;
+  public static RobotId kRobotId = RobotId.Default;
 
   /**
    * This function is run when the robot is first started up and should be used for any

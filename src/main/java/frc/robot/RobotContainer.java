@@ -88,7 +88,7 @@ public class RobotContainer {
     m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
 
     // If the robot is the competition robot, create the arm and intake
-    if (Robot.kRobotId == RobotId.SwerveTest) {
+    if (Robot.kRobotId == RobotId.SwerveCompetition) {
 
       m_arm = new FourBarArm();
       m_intake = new Intake();
