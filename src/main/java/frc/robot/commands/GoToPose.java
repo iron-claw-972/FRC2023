@@ -5,14 +5,13 @@ import java.util.function.Supplier;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.TestConstants;
 import frc.robot.subsystems.Drivetrain;
 
 /**
- * Tests the odometry of the robot by driving a certain distance and calculating the error.
+ * Uses robot odometry to move to a certain Pose2d, x, y, theta.
  */
 public class GoToPose extends CommandBase {
 
@@ -20,12 +19,12 @@ public class GoToPose extends CommandBase {
   private Supplier<Pose2d> m_poseSupplier;
   private double m_startTime;
   private Pose2d m_finalPose;
-  private Pose2d m_error;
+  private Transform2d m_error;
   private boolean m_relativeToRobot;
   private boolean m_doNotEnd = false;
   
   /**
-   * Returns a command that goes to a position based on shuffleboard inputs
+   * Goes to a pose based on shuffleboard inputs.
    * DO NOT USE IF SHUFFLEBOARD IS DISABLED 
    * @param drive drivetrain to be used for the command
    * @param relativeToRobot should pose be converted to a transformation
@@ -44,7 +43,7 @@ public class GoToPose extends CommandBase {
   }
 
   /**
-   * Returns a command that goes to a position
+   * Moves the robot to the pose specified.
    * @param drive drivetrain to be used for the command
    * @param pose pose to go to
    * @param relativeToRobot should pose be converted to a transformation
@@ -54,7 +53,8 @@ public class GoToPose extends CommandBase {
   }
 
   /**
-   * Returns a command that goes to a position based off the position supplier
+   * Moves the robot to the pose supplied at the time the command starts by the pose supplier. 
+   * So if the supplier changes value mid execution, the command will continue to go to the old pose.
    * @param drive drivetrain to be used for the command
    * @param poseSupplier supplier of pose go to
    * @param relativeToRobot should pose be converted to a transformation
@@ -68,6 +68,7 @@ public class GoToPose extends CommandBase {
   
   @Override
   public void initialize() {
+    // get the position to go to
     m_finalPose = m_poseSupplier.get();
     if (m_relativeToRobot) m_finalPose = m_drive.getPose().plus(
       m_finalPose.minus(new Pose2d()) // the minus method is to make the pose a transform
@@ -77,15 +78,17 @@ public class GoToPose extends CommandBase {
   
   @Override
   public void execute() {
-    m_drive.runChassisPID(m_finalPose.getX(), m_finalPose.getY(), m_finalPose.getRotation().getRadians()); 
+    m_drive.runChassisPID(m_finalPose.getX(), m_finalPose.getY(), m_finalPose.getRotation().getRadians());
+
+    // calculate the error, the difference between poses.
+    m_error = m_drive.getPose().minus(m_finalPose);
   }
 
   @Override
   public boolean isFinished() {
-    if (m_doNotEnd) return false;
     return 
-      m_drive.getPose().getTranslation().getDistance(m_finalPose.getTranslation()) 
-        < TestConstants.kTranslationError && 
+      !m_doNotEnd &&
+      Math.abs(m_error.getTranslation().getNorm()) < TestConstants.kTranslationError && 
       Math.abs(m_error.getRotation().getRadians()) < TestConstants.kHeadingError;
   }
 
