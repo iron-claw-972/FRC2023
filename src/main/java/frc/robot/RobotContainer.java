@@ -1,6 +1,9 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -22,6 +25,9 @@ import frc.robot.commands.auto.PathPlannerCommand;
 import frc.robot.commands.test.CircleDrive;
 import frc.robot.commands.test.DriveFeedForwardCharacterization;
 import frc.robot.commands.test.GoToPoseTest;
+import frc.robot.commands.GoToPose;
+import frc.robot.commands.test.CircleDrive;
+import frc.robot.commands.test.DriveFeedForwardCharacterization;
 import frc.robot.commands.test.SteerFeedForwardCharacterizationSingle;
 import frc.robot.commands.test.TestDriveVelocity;
 import frc.robot.commands.test.TestHeadingPID;
@@ -170,6 +176,22 @@ public class RobotContainer {
     m_testTab.add("Test Drive Velocity", new TestDriveVelocity(m_drive, testEntry));
     m_testTab.add("Heading PID", new TestHeadingPID(m_drive, testEntry));
     m_testTab.add("Steer angle", new TestSteerAngle(m_drive, testEntry));
+    m_testTab.add("Transform Pose", new GoToPose(m_drive, true, true));
+    m_testTab.add("Go To Pose", new GoToPose(m_drive, false, true));
+    m_testTab.add("Odometry Test", new GoToPose(
+        m_drive, 
+        new Pose2d(new Translation2d(1,1), new Rotation2d(Math.PI)), 
+        true
+      ));
+    m_testTab.add("Reset Pose", new InstantCommand(()-> {
+      m_drive.resetOdometry(
+        new Pose2d(
+          m_drive.getRequestedXPos().getDouble(0),
+          m_drive.getRequestedYPos().getDouble(0), 
+          new Rotation2d(m_drive.getRequestedHeadingEntry().getDouble(0))
+        ));
+      }
+    ));
     m_testTab.add("Test vision (forward)", new TestVisionDistance(0.2, m_drive, m_vision));
     m_testTab.add("Test vision (backward)", new TestVisionDistance(-0.2, m_drive, m_vision));
     m_testTab.add("Align to 0 degrees", new TestVisionAlignment(0, m_drive, m_vision));

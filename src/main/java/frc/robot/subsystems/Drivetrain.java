@@ -82,13 +82,37 @@ public class Drivetrain extends SubsystemBase {
   private final Field2d m_fieldDisplay = new Field2d();
   
   // PID Controllers
-  private final PIDController m_xController = new PIDController(DriveConstants.kTranslationalP, DriveConstants.kTranslationalI, DriveConstants.kTranslationalD);
-  private final PIDController m_yController = new PIDController(DriveConstants.kTranslationalP, DriveConstants.kTranslationalI, DriveConstants.kTranslationalD);
-  private final PIDController m_rotationController = new PIDController(DriveConstants.kHeadingP, DriveConstants.kHeadingI, DriveConstants.kHeadingD);
+  private final PIDController m_xController = new PIDController(
+    DriveConstants.kTranslationalP, 
+    DriveConstants.kTranslationalI, 
+    DriveConstants.kTranslationalD
+  );
+  private final PIDController m_yController = new PIDController(
+    DriveConstants.kTranslationalP, 
+    DriveConstants.kTranslationalI, 
+    DriveConstants.kTranslationalD
+  );
+  private final PIDController m_rotationController = new PIDController(
+    DriveConstants.kHeadingP, 
+    DriveConstants.kHeadingI, 
+    DriveConstants.kHeadingD
+  );
   
-  private final PIDController m_pathplannerXController = new PIDController(DriveConstants.kPathplannerTranslationalP, DriveConstants.kPathplannerTranslationalI, DriveConstants.kPathplannerTranslationalD);
-  private final PIDController m_pathplannerYController = new PIDController(DriveConstants.kPathplannerTranslationalP, DriveConstants.kPathplannerTranslationalI, DriveConstants.kPathplannerTranslationalD);
-  private final PIDController m_pathplannerRotationController = new PIDController(DriveConstants.kPathplannerHeadingP, DriveConstants.kPathplannerHeadingI, DriveConstants.kPathplannerHeadingD);
+  private final PIDController m_pathplannerXController = new PIDController(
+    DriveConstants.kPathplannerTranslationalP, 
+    DriveConstants.kPathplannerTranslationalI, 
+    DriveConstants.kPathplannerTranslationalD
+  );
+  private final PIDController m_pathplannerYController = new PIDController(
+    DriveConstants.kPathplannerTranslationalP, 
+    DriveConstants.kPathplannerTranslationalI, 
+    DriveConstants.kPathplannerTranslationalD
+  );
+  private final PIDController m_pathplannerRotationController = new PIDController(
+    DriveConstants.kPathplannerHeadingP, 
+    DriveConstants.kPathplannerHeadingI, 
+    DriveConstants.kPathplannerHeadingD
+  );
 
 
   //Shuffleboard
@@ -143,7 +167,8 @@ public class Drivetrain extends SubsystemBase {
       m_kinematics,
       m_pigeon.getRotation2d(),
       getModulePositions(),
-      new Pose2d());
+      new Pose2d() // initial Odometry Location
+    );
     m_poseEstimator.setVisionMeasurementStdDevs(VisionConstants.kBaseVisionPoseStdDevs);
 
     m_rotationController.enableContinuousInput(-Math.PI, Math.PI);
@@ -487,9 +512,6 @@ public class Drivetrain extends SubsystemBase {
     m_drivetrainTab.addNumber("Gyro Y", () -> getAngularRate(1));
     m_drivetrainTab.addNumber("Gyro Z", () -> getAngularRate(2));
 
-    //m_drivetrainTab.addNumber("Estimated X pos (m)", ()-> m_odometry.getPoseMeters().getX());
-    //m_drivetrainTab.addNumber("Estimated Y pos (m)", ()-> m_odometry.getPoseMeters().getY());
-    
   }
 
   /**
