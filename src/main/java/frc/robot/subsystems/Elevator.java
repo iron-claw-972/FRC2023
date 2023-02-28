@@ -65,7 +65,7 @@ public class Elevator extends SubsystemBase {
       double pidClamped = MathUtil.clamp(pid, -ElevatorConstants.kPowerLimit, ElevatorConstants.kPowerLimit);
       double finalMotorPower = pidClamped; 
       
-      setSpeedMotorStopWhenLimSwitchesHit(finalMotorPower);
+      setMotorPower(finalMotorPower);
     } else {
       //m_motor.feed();
     }
@@ -78,7 +78,13 @@ public class Elevator extends SubsystemBase {
     m_bottomLimitSwitch.close(); 
   }
 
-  public void setSpeedMotorStopWhenLimSwitchesHit(double power) {
+  /**
+   * Set the motor power while taking the limit switches into account. 
+   * If the bottom limit switch is tripped, then the elevator is only allowed to move up. 
+   * If the top limit switch is tripped, then the elevator is inly allowed to move down. 
+   * @param power the power we want to give to the motor
+   */
+  public void setMotorPower(double power) {
     if ( (isBottomSwitchTripped() && power < 0) || (isTopSwitchTripped() && power > 0) ){
       m_motor.set(0); 
     } else {
@@ -124,10 +130,6 @@ public class Elevator extends SubsystemBase {
 
   public boolean atSetpoint() {
     return m_elevatorPID.atSetpoint();
-  }
-
-  public void setMotorPower(double power){
-    m_motor.set(power);
   }
 
   public void setUpElevatorTab(){

@@ -30,7 +30,7 @@ public class ManualElevatorControl extends CommandBase {
   public void execute() {
     if (m_manualController.returnClampedLeftJoyValue() !=0){
       m_elevator.setPIDEnabled(false); 
-      m_elevator.setSpeedMotorStopWhenLimSwitchesHit(m_manualController.returnClampedLeftJoyValue());
+      m_elevator.setMotorPower(m_manualController.returnClampedLeftJoyValue());
     }else{
       m_elevator.setPIDEnabled(true); 
       m_currentElevatorPos = m_elevator.getElevatorExtension(); 
