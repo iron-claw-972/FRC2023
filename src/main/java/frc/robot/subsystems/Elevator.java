@@ -24,12 +24,10 @@ public class Elevator extends SubsystemBase {
 
   private final WPI_TalonFX m_motor;
   private final PIDController m_elevatorPID;
-  private final ElevatorFeedforward m_elevatorFF;
   private final TalonEncoder m_talonEncoder; 
   private final DigitalInput m_topLimitSwitch; 
   private final DigitalInput m_bottomLimitSwitch; 
   private final ShuffleboardTab m_elevatorTab; 
-  private double m_maxHeight; 
   private boolean m_enabled; 
   private boolean m_isCalibrated = false; 
 
@@ -45,7 +43,6 @@ public class Elevator extends SubsystemBase {
     //m_elevatorTab.add("pid",m_elevatorPID);
     //m_elevatorTab.addNumber("",()-> getHeight());
     m_elevatorPID.setTolerance(0.03);
-    m_elevatorFF = new ElevatorFeedforward(ElevatorConstants.kS, ElevatorConstants.kG, ElevatorConstants.kV, ElevatorConstants.kA);
 
     m_topLimitSwitch = new DigitalInput(ElevatorConstants.kTopLimitSwitchPort); 
     m_bottomLimitSwitch = new DigitalInput(ElevatorConstants.kBottomLimitSwitchPort); 
@@ -65,10 +62,8 @@ public class Elevator extends SubsystemBase {
   public void periodic() {
     if(m_enabled && m_isCalibrated) {
       double pid = m_elevatorPID.calculate(getElevatorExtension());
-      double ff = m_elevatorFF.calculate(ElevatorConstants.kVelocity, ElevatorConstants.kAccel); 
-      ff = 0; 
       double pidClamped = MathUtil.clamp(pid, -ElevatorConstants.kPowerLimit, ElevatorConstants.kPowerLimit);
-      double finalMotorPower = pidClamped + ff; 
+      double finalMotorPower = pidClamped; 
       
       setSpeedMotorStopWhenLimSwitchesHit(finalMotorPower);
     } else {
