@@ -24,7 +24,7 @@ public class ElevatorConstants {
 
   /** elevator travel distance in meters**/
   public static final double kMiddleNodeHeightConeExtension = 0.68; // heightToElevatorExtension(kMiddleNodeHeightCone);
-  public static final double kTopNodeHeightConeExtension = 1.39; //1.39 // heightToElevatorExtension(kTopNodeHeightCone);
+  public static final double kTopNodeHeightConeExtension = 1.3; // heightToElevatorExtension(kTopNodeHeightCone);
   
   public static final double kMiddleNodeHeightCubeExtension = heightToElevatorExtension(kMiddleNodeHeightCube);
   public static final double kTopNodeHeightCubeExtension = heightToElevatorExtension(kTopNodeHeightCube);  
