@@ -8,18 +8,21 @@ import frc.robot.subsystems.Drivetrain;
 /**
  * Attempts to set all four modules to a constant angle. Determines if the modules are able to reach the angle requested in a certain time.
  */
-public class AlignWheelsToZero extends CommandBase{
+public class SimplePresetSteerAngles extends CommandBase{
   
   private final Drivetrain m_drive;
-  private double angle;
+  private Rotation2d m_rotation;
 
-  public AlignWheelsToZero(Drivetrain drive, double angle) {
-    m_drive = drive;
-    this.angle=angle;
-    addRequirements(m_drive);
+  public SimplePresetSteerAngles(Drivetrain drive) {
+    this(drive, new Rotation2d());
   }
-  AlignWheelsToZero(Drivetrain drive, Rotation2d angle){
-    this(drive, angle.getRadians());
+  public SimplePresetSteerAngles(Drivetrain drive, double angle) {
+    this(drive, new Rotation2d(angle));
+  }
+  SimplePresetSteerAngles(Drivetrain drive, Rotation2d rotation){
+    m_drive = drive;
+    m_rotation = rotation;
+    addRequirements(m_drive);
   }
 
   @Override
@@ -31,10 +34,10 @@ public class AlignWheelsToZero extends CommandBase{
   @Override
   public void execute() {
     m_drive.setModuleStates(new SwerveModuleState[] {
-      new SwerveModuleState(0, new Rotation2d(angle)),
-      new SwerveModuleState(0, new Rotation2d(angle)),
-      new SwerveModuleState(0, new Rotation2d(angle)),
-      new SwerveModuleState(0, new Rotation2d(angle))
+      new SwerveModuleState(0, m_rotation),
+      new SwerveModuleState(0, m_rotation),
+      new SwerveModuleState(0, m_rotation),
+      new SwerveModuleState(0, m_rotation)
     });
   }
   

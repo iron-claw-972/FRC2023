@@ -11,12 +11,12 @@ import frc.robot.subsystems.Drivetrain;
 /**
  * Sets all module angles to a given trajectory's initial angle.
  */
-public class ModuleAnglesFromTrajectory extends CommandBase {
+public class TrajectoryPresetSteerAngles extends CommandBase {
 
   private final Drivetrain m_drive;
   private final Trajectory m_trajectory;
   
-  public ModuleAnglesFromTrajectory(Drivetrain drive, Trajectory trajectory) {
+  public TrajectoryPresetSteerAngles(Drivetrain drive, Trajectory trajectory) {
     m_drive = drive;
     m_trajectory = trajectory;
     

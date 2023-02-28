@@ -1,9 +1,5 @@
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -22,18 +18,6 @@ import frc.robot.commands.auto.EngageFromCenterGrid;
 import frc.robot.commands.auto.EngageNoPathplanner;
 import frc.robot.commands.auto.GoOverChargeStation;
 import frc.robot.commands.auto.PathPlannerCommand;
-import frc.robot.commands.test.CircleDrive;
-import frc.robot.commands.test.DriveFeedForwardCharacterization;
-import frc.robot.commands.test.GoToPoseTest;
-import frc.robot.commands.GoToPose;
-import frc.robot.commands.test.CircleDrive;
-import frc.robot.commands.test.DriveFeedForwardCharacterization;
-import frc.robot.commands.test.SteerFeedForwardCharacterizationSingle;
-import frc.robot.commands.test.TestDriveVelocity;
-import frc.robot.commands.test.TestHeadingPID;
-import frc.robot.commands.test.TestSteerAngle;
-import frc.robot.commands.vision.TestVisionAlignment;
-import frc.robot.commands.vision.TestVisionDistance;
 import frc.robot.constants.VisionConstants;
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.controls.BaseDriverConfig;
