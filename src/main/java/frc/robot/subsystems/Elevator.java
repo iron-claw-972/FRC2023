@@ -100,12 +100,9 @@ public class Elevator extends SubsystemBase {
     m_isCalibrated = true; 
   }
 
-  public void resetPID(){
-    m_elevatorPID.reset();
-  }
-
   public void setTargetExtension(double setpoint){
     m_elevatorPID.setSetpoint(setpoint);
+    m_elevatorPID.reset(); 
   }
 
   public boolean isBottomSwitchTripped(){
@@ -140,6 +137,5 @@ public class Elevator extends SubsystemBase {
     m_elevatorTab.addBoolean("bottomLimitSwitch", () -> isBottomSwitchTripped());
 
   }
-
 }
 

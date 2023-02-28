@@ -20,7 +20,10 @@ public class MoveToExtension extends CommandBase {
   public void initialize(){
     m_elevator.setTargetExtension(m_targetExtension); 
     m_elevator.setPIDEnabled(true);
-    m_elevator.resetPID();
   }
-
+  
+  @Override
+  public boolean isFinished() {
+    return m_elevator.atSetpoint();
+  }
 }

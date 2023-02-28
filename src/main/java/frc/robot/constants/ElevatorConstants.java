@@ -11,9 +11,6 @@ public class ElevatorConstants {
   public static final double kI = 0.3;
   public static final double kD = 0.0;
 
-  public static final double kVelocity = 0.25; 
-  public static final double kAccel = 0; 
-
   // Game constants
   /** Middle Node height (in meters) */
   public static final double kMiddleNodeHeightCone = Units.inchesToMeters(24.5);
@@ -48,11 +45,9 @@ public class ElevatorConstants {
   /** Normal full power level for the elevator motor. */
   public static final double kPowerLimit = 0.3; //1
 
-
   public static double heightToElevatorExtension(double height){
     double extension = Units.inchesToMeters(height-10.5)/Math.sin(Units.degreesToRadians(55));
     return extension; 
   }
-
 }
 

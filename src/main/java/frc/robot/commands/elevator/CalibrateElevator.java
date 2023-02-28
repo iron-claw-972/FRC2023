@@ -17,5 +17,4 @@ public class CalibrateElevator extends SequentialCommandGroup {
       new InstantCommand(() -> elevator.setIsCalibrated())
     );
   }
-
 }
