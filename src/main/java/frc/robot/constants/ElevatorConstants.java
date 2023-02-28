@@ -7,8 +7,8 @@ public class ElevatorConstants {
   public static final int kTopLimitSwitchPort = 9;
   public static final int kBottomLimitSwitchPort = 8;
 
-  public static final double kP = 5;
-  public static final double kI = 0.005;
+  public static final double kP = 1.2;
+  public static final double kI = 0.3;
   public static final double kD = 0.0;
 
   public static final double kVelocity = 0.25; 
