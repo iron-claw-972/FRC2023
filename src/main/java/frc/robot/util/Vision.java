@@ -133,13 +133,14 @@ public class Vision {
       () -> getPose2d().getY(),
       () -> getPose2d().getRotation().getRadians()
     };
+    
     LogManager.addDoubleArray("Pose2d", poseSupplier);
-    LogManager.addInt("Visible April Tags", () -> getEstimatedPoses(getPose2d()).size() );
+    LogManager.addInt("Visible April Tags", () -> getEstimatedPoses(getPose2d()).size());
+    
   }
   
   public void setupVisionShuffleboard() {
   }
-
   
   class VisionCamera {
     PhotonCamera camera;
