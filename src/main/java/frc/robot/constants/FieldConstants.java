@@ -12,13 +12,13 @@ public class FieldConstants {
   public static final double kRobotDistanceFromNodeTape = 0 + DriveConstants.kRobotWidthWithBumpers / 2; // meters
 
   // The locations of the node tape in the x axis, relative to the very bottom left corner of the entire field
-  public static final double kBlueNodeTapeLocX = 4.379; // meters
-  public static final double kRedNodeTapeLocX = 18.183; // meters
+  public static final double kBlueNodeTapePosX = 4.379; // meters
+  public static final double kRedNodeTapePosX = 18.183; // meters
 
   // The location that the robot should be at in the X axis
-  public static final double kBlueAllianceNodeStartX = kBlueNodeTapeLocX + kRobotDistanceFromNodeTape; // meters
+  public static final double kBlueAllianceNodeStartX = kBlueNodeTapePosX + kRobotDistanceFromNodeTape; // meters
   // Subtract because the red alliance is on the opposite side of the field
-  public static final double kRedAllianceNodeStartX = kRedNodeTapeLocX - kRobotDistanceFromNodeTape; // meters
+  public static final double kRedAllianceNodeStartX = kRedNodeTapePosX - kRobotDistanceFromNodeTape; // meters
 
   // The location of the field boundary in the y axis, relative to the very bottom left corner of the entire field
   public static final double kNodeStartY = 0.569; // meters

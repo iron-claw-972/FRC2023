@@ -136,14 +136,15 @@ public class Vision {
   }
 
   public void logging(){
-    DoubleSupplier[] poseSupplier = {
-      () -> getPose2d().getX(),
-      () -> getPose2d().getY(),
-      () -> getPose2d().getRotation().getRadians()
-    };
+    //TODO: fix this, currently breaks because of nulls
+    // DoubleSupplier[] poseSupplier = {
+    //   () -> getPose2d().getX(),
+    //   () -> getPose2d().getY(),
+    //   () -> getPose2d().getRotation().getRadians()
+    // };
     
-    LogManager.addDoubleArray("Pose2d", poseSupplier);
-    LogManager.addInt("Visible April Tags", () -> getEstimatedPoses(getPose2d()).size());
+    // LogManager.addDoubleArray("Pose2d", poseSupplier);
+    // LogManager.addInt("Visible April Tags", () -> getEstimatedPoses(getPose2d()).size());
     
   }
   
