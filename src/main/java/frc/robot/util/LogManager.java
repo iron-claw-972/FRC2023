@@ -1,6 +1,7 @@
 package frc.robot.util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.IntSupplier;
@@ -24,14 +25,20 @@ public class LogManager {
   // These are array lists of log entry classes from WPI. appending to a log entry automatically adds to the log file.
   private static ArrayList<DoubleLogEntry> doubleLogs = new ArrayList<>();
   private static ArrayList<DoubleArrayLogEntry> doubleArrayLogs = new ArrayList<>();
-  private static ArrayList<BooleanLogEntry> boolLogs = new ArrayList<>();
+  private static ArrayList<BooleanLogEntry> booleanLogs = new ArrayList<>();
   private static ArrayList<IntegerLogEntry> intLogs = new ArrayList<>();
 
   // These are the suppliers, or functions that return values. This is how the values are accessed.
   private static ArrayList<DoubleSupplier> doubleValues = new ArrayList<>();
   private static ArrayList<DoubleSupplier[]> doubleArrayValues = new ArrayList<>();
-  private static ArrayList<BooleanSupplier> boolValues = new ArrayList<>();
+  private static ArrayList<BooleanSupplier> booleanValues = new ArrayList<>();
   private static ArrayList<IntSupplier> intValues = new ArrayList<>();
+
+  // These are the log entries that are not updated periodically, they just receive individual values.
+  private static HashMap<String, DoubleLogEntry> individualDoubleLogs = new HashMap<>();
+  private static HashMap<String, DoubleArrayLogEntry> individualDoubleArrayLogs = new HashMap<>();
+  private static HashMap<String, BooleanLogEntry> individualBooleanLogs = new HashMap<>();
+  private static HashMap<String, IntegerLogEntry> individualIntegerLogs = new HashMap<>();
 
   /**
    * Records the metadata supplied by gversion (https://github.com/lessthanoptimal/gversion-plugin) in BuildData.java.
@@ -50,7 +57,8 @@ public class LogManager {
   }
 
   /**
-   * Starts logging a double from a function.
+   * Starts logging a double from a function. This should only be called once in an initialization, the double supplier will be periodically
+   * called for values. If your value is not always there, consider using the other addDouble that takes a single value at a time.
    * 
    * @param name The name of the log. Use / to create subdirectories, and keep names unique.
    * @param logged A double supplier of the value to be logged. Can be created by using a lambda on a function that returns a double.
@@ -62,7 +70,25 @@ public class LogManager {
   }
 
   /**
-   * Starts logging an array of doubles from a function.
+   * Logs a single double value to the log. Do not use with the other addDouble() that takes a double supplier.
+   * This will only log the value once, so it should be called periodically or when needed. If you have a function that consistently 
+   * returns values, it may be easier to use the double supplier log.
+   * 
+   * @param name The name of the log. Use / to create subdirectories, and keep names unique.
+   * @param value the value to be logged.
+   */
+  public static void addDouble(String name, double value) {
+    if (individualDoubleLogs.containsKey(name)) {
+      individualDoubleLogs.get(name).append(value);
+    } else {
+      individualDoubleLogs.put(name, new DoubleLogEntry(log, name));
+      individualDoubleLogs.get(name).append(value);
+    }
+  }
+
+  /**
+   * Starts logging an array of doubles from a function. This should only be called once in an initialization, the supplier will be periodically
+   * called for values. If your value is not always there, consider using the other addDoubleArray that takes a single value at a time.
    * 
    * @param name The name of the log. Use / to create subdirectories, and keep names unique.
    * @param logged An array of double suppliers of the values to be logged. 
@@ -75,7 +101,25 @@ public class LogManager {
   }
 
   /**
-   * Logs a int from a function.
+   * Logs a single double array to the log. Do not use with the other addDoubleArray() that takes a double array supplier.
+   * This will only log the value once, so it should be called periodically or when needed. If you have a function that consistently 
+   * returns values, it may be easier to use the double array supplier log.
+   * 
+   * @param name The name of the log. Use / to create subdirectories, and keep names unique.
+   * @param value the value to be logged.
+   */
+  public static void addDoubleArray(String name, double[] value) {
+    if (individualDoubleArrayLogs.containsKey(name)) {
+      individualDoubleArrayLogs.get(name).append(value);
+    } else {
+      individualDoubleArrayLogs.put(name, new DoubleArrayLogEntry(log, name));
+      individualDoubleArrayLogs.get(name).append(value);
+    }
+  }
+
+  /**
+   * Starts logging an int from a function. This should only be called once in an initialization, the supplier will be periodically
+   * called for values. If your value is not always there, consider using the other addInt() that takes a single value at a time.
    * 
    * @param name The name of the log. Use / to create subdirectories, and keep names unique.
    * @param logged An int supplier of the value to be logged. Can be created by using a lambda on a function that returns a int.
@@ -87,15 +131,50 @@ public class LogManager {
   }
 
   /**
-   * Starts logging a boolean from a function.
+   * Logs a single int to the log. Do not use with the other addInt() that takes a int supplier.
+   * This will only log the value once, so it should be called periodically or when needed. If you have a function that consistently 
+   * returns values, it may be easier to use the int supplier log.
+   * 
+   * @param name The name of the log. Use / to create subdirectories, and keep names unique.
+   * @param value the value to be logged.
+   */
+  public static void addInt(String name, int value) {
+    if (individualIntegerLogs.containsKey(name)) {
+      individualIntegerLogs.get(name).append(value);
+    } else {
+      individualIntegerLogs.put(name, new IntegerLogEntry(log, name));
+      individualIntegerLogs.get(name).append(value);
+    }
+  }
+
+  /**
+   * Starts logging a boolean from a function. This should only be called once in an initialization, the supplier will be periodically
+   * called for values. If your value is not always there, consider using the other addBoolean() that takes a single value at a time.
    * 
    * @param name The name of the log. Use / to create subdirectories, and keep names unique.
    * @param logged A boolean supplier of the value to be logged. Can be created by using a lambda on a function that returns a boolean.
    */
-  public static void addBool(String name, BooleanSupplier logged) {
+  public static void addBoolean(String name, BooleanSupplier logged) {
     BooleanLogEntry BooleanLog = new BooleanLogEntry(log, name);
-    boolLogs.add(BooleanLog);
-    boolValues.add(logged);
+    booleanLogs.add(BooleanLog);
+    booleanValues.add(logged);
+  }
+
+  /**
+   * Logs a single boolean to the log. Do not use with the other addBoolean() that takes a boolean supplier.
+   * This will only log the value once, so it should be called periodically or when needed. If you have a function that consistently 
+   * returns values, it may be easier to use the boolean supplier log.
+   * 
+   * @param name The name of the log. Use / to create subdirectories, and keep names unique.
+   * @param value the value to be logged.
+   */
+  public static void addBoolean(String name, boolean value) {
+    if (individualBooleanLogs.containsKey(name)) {
+      individualBooleanLogs.get(name).append(value);
+    } else {
+      individualBooleanLogs.put(name, new BooleanLogEntry(log, name));
+      individualBooleanLogs.get(name).append(value);
+    }
   }
 
   /**
@@ -115,8 +194,8 @@ public class LogManager {
     for (int i = 0; i < intLogs.size(); i++) {
       intLogs.get(i).append(intValues.get(i).getAsInt());
     }
-    for (int i = 0; i < boolLogs.size(); i++) {
-      boolLogs.get(i).append(boolValues.get(i).getAsBoolean());
+    for (int i = 0; i < booleanLogs.size(); i++) {
+      booleanLogs.get(i).append(booleanValues.get(i).getAsBoolean());
     }
   }
 }
