@@ -103,9 +103,10 @@ public class Operator {
       // Outtake
       m_operator.get(m_operator.LEFT_TRIGGER_BUTTON).onTrue(new InstantCommand(() -> m_intake.intake(-1)));
       m_operator.get(m_operator.LEFT_TRIGGER_BUTTON).onFalse(new InstantCommand(() -> m_intake.stop()));
+      
       // Extends the bar
-      m_operator.get(Button.B).onTrue(new RotateDeployingBar(m_deployingBar, DeployingBarConstants.kMaxRotation));
-      m_operator.get(Button.B).onFalse(new RotateDeployingBar(m_deployingBar, DeployingBarConstants.kMinRotation));
+      m_operator.get(Button.B).onTrue(new RotateDeployingBar(m_deployingBar, DeployingBarConstants.kDeployedRotation));
+      m_operator.get(Button.B).onFalse(new RotateDeployingBar(m_deployingBar, DeployingBarConstants.kStowRotation));
     }
 
     // Prints that operator controls are working
