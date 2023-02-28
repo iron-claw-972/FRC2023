@@ -23,7 +23,6 @@ public class EngageFromCenterGrid extends SequentialCommandGroup{
         poseCharge = new Pose2d(4, 0, new Rotation2d(0));
 
         addCommands(
-            new SimplePresetSteerAngles(m_drive),
             new GoToPose(m_drive, poseCharge),
             new BalanceCommand(m_drive)
 
