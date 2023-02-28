@@ -134,7 +134,7 @@ public class Vision {
       () -> getPose2d().getRotation().getRadians()
     };
     LogManager.addDoubleArray("Pose2d", poseSupplier);
-    LogManager.addDouble("Visible April Tags", getEstimatedPoses(getPose2d()).size() );
+    LogManager.addInt("Visible April Tags", () -> getEstimatedPoses(getPose2d()).size() );
   }
   
   public void setupVisionShuffleboard() {
@@ -154,7 +154,7 @@ public class Vision {
       camera = new PhotonCamera(cameraName);
       photonPoseEstimator = new PhotonPoseEstimator(
         m_aprilTagFieldLayout, 
-        PoseStrategy.MULTI_TAG_PNP, g
+        PoseStrategy.MULTI_TAG_PNP, 
         camera, 
         robotToCam
       );
