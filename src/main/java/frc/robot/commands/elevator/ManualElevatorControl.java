@@ -30,7 +30,7 @@ public class ManualElevatorControl extends CommandBase {
       m_elevator.setMotorPower(m_manualController.getManualElevatorPower());
     } else {
       m_elevator.setPIDEnabled(true);
-      m_elevator.setTargetExtension(m_elevator.getElevatorExtension());
+      m_elevator.setTargetExtension(m_elevator.getExtension());
     }
   }
 }

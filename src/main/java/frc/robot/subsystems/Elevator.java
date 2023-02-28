@@ -52,6 +52,9 @@ public class Elevator extends SubsystemBase {
     addChild("Bottom Limit",m_bottomLimitSwitch);
 
     LogManager.addDouble("Elevator/error", () -> getError());
+    LogManager.addDouble("Elevator/extension", () -> getExtension());
+    LogManager.addBool("Elevator/bottomLimitSwitch", () -> isBottomSwitchTripped());
+    LogManager.addBool("Elevator/topLimitSwitch", () -> isTopSwitchTripped());
     
     setUpElevatorTab();
   }
@@ -59,7 +62,7 @@ public class Elevator extends SubsystemBase {
   @Override
   public void periodic() {
     if(m_enabled && m_isCalibrated) {
-      double pidPower = m_elevatorPID.calculate(getElevatorExtension(), MathUtil.clamp(m_elevatorPID.getSetpoint(), ElevatorConstants.kMinExtension, ElevatorConstants.kMaxExtension));
+      double pidPower = m_elevatorPID.calculate(getExtension(), MathUtil.clamp(m_elevatorPID.getSetpoint(), ElevatorConstants.kMinExtension, ElevatorConstants.kMaxExtension));
       setMotorPower(pidPower);
     }
   }
@@ -124,7 +127,7 @@ public class Elevator extends SubsystemBase {
    * Determine the elevator extension from the motor encoder.
    * @return return extension in meters
    */
-  public double getElevatorExtension() {
+  public double getExtension() {
     return m_talonEncoder.getDistance(); 
   }
 
@@ -137,11 +140,11 @@ public class Elevator extends SubsystemBase {
    */
   public double getError() {
     if (!m_enabled) return 0;
-    return getElevatorExtension() - m_elevatorPID.getSetpoint();
+    return getExtension() - m_elevatorPID.getSetpoint();
   }
 
   public void setUpElevatorTab() {
-    m_elevatorTab.addNumber("Elevator Height", () -> getElevatorExtension());
+    m_elevatorTab.addNumber("Elevator Extension", () -> getExtension());
     m_elevatorTab.add(m_elevatorPID); 
     m_elevatorTab.addBoolean("enabled", () -> m_enabled);
     m_elevatorTab.addBoolean("topLimitSwitch", () -> isTopSwitchTripped() );
