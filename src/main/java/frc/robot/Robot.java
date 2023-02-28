@@ -100,6 +100,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     CommandScheduler.getInstance().cancelAll();
+    m_robotContainer.autoChooserUpdate();
   }
 
   /** This function is called periodically when the robot is disabled */
