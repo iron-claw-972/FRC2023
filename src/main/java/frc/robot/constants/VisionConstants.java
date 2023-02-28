@@ -44,7 +44,7 @@ public class VisionConstants {
           )
         )
       ));
-    }else{
+    } else {
       kCameras = new ArrayList<Pair<String, Transform3d>>(List.of(
         new Pair<String, Transform3d>(
           "Camera_1",
