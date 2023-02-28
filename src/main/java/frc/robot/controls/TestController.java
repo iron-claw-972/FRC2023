@@ -58,7 +58,7 @@ public class TestController {
     }
   }
 
-  public double getClampedElevatorThrottleValue() {
+  public double returnClampedLeftJoyValue() {
     return MathUtil.clamp(test.get(Axis.LEFT_Y),-ElevatorConstants.kPowerLimit, ElevatorConstants.kPowerLimit);
   }
 

@@ -58,7 +58,7 @@ public class Elevator extends SubsystemBase {
     
     //m_motor.setSafetyEnabled(true);
     setUpElevatorTab();
-    setTargetExtension(0); 
+    setTargetExtension(0.1); 
   }
 
   @Override
@@ -133,11 +133,6 @@ public class Elevator extends SubsystemBase {
 
   public void setMotorPower(double power){
     m_motor.set(power);
-  }
-
-  public double setElevatorExtension(){
-    double m_maxHeight = m_talonEncoder.getDistance();
-    return m_maxHeight;  
   }
 
   public void setUpElevatorTab(){

@@ -28,11 +28,10 @@ public class ManualElevatorControl extends CommandBase {
 
   @Override
   public void execute() {
-    if ((m_manualController.getClampedElevatorThrottleValue() > 0) || (m_manualController.getClampedElevatorThrottleValue() < 0)){
+    if (m_manualController.returnClampedLeftJoyValue() !=0){
       m_elevator.setPIDEnabled(false); 
-      m_elevator.setSpeedMotorStopWhenLimSwitchesHit(m_manualController.getClampedElevatorThrottleValue());
-    }
-    if(m_manualController.getClampedElevatorThrottleValue() == 0){
+      m_elevator.setSpeedMotorStopWhenLimSwitchesHit(m_manualController.returnClampedLeftJoyValue());
+    }else{
       m_elevator.setPIDEnabled(true); 
       m_currentElevatorPos = m_elevator.getElevatorExtension(); 
       m_elevator.setTargetExtension(m_currentElevatorPos);

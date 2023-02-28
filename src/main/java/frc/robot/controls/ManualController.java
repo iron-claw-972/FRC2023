@@ -43,7 +43,7 @@ public class ManualController {
     //TODO: calibrate elevator using absolute encoders(probably will not work yet as of 2/15/2023);
     //move to bottom node height
   }
-  public double getClampedElevatorThrottleValue() {
+  public double returnClampedLeftJoyValue() {
     return MathUtil.clamp(m_manual.get(Axis.LEFT_Y), -ElevatorConstants.kPowerLimit,ElevatorConstants.kPowerLimit);   
   }
 }

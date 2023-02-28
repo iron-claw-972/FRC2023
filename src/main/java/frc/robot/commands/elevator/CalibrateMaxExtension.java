@@ -28,9 +28,8 @@ public class CalibrateMaxExtension extends CommandBase {
   
   @Override
   public void end(boolean interrupted) {
-    m_elevator.setElevatorExtension();
     m_elevator.setMotorPower(0); 
-    SmartDashboard.putNumber("Max Elevator Extension", m_elevator.setElevatorExtension());
+    SmartDashboard.putNumber("Max Elevator Extension", m_elevator.getElevatorExtension());
     m_elevator.setPIDEnabled(true);
   }
   
