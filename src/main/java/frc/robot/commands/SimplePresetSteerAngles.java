@@ -41,7 +41,6 @@ public class SimplePresetSteerAngles extends CommandBase{
 
   @Override
   public void initialize() {
-    m_drive.setAllOptimize(false);
     m_drive.enableStateDeadband(false);
   }
   
@@ -57,7 +56,6 @@ public class SimplePresetSteerAngles extends CommandBase{
   
   @Override
   public void end(boolean interrupted) {
-    m_drive.setAllOptimize(true);
     m_drive.enableStateDeadband(true);
     m_drive.stop();
   }

@@ -10,7 +10,9 @@ import frc.robot.subsystems.Drivetrain;
 public class BalanceCommand extends CommandBase {
 
     private Drivetrain m_drive;
-    private final PIDController m_pid;
+    private final PIDController m_pid = new PIDController(
+        DriveConstants.kBalanceP, DriveConstants.kBalanceI, DriveConstants.kBalanceD);
+    
 
     private double m_currentAngle, m_output;
 
@@ -22,14 +24,13 @@ public class BalanceCommand extends CommandBase {
 
     public BalanceCommand(Drivetrain drive) {
         m_drive = drive;
-        addRequirements(drive);
-
-        m_pid = new PIDController(DriveConstants.kBalanceP, DriveConstants.kBalanceI, DriveConstants.kBalanceD);
         m_pid.setTolerance(DriveConstants.kBalanceTolerance);
+        addRequirements(drive);
     }
 
     @Override
     public void initialize() {
+        
         m_inverted = 1;
 
         m_pid.setSetpoint(0);
@@ -61,7 +62,6 @@ public class BalanceCommand extends CommandBase {
                 m_drive.stop();
                 timer.reset();
             }
-
         }
     }
 
