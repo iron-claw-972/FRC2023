@@ -93,21 +93,21 @@ public class RobotContainer {
     // If the robot is the competition robot, create the arm and intake
     if (Robot.kRobotId == RobotId.SwerveCompetition) {
 
-      m_arm = null;//new FourBarArm();
-      m_intake = null;//new Intake();
+      m_arm = new FourBarArm();
+      m_intake = new Intake();
       m_elevator = new Elevator(m_elevatorTab);
-      m_deployingBar = null;//new DeployingBar(); 
+      m_deployingBar = null; 
 
-      m_operator = null;//new Operator(m_deployingBar);
+      m_operator = new Operator();
       m_testController = new TestController(m_arm, m_intake, m_elevator);
-      m_manualController = null;// new ManualController(m_arm, m_intake, m_elevator);
+      m_manualController = new ManualController(m_arm, m_intake, m_elevator);
 
-      //m_operator.configureControls(m_intake);
-      //m_operator.configureControls(m_arm);
+      m_operator.configureControls(m_intake);
+      m_operator.configureControls(m_arm);
       //TODO: add back controls once deploying bar is installed
       //m_operator.configureControls(m_deployingBar);
       m_testController.configureControls();
-      //m_manualController.configureControls();
+      m_manualController.configureControls();
 
     } else {
 
