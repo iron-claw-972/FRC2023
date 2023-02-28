@@ -22,7 +22,7 @@ public class TestController {
   private Intake m_intake;
   private Elevator m_elevator;
   
-  public TestController(FourBarArm arm, Intake intake, Elevator elevator){
+  public TestController(FourBarArm arm, Intake intake, Elevator elevator) {
     m_arm = arm;
     m_intake = intake;
     m_elevator = elevator;
@@ -36,13 +36,13 @@ public class TestController {
       test.get(Button.B).onTrue(new ExtendToPosition(m_arm, ArmConstants.kShelfPosition));
     }
    
-    if(m_intake != null){ // intake controls
+    if(m_intake != null) { // intake controls
       test.get(DPad.DOWN).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kIntakeSpeed), m_intake));
       test.get(DPad.UP).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kOuttakeSpeed),m_intake));
       test.get(DPad.LEFT).onTrue(new InstantCommand(() -> m_intake.stop(), m_intake));
     }
 
-    if(m_elevator != null){// elevator controls 
+    if(m_elevator != null) {// elevator controls 
       //test.get(DPad.LEFT).onTrue(new InstantCommand(() -> m_elevator.setMotorPower(0), m_elevator));
       test.get(DPad.DOWN).onTrue(new CalibrateElevator(m_elevator));
       test.get(Button.A).onTrue(new MoveToExtension(m_elevator, ElevatorConstants.kMiddleNodeHeightExtension));
