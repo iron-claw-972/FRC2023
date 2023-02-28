@@ -77,6 +77,11 @@ public class RobotContainer {
   private final TestController m_testController;
   private final ManualController m_manualController;
 
+  //TODO: set this somewhere
+  // What game piece the robot has
+  public enum GamePieceType {CONE, CUBE};
+  private GamePieceType m_gamePiece = GamePieceType.CONE;
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
@@ -89,7 +94,7 @@ public class RobotContainer {
     // Create Drivetrain, because every robot will have a drivetrain
     m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab, m_vision);
     m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
-    m_operator = new Operator(m_vision);
+    m_operator = new Operator(m_vision, this);
     m_operator.configureControls();
 
     // If the robot is the competition robot, create the arm and intake
@@ -104,6 +109,7 @@ public class RobotContainer {
       m_manualController = new ManualController(m_arm, m_intake, m_elevator);
 
       m_operator.configureControls(m_arm);
+      m_operator.configureControls(m_elevator);
       m_operator.configureControls(m_intake);
       // m_operator.configureControls(m_deployingBar);
       m_testController.configureControls();
@@ -146,6 +152,10 @@ public class RobotContainer {
     addTestCommands();
 
     m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive, m_driver));
+  }
+
+  public GamePieceType getGamePiece(){
+    return m_gamePiece;
   }
 
   /** 

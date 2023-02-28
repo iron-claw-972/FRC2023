@@ -5,13 +5,17 @@ import java.util.function.BooleanSupplier;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import frc.robot.RobotContainer;
 import frc.robot.commands.arm.ExtendToPosition;
 import frc.robot.constants.ArmConstants;
 import frc.robot.commands.deployingbar.RotateDeployingBar;
+import frc.robot.commands.elevator.MoveToExtension;
 import frc.robot.constants.DeployingBarConstants;
+import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.DeployingBar;
+import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.util.NodeLegecy;
 import frc.robot.util.Vision;
@@ -66,7 +70,7 @@ public class Operator {
    * @param arm The arm
    */
   public void configureControls(FourBarArm arm){
-    // Makes the arm and elevator go to different heights
+    // Makes the arm go to different heights
     m_operator.get(Button.A).onTrue(new ParallelCommandGroup(
       new InstantCommand(() -> selectValue(1, 1)),
       new ExtendToPosition(arm, ArmConstants.kLowPosition)
@@ -80,14 +84,39 @@ public class Operator {
       new ExtendToPosition(arm, ArmConstants.kTopPosition)
     ));
 
-    // Puts the arm and elevator in the initial position inside the robot
+    // Puts the arm in the initial position inside the robot
     m_operator.get(Button.LB).onTrue(new ExtendToPosition(arm, ArmConstants.kInitialPosition));
       
-      // Moves arm to position to intake from shelf or ground
-      m_operator.get(m_operator.RIGHT_TRIGGER_BUTTON).onTrue(new ExtendToPosition(arm, ArmConstants.kShelfPosition));
-      m_operator.get(m_operator.RIGHT_TRIGGER_BUTTON).onFalse(new ExtendToPosition(arm, ArmConstants.kInitialPosition));
-      m_operator.get(Button.RB).onTrue(new ExtendToPosition(arm, ArmConstants.kIntakePosition));
-      m_operator.get(Button.RB).onFalse(new ExtendToPosition(arm, ArmConstants.kInitialPosition));
+    // Moves arm to position to intake from shelf or ground
+    m_operator.get(m_operator.RIGHT_TRIGGER_BUTTON).onTrue(new ExtendToPosition(arm, ArmConstants.kShelfPosition));
+    m_operator.get(m_operator.RIGHT_TRIGGER_BUTTON).onFalse(new ExtendToPosition(arm, ArmConstants.kInitialPosition));
+    m_operator.get(Button.RB).onTrue(new ExtendToPosition(arm, ArmConstants.kIntakePosition));
+    m_operator.get(Button.RB).onFalse(new ExtendToPosition(arm, ArmConstants.kInitialPosition));
+  }
+
+  /**
+   * Configures elevator controls
+   * @param elevator The elevator
+   */
+  public void configureControls(Elevator elevator){
+    // Makes the elevator go to different heights
+    m_operator.get(Button.A).onTrue(new MoveToExtension(elevator, ElevatorConstants.kHybridNodeOuttakeExtension));
+    m_operator.get(Button.X).onTrue(new MoveToExtension(elevator, 
+      selectValues[2]==2?ElevatorConstants.kMiddleNodeHeightCube:ElevatorConstants.kMiddleNodeHeightCone
+    ));
+    m_operator.get(Button.Y).onTrue(new MoveToExtension(elevator, 
+      selectValues[2]==2?ElevatorConstants.kTopNodeHeightCube:ElevatorConstants.kTopNodeHeightCone
+    ));
+
+
+    // Puts the elevator in the initial position
+    m_operator.get(Button.LB).onTrue(new MoveToExtension(elevator, ElevatorConstants.kMinExtension));
+      
+    // Moves elevator to position to intake from shelf or ground
+    m_operator.get(m_operator.RIGHT_TRIGGER_BUTTON).onTrue(new ExtendToPosition(arm, ArmConstants.kShelfPosition));
+    m_operator.get(m_operator.RIGHT_TRIGGER_BUTTON).onFalse(new ExtendToPosition(arm, ArmConstants.kInitialPosition));
+    m_operator.get(Button.RB).onTrue(new ExtendToPosition(arm, ArmConstants.kIntakePosition));
+    m_operator.get(Button.RB).onFalse(new ExtendToPosition(arm, ArmConstants.kInitialPosition));
   }
 
   /**
