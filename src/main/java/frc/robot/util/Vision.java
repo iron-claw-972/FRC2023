@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.DoubleSupplier;
 
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
@@ -126,9 +127,20 @@ public class Vision {
     return getAprilTagFieldLayout().getTagPose(id).get();
   }
 
+  public void logging(){
+    DoubleSupplier[] poseSupplier = {
+      () -> getPose2d().getX(),
+      () -> getPose2d().getY(),
+      () -> getPose2d().getRotation().getRadians()
+    };
+    LogManager.addDoubleArray("Pose2d", poseSupplier);
+    LogManager.addDouble("Visible April Tags", getEstimatedPoses(getPose2d()).size() );
+  }
+  
   public void setupVisionShuffleboard() {
   }
 
+  
   class VisionCamera {
     PhotonCamera camera;
     PhotonPoseEstimator photonPoseEstimator;
@@ -142,7 +154,7 @@ public class Vision {
       camera = new PhotonCamera(cameraName);
       photonPoseEstimator = new PhotonPoseEstimator(
         m_aprilTagFieldLayout, 
-        PoseStrategy.MULTI_TAG_PNP, 
+        PoseStrategy.MULTI_TAG_PNP, g
         camera, 
         robotToCam
       );
