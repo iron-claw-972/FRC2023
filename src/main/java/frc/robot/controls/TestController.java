@@ -49,7 +49,6 @@ public class TestController {
       test.get(DPad.DOWN).onTrue(new CalibrateElevator(m_elevator));
       test.get(Button.A).onTrue(new MoveToExtension(m_elevator, ElevatorConstants.kMiddleNodeHeightConeExtension));
       test.get(Button.B).onTrue(new MoveToExtension(m_elevator, ElevatorConstants.kTopNodeHeightConeExtension));
-
     }
     
     }

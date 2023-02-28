@@ -47,6 +47,7 @@ import frc.robot.util.Vision;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+
   // Shuffleboard auto chooser
   private final SendableChooser<Command> m_autoCommand = new SendableChooser<>();
 
@@ -95,9 +96,9 @@ public class RobotContainer {
       m_arm = new FourBarArm();
       m_intake = new Intake();
       m_elevator = new Elevator(m_elevatorTab);
-      m_deployingBar = new DeployingBar(); 
+      m_deployingBar = null; 
 
-      m_operator = new Operator(m_deployingBar);
+      m_operator = new Operator();
       m_testController = new TestController(m_arm, m_intake, m_elevator);
       m_manualController = new ManualController(m_arm, m_intake, m_elevator);
 

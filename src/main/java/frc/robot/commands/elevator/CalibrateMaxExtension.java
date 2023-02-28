@@ -34,5 +34,3 @@ public class CalibrateMaxExtension extends CommandBase {
     return m_elevator.isTopSwitchTripped();
   }
 }
-
-
