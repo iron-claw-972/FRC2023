@@ -72,7 +72,11 @@ public class Drivetrain extends SubsystemBase {
   // translation controllers have dummy constants that are just good enough to run the odometry test
   private final PIDController m_xController = new PIDController(0.1, 0, 0);
   private final PIDController m_yController = new PIDController(0.1, 0, 0);
-  private final PIDController m_rotationController = new PIDController(DriveConstants.kHeadingP, DriveConstants.kHeadingI, DriveConstants.kHeadingD);
+  private final PIDController m_rotationController = new PIDController(
+    DriveConstants.kHeadingP, 
+    DriveConstants.kHeadingI, 
+    DriveConstants.kHeadingD
+  );
 
   //Shuffleboard
   private GenericEntry 
@@ -123,7 +127,8 @@ public class Drivetrain extends SubsystemBase {
       m_kinematics,
       m_pigeon.getRotation2d(),
       getModulePositions(),
-      new Pose2d());
+      new Pose2d()
+    );
     m_poseEstimator.setVisionMeasurementStdDevs(VisionConstants.kBaseVisionPoseStdDevs);
 
     m_rotationController.enableContinuousInput(-Math.PI, Math.PI);
@@ -460,10 +465,26 @@ public class Drivetrain extends SubsystemBase {
     m_steerVelocityEntry = m_swerveModulesTab.add("Set Steer Velocity", 0).getEntry();
     m_steerAngleEntry = m_swerveModulesTab.add("Set Steer Angle", 0).getEntry();
     m_drivetrainVoltsEntry = m_swerveModulesTab.add("Set Volts", 0).getEntry();
-    m_driveStaticFeedforwardEntry = m_swerveModulesTab.add("Drive kS FF", m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()]).getEntry();
-    m_driveVelocityFeedforwardEntry = m_swerveModulesTab.add("Drive kV FF", m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()]).getEntry();
-    m_steerStaticFeedforwardEntry = m_swerveModulesTab.add("Steer kS FF", m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()]).getEntry();
-    m_steerVelocityFeedforwardEntry = m_swerveModulesTab.add("Steer kV k FF", m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()]).getEntry();
+    m_driveStaticFeedforwardEntry = m_swerveModulesTab.add(
+      "Drive kS FF", 
+      m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getId()]
+    ).getEntry();
+
+    m_driveVelocityFeedforwardEntry = m_swerveModulesTab.add(
+      "Drive kV FF", 
+      m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getId()]
+    ).getEntry();
+
+    m_steerStaticFeedforwardEntry = m_swerveModulesTab.add(
+      "Steer kS FF", 
+      m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getId()]
+    ).getEntry();
+
+    m_steerVelocityFeedforwardEntry = m_swerveModulesTab.add(
+      "Steer kV FF", 
+      m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getId()]
+    ).getEntry();
+
     
     for (int i = 0; i < 4; i++) {
       m_modules[i].setupModulesShuffleboard();
@@ -504,14 +525,20 @@ public class Drivetrain extends SubsystemBase {
   public void updateDriveModuleFeedforwardShuffleboard() {
     // revert to previous saved feed forward data if changed
     if (m_prevModule != m_moduleChooser.getSelected()) {
-      m_driveStaticFeedforwardEntry.setDouble(m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()]);
-      m_driveVelocityFeedforwardEntry.setDouble(m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()]);
+      m_driveStaticFeedforwardEntry.setDouble(
+        m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getId()]
+      );
+      m_driveVelocityFeedforwardEntry.setDouble(
+        m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getId()]
+      );
       m_prevModule = m_moduleChooser.getSelected();
     }
     
     // update saved feedforward data
-    m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()] = m_driveStaticFeedforwardEntry.getDouble(0);
-    m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()] = m_driveVelocityFeedforwardEntry.getDouble(0);
+    m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getId()] = 
+      m_driveStaticFeedforwardEntry.getDouble(0);
+    m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getId()] = 
+      m_driveVelocityFeedforwardEntry.getDouble(0);
     
     // to set all modules to same feedforward values if all
     // if (m_module.getSelected() == m_allModule) {
@@ -521,7 +548,10 @@ public class Drivetrain extends SubsystemBase {
     // }
         
     //set selected module
-    m_moduleChooser.getSelected().setDriveFeedForwardValues(m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()],m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()]);
+    m_moduleChooser.getSelected().setDriveFeedForwardValues(
+      m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getId()],
+      m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getId()]
+    );
   }
 
   /**
@@ -531,24 +561,33 @@ public class Drivetrain extends SubsystemBase {
     
     //revert to previous saved feed forward data if changed
     if (m_prevModule != m_moduleChooser.getSelected()) {
-      m_steerStaticFeedforwardEntry.setDouble(m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()]);
-      m_steerVelocityFeedforwardEntry.setDouble(m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()]);
+      m_steerStaticFeedforwardEntry.setDouble(
+        m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getId()]
+      );
+      m_steerVelocityFeedforwardEntry.setDouble(
+        m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getId()]
+      );
       m_prevModule = m_moduleChooser.getSelected();
     }
     
     // update saved feedforward data
-    m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()] = m_steerStaticFeedforwardEntry.getDouble(0);
-    m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()] = m_steerVelocityFeedforwardEntry.getDouble(0);
+    m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getId()] = 
+      m_steerStaticFeedforwardEntry.getDouble(0);
+    m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getId()] = 
+      m_steerVelocityFeedforwardEntry.getDouble(0);
     
     //to set all modules to same feedforward values if all
     // if (m_module.getSelected() == m_allModule) {
     //   for(int i = 0; i < 4; i++) {
-    //     m_modules[i].setDriveFeedForwardValues(m_steerStaticFeedForwardSaver[m_module.getSelected().getModuleType().getID()], m_steerVelFeedForwardSaver[m_module.getSelected().getModuleType().getID()]);
+    //     m_modules[i].setDriveFeedForwardValues(m_steerStaticFeedForwardSaver[m_module.getSelected().getId()], m_steerVelFeedForwardSaver[m_module.getSelected().getId()]);
     //   }
     // }
     
     //set selected module
-    m_moduleChooser.getSelected().setDriveFeedForwardValues(m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()],m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()]);
+    m_moduleChooser.getSelected().setDriveFeedForwardValues(
+      m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getId()],
+      m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getId()]
+    );
   }
   
   /**

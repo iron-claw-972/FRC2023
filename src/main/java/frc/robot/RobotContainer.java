@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Robot.RobotId;
 import frc.robot.commands.DefaultDriveCommand;
@@ -31,6 +32,7 @@ import frc.robot.controls.GameControllerDriverConfig;
 import frc.robot.controls.ManualController;
 import frc.robot.controls.Operator;
 import frc.robot.controls.TestController;
+import frc.robot.subsystems.DeployingBar;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.Intake;
@@ -56,6 +58,7 @@ public class RobotContainer {
   private final ShuffleboardTab m_controllerTab = Shuffleboard.getTab("Controller");
   private final ShuffleboardTab m_visionTab = Shuffleboard.getTab("Vision");
   private final ShuffleboardTab m_testTab = Shuffleboard.getTab("Test");
+  
 
   private final Vision m_vision;
 
@@ -63,6 +66,7 @@ public class RobotContainer {
   private final Drivetrain m_drive;
   private final FourBarArm m_arm;
   private final Intake m_intake;
+  private final DeployingBar m_deployingBar;
 
   // Controllers are defined here
   private final BaseDriverConfig m_driver;
@@ -88,12 +92,16 @@ public class RobotContainer {
 
       m_arm = new FourBarArm();
       m_intake = new Intake();
+      m_deployingBar = null;
 
-      m_operator = new Operator(m_arm, m_intake);
+      m_operator = new Operator();
       m_testController = new TestController(m_arm, m_intake);
       m_manualController = new ManualController(m_arm, m_intake);
 
-      m_operator.configureControls();
+      m_operator.configureControls(m_intake);
+      m_operator.configureControls(m_arm);
+      //TODO: add back controls once deploying bar is installed
+      //m_operator.configureControls(m_deployingBar);
       m_testController.configureControls();
       m_manualController.configureControls();
 
@@ -103,6 +111,7 @@ public class RobotContainer {
 
       m_arm = null;
       m_intake = null;
+      m_deployingBar = null;
 
       m_operator = null;
       m_testController = null;
@@ -121,6 +130,8 @@ public class RobotContainer {
     LiveWindow.setEnabled(false);
     
     autoChooserUpdate();
+    m_autoTab.add("Auto Chooser", m_autoCommand);
+
     loadCommandSchedulerShuffleboard();
     m_drive.setupDrivetrainShuffleboard();
     m_drive.setupModulesShuffleboard();
@@ -132,7 +143,7 @@ public class RobotContainer {
     m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive, m_driver));
   }
 
-  /**
+  /** 
    * Resets the yaw of the pigeon, unless it has already been reset. Or use force to reset it no matter what.
    * 
    * @param force if the yaw should be reset even if it already has been reset since robot enable.
@@ -147,6 +158,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+    autoChooserUpdate();
     return m_autoCommand.getSelected();
   }
 
@@ -155,6 +167,7 @@ public class RobotContainer {
    */
   public void addTestCommands() {
     GenericEntry testEntry = m_testTab.add("Test Results", false).getEntry();
+    m_testTab.add("Cancel Command", new InstantCommand( () -> CommandScheduler.getInstance().cancelAll()));
     m_testTab.add("Circle Drive", new CircleDrive(m_drive));
     m_testTab.add("Drive FeedForward", new DriveFeedForwardCharacterization(m_drive));
     m_testTab.add("Steer Single FeedForward", new SteerFeedForwardCharacterizationSingle(m_drive));
@@ -179,7 +192,6 @@ public class RobotContainer {
     m_autoCommand.setDefaultOption("Do Nothing", new PrintCommand("This will do nothing!"));
     // add commands below with: m_autoCommand.addOption("Example", new ExampleCommand());
     
-    m_autoTab.add("Auto Chooser", m_autoCommand);
   }
 
   /**
