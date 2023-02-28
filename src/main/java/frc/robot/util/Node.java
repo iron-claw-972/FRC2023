@@ -54,8 +54,16 @@ public class Node {
           : NodeType.CONE;
 
     // Starting locations
-    double x = (alliance == Alliance.Blue ? FieldConstants.kBlueAllianceNodeStartX : FieldConstants.kRedAllianceNodeStartX);
+    double x = (alliance == Alliance.Blue ? 
+      FieldConstants.kBlueAllianceNodeStartX : 
+      FieldConstants.kRedAllianceNodeStartX
+    );
+
     double y = FieldConstants.kNodeStartY;
+
+    
+    // add or subtract Robot offset from node tape
+    x += FieldConstants.kRobotOffsetX * (alliance == Alliance.Blue ? 1 : -1);
 
     // Distance from the field boundary to the boundary separating the grid and loading zone
     switch (column) {
@@ -87,7 +95,6 @@ public class Node {
         y += 4.978;  
         break;
     }
-    y += FieldConstants.kRobotOffsetY * (alliance == Alliance.Blue ? 1 : -1);
     scorePose = new Pose2d(x, y, new Rotation2d());
   }
 
