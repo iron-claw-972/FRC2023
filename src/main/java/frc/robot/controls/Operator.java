@@ -30,7 +30,16 @@ public class Operator {
   private int[] selectValues = {1, 1, 1};
 
   // The selected node where the robot will score
-  public static NodeLegecy selectedNode = new NodeLegecy();
+  private static NodeLegecy selectedNode = new NodeLegecy();
+
+  private final BooleanSupplier 
+    LEFT_STICK_LEFT = () -> m_operator.get(Axis.LEFT_X) < -0.75,
+    LEFT_STICK_RIGHT = () -> m_operator.get(Axis.LEFT_X) > 0.75,
+    LEFT_STICK_UP = () -> m_operator.get(Axis.LEFT_Y) < -0.75;
+  private final BooleanSupplier 
+    RIGHT_STICK_LEFT = () -> m_operator.get(Axis.RIGHT_X) < -0.75,
+    RIGHT_STICK_RIGHT = () -> m_operator.get(Axis.RIGHT_X) > 0.75,
+    RIGHT_STICK_UP = () -> m_operator.get(Axis.RIGHT_Y) < -0.75;
 
   public Operator(Vision vision){
     m_vision = vision;
@@ -39,9 +48,8 @@ public class Operator {
   }
   
   /**
-   * Configures the operator controls for the deploying Bar.
+   * Configures the operator controls for column selection.
    */
-
   public void configureControls() {
     // Selects which grid to score in
     m_operator.get(LEFT_STICK_LEFT).onTrue(new InstantCommand(() -> selectValue(0, 1)));
@@ -53,6 +61,10 @@ public class Operator {
     m_operator.get(RIGHT_STICK_RIGHT).onTrue(new InstantCommand(() -> selectValue(2, 3)));
   }
 
+  /**
+   * Configures arm controls
+   * @param arm The arm
+   */
   public void configureControls(FourBarArm arm){
     // Makes the arm and elevator go to different heights
     m_operator.get(Button.A).onTrue(new ParallelCommandGroup(
@@ -78,6 +90,10 @@ public class Operator {
       m_operator.get(Button.RB).onFalse(new ExtendToPosition(arm, ArmConstants.kInitialPosition));
   }
 
+  /**
+   * Configures intkae controls
+   * @param intake The intake
+   */
   public void configureControls(Intake intake){
     // Intake
     m_operator.get(m_operator.RIGHT_TRIGGER_BUTTON).onTrue(new InstantCommand(()->intake.intake(1)));
@@ -90,10 +106,18 @@ public class Operator {
     m_operator.get(m_operator.LEFT_TRIGGER_BUTTON).onFalse(new InstantCommand(() -> intake.stop()));
   }
 
+  /**
+   * Configures deploying bar controls
+   * @param deployingBar The deploying bar
+   */
   public void configureControls(DeployingBar deployingBar){
     // Extends the bar
     m_operator.get(Button.B).onTrue(new RotateDeployingBar(deployingBar, DeployingBarConstants.kDeployedRotation));
     m_operator.get(Button.B).onFalse(new RotateDeployingBar(deployingBar, DeployingBarConstants.kStowRotation));
+  }
+
+  public static NodeLegecy getSelectedNode(){
+    return selectedNode;
   }
 
   /**
@@ -105,13 +129,4 @@ public class Operator {
     selectValues[index] = value;
     selectedNode = new NodeLegecy(m_vision, DriverStation.getAlliance(), selectValues[1], selectValues[0]*3-3+selectValues[2]);
   }
-
-  private final BooleanSupplier 
-    LEFT_STICK_LEFT = () -> m_operator.get(Axis.LEFT_X) < -0.75,
-    LEFT_STICK_RIGHT = () -> m_operator.get(Axis.LEFT_X) > 0.75,
-    LEFT_STICK_UP = () -> m_operator.get(Axis.LEFT_Y) < -0.75;
-  private final BooleanSupplier 
-    RIGHT_STICK_LEFT = () -> m_operator.get(Axis.RIGHT_X) < -0.75,
-    RIGHT_STICK_RIGHT = () -> m_operator.get(Axis.RIGHT_X) > 0.75,
-    RIGHT_STICK_UP = () -> m_operator.get(Axis.RIGHT_Y) < -0.75;
 }

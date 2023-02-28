@@ -1,6 +1,5 @@
 package frc.robot.commands;
 
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.controls.Operator;
 import frc.robot.subsystems.Drivetrain;
@@ -24,9 +23,9 @@ public class MoveToSelectedPose extends CommandBase {
   
   @Override
   public void execute() {
-    double x = Operator.selectedNode.scorePose.getX();
-    double y = Operator.selectedNode.scorePose.getY();
-    double rot = Operator.selectedNode.scorePose.getRotation().getRadians();
+    double x = Operator.getSelectedNode().scorePose.getX();
+    double y = Operator.getSelectedNode().scorePose.getY();
+    double rot = Operator.getSelectedNode().scorePose.getRotation().getRadians();
     m_drive.runChassisPID(x, y, rot);
   }
   

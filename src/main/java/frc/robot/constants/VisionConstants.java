@@ -3,9 +3,6 @@ package frc.robot.constants;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.opencv.core.Mat.Tuple2;
-import org.opencv.core.Mat.Tuple3;
-
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.MatBuilder;
 import edu.wpi.first.math.Matrix;
