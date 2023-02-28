@@ -43,7 +43,7 @@ public class ElevatorConstants {
 
   public static final double kCalibrationPower = 0.2; 
   /** Normal full power level for the elevator motor. */
-  public static final double kPowerLimit = 0.3; //1
+  public static final double kPowerLimit = 0.2; //1
 
   public static double heightToElevatorExtension(double height){
     double extension = Units.inchesToMeters(height-10.5)/Math.sin(Units.degreesToRadians(55));

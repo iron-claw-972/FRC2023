@@ -28,20 +28,27 @@ public class ManualController {
   }
   
   public void configureControls() {
-    m_manual.get(DPad.DOWN).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kIntakeSpeed), m_intake));
-    m_manual.get(DPad.UP).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kOuttakeSpeed),m_intake));
-    m_manual.get(DPad.LEFT).onTrue(new InstantCommand(() -> m_intake.stop(), m_intake));
-    
-    m_manual.get(Button.Y).onTrue(new InstantCommand(() -> m_arm.setMotorPower(0.05)));
-    m_manual.get(Button.X).onTrue(new InstantCommand(() -> m_arm.setMotorPower(-0.05)));
-    m_manual.get(Button.B).onTrue(new InstantCommand(() -> m_arm.setMotorPower(0)));
+    if(m_intake != null){
+      m_manual.get(DPad.DOWN).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kIntakeSpeed), m_intake));
+      m_manual.get(DPad.UP).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kOuttakeSpeed),m_intake));
+      m_manual.get(DPad.LEFT).onTrue(new InstantCommand(() -> m_intake.stop(), m_intake));  
+    }
 
-    //Move to min height
-    m_manual.get(Button.RB).onTrue(new MoveToExtension(m_elevator, ElevatorConstants.kMinExtension)); 
-    //Calibrate elevator using inbuilt motor encoders
-    m_manual.get(DPad.DOWN).onTrue(new ResetEncoderAtBottom(m_elevator));
-    //TODO: calibrate elevator using absolute encoders(probably will not work yet as of 2/15/2023);
-    //move to bottom node height
+    if(m_arm != null){
+      m_manual.get(Button.Y).onTrue(new InstantCommand(() -> m_arm.setMotorPower(0.05)));
+      m_manual.get(Button.X).onTrue(new InstantCommand(() -> m_arm.setMotorPower(-0.05)));
+      m_manual.get(Button.B).onTrue(new InstantCommand(() -> m_arm.setMotorPower(0)));  
+    }
+    
+    if(m_elevator != null){
+      //Move to min height
+      m_manual.get(Button.RB).onTrue(new MoveToExtension(m_elevator, ElevatorConstants.kMinExtension)); 
+      //Calibrate elevator using inbuilt motor encoders
+      m_manual.get(DPad.DOWN).onTrue(new ResetEncoderAtBottom(m_elevator));
+      //TODO: calibrate elevator using absolute encoders(probably will not work yet as of 2/15/2023);
+      //move to bottom node height
+    }
+    
   }
   public double returnClampedLeftJoyValue() {
     double joystick_value = m_manual.get(Axis.LEFT_Y); 
