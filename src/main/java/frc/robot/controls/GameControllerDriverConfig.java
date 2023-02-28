@@ -28,7 +28,7 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
     kDriver.get(Button.START).onTrue(new InstantCommand(() -> super.getDrivetrain().setPigeonYaw(DriveConstants.kStartingHeadingDegrees)));
     kDriver.get(Button.A).whileTrue(new SetFormationX(super.getDrivetrain()));
 
-    // kDriver.get(kDriver.RIGHT_TRIGGER_BUTTON).whileTrue(new AlignToColumn(getDrivetrain()));
+    // kDriver.get(Button.RB).whileTrue(new AlignToColumn(getDrivetrain()));
     kDriver.get(Button.RB).whileTrue(new MoveToSelectedPose(getDrivetrain()));
   }
   
