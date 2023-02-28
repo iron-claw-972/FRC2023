@@ -12,6 +12,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.networktables.NetworkTableInstance.NetworkMode;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -28,6 +29,7 @@ public class Elevator extends SubsystemBase {
   private final DigitalInput m_topLimitSwitch; 
   private final DigitalInput m_bottomLimitSwitch; 
   private final ShuffleboardTab m_elevatorTab; 
+
   private boolean m_enabled; 
   private boolean m_isCalibrated = false; 
 
@@ -35,6 +37,7 @@ public class Elevator extends SubsystemBase {
     m_elevatorTab = elevatorTab; 
     m_motor = MotorFactory.createTalonFX(ElevatorConstants.kMotorPort, Constants.kCanivoreCAN);
     m_motor.setInverted(true);
+
     m_talonEncoder = new TalonEncoder(m_motor); 
     m_talonEncoder.setDistancePerPulse(ElevatorConstants.kDistPerPulse);
     addChild("motor", m_motor);
@@ -55,13 +58,13 @@ public class Elevator extends SubsystemBase {
     
     //m_motor.setSafetyEnabled(true);
     setUpElevatorTab();
-    setTargetExtension(0.1); 
+    //setTargetExtension(0.1); 
   }
 
   @Override
   public void periodic() {
     if(m_enabled && m_isCalibrated) {
-      double pid = m_elevatorPID.calculate(getElevatorExtension());
+      double pid = m_elevatorPID.calculate(getElevatorExtension(), MathUtil.clamp(m_elevatorPID.getSetpoint(), ElevatorConstants.kMinExtension, ElevatorConstants.kMaxExtension));
       double pidClamped = MathUtil.clamp(pid, -ElevatorConstants.kPowerLimit, ElevatorConstants.kPowerLimit);
       double finalMotorPower = pidClamped; 
       
@@ -101,6 +104,16 @@ public class Elevator extends SubsystemBase {
   }
 
   public void setTargetExtension(double setpoint){
+    if(setpoint > ElevatorConstants.kMaxExtension){
+      System.out.println("SETPOINT IS MORE THAN THE MAX EXTENSION!!!!!!!!!!!"); 
+      return; 
+    }
+
+    if(setpoint <0){
+      System.out.println("SETPOINT IS LESS THAN THE MIN EXTENSION!!!!!!!!!!!"); 
+      return; 
+    }
+
     m_elevatorPID.setSetpoint(setpoint);
     m_elevatorPID.reset(); 
   }
