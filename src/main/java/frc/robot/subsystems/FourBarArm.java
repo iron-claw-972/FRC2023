@@ -32,7 +32,6 @@ public class FourBarArm extends SubsystemBase {
     // The RelativeEncoder reports RPM by default.
     // Change the velocity to radians per second (1 RPM = 2 pi radians / 60 seconds)
     m_encoder.setVelocityConversionFactor(2.0 * Math.PI / 60.0);  
-
  
     // make the PID controller
     m_pid = new PIDController(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD);
