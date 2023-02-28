@@ -157,8 +157,6 @@ public class Drivetrain extends SubsystemBase {
     
     m_fieldDisplay.setRobotPose(getPose());
     SmartDashboard.putData("Field", m_fieldDisplay);
-
-    
   }
 
   @Override

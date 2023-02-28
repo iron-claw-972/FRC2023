@@ -21,6 +21,7 @@ import frc.robot.commands.auto.GoOverChargeStation;
 import frc.robot.commands.auto.PathPlannerCommand;
 import frc.robot.commands.test.CircleDrive;
 import frc.robot.commands.test.DriveFeedForwardCharacterization;
+import frc.robot.commands.test.GoToPoseTest;
 import frc.robot.commands.test.SteerFeedForwardCharacterizationSingle;
 import frc.robot.commands.test.TestDriveVelocity;
 import frc.robot.commands.test.TestHeadingPID;
@@ -175,6 +176,7 @@ public class RobotContainer {
     m_testTab.add("Align to 90 degrees", new TestVisionAlignment(Math.PI/2, m_drive, m_vision));
     m_testTab.add("Align to -90 degrees", new TestVisionAlignment(-Math.PI/2, m_drive, m_vision));
     m_testTab.add("Align to 180 degrees", new TestVisionAlignment(Math.PI, m_drive, m_vision));
+    m_testTab.add("GoToPoseTest", new GoToPoseTest(m_drive));
     m_testTab.add("Reset Pose", new InstantCommand(()-> {
       m_drive.resetOdometry(new Pose2d(
         m_drive.getRequestedXPos().getDouble(0),
@@ -204,6 +206,7 @@ public class RobotContainer {
     m_autoCommand.addOption("EngageNoPathplanner", new EngageNoPathplanner(m_drive));
     m_autoCommand.addOption("EngageFromCenterGrid", new EngageFromCenterGrid(m_drive));
     m_autoCommand.addOption("GoOverChargeStation", new GoOverChargeStation(m_drive));
+    
    }
     
 
