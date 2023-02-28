@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.DoubleSupplier;
 
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
@@ -130,9 +131,22 @@ public class Vision {
     return getAprilTagFieldLayout().getTagPose(id).get();
   }
 
+  public void logging(){
+    //TODO: fix this, currently breaks because of nulls
+    // DoubleSupplier[] poseSupplier = {
+    //   () -> getPose2d().getX(),
+    //   () -> getPose2d().getY(),
+    //   () -> getPose2d().getRotation().getRadians()
+    // };
+    
+    // LogManager.addDoubleArray("Pose2d", poseSupplier);
+    // LogManager.addInt("Visible April Tags", () -> getEstimatedPoses(getPose2d()).size());
+    
+  }
+  
   public void setupVisionShuffleboard() {
   }
-
+  
   class VisionCamera {
     PhotonCamera camera;
     PhotonPoseEstimator photonPoseEstimator;
