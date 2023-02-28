@@ -12,6 +12,8 @@ import frc.robot.constants.FalconConstants;
  */
 public class DriveConstants {
 
+  public static double kRobotWidthWithBumpers = Units.inchesToMeters(26 + 3.75 * 2);
+
   public static double kWheelRadius = Units.inchesToMeters(2);
 
   public static double kTrackWidth = Units.inchesToMeters(20.75);//22.75 swerve bot, 20.75 comp bot

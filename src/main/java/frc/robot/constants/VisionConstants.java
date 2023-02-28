@@ -3,6 +3,9 @@ package frc.robot.constants;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.opencv.core.Mat.Tuple2;
+import org.opencv.core.Mat.Tuple3;
+
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.MatBuilder;
 import edu.wpi.first.math.Matrix;
@@ -26,9 +29,6 @@ public class VisionConstants {
 
   public static ArrayList<Pair<String, Transform3d>> kCameras = new ArrayList<>();
 
-  // How far from the grid the robot should go to score in inches
-  public static double kGridDistance = 24;
-
   /**
    * Update the camera list based on the robot id detected from rio preferences.
    */
@@ -41,6 +41,24 @@ public class VisionConstants {
           new Transform3d(
             new Translation3d(-Units.inchesToMeters(4.75), Units.inchesToMeters(10.375), Units.inchesToMeters(10)),
             new Rotation3d(0, 0, 0)
+          )
+        )
+      ));
+    } else {
+      kCameras = new ArrayList<Pair<String, Transform3d>>(List.of(
+        new Pair<String, Transform3d>(
+          "Camera_1",
+          new Transform3d(
+            new Translation3d(Units.inchesToMeters(1.25), Units.inchesToMeters(7.125), Units.inchesToMeters(21)),
+            new Rotation3d(0, 0, Math.PI)
+          )
+        ),
+
+        new Pair<String, Transform3d>(
+          "Camera_2",
+          new Transform3d(
+            new Translation3d(Units.inchesToMeters(1.25), Units.inchesToMeters(-7.125), Units.inchesToMeters(21)),
+            new Rotation3d(0, 0, Math.PI)
           )
         )
       ));
