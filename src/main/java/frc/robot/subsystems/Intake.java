@@ -25,14 +25,11 @@ public class Intake extends SubsystemBase {
   private final CANSparkMax m_leftMotor;
   private final CANSparkMax m_rightMotor;
   private final ShuffleboardTab m_intakeTab;
-  private final double kConeThreshold = 420;
-  private final double kCubeThreshold = 69;
-  private final double kCubeTolerance = 5;
+  private final Rev2mDistanceSensor m_distSensor = new Rev2mDistanceSensor(Port.kOnboard);
+
   private boolean m_hasCone = false;
   private boolean m_hasCube = false;
   private double m_startTime = 0;
-  private final double kCubeTimeThreshold = 0; // seconds
-  private final Rev2mDistanceSensor m_distSensor = new Rev2mDistanceSensor(Port.kOnboard);
 
   public Intake(ShuffleboardTab intakeTab) {
     m_leftMotor = new CANSparkMax(IntakeConstants.kLeftMotorPort, MotorType.kBrushless);
@@ -61,17 +58,17 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
     double range = m_distSensor.getRange();
-    if (range == -1 || range > kCubeThreshold + kCubeTolerance) { // Empty intake
+    if (range == -1 || range > IntakeConstants.kCubeDistanceThreshold + IntakeConstants.kCubeDistanceTolerance) { // Empty intake
       m_startTime = Timer.getFPGATimestamp();
       m_hasCone = false;
       m_hasCube = false;
     } 
-    else if (range < kConeThreshold) { // Cone
+    else if (range < IntakeConstants.kConeDistanceThreshold) { // Cone
       m_hasCone = true;
       m_hasCube = false;
     } 
-    else if (range > kConeThreshold && range < kCubeThreshold + kCubeTolerance){ // Cube
-      if (Timer.getFPGATimestamp() + kCubeTimeThreshold >= m_startTime) {
+    else if (range > IntakeConstants.kConeDistanceThreshold && range < IntakeConstants.kCubeDistanceThreshold + IntakeConstants.kCubeDistanceTolerance){ // Cube
+      if (Timer.getFPGATimestamp() + IntakeConstants.kCubeTimeThreshold >= m_startTime) {
         m_hasCone = false;
         m_hasCube = true;
       }
