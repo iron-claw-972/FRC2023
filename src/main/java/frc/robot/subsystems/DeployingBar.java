@@ -30,7 +30,10 @@ public class DeployingBar extends SubsystemBase {
     m_motor.setNeutralMode(NeutralMode.Brake);
     m_encoder = new TalonEncoder(m_motor);
     m_encoder.setDistancePerPulse(DeployingBarConstants.kDistancePerPulse);
+
+    // This means the deploying bar must start stowed!
     m_encoder.reset();
+
     m_pid = new PIDController(DeployingBarConstants.kP, DeployingBarConstants.kI, DeployingBarConstants.kD);
     m_pid.setTolerance(DeployingBarConstants.kTolerance);
     isEnabled = false;
