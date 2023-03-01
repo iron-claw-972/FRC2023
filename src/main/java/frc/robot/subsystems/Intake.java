@@ -50,6 +50,11 @@ public class Intake extends SubsystemBase {
     m_rightMotor.set(speed);
   }
 
+  public void spinOuttake(double speed){
+    m_leftMotor.set(speed);
+    m_rightMotor.set(-speed);
+  }
+
   public boolean containsGamePiece(){
     return m_hasCone || m_hasCube;
   }
