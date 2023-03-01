@@ -64,7 +64,7 @@ public abstract class BaseDriverConfig {
   }
   
   public double getRotation() {
-    return m_rotLimiter.calculate(-Functions.expoMS(Functions.deadband(getRawRotation(), m_rotationDeadband), m_rotationExpo) * DriveConstants.kMaxAngularSpeed * m_rotationSensitivity, m_rotationSlewrate);
+    return m_rotLimiter.calculate(Functions.expoMS(Functions.deadband(getRawRotation(), m_rotationDeadband), m_rotationExpo) * DriveConstants.kMaxAngularSpeed * m_rotationSensitivity, m_rotationSlewrate);
   }
 
   public double getHeading() {
