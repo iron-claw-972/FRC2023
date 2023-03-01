@@ -37,6 +37,8 @@ public class Intake extends SubsystemBase {
     m_rightMotor = new CANSparkMax(IntakeConstants.kRightMotorPort, MotorType.kBrushless);
     m_leftMotor.restoreFactoryDefaults();
     m_rightMotor.restoreFactoryDefaults();
+    m_leftMotor.setSmartCurrentLimit(10);
+    m_rightMotor.setSmartCurrentLimit(10);
     m_intakeTab = intakeTab;
     m_distSensor.setAutomaticMode(true);
     m_distSensor.setEnabled(true);
