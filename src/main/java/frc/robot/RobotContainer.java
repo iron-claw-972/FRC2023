@@ -10,12 +10,16 @@ import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Robot.RobotId;
 import frc.robot.commands.DefaultDriveCommand;
+import frc.robot.commands.DepositTune;
+import frc.robot.commands.intake.OuttakeGamePiece;
+import frc.robot.commands.intake.SpinOuttake;
 import frc.robot.commands.test.CircleDrive;
 import frc.robot.commands.test.DriveFeedForwardCharacterization;
 import frc.robot.commands.test.OdometryTestCommand;
@@ -60,6 +64,7 @@ public class RobotContainer {
   private final ShuffleboardTab m_visionTab = Shuffleboard.getTab("Vision");
   private final ShuffleboardTab m_testTab = Shuffleboard.getTab("Test");
   private final ShuffleboardTab m_elevatorTab = Shuffleboard.getTab("Elevator");
+  private final ShuffleboardTab m_intakeTab = Shuffleboard.getTab("Intake");
   
 
   private final Vision m_vision;
@@ -97,7 +102,7 @@ public class RobotContainer {
     if (Robot.kRobotId == RobotId.SwerveCompetition) {
 
       m_arm = new FourBarArm();
-      m_intake = new Intake();
+      m_intake = new Intake(m_intakeTab);
       m_elevator = new Elevator(m_elevatorTab);
       m_deployingBar = null; 
 
@@ -110,7 +115,6 @@ public class RobotContainer {
       // m_operator.configureControls(m_deployingBar);
       m_testController.configureControls();
       m_manualController.configureControls();
-
     } else {
 
       DriverStation.reportWarning("Not registering subsystems and controls due to incorrect robot", false);
@@ -187,6 +191,12 @@ public class RobotContainer {
     m_testTab.add("Align to 90 degrees", new TestVisionAlignment(Math.PI/2, m_drive, m_vision));
     m_testTab.add("Align to -90 degrees", new TestVisionAlignment(-Math.PI/2, m_drive, m_vision));
     m_testTab.add("Align to 180 degrees", new TestVisionAlignment(Math.PI, m_drive, m_vision));
+
+    SmartDashboard.putNumber("Deposit Elevator Extension", 0.0);
+    SmartDashboard.putNumber("Deposit Arm Extension", 0.0);
+    m_testTab.add("Tune Deposit Locations", new DepositTune(m_elevator, m_arm, m_intake));
+    m_testTab.add("Outtake", new OuttakeGamePiece(m_intake));
+    m_testTab.add("Rotate Outtake", new OuttakeGamePiece(m_intake, true));
   }
 
   /**

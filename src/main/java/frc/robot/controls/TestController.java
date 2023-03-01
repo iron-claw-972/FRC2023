@@ -1,9 +1,12 @@
 package frc.robot.controls;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.commands.arm.ExtendToPosition;
+import frc.robot.commands.DepositTune;
+import frc.robot.commands.arm.ExtendArm;
 import frc.robot.commands.elevator.CalibrateElevator;
-import frc.robot.commands.elevator.MoveToExtension;
+import frc.robot.commands.elevator.ExtendElevator;
+import frc.robot.commands.gamePiecePlacement.DepositMiddleNode;
+import frc.robot.commands.gamePiecePlacement.DepositTopNode;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.IntakeConstants;
@@ -29,25 +32,22 @@ public class TestController {
   }
   
   public void configureControls() {
-    if(m_arm != null) { //arm controls
-      test.get(Button.Y).onTrue(new ExtendToPosition(m_arm, ArmConstants.kTopPosition));
-      test.get(Button.X).onTrue(new ExtendToPosition(m_arm, ArmConstants.kMiddlePosition));
-      test.get(Button.A).onTrue(new ExtendToPosition(m_arm, ArmConstants.kIntakePosition));
-      test.get(Button.B).onTrue(new ExtendToPosition(m_arm, ArmConstants.kShelfPosition));
-    }
+      test.get(DPad.LEFT).onTrue(new DepositMiddleNode(m_elevator, m_arm, m_intake));
+      test.get(DPad.RIGHT).onTrue(new DepositTopNode(m_elevator,m_arm,m_intake));
+      test.get(DPad.UP).onTrue(new ExtendArm(m_arm, ArmConstants.kStowedAbsEncoderPos));
+      //test.get(Button.B).onTrue(new ExtendToPosition(m_arm, ArmConstants.kShelfPositionAbsEncoderPos));
+    
    
-    if(m_intake != null) { // intake controls
-      test.get(DPad.DOWN).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kIntakeSpeed), m_intake));
-      test.get(DPad.UP).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kOuttakeSpeed),m_intake));
-      test.get(DPad.LEFT).onTrue(new InstantCommand(() -> m_intake.stop(), m_intake));
-    }
+      //test.get(DPad.DOWN).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kIntakeSpeed), m_intake));
+      //test.get(DPad.UP).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kOuttakeSpeed),m_intake));
+      //test.get(DPad.LEFT).onTrue(new InstantCommand(() -> m_intake.stopIntake(), m_intake));
+  
 
-    if(m_elevator != null) {// elevator controls 
       //test.get(DPad.LEFT).onTrue(new InstantCommand(() -> m_elevator.setMotorPower(0), m_elevator));
       test.get(DPad.DOWN).onTrue(new CalibrateElevator(m_elevator));
-      test.get(Button.A).onTrue(new MoveToExtension(m_elevator, ElevatorConstants.kMiddleNodeHeightExtension));
-      test.get(Button.B).onTrue(new MoveToExtension(m_elevator, ElevatorConstants.kTopNodeHeightExtension));
-      test.get(Button.Y).onTrue(new MoveToExtension(m_elevator, ElevatorConstants.kMinExtension));
-    }
+      test.get(Button.B).onTrue(new ExtendElevator(m_elevator, ElevatorConstants.kMiddleNodeHeightExtension));
+      test.get(Button.X).onTrue(new ExtendElevator(m_elevator, ElevatorConstants.kTopNodeHeightExtension));
+      test.get(Button.Y).onTrue(new ExtendElevator(m_elevator, ElevatorConstants.kMinExtension));
+    
   }
 }

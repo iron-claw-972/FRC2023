@@ -11,6 +11,9 @@ public class ManualElevatorControl extends CommandBase {
   
   /**
    * Enables manual control of the elevator.
+   * 
+   * @param elevator the elevator subsystem
+   * @param manualController the manual controller which will be used to move the elevator
    */
   public ManualElevatorControl(Elevator elevator, ManualController manualController) {
     m_elevator = elevator; 

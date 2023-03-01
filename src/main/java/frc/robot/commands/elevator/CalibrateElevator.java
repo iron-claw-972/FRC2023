@@ -9,7 +9,7 @@ public class CalibrateElevator extends CommandBase {
   private final Elevator m_elevator; 
   
   /**
-   * First part of calibration sequence. Resets the elevator by resetting the encoder after it hits the bottom limit switch. 
+   * Resets the elevator by resetting the encoder after it hits the bottom limit switch. 
    */
   public CalibrateElevator(Elevator elevator) {
     m_elevator = elevator; 
@@ -26,6 +26,7 @@ public class CalibrateElevator extends CommandBase {
   public void end(boolean interrupted) {
     m_elevator.resetTalonEncoder();
     m_elevator.setMotorPower(0); 
+    m_elevator.setIsCalibrated();
   }
   
   @Override
