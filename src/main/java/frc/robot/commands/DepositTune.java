@@ -65,9 +65,4 @@ public class DepositTune extends CommandBase {
   public boolean isFinished(){
     return (m_elevatorDone && m_arm.reachedSetpoint()); 
   }
-
-
 }
-
-
-
