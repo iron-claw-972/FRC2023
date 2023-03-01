@@ -10,8 +10,6 @@ import frc.robot.subsystems.Drivetrain;
  * Attempts to set all four modules to a constant angle. Determines if the modules are able to reach the angle requested in a certain time.
  */
 public class SimplePresetSteerAngles extends InstantCommand{
-  
-
 
   /**
    * sets the angle of module steer to 0 to remove initial turn time and drift
@@ -46,11 +44,4 @@ public class SimplePresetSteerAngles extends InstantCommand{
   },drive);
   drive.enableStateDeadband(true);
   }
-  
-
-    
-    
-
- 
-  
 }
