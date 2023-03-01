@@ -7,17 +7,19 @@ import frc.robot.subsystems.FourBarArm;
 import frc.robot.util.PathGroupLoader;
 
 public class TwoPieceBottomPath extends SequentialCommandGroup{
-    
-    public TwoPieceBottomPath(Drivetrain m_drive, FourBarArm m_arm, double armSetPoint){
-        addCommands(
-            new ExtendToPosition(m_arm, armSetPoint), //deposit preloaded cone in high node
-            new PathPlannerCommand(PathGroupLoader.getPathGroup("To Center And Back"), 0, m_drive, true),//intake a cone 
-            new PathPlannerCommand(PathGroupLoader.getPathGroup("To Center And Back"), 1, m_drive, false)//deposit cone in high node
-
-        );
-    }
-};
   
-  
-
-
+  /**
+   * Deposit two Pieces doesn't cross the charge station 
+   * @param m_drive drivetrain used
+   * @param m_arm four bar arm used
+   */
+  public TwoPieceBottomPath(Drivetrain m_drive, FourBarArm m_arm){
+    addCommands(
+      //deposit preloaded cone in high node
+      new PathPlannerCommand(PathGroupLoader.getPathGroup("To Center And Back"), 0, m_drive, true),
+      //intake a cone 
+      new PathPlannerCommand(PathGroupLoader.getPathGroup("To Center And Back"), 1, m_drive, false)
+      //deposit cone in high node
+    );
+  }
+}
