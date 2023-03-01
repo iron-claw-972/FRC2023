@@ -21,6 +21,8 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -195,7 +197,7 @@ public class Drivetrain extends SubsystemBase {
     if (!m_hasResetYaw || force) {
       m_hasResetYaw = true;
       // TODO: reset the yaw to different angles depending on auto start position
-      setPigeonYaw(DriveConstants.kStartingHeadingDegrees);
+      setPigeonYaw(DriverStation.getAlliance() == Alliance.Blue ? 0 : 180);
     }
   }
   

@@ -1,5 +1,7 @@
 package frc.robot.controls;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.SetFormationX;
@@ -24,7 +26,9 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
   
   @Override
   public void configureControls() { 
-    kDriver.get(Button.START).onTrue(new InstantCommand(() -> super.getDrivetrain().setPigeonYaw(DriveConstants.kStartingHeadingDegrees)));
+    kDriver.get(Button.START).onTrue(new InstantCommand(() -> super.getDrivetrain().setPigeonYaw(
+      (DriverStation.getAlliance() == Alliance.Blue ? 0 : 180)
+    )));
     kDriver.get(Button.A).whileTrue(new SetFormationX(super.getDrivetrain()));
   }
   

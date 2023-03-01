@@ -1,6 +1,8 @@
 package frc.robot.controls;
 
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.constants.OIConstants;
 import frc.robot.constants.swerve.DriveConstants;
@@ -56,11 +58,18 @@ public abstract class BaseDriverConfig {
   }
 
   public double getForwardTranslation() {
-    return m_ySpeedLimiter.calculate(-Functions.expoMS(Functions.deadband(getRawForwardTranslation(), m_translationalDeadband), m_translationalExpo) * DriveConstants.kMaxSpeed * m_translationalSensitivity, m_translationalSlewrate);
+    return m_ySpeedLimiter.calculate(
+      (DriverStation.getAlliance() == Alliance.Blue ? -1 : 1) *
+      Functions.expoMS(
+        Functions.deadband(getRawForwardTranslation(), m_translationalDeadband),
+         m_translationalExpo
+      ) * DriveConstants.kMaxSpeed * m_translationalSensitivity, m_translationalSlewrate
+    );
   }
 
   public double getSideTranslation() {
-    return m_xSpeedLimiter.calculate(-Functions.expoMS(Functions.deadband(getRawSideTranslation(), m_translationalDeadband), m_translationalExpo) * DriveConstants.kMaxSpeed * m_translationalSensitivity, m_translationalSlewrate);
+    return m_xSpeedLimiter.calculate(
+      -Functions.expoMS(Functions.deadband(getRawSideTranslation(), m_translationalDeadband), m_translationalExpo) * DriveConstants.kMaxSpeed * m_translationalSensitivity, m_translationalSlewrate);
   }
   
   public double getRotation() {
