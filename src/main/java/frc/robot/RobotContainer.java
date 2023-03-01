@@ -10,12 +10,16 @@ import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Robot.RobotId;
 import frc.robot.commands.DefaultDriveCommand;
+import frc.robot.commands.DepositTune;
+import frc.robot.commands.intake.OuttakeNormal;
+import frc.robot.commands.intake.SpinOuttake;
 import frc.robot.commands.test.CircleDrive;
 import frc.robot.commands.test.DriveFeedForwardCharacterization;
 import frc.robot.commands.test.OdometryTestCommand;
@@ -110,6 +114,13 @@ public class RobotContainer {
       //m_operator.configureControls(m_deployingBar);
       m_testController.configureControls();
       m_manualController.configureControls();
+
+      // put a tuning command on the dashboard
+      SmartDashboard.putData("DepositTune", new DepositTune(m_elevator, m_arm, m_intake));
+      SmartDashboard.putNumber("DepositHeight", 0.0);
+      SmartDashboard.putNumber("DepositPosition", 0.0);
+      SmartDashboard.putData("Spit", new OuttakeNormal(m_intake));
+      SmartDashboard.putData("Spin", new SpinOuttake(m_intake));
 
     } else {
 

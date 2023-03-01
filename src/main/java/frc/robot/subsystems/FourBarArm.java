@@ -55,6 +55,7 @@ public class FourBarArm extends SubsystemBase {
   @Override
   public void periodic() {
     if(m_enabled) {
+      
       // calculate the PID power level
       double pidPower = m_pid.calculate(m_encoder.getPosition());
       // calculate the feedforward power (nothing for now)
