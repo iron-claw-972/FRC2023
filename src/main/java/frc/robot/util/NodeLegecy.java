@@ -93,6 +93,6 @@ public class NodeLegecy {
     pose = new Pose3d(x, y, z, tag.getRotation());
     // Adds the grid distance to the edge of the grid to find where the robot should be
     // The robot should be at 0 degrees (facing left) if it's blue and 180 degrees (π radians) if it's red
-    scorePose = new Pose2d(tag.getX()+Units.inchesToMeters(14.25+VisionConstants.kGridDistance)*(alliance==Alliance.Red?-1:1), y, new Rotation2d(alliance==Alliance.Red?Math.PI:0));
+    scorePose = new Pose2d(tag.getX()+Units.inchesToMeters(14.25+VisionConstants.kGridDistance)*(alliance==Alliance.Red?-1:1), y, new Rotation2d(alliance==Alliance.Red?0:Math.PI));
   }
 }
