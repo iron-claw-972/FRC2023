@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.Trajectory.State;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.Drivetrain;
@@ -27,13 +28,14 @@ public class TrajectoryPresetSteerAngles extends InstantCommand {
       drive.enableStateDeadband(false);
   
       Pose2d initialPose = trajectory.getInitialPose();
-      Pose2d nextPose = trajectory.sample(time).poseMeters;
+      State sample = trajectory.sample(time);
+      Pose2d nextPose = sample.poseMeters;
   
-      double xVelo = (nextPose.getX() - initialPose.getX()) / time;
-      double yVelo = (nextPose.getY() - initialPose.getY()) / time;
+      double xVelocity = sample.velocityMetersPerSecond * nextPose.getRotation().getCos();
+      double yVelocity = sample.velocityMetersPerSecond * nextPose.getRotation().getSin();
       double angularVelo = (nextPose.getRotation().getRadians() - initialPose.getRotation().getRadians()) / time;
   
-      ChassisSpeeds chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xVelo, yVelo, angularVelo, initialPose.getRotation());
+      ChassisSpeeds chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xVelocity, yVelocity, angularVelo, initialPose.getRotation());
   
       SwerveModuleState[] swerveModuleStates = drive.getKinematics().toSwerveModuleStates(chassisSpeeds);
       for (int i = 0; i < swerveModuleStates.length; i++){
