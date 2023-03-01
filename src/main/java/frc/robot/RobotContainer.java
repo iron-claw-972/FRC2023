@@ -129,7 +129,7 @@ public class RobotContainer {
     
     autoChooserUpdate();
     m_autoTab.add("Auto Chooser", m_autoCommand);
-    
+
     loadCommandSchedulerShuffleboard();
     m_drive.setupDrivetrainShuffleboard();
     m_drive.setupModulesShuffleboard();
@@ -139,7 +139,7 @@ public class RobotContainer {
     
     addTestCommands();
 
-    m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive, m_driver));  
+    m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive, m_driver));
   }
 
   /** 
