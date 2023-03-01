@@ -11,14 +11,14 @@ import lib.controllers.GameController.Button;
 
 public class Operator {
 
-  private GameController operator = new GameController(OIConstants.kOperatorJoy);
+  private GameController m_operator = new GameController(OIConstants.kOperatorJoy);
   
   /**
    * Configures the operator controls for the deploying Bar.
    */
   public void configureControls(DeployingBar deployingBar) {
-    operator.get(Button.A).onTrue(new RotateDeployingBar(deployingBar, DeployingBarConstants.kStowRotation));
-    operator.get(Button.B).onTrue(new RotateDeployingBar(deployingBar, DeployingBarConstants.kDeployedRotation));
+    m_operator.get(Button.A).onTrue(new RotateDeployingBar(deployingBar, DeployingBarConstants.kStowRotation));
+    m_operator.get(Button.B).onTrue(new RotateDeployingBar(deployingBar, DeployingBarConstants.kDeployedRotation));
   }
 
   /**

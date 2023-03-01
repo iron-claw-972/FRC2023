@@ -24,6 +24,6 @@ public class FieldConstants {
   public static final double kNodeStartY = 0.569; // meters
 
   // TODO: This value needs to be tested to ensure functionality, for node scoring
-  public static final double kRobotOffsetY = DriveConstants.kRobotWidthWithBumpers / 2; // meters
+  public static final double kRobotOffsetX = DriveConstants.kRobotWidthWithBumpers / 2; // meters
 
 }
