@@ -67,7 +67,7 @@ public class Vision {
     for (int i = 0; i < m_cameras.size(); i++) {
       Optional<EstimatedRobotPose> estimatedPose = m_cameras.get(i).getEstimatedPose(referencePose);
       // If the camera can see an april tag, add it to the array list
-      if (estimatedPose.isPresent() && estimatedPose.get()!=null &&estimatedPose.get().estimatedPose!=null) {
+      if (estimatedPose.isPresent()) {
         estimatedPoses.add(estimatedPose.get());
       }
     }
@@ -134,18 +134,6 @@ public class Vision {
       return null;
     }
     return getAprilTagFieldLayout().getTagPose(id).get();
-  }
-
-  public void logPose(Pose2d referencePose){
-    Pose2d pose = getPose2d(referencePose);
-    if(pose!=null){
-      DoubleSupplier[] poseSupplier = {
-        () -> pose.getX(),
-        () -> pose.getY(),
-        () -> pose.getRotation().getRadians()
-      };
-      LogManager.addDoubleArray("Pose2d", poseSupplier);
-    }
   }
   
   public void setupVisionShuffleboard() {

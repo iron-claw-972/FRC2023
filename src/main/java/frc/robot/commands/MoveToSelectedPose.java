@@ -10,9 +10,10 @@ import frc.robot.subsystems.Drivetrain;
 public class MoveToSelectedPose extends CommandBase {
 
   private final Drivetrain m_drive;
-  
-  public MoveToSelectedPose(Drivetrain drive) {
+  private final Operator m_Operator;
+  public MoveToSelectedPose(Drivetrain drive, Operator operator) {
     m_drive = drive;    
+    m_Operator=operator;
     addRequirements(drive);
   }
 
@@ -23,9 +24,9 @@ public class MoveToSelectedPose extends CommandBase {
   
   @Override
   public void execute() {
-    double x = Operator.getSelectedNode().scorePose.getX();
-    double y = Operator.getSelectedNode().scorePose.getY();
-    double rot = Operator.getSelectedNode().scorePose.getRotation().getRadians();
+    double x = m_Operator.getSelectedNode().scorePose.getX();
+    double y = m_Operator.getSelectedNode().scorePose.getY();
+    double rot = m_Operator.getSelectedNode().scorePose.getRotation().getRadians();
     m_drive.runChassisPID(x, y, rot);
   }
   

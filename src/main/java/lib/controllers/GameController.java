@@ -86,7 +86,7 @@ public class GameController extends Controller {
   }
 
   public Trigger get(BooleanSupplier booleanSupplier) {
-    return new Trigger(() -> booleanSupplier.getAsBoolean());
+    return new Trigger(booleanSupplier);
   }
 
   public double get(Axis axis) {

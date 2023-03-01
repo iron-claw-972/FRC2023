@@ -18,9 +18,10 @@ import lib.controllers.GameController.Button;
 public class GameControllerDriverConfig extends BaseDriverConfig {
   
   private final GameController kDriver = new GameController(OIConstants.kDriverJoy);
-  
-  public GameControllerDriverConfig(Drivetrain drive, ShuffleboardTab controllerTab, boolean shuffleboardUpdates) {
+  private final Operator m_operator;
+  public GameControllerDriverConfig(Drivetrain drive, ShuffleboardTab controllerTab, boolean shuffleboardUpdates, Operator operator) {
     super(drive, controllerTab, shuffleboardUpdates);
+    m_operator=operator;
   }
   
   @Override
@@ -29,7 +30,7 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
     kDriver.get(Button.A).whileTrue(new SetFormationX(super.getDrivetrain()));
 
     // kDriver.get(Button.RB).whileTrue(new AlignToColumn(getDrivetrain()));
-    kDriver.get(Button.RB).whileTrue(new MoveToSelectedPose(getDrivetrain()));
+    kDriver.get(Button.RB).whileTrue(new MoveToSelectedPose(getDrivetrain(),m_operator));
   }
   
   @Override

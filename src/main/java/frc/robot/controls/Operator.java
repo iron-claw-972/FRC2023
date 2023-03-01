@@ -33,7 +33,7 @@ public class Operator {
   private int[] selectValues = {1, 1, 1};
 
   // The selected node where the robot will score
-  private static NodeLegecy selectedNode = new NodeLegecy();
+  private NodeLegecy selectedNode = new NodeLegecy();
 
   private final BooleanSupplier 
     LEFT_STICK_LEFT = () -> m_operator.get(Axis.LEFT_X) < -0.75,
@@ -44,8 +44,7 @@ public class Operator {
     RIGHT_STICK_RIGHT = () -> m_operator.get(Axis.RIGHT_X) > 0.75,
     RIGHT_STICK_UP = () -> m_operator.get(Axis.RIGHT_Y) < -0.75;
 
-  public Operator(Vision vision){
-    m_vision = vision;
+  public Operator(){
     m_operator = new GameController(OIConstants.kOperatorJoy);
     selectValue(0, 1);
   }
@@ -140,7 +139,7 @@ public class Operator {
     m_operator.get(Button.B).onFalse(new RotateDeployingBar(deployingBar, DeployingBarConstants.kStowRotation));
   }
 
-  public static NodeLegecy getSelectedNode(){
+  public NodeLegecy getSelectedNode(){
     return selectedNode;
   }
 

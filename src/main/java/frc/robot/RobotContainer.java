@@ -88,8 +88,9 @@ public class RobotContainer {
 
     // Create Drivetrain, because every robot will have a drivetrain
     m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab, m_vision);
-    m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
-    m_operator = new Operator(m_vision);
+    m_operator = new Operator();
+    m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false, m_operator);
+
     m_operator.configureControls();
 
     // If the robot is the competition robot, create the arm and intake
@@ -142,7 +143,6 @@ public class RobotContainer {
     m_drive.setupModulesShuffleboard();
     m_vision.setupVisionShuffleboard();
     m_driver.setupShuffleboard();
-    m_vision.logPose(m_drive.getPose());
     
     addTestCommands();
 
