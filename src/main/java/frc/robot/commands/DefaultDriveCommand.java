@@ -22,8 +22,9 @@ public class DefaultDriveCommand extends CommandBase {
   @Override
   public void execute() {
     m_drive.setAllOptimize(true);
+    m_drive.enableStateDeadband(true);
     
-    m_driver.updateSettings();
+    // m_driver.updateSettings();
     double xSpeed = m_driver.getForwardTranslation();
     double ySpeed = m_driver.getSideTranslation();
     double rot = m_driver.getRotation();
