@@ -36,31 +36,31 @@ public class VisionConstants {
   public static void update() {
     if (Robot.kRobotId == RobotId.SwerveTest) {
       kCameras = new ArrayList<Pair<String, Transform3d>>(List.of(
-        // new Pair<String, Transform3d>(
-        //   "Camera_2",
-        //   new Transform3d(
-        //     new Translation3d(-Units.inchesToMeters(4.75), Units.inchesToMeters(10.375), Units.inchesToMeters(10)),
-        //     new Rotation3d(0, 0, 0)
-        //   )
-        // )
+        new Pair<String, Transform3d>(
+          "Camera_2",
+          new Transform3d(
+            new Translation3d(-Units.inchesToMeters(4.75), Units.inchesToMeters(10.375), Units.inchesToMeters(10)),
+            new Rotation3d(0, 0, 0)
+          )
+        )
       ));
     } else {
       kCameras = new ArrayList<Pair<String, Transform3d>>(List.of(
-        // new Pair<String, Transform3d>(
-        //   "Camera_1",
-        //   new Transform3d(
-        //     new Translation3d(Units.inchesToMeters(1.25), Units.inchesToMeters(7.125), Units.inchesToMeters(21)),
-        //     new Rotation3d(0, 0, Math.PI)
-        //   )
-        // ),
+        new Pair<String, Transform3d>(
+          "Camera_1",
+          new Transform3d(
+            new Translation3d(Units.inchesToMeters(1.25), Units.inchesToMeters(7.125), Units.inchesToMeters(21)),
+            new Rotation3d(0, 0, Math.PI)
+          )
+        ),
 
-        // new Pair<String, Transform3d>(
-        //   "Camera_2",
-        //   new Transform3d(
-        //     new Translation3d(Units.inchesToMeters(1.25), Units.inchesToMeters(-7.125), Units.inchesToMeters(21)),
-        //     new Rotation3d(0, 0, Math.PI)
-        //   )
-        // )
+        new Pair<String, Transform3d>(
+          "Camera_2",
+          new Transform3d(
+            new Translation3d(Units.inchesToMeters(1.25), Units.inchesToMeters(-7.125), Units.inchesToMeters(21)),
+            new Rotation3d(0, 0, Math.PI)
+          )
+        )
       ));
     }
   }
