@@ -2,15 +2,18 @@ package frc.robot.commands.elevator;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Elevator;
 
-public class MoveToExtension extends CommandBase {
+public class ExtendElevator extends CommandBase {
   
   private final Elevator m_elevator; 
   private final double m_targetExtension; 
   
   /**
    * Moves the elevator to a specific extension point.
+   * 
+   * @param elevator the elevator subsystem to use
+   * @param targetExtension the amount the elevator should extend, in meters. This is the diagonal distance, not vertical.
    */
-  public MoveToExtension(Elevator elevator, double targetExtension) {
+  public ExtendElevator(Elevator elevator, double targetExtension) {
     m_elevator = elevator; 
     m_targetExtension = targetExtension; 
     addRequirements(m_elevator);
