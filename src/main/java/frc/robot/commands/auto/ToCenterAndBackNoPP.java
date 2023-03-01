@@ -8,7 +8,7 @@ import frc.robot.commands.SimplePresetSteerAngles;
 import frc.robot.commands.GoToPose;
 import frc.robot.subsystems.Drivetrain;
 
-public class ToCenterAndBack extends SequentialCommandGroup{
+public class ToCenterAndBackNoPP extends SequentialCommandGroup{
 
     private Drivetrain m_drive;
     private Pose2d centerPose, initialPose;
@@ -17,7 +17,7 @@ public class ToCenterAndBack extends SequentialCommandGroup{
      * Drives to center line, then drives back. Can be done on either side of drivestation. 
      * @param drive drivetrain
      */
-    public ToCenterAndBack(Drivetrain drive)  {
+    public ToCenterAndBackNoPP(Drivetrain drive)  {
         m_drive = drive;
         
         startRot = new Rotation2d(0);

@@ -19,7 +19,6 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.util.PathGroupLoader;
 
 
-// Assuming this method is part of a drivetrain subsystem that provides the necessary methods
 public class PathPlannerCommand extends SequentialCommandGroup{
 
     Alliance alliance;
