@@ -65,7 +65,6 @@ public class RobotContainer {
   private final ShuffleboardTab m_testTab = Shuffleboard.getTab("Test");
   private final ShuffleboardTab m_elevatorTab = Shuffleboard.getTab("Elevator");
   private final ShuffleboardTab m_intakeTab = Shuffleboard.getTab("Intake");
-
   
 
   private final Vision m_vision;
@@ -114,15 +113,6 @@ public class RobotContainer {
       //m_operator.configureControls(m_deployingBar);
       m_testController.configureControls();
       m_manualController.configureControls();
-
-      // put a tuning command on the dashboard
-      SmartDashboard.putData("DepositTune", new DepositTune(m_elevator, m_arm, m_intake));
-      SmartDashboard.putNumber("DepositHeight", 0.0);
-      SmartDashboard.putNumber("DepositPosition", 0.0);
-      SmartDashboard.putData("Spit", new OuttakeNormal(m_intake));
-      SmartDashboard.putData("Spin", new SpinOuttake(m_intake));
-      SmartDashboard.putNumber("Arm Abs Encoder Value", m_arm.getAbsEncoderPos());
-
     } else {
 
       DriverStation.reportWarning("Not registering subsystems and controls due to incorrect robot", false);
@@ -201,6 +191,12 @@ public class RobotContainer {
     m_testTab.add("Align to 90 degrees", new TestVisionAlignment(Math.PI/2, m_drive, m_vision));
     m_testTab.add("Align to -90 degrees", new TestVisionAlignment(-Math.PI/2, m_drive, m_vision));
     m_testTab.add("Align to 180 degrees", new TestVisionAlignment(Math.PI, m_drive, m_vision));
+
+    SmartDashboard.putNumber("DepositHeight", 0.0);
+    SmartDashboard.putNumber("DepositPosition", 0.0);
+    m_testTab.add("Tune Deposit Locations", new DepositTune(m_elevator, m_arm, m_intake));
+    m_testTab.add("Outtake", new OuttakeNormal(m_intake));
+    m_testTab.add("Rotate Outtake", new SpinOuttake(m_intake));
   }
 
   /**
