@@ -302,7 +302,8 @@ public class Drivetrain extends SubsystemBase {
         if(m_chargeStationAuto){
           m_poseEstimator.addVisionMeasurement(
             estimatedPose.estimatedPose.toPose2d(),
-            estimatedPose.timestampSeconds
+            estimatedPose.timestampSeconds,
+            VisionConstants.kChargeStationVisionPoseStdDevs
           );
         }else{
           m_poseEstimator.addVisionMeasurement(

@@ -72,6 +72,13 @@ public class VisionConstants {
     0.9, // y in meters (default=0.9)
     0.9 // heading in radians (default=0.9)
   );
+  // How much to trust vision measurements when going over the charge station
+  // x is going to be the least accurate, and angle should be correct
+  public static final Matrix<N3, N1> kChargeStationVisionPoseStdDevs = new MatBuilder<>(Nat.N3(), Nat.N1()).fill(
+    0.01, // x in meters
+    0.2, // y in meters
+    0.9 // heading in radians (default=0.9)
+  );
 
   // Increasing this makes pose estimation trust vision measurements less as distance from Apriltags increases
   // This is how much is added to std dev for vision when closest visible Apriltag is 1 meter away
