@@ -9,7 +9,7 @@ public class CalibrateElevator extends CommandBase {
   private final Elevator m_elevator; 
   
   /**
-   * First part of calibration sequence. Resets the elevator by resetting the encoder after it hits the bottom limit switch. 
+   * Resets the elevator by resetting the encoder after it hits the bottom limit switch. 
    */
   public CalibrateElevator(Elevator elevator) {
     m_elevator = elevator; 

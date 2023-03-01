@@ -11,6 +11,7 @@ import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.Intake;
 
 public class IntakeDoubleSubstation extends SequentialCommandGroup {
+  //TODO: add javadoc comment
   public IntakeDoubleSubstation(Elevator elevator, FourBarArm arm, Intake intake) {
     addRequirements(elevator, arm, intake);
     addCommands(

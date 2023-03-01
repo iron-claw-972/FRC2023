@@ -9,6 +9,7 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
 
 public class Stow extends SequentialCommandGroup {
+  //TODO: add javadoc comment
   public Stow(Elevator elevator, FourBarArm arm) {
     addRequirements(elevator, arm);
     addCommands(

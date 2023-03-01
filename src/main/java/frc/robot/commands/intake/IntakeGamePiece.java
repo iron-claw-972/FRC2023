@@ -9,7 +9,7 @@ public class IntakeGamePiece extends CommandBase {
 
   /**
    * Spins the intake until the game piece is inside the intake.
-   * @param intake
+   * @param intake the intake subsystem
    */
   public IntakeGamePiece(Intake intake){
     m_intake = intake; 

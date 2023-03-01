@@ -9,6 +9,9 @@ public class ExtendElevator extends CommandBase {
   
   /**
    * Moves the elevator to a specific extension point.
+   * 
+   * @param elevator the elevator subsystem to use
+   * @param targetExtension the amount the elevator should extend, in meters. This is the diagonal distance, not vertical.
    */
   public ExtendElevator(Elevator elevator, double targetExtension) {
     m_elevator = elevator; 

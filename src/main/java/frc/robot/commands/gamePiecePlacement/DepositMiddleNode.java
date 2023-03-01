@@ -10,6 +10,7 @@ import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.Intake;
 
 public class DepositMiddleNode extends SequentialCommandGroup {
+  //TODO: add javadoc comment
   public DepositMiddleNode(Elevator elevator, FourBarArm arm, Intake intake) {
     addRequirements(elevator, arm, intake);
     addCommands(
