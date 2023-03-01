@@ -24,14 +24,14 @@ public class DriveConstants {
 
   // Need to convert tangential velocity (the m/s of the edge of the robot) to angular velocity (the radians/s of the robot)
   // To do so, divide by the radius. The radius is the diagonal of the square chassis, diagonal = sqrt(2) * side_length.
-  public static double kMaxAngularSpeed = kMaxSpeed / ((kTrackWidth/2) * Math.sqrt(2));
+  public static double kMaxAngularSpeed = (kMaxSpeed * 2) / ((kTrackWidth/2) * Math.sqrt(2));
 
   // TODO: tune this better.
   public static double kMaxAngularAccel = 8 * 2 * Math.PI; // 8 rotations per second per second
 
   public static int kPigeon = 0;
 
-  public static double kStartingHeadingDegrees = 0;
+  public static double kStartingHeadingDegrees = 180;
 
   public static int kDriveFrontLeft = 20;
   public static int kSteerFrontLeft = 15;
