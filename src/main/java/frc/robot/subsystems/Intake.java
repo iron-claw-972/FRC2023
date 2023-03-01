@@ -27,7 +27,7 @@ public class Intake extends SubsystemBase {
 
   private boolean m_hasCone = false;
   private boolean m_hasCube = false;
-  private double m_startTime = 0;
+  private double m_timeLastNotSeenCube = 0;
 
   private double m_range = -1;
   private double m_timestamp = -1;
@@ -65,35 +65,30 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
 
-    if (m_distSensor.isRangeValid()) {
-      double range = m_distSensor.getRange();
+    double range = m_distSensor.getRange();
 
-      if (range == -1 || range > IntakeConstants.kCubeDistanceThreshold + IntakeConstants.kCubeDistanceTolerance) { // Empty intake
-        m_startTime = Timer.getFPGATimestamp();
+    if (range == -1 || range > IntakeConstants.kCubeDistanceThreshold) { // Empty intake
+      m_timeLastNotSeenCube = Timer.getFPGATimestamp();
+      m_hasCone = false;
+      m_hasCube = false;
+    } 
+    else if (range < IntakeConstants.kConeDistanceThreshold) { // Cone
+      m_timeLastNotSeenCube = Timer.getFPGATimestamp();
+      m_hasCone = true;
+      m_hasCube = false;
+    } 
+    else if (range > IntakeConstants.kConeDistanceThreshold && range < IntakeConstants.kCubeDistanceThreshold){ // Cube
+      if (Timer.getFPGATimestamp() - m_timeLastNotSeenCube > IntakeConstants.kCubeTimeThreshold) {
+        m_hasCone = false;
+        m_hasCube = true;
+      } else {
         m_hasCone = false;
         m_hasCube = false;
-      } 
-      else if (range < IntakeConstants.kConeDistanceThreshold) { // Cone
-        m_hasCone = true;
-        m_hasCube = false;
-      } 
-      else if (range > IntakeConstants.kConeDistanceThreshold && range < IntakeConstants.kCubeDistanceThreshold + IntakeConstants.kCubeDistanceTolerance){ // Cube
-        if (Timer.getFPGATimestamp() + IntakeConstants.kCubeTimeThreshold >= m_startTime) {
-          m_hasCone = false;
-          m_hasCube = true;
-        }
-        else {
-        m_startTime = Timer.getFPGATimestamp();
-        m_hasCone = false;
-        m_hasCube = false;
-        }
       }
     }
 
-    if (m_distSensor.isRangeValid()) {
-      m_timestamp = m_distSensor.getTimestamp();
-      m_range = m_distSensor.GetRange();
-    }
+    m_timestamp = m_distSensor.getTimestamp();
+    m_range = m_distSensor.GetRange();
   }
 
   public double getRange() {
