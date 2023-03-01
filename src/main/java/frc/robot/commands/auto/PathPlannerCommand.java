@@ -33,7 +33,7 @@ public class PathPlannerCommand extends SequentialCommandGroup{
       }
     
     public PathPlannerCommand(PathPlannerTrajectory path, Drivetrain drive){
-    this(new ArrayList<PathPlannerTrajectory>(Arrays.asList(path)), 0, drive, false);
+        this(new ArrayList<PathPlannerTrajectory>(Arrays.asList(path)), 0, drive, false);
     }
 
     public PathPlannerCommand(String pathGroupName, int pathIndex, Drivetrain drive){
@@ -59,7 +59,8 @@ public class PathPlannerCommand extends SequentialCommandGroup{
                 drive::setModuleStates, // Module states consumer
                 true,
                 drive // Requires this drive subsystem
-            )
+            ),
+            new InstantCommand(() -> drive.stop())
         );
     }
 }
