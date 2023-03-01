@@ -50,7 +50,7 @@ public class BalanceCommand extends CommandBase {
   
   @Override
   public void execute() {
-    m_timer.start();
+    // m_timer.start();
     
     m_output = MathUtil.clamp(m_pid.calculate(m_currentAngle), -DriveConstants.kBalanceMaxOutput, DriveConstants.kBalanceMaxOutput);
     
