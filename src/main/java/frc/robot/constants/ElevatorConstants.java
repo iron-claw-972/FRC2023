@@ -24,7 +24,7 @@ public class ElevatorConstants {
 
   /** elevator travel distance in meters**/
   public static final double kMiddleNodeHeightExtension = 0.68; // heightToElevatorExtension(kMiddleNodeHeightCone);
-  public static final double kTopNodeHeightExtension = 1.3; // heightToElevatorExtension(kTopNodeHeightCone);
+  public static final double kTopNodeHeightExtension = 1.2; // heightToElevatorExtension(kTopNodeHeightCone);
   
   // for our purposes, cone and cube extension is the same
   // public static final double kMiddleNodeHeightCubeExtension = heightToElevatorExtension(kMiddleNodeHeightCube);
@@ -33,7 +33,7 @@ public class ElevatorConstants {
   public static final double kHybridNodeOuttakeExtension = 0;
   public static final double kGroundIntakeExtension = 0;
 
-  public static final double kShelfIntakeHeightExtension = heightToElevatorExtension(kShelfIntakeHeight); 
+  public static final double kDoubleSubstationHeightExtension = 0.5; 
 
   public static final double kMaxExtension = 1.4; 
   public static final double kMinExtension = 0.0; 
