@@ -13,10 +13,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Robot.RobotId;
 import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.commands.auto.ToCenterAndBackNoPP;
-import frc.robot.commands.auto.EngageFromCenterGrid;
-import frc.robot.commands.auto.EngageNoPathplanner;
-import frc.robot.commands.auto.GoOverChargeStationNoPP;
 import frc.robot.commands.auto.PathPlannerCommand;
 import frc.robot.constants.VisionConstants;
 import frc.robot.constants.swerve.DriveConstants;
@@ -184,10 +180,6 @@ public class RobotContainer {
     m_autoCommand.addOption("To Center And Back", new PathPlannerCommand("To Center And Back", 0, m_drive));
     m_autoCommand.addOption("Drive out of Community", new PathPlannerCommand("Drive out of Community", 0, m_drive));
     m_autoCommand.addOption("BottomSimpleLine1", new PathPlannerCommand("Bottom Simple Line1", 0, m_drive));
-    m_autoCommand.addOption("AutoPathNoPlan", new ToCenterAndBackNoPP(m_drive));
-    m_autoCommand.addOption("EngageNoPathplanner", new EngageNoPathplanner(m_drive));
-    m_autoCommand.addOption("EngageFromCenterGrid", new EngageFromCenterGrid(m_drive));
-    m_autoCommand.addOption("GoOverChargeStation", new GoOverChargeStationNoPP(m_drive));
    }
 
   /**

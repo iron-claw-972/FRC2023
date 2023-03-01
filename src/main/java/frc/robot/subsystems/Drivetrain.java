@@ -31,7 +31,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.commands.GoToPose;
 import frc.robot.commands.test.CircleDrive;
 import frc.robot.commands.test.DriveFeedForwardCharacterization;
 import frc.robot.commands.test.SteerFeedForwardCharacterizationSingle;
@@ -710,13 +709,6 @@ public class Drivetrain extends SubsystemBase {
     testTab.add("Test Drive Velocity", new TestDriveVelocity(this, testEntry));
     testTab.add("Heading PID", new TestHeadingPID(this, testEntry));
     testTab.add("Steer angle", new TestSteerAngle(this, testEntry));
-    testTab.add("Transform Pose", new GoToPose(this, true, true));
-    testTab.add("Go To Pose", new GoToPose(this, false, true));
-    testTab.add("Odometry Test", new GoToPose(
-        this, 
-        new Pose2d(new Translation2d(1,1), new Rotation2d(Math.PI)), 
-        true
-      ));
     testTab.add("Reset Pose", new InstantCommand(()-> {
       this.resetOdometry(
         new Pose2d(
