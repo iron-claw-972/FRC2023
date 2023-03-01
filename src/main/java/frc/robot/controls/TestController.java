@@ -39,7 +39,7 @@ public class TestController {
     if(m_intake != null) { // intake controls
       test.get(DPad.DOWN).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kIntakeSpeed), m_intake));
       test.get(DPad.UP).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kOuttakeSpeed),m_intake));
-      test.get(DPad.LEFT).onTrue(new InstantCommand(() -> m_intake.stop(), m_intake));
+      test.get(DPad.LEFT).onTrue(new InstantCommand(() -> m_intake.stopIntake(), m_intake));
     }
 
     if(m_elevator != null) {// elevator controls 
