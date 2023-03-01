@@ -62,9 +62,16 @@ public class DepositTune extends CommandBase {
   }
 
   @Override
+  public void end(boolean interrupted) {
+    m_intake.stopIntake();
+  }
+  
+  @Override
   public boolean isFinished(){
     return (m_elevatorDone && m_arm.reachedSetpoint()); 
   }
+
+
 }
 
 
