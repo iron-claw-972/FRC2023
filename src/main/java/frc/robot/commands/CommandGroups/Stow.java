@@ -12,11 +12,8 @@ public class Stow extends SequentialCommandGroup {
   public Stow(Elevator elevator, FourBarArm arm) {
     addRequirements(elevator, arm);
     addCommands(
-      new SequentialCommandGroup(
-        new ExtendToPosition(arm, ArmConstants.kInitialPosition),
-        new MoveToExtension(elevator, ElevatorConstants.kMinExtension)
-
-      )
+      new ExtendToPosition(arm, ArmConstants.kInitialPosition),
+      new MoveToExtension(elevator, ElevatorConstants.kMinExtension)
     );
   }
 }

@@ -33,7 +33,7 @@ public class ElevatorConstants {
   public static final double kHybridNodeOuttakeExtension = 0;
   public static final double kGroundIntakeExtension = 0;
 
-  public static final double kShelfIntakeHeightExtension = heightToElevatorExtension(kShelfIntakeHeight); 
+  public static final double kDoubleSubstationHeightExtension = 0.5; 
 
   public static final double kMaxExtension = 1.4; 
   public static final double kMinExtension = 0.0; 
