@@ -7,39 +7,41 @@ import frc.robot.constants.ArmConstants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
-import frc.robot.subsystems.Intake;
 
 public class DepositTune extends CommandBase {
   Elevator m_elevator; 
   FourBarArm m_arm;
-  Intake m_intake;
 
   double m_height = 0.0;
   double m_position = 0.0;
 
   boolean m_elevatorDone = false; 
 
-  public DepositTune(Elevator elevator, FourBarArm arm, Intake intake) {
+  /**
+   * Moves the elevator and arm to the positions indicated by Smartdashboard
+   * @param elevator the elevator subsystem
+   * @param arm the arm subsystem
+   */
+  public DepositTune(Elevator elevator, FourBarArm arm) {
     m_elevator = elevator; 
-    m_arm = arm; 
-    m_intake = intake; 
+    m_arm = arm;
 
-    addRequirements(elevator, arm, intake);
+    addRequirements(elevator, arm);
   }
 
   @Override
   public void initialize() {
     // get the parameters from the SmartDashboard
-    m_height = SmartDashboard.getNumber("DepositHeight", 0);
-    m_position = SmartDashboard.getNumber("DepositPosition", 0);
+    m_height = SmartDashboard.getNumber("Deposit Elevator Extension", 0);
+    m_position = SmartDashboard.getNumber("Deposit Arm Extension", 0);
 
     // make sure the parameters are sane
     m_height = MathUtil.clamp(m_height, ElevatorConstants.kMinExtension, ElevatorConstants.kMaxExtension);
     m_position = MathUtil.clamp(m_position, ArmConstants.kStowedAbsEncoderPos, ArmConstants.kMaxArmExtensionAbsEncoderPos); 
 
-    // repot the trimmed values on the dashboard
-    SmartDashboard.putNumber("DepositHeight", m_height);
-    SmartDashboard.putNumber("DepositPosition", m_position);
+    // report the trimmed values on the dashboard
+    SmartDashboard.putNumber("Deposit Elevator Extension", m_height);
+    SmartDashboard.putNumber("Deposit Arm Extension", m_position);
 
     // move the elevator to the desired position
     m_elevator.setTargetExtension(m_height);
@@ -54,11 +56,6 @@ public class DepositTune extends CommandBase {
       m_elevatorDone = true; 
       m_arm.setArmSetpoint(m_position);
     }
-  }
-
-  @Override
-  public void end(boolean interrupted) {
-    m_intake.stopIntake();
   }
 
   @Override
