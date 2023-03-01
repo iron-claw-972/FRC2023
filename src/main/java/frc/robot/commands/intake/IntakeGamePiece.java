@@ -7,6 +7,10 @@ import frc.robot.subsystems.Intake;
 public class IntakeGamePiece extends CommandBase {
   Intake m_intake; 
 
+  /**
+   * Spins the intake until the game piece is inside the intake.
+   * @param intake
+   */
   public IntakeGamePiece(Intake intake){
     m_intake = intake; 
     addRequirements(m_intake);

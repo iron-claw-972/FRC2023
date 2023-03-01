@@ -1,8 +1,8 @@
-package frc.robot.commands.CommandGroups;
+package frc.robot.commands.gamePiecePlacement;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.arm.ExtendToPosition;
-import frc.robot.commands.elevator.MoveToExtension;
+import frc.robot.commands.arm.ExtendArm;
+import frc.robot.commands.elevator.ExtendElevator;
 import frc.robot.commands.intake.IntakeGamePiece;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.ElevatorConstants;
@@ -14,8 +14,8 @@ public class IntakeFromGround extends SequentialCommandGroup {
   public IntakeFromGround(Elevator elevator, FourBarArm arm, Intake intake) {
     addRequirements(elevator, arm, intake);
     addCommands(
-      new MoveToExtension(elevator, ElevatorConstants.kGroundIntakeExtension),
-      new ExtendToPosition(arm, ArmConstants.kBottomNodePositionAbsEncoderPos),
+      new ExtendElevator(elevator, ElevatorConstants.kGroundIntakeExtension),
+      new ExtendArm(arm, ArmConstants.kBottomNodePositionAbsEncoderPos),
       new IntakeGamePiece(intake),
       new Stow(elevator, arm)
     );

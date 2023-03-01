@@ -2,11 +2,11 @@ package frc.robot.controls;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.DepositTune;
-import frc.robot.commands.CommandGroups.DepositMiddleNode;
-import frc.robot.commands.CommandGroups.DepositTopNode;
-import frc.robot.commands.arm.ExtendToPosition;
+import frc.robot.commands.arm.ExtendArm;
 import frc.robot.commands.elevator.CalibrateElevator;
-import frc.robot.commands.elevator.MoveToExtension;
+import frc.robot.commands.elevator.ExtendElevator;
+import frc.robot.commands.gamePiecePlacement.DepositMiddleNode;
+import frc.robot.commands.gamePiecePlacement.DepositTopNode;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.IntakeConstants;
@@ -34,7 +34,7 @@ public class TestController {
   public void configureControls() {
       test.get(DPad.LEFT).onTrue(new DepositMiddleNode(m_elevator, m_arm, m_intake));
       test.get(DPad.RIGHT).onTrue(new DepositTopNode(m_elevator,m_arm,m_intake));
-      test.get(DPad.UP).onTrue(new ExtendToPosition(m_arm, ArmConstants.kStowedAbsEncoderPos));
+      test.get(DPad.UP).onTrue(new ExtendArm(m_arm, ArmConstants.kStowedAbsEncoderPos));
       //test.get(Button.B).onTrue(new ExtendToPosition(m_arm, ArmConstants.kShelfPositionAbsEncoderPos));
     
    
@@ -45,9 +45,9 @@ public class TestController {
 
       //test.get(DPad.LEFT).onTrue(new InstantCommand(() -> m_elevator.setMotorPower(0), m_elevator));
       test.get(DPad.DOWN).onTrue(new CalibrateElevator(m_elevator));
-      test.get(Button.B).onTrue(new MoveToExtension(m_elevator, ElevatorConstants.kMiddleNodeHeightExtension));
-      test.get(Button.X).onTrue(new MoveToExtension(m_elevator, ElevatorConstants.kTopNodeHeightExtension));
-      test.get(Button.Y).onTrue(new MoveToExtension(m_elevator, ElevatorConstants.kMinExtension));
+      test.get(Button.B).onTrue(new ExtendElevator(m_elevator, ElevatorConstants.kMiddleNodeHeightExtension));
+      test.get(Button.X).onTrue(new ExtendElevator(m_elevator, ElevatorConstants.kTopNodeHeightExtension));
+      test.get(Button.Y).onTrue(new ExtendElevator(m_elevator, ElevatorConstants.kMinExtension));
     
   }
 }

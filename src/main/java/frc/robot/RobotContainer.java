@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Robot.RobotId;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.DepositTune;
-import frc.robot.commands.intake.OuttakeNormal;
+import frc.robot.commands.intake.OuttakeGamePiece;
 import frc.robot.commands.intake.SpinOuttake;
 import frc.robot.commands.test.CircleDrive;
 import frc.robot.commands.test.DriveFeedForwardCharacterization;
@@ -195,8 +195,8 @@ public class RobotContainer {
     SmartDashboard.putNumber("DepositHeight", 0.0);
     SmartDashboard.putNumber("DepositPosition", 0.0);
     m_testTab.add("Tune Deposit Locations", new DepositTune(m_elevator, m_arm, m_intake));
-    m_testTab.add("Outtake", new OuttakeNormal(m_intake));
-    m_testTab.add("Rotate Outtake", new SpinOuttake(m_intake));
+    m_testTab.add("Outtake", new OuttakeGamePiece(m_intake));
+    m_testTab.add("Rotate Outtake", new OuttakeGamePiece(m_intake, true));
   }
 
   /**
