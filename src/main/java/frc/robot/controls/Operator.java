@@ -44,7 +44,8 @@ public class Operator {
     RIGHT_STICK_RIGHT = () -> m_operator.get(Axis.RIGHT_X) > 0.75,
     RIGHT_STICK_UP = () -> m_operator.get(Axis.RIGHT_Y) < -0.75;
 
-  public Operator(){
+  public Operator(Vision vision){
+    m_vision=vision;
     m_operator = new GameController(OIConstants.kOperatorJoy);
     selectValue(0, 1);
   }
