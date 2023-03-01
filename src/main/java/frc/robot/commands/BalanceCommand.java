@@ -23,7 +23,7 @@ public class BalanceCommand extends CommandBase {
   
   private boolean m_inverted;
   
-  Timer m_timer = new Timer();
+  // private Timer m_timer = new Timer();
   
   public BalanceCommand(Drivetrain drive) {
     m_drive = drive;
@@ -63,10 +63,10 @@ public class BalanceCommand extends CommandBase {
       m_drive.driveHeading(-m_output, 0, (m_inverted? 0: Math.PI), true); // TODO: inversion may be incorrect
     }
     
-    if (m_timer.get() >= 0 && m_timer.get() <= DriveConstants.kBalanceTime) {
-      m_drive.stop();
-      m_timer.reset();
-    }
+    // if (m_timer.get() >= 0 && m_timer.get() <= DriveConstants.kBalanceTime) {
+    //   m_drive.stop();
+    //   m_timer.reset();
+    // }
   }
   
   @Override
