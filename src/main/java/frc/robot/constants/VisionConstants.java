@@ -48,7 +48,7 @@ public class VisionConstants {
           "Camera_1",
           new Transform3d(
             new Translation3d(Units.inchesToMeters(1.25), Units.inchesToMeters(7.125), Units.inchesToMeters(21)),
-            new Rotation3d(0, 0, Math.PI)
+            new Rotation3d(0, 0, 0)
           )
         ),
 
@@ -56,7 +56,7 @@ public class VisionConstants {
           "Camera_2",
           new Transform3d(
             new Translation3d(Units.inchesToMeters(1.25), Units.inchesToMeters(-7.125), Units.inchesToMeters(21)),
-            new Rotation3d(0, 0, Math.PI)
+            new Rotation3d(0, 0, 0)
           )
         )
       ));
