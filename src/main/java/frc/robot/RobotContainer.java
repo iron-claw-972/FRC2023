@@ -109,6 +109,8 @@ public class RobotContainer {
       m_testController.configureControls();
       m_manualController.configureControls();
 
+      m_elevator.logging();
+
     } else {
 
       DriverStation.reportWarning("Not registering subsystems and controls due to incorrect robot", false);
@@ -121,6 +123,7 @@ public class RobotContainer {
       m_operator = null;
       m_testController = null;
       m_manualController = null;
+
     }
 
     // This is really annoying so it's disabled
@@ -142,7 +145,8 @@ public class RobotContainer {
     m_drive.setupModulesShuffleboard();
     m_vision.setupVisionShuffleboard();
     m_driver.setupShuffleboard();
-    m_vision.logging();
+
+    m_drive.logging();
     
     addTestCommands();
 

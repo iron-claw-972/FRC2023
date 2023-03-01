@@ -126,19 +126,6 @@ public class Vision {
     }
     return getAprilTagFieldLayout().getTagPose(id).get();
   }
-
-  public void logging(){
-    //TODO: fix this, currently breaks because of nulls
-    // DoubleSupplier[] poseSupplier = {
-    //   () -> getPose2d().getX(),
-    //   () -> getPose2d().getY(),
-    //   () -> getPose2d().getRotation().getRadians()
-    // };
-    
-    // LogManager.addDoubleArray("Pose2d", poseSupplier);
-    // LogManager.addInt("Visible April Tags", () -> getEstimatedPoses(getPose2d()).size());
-    
-  }
   
   public void setupVisionShuffleboard() {
   }
@@ -170,7 +157,8 @@ public class Vision {
      */
     public Optional<EstimatedRobotPose> getEstimatedPose(Pose2d referencePose) {
       photonPoseEstimator.setReferencePose(referencePose);
-      return photonPoseEstimator.update();
+      Optional<EstimatedRobotPose> pose = photonPoseEstimator.update();
+      return pose;
     }
   }
 }
