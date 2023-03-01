@@ -26,6 +26,7 @@ public class CalibrateElevator extends CommandBase {
   public void end(boolean interrupted) {
     m_elevator.resetTalonEncoder();
     m_elevator.setMotorPower(0); 
+    m_elevator.setIsCalibrated();
   }
   
   @Override

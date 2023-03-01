@@ -7,6 +7,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ArmConstants;
 
@@ -14,13 +15,13 @@ public class FourBarArm extends SubsystemBase {
   private final CANSparkMax m_motor;
   private final PIDController m_pid;
   private final DutyCycleEncoder m_absEncoder;
-  private boolean m_enabled = false;
+  private boolean m_enabled = true;
 
   public FourBarArm() {
     // configure the motor
     m_motor = new CANSparkMax(ArmConstants.kMotorId, MotorType.kBrushless);
     m_motor.setIdleMode(IdleMode.kBrake);
-    //m_motor.setInverted(true); 
+    m_motor.setInverted(true); 
 
     // configure the encoder
     m_absEncoder = new DutyCycleEncoder(ArmConstants.kAbsEncoderId); 
@@ -34,6 +35,8 @@ public class FourBarArm extends SubsystemBase {
     // TODO: restore stowed position
     // setArmSetpoint(ArmConstants.kStowedAbsEncoderPos);
     setArmSetpoint(getAbsEncoderPos());
+
+    SmartDashboard.putData("4 bar arm PID", m_pid); 
 
   }
 
@@ -50,6 +53,7 @@ public class FourBarArm extends SubsystemBase {
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("Arm Abs Encoder Value", getAbsEncoderPos());
     if(m_enabled) {
       
       // calculate the PID power level
@@ -80,6 +84,6 @@ public class FourBarArm extends SubsystemBase {
 
 
   public double getAbsEncoderPos(){
-    return m_absEncoder.getDistance(); 
+    return m_absEncoder.getAbsolutePosition() * -1; 
   }
 }
