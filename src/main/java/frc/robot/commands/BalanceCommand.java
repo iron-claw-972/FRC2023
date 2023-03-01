@@ -21,7 +21,7 @@ public class BalanceCommand extends CommandBase {
   
   private boolean m_usePitch;
   
-  private int m_inverted;
+  private boolean m_inverted;
   
   Timer m_timer = new Timer();
   
@@ -34,7 +34,7 @@ public class BalanceCommand extends CommandBase {
   @Override
   public void initialize() {
     
-    m_inverted = 1;
+    m_inverted = false;
     
     m_pid.setSetpoint(0);
     if(Math.abs(Math.PI/2 - Math.abs(m_drive.getAngleHeading())) > Math.PI/4)  { //Determines whether to use roll or pitch
@@ -43,8 +43,8 @@ public class BalanceCommand extends CommandBase {
     else  {
       m_usePitch = true;
     }
-    if(m_drive.getAngleHeading() < 0)  {
-      m_inverted = -1;
+    if(m_drive.getAngleHeading() < Math.PI/4 || m_drive.getAngleHeading() < -Math.PI*3/4)  {
+      m_inverted = true;
     }
   }
   
@@ -52,14 +52,15 @@ public class BalanceCommand extends CommandBase {
   public void execute() {
     m_timer.start();
     
-    m_currentAngle = m_drive.getPitch();
     m_output = MathUtil.clamp(m_pid.calculate(m_currentAngle), -DriveConstants.kBalanceMaxOutput, DriveConstants.kBalanceMaxOutput);
     
     if(m_usePitch) {
-      m_drive.driveHeading(-m_output, 0, m_inverted*Math.PI/2, true);
+    m_currentAngle = m_drive.getPitch();
+      m_drive.driveHeading(-m_output, 0, (m_inverted? -Math.PI/2: Math.PI/2), true);
     }
     else {
-      m_drive.driveHeading(-m_output, 0, 0, true);
+    m_currentAngle = m_drive.getRoll();
+      m_drive.driveHeading(-m_output, 0, (m_inverted? 0: Math.PI), true); // TODO: inversion may be incorrect
     }
     
     if (m_timer.get() >= 0 && m_timer.get() <= DriveConstants.kBalanceTime) {
