@@ -30,10 +30,10 @@ public class TestController {
   
   public void configureControls() {
     if(m_arm != null) { //arm controls
-      test.get(Button.Y).onTrue(new ExtendToPosition(m_arm, ArmConstants.kTopPosition));
-      test.get(Button.X).onTrue(new ExtendToPosition(m_arm, ArmConstants.kMiddlePosition));
-      test.get(Button.A).onTrue(new ExtendToPosition(m_arm, ArmConstants.kIntakePosition));
-      test.get(Button.B).onTrue(new ExtendToPosition(m_arm, ArmConstants.kShelfPosition));
+      test.get(Button.Y).onTrue(new ExtendToPosition(m_arm, ArmConstants.kTopConeOuttakeAbsEncoderPos));
+      test.get(Button.X).onTrue(new ExtendToPosition(m_arm, ArmConstants.kMiddleConeOuttakeAbsEncoderPos));
+      test.get(Button.A).onTrue(new ExtendToPosition(m_arm, ArmConstants.kBottomNodePositionAbsEncoderPos));
+      test.get(Button.B).onTrue(new ExtendToPosition(m_arm, ArmConstants.kShelfPositionAbsEncoderPos));
     }
    
     if(m_intake != null) { // intake controls

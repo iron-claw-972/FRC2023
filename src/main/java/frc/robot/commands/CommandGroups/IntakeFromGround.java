@@ -15,7 +15,7 @@ public class IntakeFromGround extends SequentialCommandGroup {
     addRequirements(elevator, arm, intake);
     addCommands(
       new MoveToExtension(elevator, ElevatorConstants.kGroundIntakeExtension),
-      new ExtendToPosition(arm, ArmConstants.kIntakePosition),
+      new ExtendToPosition(arm, ArmConstants.kBottomNodePositionAbsEncoderPos),
       new IntakeGamePiece(intake),
       new Stow(elevator, arm)
     );

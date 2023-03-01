@@ -3,12 +3,9 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxAlternateEncoder;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.DutyCycle;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ArmConstants;
@@ -26,7 +23,6 @@ public class FourBarArm extends SubsystemBase {
     //m_motor.setInverted(true); 
 
     // configure the encoder
-    // TODO: use a kConstant instead of the 8192
     m_absEncoder = new DutyCycleEncoder(ArmConstants.kAbsEncoderId); 
 
     // make the PID controller
@@ -34,7 +30,10 @@ public class FourBarArm extends SubsystemBase {
     // set the PID controller's tolerance
     m_pid.setTolerance(ArmConstants.kTolerance);
     // go to the initial position (use the class method)
-    setArmSetpoint(ArmConstants.kStowedAbsEncoderPos);
+
+    // TODO: restore stowed position
+    // setArmSetpoint(ArmConstants.kStowedAbsEncoderPos);
+    setArmSetpoint(getAbsEncoderPos());
 
   }
 
@@ -54,8 +53,7 @@ public class FourBarArm extends SubsystemBase {
     if(m_enabled) {
       
       // calculate the PID power level
-      double pidPower = m_pid.calculate(getAbsEncoderPos(),MathUtil.clamp(m_pid.getSetpoint(),ArmConstants.kStowedAbsEncoderPos, ArmConstants.kMaxArmExtension));
-      pidPower = MathUtil.clamp(pidPower, ArmConstants.kMinMotorPower,ArmConstants.kMaxMotorPower); 
+      double pidPower = m_pid.calculate(getAbsEncoderPos(),MathUtil.clamp(m_pid.getSetpoint(),ArmConstants.kStowedAbsEncoderPos, ArmConstants.kMaxArmExtensionAbsEncoderPos));
       // calculate the feedforward power (nothing for now)
       double feedforwardPower = 0.0;
 

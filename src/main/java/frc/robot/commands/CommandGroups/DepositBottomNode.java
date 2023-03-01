@@ -14,7 +14,7 @@ public class DepositBottomNode extends SequentialCommandGroup {
     addRequirements(elevator, arm, intake);
     addCommands(
       new MoveToExtension(elevator, ElevatorConstants.kHybridNodeOuttakeExtension),
-      new ExtendToPosition(arm, ArmConstants.kIntakePosition),
+      new ExtendToPosition(arm, ArmConstants.kBottomNodePositionAbsEncoderPos),
       new OuttakeNormal(intake), 
       new Stow(elevator, arm)
     );

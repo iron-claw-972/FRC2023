@@ -14,7 +14,7 @@ public class DepositMiddleNode extends SequentialCommandGroup {
     addRequirements(elevator, arm, intake);
     addCommands(
       new MoveToExtension(elevator, ElevatorConstants.kMiddleNodeHeightExtension),
-      new ExtendToPosition(arm, ArmConstants.kMiddlePosition),
+      new ExtendToPosition(arm, ArmConstants.kMiddleConeOuttakeAbsEncoderPos),
       new OuttakeNormal(intake), 
       new Stow(elevator, arm)
     );

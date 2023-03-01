@@ -15,7 +15,7 @@ public class DepositTopNode extends SequentialCommandGroup {
     addRequirements(elevator, arm, intake);
     addCommands(
       new MoveToExtension(elevator, ElevatorConstants.kTopNodeHeightExtension),
-      new ExtendToPosition(arm, ArmConstants.kTopPosition),
+      new ExtendToPosition(arm, ArmConstants.kTopConeOuttakeAbsEncoderPos),
       new OuttakeNormal(intake), 
       new Stow(elevator, arm)
     );

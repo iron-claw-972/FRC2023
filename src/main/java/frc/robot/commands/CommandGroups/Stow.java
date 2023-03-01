@@ -12,7 +12,7 @@ public class Stow extends SequentialCommandGroup {
   public Stow(Elevator elevator, FourBarArm arm) {
     addRequirements(elevator, arm);
     addCommands(
-      new ExtendToPosition(arm, ArmConstants.kInitialPosition),
+      new ExtendToPosition(arm, ArmConstants.kStowedAbsEncoderPos),
       new MoveToExtension(elevator, ElevatorConstants.kMinExtension)
     );
   }
