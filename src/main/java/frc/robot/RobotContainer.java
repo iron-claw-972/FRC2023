@@ -119,6 +119,7 @@ public class RobotContainer {
       SmartDashboard.putData("DepositTune", new DepositTune(m_elevator, m_arm, m_intake));
       SmartDashboard.putNumber("DepositHeight", 0.0);
       SmartDashboard.putNumber("DepositPosition", 0.0);
+      SmartDashboard.putNumber("Arm Abs Encoder Value", m_arm.getAbsEncoderPos());
       SmartDashboard.putData("Spit", new OuttakeNormal(m_intake));
       SmartDashboard.putData("Spin", new SpinOuttake(m_intake));
 

@@ -3,11 +3,6 @@ package frc.robot.commands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.CommandGroups.Stow;
-import frc.robot.commands.arm.ExtendToPosition;
-import frc.robot.commands.elevator.MoveToExtension;
-import frc.robot.commands.intake.OuttakeNormal;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.subsystems.Elevator;
@@ -65,7 +60,7 @@ public class DepositTune extends CommandBase {
   public void end(boolean interrupted) {
     m_intake.stopIntake();
   }
-  
+
   @Override
   public boolean isFinished(){
     return (m_elevatorDone && m_arm.reachedSetpoint()); 

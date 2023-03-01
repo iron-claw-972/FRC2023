@@ -8,37 +8,34 @@ import com.revrobotics.SparkMaxAlternateEncoder;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DutyCycle;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ArmConstants;
 
 public class FourBarArm extends SubsystemBase {
   private final CANSparkMax m_motor;
   private final PIDController m_pid;
-  private final RelativeEncoder m_encoder;
+  private final DutyCycleEncoder m_absEncoder;
   private boolean m_enabled = false;
 
   public FourBarArm() {
     // configure the motor
     m_motor = new CANSparkMax(ArmConstants.kMotorId, MotorType.kBrushless);
     m_motor.setIdleMode(IdleMode.kBrake);
+    //m_motor.setInverted(true); 
 
     // configure the encoder
     // TODO: use a kConstant instead of the 8192
-    m_encoder = m_motor.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, 8192);
-    // The RelativeEncoder reports angles in native revolutions by default.
-    // See https://codedocs.revrobotics.com/java/com/revrobotics/relativeencoder
-    // Change the encoder's reported value to radians (1 revolution = 2 pi radians).
-    m_encoder.setPositionConversionFactor(2*Math.PI);
-    // The RelativeEncoder reports RPM by default.
-    // Change the velocity to radians per second (1 RPM = 2 pi radians / 60 seconds)
-    m_encoder.setVelocityConversionFactor(2.0 * Math.PI / 60.0);  
- 
+    m_absEncoder = new DutyCycleEncoder(ArmConstants.kAbsEncoderId); 
+
     // make the PID controller
     m_pid = new PIDController(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD);
     // set the PID controller's tolerance
     m_pid.setTolerance(ArmConstants.kTolerance);
     // go to the initial position (use the class method)
-    setArmSetpoint(ArmConstants.kInitialPosition);
+    setArmSetpoint(ArmConstants.kStowedAbsEncoderPos);
+
   }
 
   /**
@@ -57,7 +54,8 @@ public class FourBarArm extends SubsystemBase {
     if(m_enabled) {
       
       // calculate the PID power level
-      double pidPower = m_pid.calculate(m_encoder.getPosition());
+      double pidPower = m_pid.calculate(getAbsEncoderPos(),MathUtil.clamp(m_pid.getSetpoint(),ArmConstants.kStowedAbsEncoderPos, ArmConstants.kMaxArmExtension));
+      pidPower = MathUtil.clamp(pidPower, ArmConstants.kMinMotorPower,ArmConstants.kMaxMotorPower); 
       // calculate the feedforward power (nothing for now)
       double feedforwardPower = 0.0;
 
@@ -80,5 +78,10 @@ public class FourBarArm extends SubsystemBase {
 
   public void setEnabled(boolean enable)  {
     m_enabled = enable;
+  }
+
+
+  public double getAbsEncoderPos(){
+    return m_absEncoder.getDistance(); 
   }
 }
