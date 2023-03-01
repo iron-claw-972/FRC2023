@@ -149,10 +149,6 @@ public class RobotContainer {
     m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive, m_driver));
   }
 
-  public GamePieceType getGamePiece(){
-    return m_gamePiece;
-  }
-
   /** 
    * Resets the yaw of the pigeon, unless it has already been reset. Or use force to reset it no matter what.
    * 
