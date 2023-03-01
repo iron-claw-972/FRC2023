@@ -137,7 +137,29 @@ public class Drivetrain extends SubsystemBase {
       () -> getPose().getY(),
       () -> getPose().getRotation().getRadians()
     };
-    LogManager.addDoubleArray("Pose2d", poseSupplier);
+    LogManager.addDoubleArray("Swerve/Pose2d", poseSupplier);
+    DoubleSupplier[] actualStateSuppliers = {
+      () -> m_modules[0].getSteerAngle(),
+      () -> m_modules[0].getDriveVelocity(),
+      () -> m_modules[1].getSteerAngle(),
+      () -> m_modules[1].getDriveVelocity(),
+      () -> m_modules[2].getSteerAngle(),
+      () -> m_modules[2].getDriveVelocity(),
+      () -> m_modules[3].getSteerAngle(),
+      () -> m_modules[3].getDriveVelocity()
+    };
+    LogManager.addDoubleArray("Swerve/actual swerve states", actualStateSuppliers);
+    DoubleSupplier[] desiredStateSuppliers = {
+      () -> m_modules[0].getSteerAngle(),
+      () -> m_modules[0].getDriveVelocity(),
+      () -> m_modules[1].getSteerAngle(),
+      () -> m_modules[1].getDriveVelocity(),
+      () -> m_modules[2].getSteerAngle(),
+      () -> m_modules[2].getDriveVelocity(),
+      () -> m_modules[3].getSteerAngle(),
+      () -> m_modules[3].getDriveVelocity()
+    };
+    LogManager.addDoubleArray("Swerve/desired swerve states", actualStateSuppliers);
     
     m_fieldDisplay.setRobotPose(getPose());
     SmartDashboard.putData("Field", m_fieldDisplay);
