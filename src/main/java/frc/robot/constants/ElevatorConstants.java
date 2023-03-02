@@ -1,6 +1,7 @@
 package frc.robot.constants;
 
 import edu.wpi.first.math.util.Units;
+import frc.robot.util.Conversions;
 
 public class ElevatorConstants {
   public static final int kMotorPort = 13;
@@ -33,7 +34,7 @@ public class ElevatorConstants {
   public static final double kHybridNodeOuttakeExtension = 0;
   public static final double kGroundIntakeExtension = 0;
 
-  public static final double kShelfIntakeHeightExtension = heightToElevatorExtension(kShelfIntakeHeight); 
+  public static final double kShelfIntakeHeightExtension = Conversions.ElevatorHeightToExtension(kShelfIntakeHeight); 
 
   public static final double kMaxExtension = 1.4; 
   public static final double kMinExtension = 0.0; 
@@ -50,8 +51,7 @@ public class ElevatorConstants {
 
   public static final double kTolerance = 0.03;
 
-  public static double heightToElevatorExtension(double height) {
-    return (height - Units.inchesToMeters(10.5))/Math.sin(Units.degreesToRadians(55)); 
-  }
+  public static final double kElevatorBaseHeight = Units.inchesToMeters(10.5);
+  public static final double kElevatorAngle = Units.degreesToRadians(55);
 }
 

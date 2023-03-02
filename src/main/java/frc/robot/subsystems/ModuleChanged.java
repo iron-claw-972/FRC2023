@@ -9,6 +9,7 @@ import lib.CTREModuleState;
 import frc.robot.constants.Constants;
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.constants.swerve.ModuleConstants;
+import frc.robot.util.Conversions;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
@@ -105,7 +106,7 @@ public class ModuleChanged {
 
   private Rotation2d getAngle() {
     return Rotation2d.fromDegrees(
-        Conversions.falconToDegrees(m_angleMotor.getSelectedSensorPosition(), SwerveConstants.kAngleGearRatio));
+        Conversions.falconToDegrees(m_angleMotor.getSelectedSensorPosition(), DriveConstants.kAngleGearRatio));
   }
 
   public Rotation2d getCANcoder() {

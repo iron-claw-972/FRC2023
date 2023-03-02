@@ -160,7 +160,7 @@ public class DriveConstants {
   public static final NeutralMode kDriveNeutralMode = NeutralMode.Brake;
   public static final NeutralMode kAngleNeutralMode = NeutralMode.Coast;
 
-    /* Drive Motor PID Values */
+  /* Drive Motor PID Values */
   public static final double kDriveP = 0.05;
   public static final double kDriveI = 0.0;
   public static final double kDriveD = 0.0;
@@ -175,7 +175,6 @@ public class DriveConstants {
   public static final double kWheelCircumference = kModuleConstants.wheelCircumference;
 
   public static final boolean kUseTelemetry = true;
-  
   
   /* Motor gear ratios */
   public static final double kAngleGearRatio = kModuleConstants.angleGearRatio;
