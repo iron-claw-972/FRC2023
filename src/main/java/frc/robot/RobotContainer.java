@@ -193,7 +193,7 @@ public class RobotContainer {
 
     SmartDashboard.putNumber("Deposit Elevator Extension", 0.0);
     SmartDashboard.putNumber("Deposit Arm Extension", 0.0);
-    // m_testTab.add("Tune Deposit Locations", new DepositTune(m_elevator, m_arm, m_intake));
+    m_testTab.add("Tune Deposit Locations", new DepositTune(m_elevator, m_arm));
     m_testTab.add("Outtake", new OuttakeGamePiece(m_intake));
     m_testTab.add("Rotate Outtake", new OuttakeGamePiece(m_intake, true));
   }
