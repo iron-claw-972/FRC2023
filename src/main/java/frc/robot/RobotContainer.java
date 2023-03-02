@@ -100,7 +100,7 @@ public class RobotContainer {
 
       m_arm = new FourBarArm();
       m_intake = new Intake(m_intakeTab);
-      m_elevator = new Elevator(m_elevatorTab);
+      m_elevator = new Elevator(m_elevatorTab, ()->m_intake.containsGamePiece());
       m_deployingBar = null; 
 
       m_operator = new Operator();
