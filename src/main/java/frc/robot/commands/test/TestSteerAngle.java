@@ -32,7 +32,7 @@ public class TestSteerAngle extends CommandBase{
       Module module = m_drive.m_modules[i];
       m_timeAccuracyTests[i] = new TimeAccuracyTest(
         () -> module.getDriveVelocityError(),
-        () -> m_drive.getRequestedSteerVelocityEntry().getDouble(0),
+        () -> m_drive.getRequestedSteerVelocity(0),
         TestConstants.kSteerAngleError,
         TestConstants.kSteerAngleTimeError
       );
@@ -42,10 +42,10 @@ public class TestSteerAngle extends CommandBase{
   @Override
   public void execute() {
     m_drive.setModuleStates(new SwerveModuleState[] {
-      new SwerveModuleState(0, new Rotation2d(m_drive.getRequestedSteerAngleEntry().getDouble(0))),
-      new SwerveModuleState(0, new Rotation2d(m_drive.getRequestedSteerAngleEntry().getDouble(0))),
-      new SwerveModuleState(0, new Rotation2d(m_drive.getRequestedSteerAngleEntry().getDouble(0))),
-      new SwerveModuleState(0, new Rotation2d(m_drive.getRequestedSteerAngleEntry().getDouble(0)))
+      new SwerveModuleState(0, new Rotation2d(m_drive.getRequestedSteerAngle(m_drive.m_modules[0].getSteerAngle()))),
+      new SwerveModuleState(0, new Rotation2d(m_drive.getRequestedSteerAngle(m_drive.m_modules[1].getSteerAngle()))),
+      new SwerveModuleState(0, new Rotation2d(m_drive.getRequestedSteerAngle(m_drive.m_modules[2].getSteerAngle()))),
+      new SwerveModuleState(0, new Rotation2d(m_drive.getRequestedSteerAngle(m_drive.m_modules[3].getSteerAngle())))
     });
     m_testEntry.setBoolean(
       m_timeAccuracyTests[0].calculate() &&

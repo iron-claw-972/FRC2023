@@ -2,6 +2,7 @@ package frc.robot.commands.auto;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.GoToPose;
 import frc.robot.subsystems.Drivetrain;
@@ -26,6 +27,7 @@ public class ToCenterAndBack extends SequentialCommandGroup{
         initialPose = new Pose2d(-.5,0, startRot);//it is -0.5 to account for significant error in which it did not come back all the way
 
         addCommands(
+            new InstantCommand(() -> m_drive.setPigeonYaw(startRot.getDegrees()), m_drive),
             new GoToPose(m_drive, centerPose), 
             new GoToPose(m_drive, initialPose)
            

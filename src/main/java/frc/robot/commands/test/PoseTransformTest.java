@@ -32,8 +32,8 @@ public class PoseTransformTest extends CommandBase {
   public void initialize() {
     m_startTime = Timer.getFPGATimestamp();
     m_finalPose = m_drive.getPose().transformBy(new Transform2d(
-      new Translation2d(m_drive.getRequestedXPos().getDouble(0), m_drive.getRequestedYPos().getDouble(0)), 
-      new Rotation2d(m_drive.getRequestedHeadingEntry().getDouble(0))
+      new Translation2d(m_drive.getRequestedXPos(0), m_drive.getRequestedYPos(0)), 
+      new Rotation2d(m_drive.getRequestedHeading(0))
     ));
   }
   

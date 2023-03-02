@@ -25,21 +25,22 @@ public class PathPlannerCommand extends SequentialCommandGroup{
     Alliance alliance;
     
     public PathPlannerCommand(ArrayList<PathPoint> waypoints, Drivetrain drive) {
-        this(PathPlanner.generatePath(
+        this(new ArrayList<PathPlannerTrajectory>(Arrays.asList(PathPlanner.generatePath(
           new PathConstraints(AutoConstants.kMaxAutoSpeed, AutoConstants.kMaxAutoAccel),
           waypoints.get(0),
           waypoints.get(1),
           (PathPoint[]) Arrays.copyOfRange(waypoints.toArray(), 2, waypoints.size())
-        ), drive);
-      }
-    
-    public PathPlannerCommand(PathPlannerTrajectory path, Drivetrain drive){
-        this(new ArrayList<PathPlannerTrajectory>(Arrays.asList(path)), 0, drive, false);
+        ))), 0, drive, true);
     }
 
     public PathPlannerCommand(String pathGroupName, int pathIndex, Drivetrain drive){
         this(PathGroupLoader.getPathGroup(pathGroupName), pathIndex, drive, true); 
     }
+
+    public PathPlannerCommand(String pathGroupName, int pathIndex, Drivetrain drive, boolean resetPose){
+        this(PathGroupLoader.getPathGroup(pathGroupName), pathIndex, drive, resetPose); 
+    }
+    
     public PathPlannerCommand(List<PathPlannerTrajectory> pathGroup, int pathIndex, Drivetrain drive, boolean resetPose){
         addRequirements(drive);
         if (pathIndex < 0 || pathIndex > pathGroup.size() - 1){
@@ -48,7 +49,7 @@ public class PathPlannerCommand extends SequentialCommandGroup{
         PathPlannerTrajectory path = pathGroup.get(pathIndex);
     
         addCommands(
-            (pathIndex == 0 && resetPose ? new InstantCommand(() -> drive.resetOdometry(path.getInitialHolonomicPose())) : new DoNothing()),
+            (pathIndex == 0 && resetPose ? new InstantCommand(() -> {drive.setPigeonYaw(path.getInitialHolonomicPose().getRotation().getDegrees()); drive.resetOdometry(path.getInitialHolonomicPose());}) : new DoNothing()),
             new PrintCommand("Number of paths: " + pathGroup.size()),
             new PPSwerveControllerCommand(
                 path, 

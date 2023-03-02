@@ -112,10 +112,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-
-    // When auto starts, we know the start position, so we should always reset the yaw to face the right way.
-    m_robotContainer.initDriveYaw(true);
-
     // Get the autonomous command.
     // This access is fast (about 14 microseconds) because the value is already resident in the Network Tables.
     // There was a problem last year because the operation also installed about over a dozen items (taking more than 20 ms).
@@ -138,10 +134,6 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Teleop mode. */
   @Override
   public void teleopInit() {
-
-    // If we enable teleop for the first time, we should reset the drive yaw. Mainly for testing.
-    m_robotContainer.initDriveYaw(false);
-
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove

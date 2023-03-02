@@ -30,7 +30,7 @@ public class TestHeadingPID extends CommandBase {
     m_drive.setAllOptimize(false);
     m_timeAccuracyTest = new TimeAccuracyTest(
       () -> m_drive.getAngleHeading(),
-      () -> m_drive.getRequestedHeadingEntry().getDouble(0),
+      () -> m_drive.getRequestedHeading(0),
       TestConstants.kHeadingError,
       TestConstants.kHeadingTimeError
     );
@@ -38,7 +38,7 @@ public class TestHeadingPID extends CommandBase {
   
   @Override
   public void execute() {
-    double headingPIDOutput = m_drive.getRotationController().calculate(m_drive.getAngleHeading(), m_drive.getRequestedHeadingEntry().getDouble(0));
+    double headingPIDOutput = m_drive.getRotationController().calculate(m_drive.getAngleHeading(), m_drive.getRequestedHeading(m_drive.getAngleHeading()));
     // headingOutput is in rad/s. Need to convert to m/s by multiplying by radius
     headingPIDOutput *= Math.sqrt(0.5) * DriveConstants.kTrackWidth;
     m_drive.setModuleStates(

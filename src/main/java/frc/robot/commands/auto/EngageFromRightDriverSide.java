@@ -3,6 +3,7 @@ package frc.robot.commands.auto;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.GoToPose;
@@ -28,6 +29,7 @@ public class EngageFromRightDriverSide extends SequentialCommandGroup{
 
 
         addCommands(
+            new InstantCommand(() -> m_drive.setPigeonYaw(startRot.getDegrees()), m_drive),
             new GoToPose(m_drive, centerPose),
             new GoToPose(m_drive, leftUnrotatedPose),//alternatively could make it poseRightRotated, but this is untested
             new GoToPose(m_drive, chargePose),
