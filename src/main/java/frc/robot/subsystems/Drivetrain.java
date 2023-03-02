@@ -63,30 +63,18 @@ public class Drivetrain extends SubsystemBase {
   private Vision m_vision;
 
   // PID Controllers for chassis movement
-  private final PIDController m_xController = new PIDController(
-    DriveConstants.kTranslationalP, 0, DriveConstants.kTranslationalD
-  );
-  private final PIDController m_yController = new PIDController(
-    DriveConstants.kTranslationalP, 0, DriveConstants.kTranslationalD
-  );
-  private final PIDController m_rotationController = new PIDController(
-    DriveConstants.kHeadingP, 0, DriveConstants.kHeadingD
-  );
+  private final PIDController m_xController;
+  private final PIDController m_yController;
+  private final PIDController m_rotationController;
 
   private boolean m_isOnChargeStation = false;
 
   // Displays the field with the robots estimated pose on it
-  private final Field2d m_fieldDisplay = new Field2d();
+  private final Field2d m_fieldDisplay;
 
-  private final PIDController m_pathplannerXController = new PIDController(
-    DriveConstants.kPathplannerTranslationalP, 0, DriveConstants.kPathplannerTranslationalD
-  );
-  private final PIDController m_pathplannerYController = new PIDController(
-    DriveConstants.kPathplannerTranslationalP, 0, DriveConstants.kPathplannerTranslationalD
-  );
-  private final PIDController m_pathplannerRotationController = new PIDController(
-    DriveConstants.kPathplannerHeadingP, 0, DriveConstants.kPathplannerHeadingD
-  );
+  private final PIDController m_pathplannerXController;
+  private final PIDController m_pathplannerYController;
+  private final PIDController m_pathplannerRotationController;
 
   //Shuffleboard
   private GenericEntry 
@@ -128,11 +116,18 @@ public class Drivetrain extends SubsystemBase {
     m_pigeon.configFactoryDefault();
     setPigeonYaw(DriveConstants.kStartingHeadingDegrees);
 
-    m_modules = new ModuleOld[] {
-      ModuleOld.create(ModuleConstants.FRONT_LEFT, m_swerveModulesTab),
-      ModuleOld.create(ModuleConstants.FRONT_RIGHT, m_swerveModulesTab),
-      ModuleOld.create(ModuleConstants.BACK_LEFT, m_swerveModulesTab),
-      ModuleOld.create(ModuleConstants.BACK_RIGHT, m_swerveModulesTab)
+    // m_modules = new ModuleOld[] {
+    //   ModuleOld.create(ModuleConstants.FRONT_LEFT, m_swerveModulesTab),
+    //   ModuleOld.create(ModuleConstants.FRONT_RIGHT, m_swerveModulesTab),
+    //   ModuleOld.create(ModuleConstants.BACK_LEFT, m_swerveModulesTab),
+    //   ModuleOld.create(ModuleConstants.BACK_RIGHT, m_swerveModulesTab)
+    // };
+
+    m_modules = new ModuleChanged[] {
+      new ModuleChanged(ModuleConstants.FRONT_LEFT, swerveModulesTab),
+      new ModuleChanged(ModuleConstants.FRONT_RIGHT, swerveModulesTab),
+      new ModuleChanged(ModuleConstants.BACK_LEFT, swerveModulesTab),
+      new ModuleChanged(ModuleConstants.BACK_RIGHT, swerveModulesTab),
     };
 
     m_prevModule = m_modules[0];
@@ -144,7 +139,7 @@ public class Drivetrain extends SubsystemBase {
      */
     Timer.delay(1.0);
     resetModulesToAbsolute();
-    
+
     m_poseEstimator = new SwerveDrivePoseEstimator(
       DriveConstants.kKinematics,
       m_pigeon.getRotation2d(),
@@ -153,8 +148,16 @@ public class Drivetrain extends SubsystemBase {
     );
     m_poseEstimator.setVisionMeasurementStdDevs(VisionConstants.kBaseVisionPoseStdDevs);
 
+    m_xController = new PIDController(DriveConstants.kTranslationalP, 0, DriveConstants.kTranslationalD);
+    m_yController = new PIDController(DriveConstants.kTranslationalP, 0, DriveConstants.kTranslationalD);
+    m_rotationController = new PIDController(DriveConstants.kTranslationalP, 0, DriveConstants.kTranslationalD);
     m_rotationController.enableContinuousInput(-Math.PI, Math.PI);
+
+    m_pathplannerXController = new PIDController(DriveConstants.kPathplannerTranslationalP, 0, DriveConstants.kPathplannerTranslationalD);
+    m_pathplannerYController = new PIDController(DriveConstants.kPathplannerTranslationalP, 0, DriveConstants.kPathplannerTranslationalD);
+    m_pathplannerRotationController = new PIDController(DriveConstants.kPathplannerHeadingP, 0, DriveConstants.kPathplannerHeadingD);
     m_pathplannerRotationController.enableContinuousInput(-Math.PI, Math.PI);
+  
     DoubleSupplier[] poseSupplier = {
       () -> getPose().getX(),
       () -> getPose().getY(),
@@ -162,8 +165,11 @@ public class Drivetrain extends SubsystemBase {
     };
     LogManager.addDoubleArray("Pose2d", poseSupplier);
     
+    m_fieldDisplay = new Field2d();
     m_fieldDisplay.setRobotPose(getPose());
-    SmartDashboard.putData("Field", m_fieldDisplay);
+
+    setupDrivetrainShuffleboard();
+    setupModulesShuffleboard();
   }
 
   @Override
@@ -225,7 +231,7 @@ public class Drivetrain extends SubsystemBase {
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean isOpenLoop) {           
     setChassisSpeeds((
       fieldRelative
-          ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getRotation2d())
+          ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getYaw())
           : new ChassisSpeeds(xSpeed, ySpeed, rot)
       ),
       isOpenLoop
@@ -352,26 +358,25 @@ public class Drivetrain extends SubsystemBase {
   * @param pose the pose to reset to.
   */
   public void resetOdometry(Pose2d pose) {
-    m_poseEstimator.resetPosition(getRotation2d(), getModulePositions(), pose);
+    m_poseEstimator.resetPosition(getYaw(), getModulePositions(), pose);
   }
   
   /**
   * @return the pigeon's heading in a Rotation2d
   */
-  public Rotation2d getRotation2d() {
-    return m_pigeon.getRotation2d(); 
+  public Rotation2d getYaw() {
+    return (DriveConstants.kInvertGyro) ? Rotation2d.fromDegrees(360 - m_pigeon.getYaw())
+        : Rotation2d.fromDegrees(m_pigeon.getYaw());
   }
 
-  public double getPitch()  {
-    return m_pigeon.getPitch();
+  public Rotation2d getPitch() {
+    return Rotation2d.fromDegrees(m_pigeon.getPitch());
   }
   
-  public double getRoll()  {
-    return m_pigeon.getRoll();
+  public Rotation2d getRoll()  {
+    return Rotation2d.fromDegrees(m_pigeon.getRoll());
   }
-  public double getYaw()  {
-    return m_pigeon.getYaw();
-  }  
+
   /**
   * Gets the angle heading from the pigeon.
   * 
@@ -387,12 +392,10 @@ public class Drivetrain extends SubsystemBase {
   * @return an array of all swerve module positions
   */
   public SwerveModulePosition[] getModulePositions() {
-    SwerveModulePosition[] positions = new SwerveModulePosition[] {
-      m_modules[0].getPosition(),
-      m_modules[1].getPosition(),
-      m_modules[2].getPosition(),
-      m_modules[3].getPosition()
-    };
+    SwerveModulePosition[] positions = new SwerveModulePosition[4];
+    for (Module mod : m_modules) {
+      positions[mod.getModuleIndex()] = mod.getPosition();
+    }
     return positions;
   }
   
@@ -510,7 +513,7 @@ public class Drivetrain extends SubsystemBase {
   /**
    * Sets up the shuffleboard tab for the drivetrain.
    */
-  public void setupDrivetrainShuffleboard() {
+  private void setupDrivetrainShuffleboard() {
     if (!Constants.kUseTelemetry) return;
 
     // inputs
@@ -543,7 +546,7 @@ public class Drivetrain extends SubsystemBase {
   /**
    * Sets up the shuffleboard tab for the swerve modules.
    */
-  public void setupModulesShuffleboard() {
+  private void setupModulesShuffleboard() {
     if (Constants.kUseTelemetry) {
       
       m_moduleChooser.setDefaultOption("Front Left", m_modules[0]);

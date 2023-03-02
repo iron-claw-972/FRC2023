@@ -55,11 +55,11 @@ public class BalanceCommand extends CommandBase {
     m_output = MathUtil.clamp(m_pid.calculate(m_currentAngle), -DriveConstants.kBalanceMaxOutput, DriveConstants.kBalanceMaxOutput);
     
     if(m_usePitch) {
-    m_currentAngle = m_drive.getPitch();
+    m_currentAngle = m_drive.getPitch().getDegrees();
       m_drive.driveHeading(-m_output, 0, (m_inverted ? -Math.PI/2 : Math.PI/2), true);
     }
     else {
-    m_currentAngle = m_drive.getRoll();
+    m_currentAngle = m_drive.getRoll().getDegrees();
       m_drive.driveHeading(-m_output, 0, (m_inverted ? 0 : Math.PI), true); // TODO: inversion may be incorrect
     }
     

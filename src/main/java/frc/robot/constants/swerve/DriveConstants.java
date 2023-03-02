@@ -143,7 +143,7 @@ public class DriveConstants {
   public static String kSteerEncoderCAN = Constants.kCanivoreCAN;
   public static String kPigeonCAN = Constants.kCanivoreCAN;
   
-  
+
   public static final COTSFalconSwerveConstants kModuleConstants = COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L2);
 
   /* Swerve Current Limiting */
@@ -183,7 +183,7 @@ public class DriveConstants {
   /* Motor gear ratios */
   public static final double kAngleGearRatio = kModuleConstants.angleGearRatio;
 
-
+  public static final boolean kInvertGyro = false; // Make sure gyro is CCW+ CW- // FIXME: Swerve
 
 
   /**
