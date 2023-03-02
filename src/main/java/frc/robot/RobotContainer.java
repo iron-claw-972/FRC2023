@@ -49,6 +49,7 @@ public class RobotContainer {
   private final ShuffleboardTab m_visionTab = Shuffleboard.getTab("Vision");
   private final ShuffleboardTab m_testTab = Shuffleboard.getTab("Test");
   private final ShuffleboardTab m_elevatorTab = Shuffleboard.getTab("Elevator");
+  private final ShuffleboardTab m_intakeTab = Shuffleboard.getTab("Intake");
   
 
   private final Vision m_vision;
@@ -83,7 +84,7 @@ public class RobotContainer {
     if (Robot.kRobotId == RobotId.SwerveCompetition) {
 
       m_arm = new FourBarArm();
-      m_intake = new Intake();
+      m_intake = new Intake(m_intakeTab);
       m_elevator = new Elevator(m_elevatorTab);
       m_deployingBar = null; 
 
@@ -97,7 +98,6 @@ public class RobotContainer {
       //m_operator.configureControls(m_deployingBar);
       m_testController.configureControls();
       m_manualController.configureControls();
-
     } else {
 
       DriverStation.reportWarning("Not registering subsystems and controls due to incorrect robot", false);

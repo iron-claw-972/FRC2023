@@ -51,23 +51,6 @@ public class Functions {
     }
     return finVal;
   }
-  
-  /**
-   * @deprecated use Math.atan2(x,y)
-   * calculates angle of the positive x direction to the origin to the point
-   * defaults to 0 if point given is (0,0)
-   * 
-   * @param x X coordinate
-   * @param y Y coordinate
-   * @return angle of points in radians 
-   * 
-   */
-  @Deprecated
-  public static double calculateAngle(double x, double y) {
-    if (x > 0) return Math.atan(y/x);
-    if (x < 0) return Math.atan(y/x) + Math.PI;
-    return Math.signum(y)* Math.PI/2;
-  }
 
   /**
    * Calculates a points distance from the origin

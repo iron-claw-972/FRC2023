@@ -3,7 +3,7 @@ package frc.robot.commands.arm;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.FourBarArm;
 
-public class ExtendToPosition extends CommandBase {
+public class ExtendArm extends CommandBase {
 
   private final FourBarArm m_arm;
   private double m_armSetpoint;
@@ -11,7 +11,7 @@ public class ExtendToPosition extends CommandBase {
   /**
    * extends four-bar-arm to a radian position using PID
    */
-  public ExtendToPosition(FourBarArm arm, double setpoint) {
+  public ExtendArm(FourBarArm arm, double setpoint) {
     addRequirements(arm);
     m_arm = arm;
     m_armSetpoint = setpoint;
