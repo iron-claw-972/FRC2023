@@ -123,7 +123,7 @@ public class Operator {
   public void configureControls(Intake intake){
     // Intake
     m_operator.get(m_operator.RIGHT_TRIGGER_BUTTON).whileTrue(new IntakeGamePiece(intake));
-    m_operator.get(Button.RB).whileTrue(null)(new IntakeGamePiece(intake));
+    m_operator.get(Button.RB).whileTrue(new IntakeGamePiece(intake));
 
     // Outtake
     m_operator.get(m_operator.LEFT_TRIGGER_BUTTON).toggleOnTrue(new OuttakeGamePiece(intake));
