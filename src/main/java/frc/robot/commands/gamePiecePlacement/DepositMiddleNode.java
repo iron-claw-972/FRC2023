@@ -14,7 +14,7 @@ public class DepositMiddleNode extends SequentialCommandGroup {
   public DepositMiddleNode(Elevator elevator, FourBarArm arm, Intake intake) {
     addRequirements(elevator, arm, intake);
     addCommands(
-      new MoveElevator(elevator, ElevatorConstants.kMiddleNodeHeightExtension),
+      new MoveElevator(elevator, ElevatorConstants.kMiddleConeHeight),
       new ExtendArm(arm, ArmConstants.kMiddleConeOuttakeAbsEncoderPos),
       new OuttakeGamePiece(intake), 
       new Stow(elevator, arm)
