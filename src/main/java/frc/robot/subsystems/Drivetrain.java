@@ -22,6 +22,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -125,6 +126,7 @@ public class Drivetrain extends SubsystemBase {
     m_vision = vision;
     
     m_pigeon = new WPI_Pigeon2(DriveConstants.kPigeon, DriveConstants.kPigeonCAN);
+    m_pigeon.configFactoryDefault();
     setPigeonYaw(DriveConstants.kStartingHeadingDegrees);
 
     m_modules = new Module[] {
@@ -133,7 +135,16 @@ public class Drivetrain extends SubsystemBase {
       Module.create(ModuleConstants.BACK_LEFT, m_swerveModulesTab),
       Module.create(ModuleConstants.BACK_RIGHT, m_swerveModulesTab)
     };
+
     m_prevModule = m_modules[0];
+
+    /*
+     * By pausing init for a second before setting module offsets, we avoid a bug
+     * with inverting motors.
+     * See https://github.com/Team364/BaseFalconSwerve/issues/8 for more info.
+     */
+    Timer.delay(1.0);
+    resetModulesToAbsolute();
     
     m_poseEstimator = new SwerveDrivePoseEstimator(
       DriveConstants.kKinematics,
@@ -163,6 +174,13 @@ public class Drivetrain extends SubsystemBase {
 
     updateOdometry();
   }
+
+  public void resetModulesToAbsolute() {
+    for (Module mod : m_modules) {
+      mod.resetToAbsolute();
+    }
+  }
+
 
   /**
    * @return chassis speed of swerve drive
@@ -482,7 +500,7 @@ public class Drivetrain extends SubsystemBase {
    * Sets up the shuffleboard tab for the drivetrain.
    */
   public void setupDrivetrainShuffleboard() {
-    if (Constants.kUseTelemetry) return;
+    if (!Constants.kUseTelemetry) return;
 
     // inputs
     m_headingEntry = m_drivetrainTab.add("Set Heading (-pi to pi)", 0).getEntry();
@@ -602,6 +620,7 @@ public class Drivetrain extends SubsystemBase {
    * Updates the drive module feedforward values on shuffleboard.
    */
   public void updateDriveModuleFeedforwardShuffleboard() {
+    if (!Constants.kUseTelemetry) return;
     // revert to previous saved feed forward data if changed
     if (m_prevModule != m_moduleChooser.getSelected()) {
       m_driveStaticFeedforwardEntry.setDouble(
@@ -637,6 +656,7 @@ public class Drivetrain extends SubsystemBase {
    * Updates the steer module feedforward values on shuffleboard.
    */
   public void updateSteerModuleFeedforwardShuffleboard() {
+    if (!Constants.kUseTelemetry) return;
     
     //revert to previous saved feed forward data if changed
     if (m_prevModule != m_moduleChooser.getSelected()) {
@@ -670,6 +690,7 @@ public class Drivetrain extends SubsystemBase {
   }
   
   public Module getModuleChoosen() {
+    if (!Constants.kUseTelemetry) return m_modules[0];
     return m_moduleChooser.getSelected();
   }
 

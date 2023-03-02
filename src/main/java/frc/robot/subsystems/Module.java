@@ -481,4 +481,11 @@ public class Module {
     m_moduleTab.addNumber("Drive Pos " + m_moduleType.abbrev, ()-> getDrivePosition());
   }
 
+
+  /**
+   * DUMMY FUNCTION
+   */
+  public void resetToAbsolute() {
+
+  }
 }
