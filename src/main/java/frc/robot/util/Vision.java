@@ -67,7 +67,7 @@ public class Vision {
     for (int i = 0; i < m_cameras.size(); i++) {
       Optional<EstimatedRobotPose> estimatedPose = m_cameras.get(i).getEstimatedPose(referencePose);
       // If the camera can see an april tag, add it to the array list
-      if (estimatedPose.isPresent()) {
+      if (estimatedPose.isPresent() && estimatedPose.get().estimatedPose!=null) {
         estimatedPoses.add(estimatedPose.get());
       }
     }
