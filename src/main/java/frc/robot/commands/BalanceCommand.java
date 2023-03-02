@@ -56,11 +56,11 @@ public class BalanceCommand extends CommandBase {
     
     if(m_usePitch) {
     m_currentAngle = m_drive.getPitch();
-      m_drive.driveHeading(-m_output, 0, (m_inverted? -Math.PI/2: Math.PI/2), true);
+      m_drive.driveHeading(-m_output, 0, (m_inverted ? -Math.PI/2 : Math.PI/2), true);
     }
     else {
     m_currentAngle = m_drive.getRoll();
-      m_drive.driveHeading(-m_output, 0, (m_inverted? 0: Math.PI), true); // TODO: inversion may be incorrect
+      m_drive.driveHeading(-m_output, 0, (m_inverted ? 0 : Math.PI), true); // TODO: inversion may be incorrect
     }
     
     if (m_timer.get() >= DriveConstants.kBalanceStartTime && m_timer.get() <= DriveConstants.kBalanceEndTime) {
