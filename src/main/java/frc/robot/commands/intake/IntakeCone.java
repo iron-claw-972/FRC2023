@@ -22,7 +22,7 @@ public class IntakeCone extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
-    m_intake.stop();
+    m_intake.stopIntake();
   }
   
   // Returns true when the command should end.
