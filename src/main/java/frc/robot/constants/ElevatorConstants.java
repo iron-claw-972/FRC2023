@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 
 import edu.wpi.first.math.util.Units;
+import lib.math.Conversions;
 
 public class ElevatorConstants {
   public static final int kMotorID = 13;
