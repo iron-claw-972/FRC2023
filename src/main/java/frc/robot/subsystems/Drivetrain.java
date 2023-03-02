@@ -53,7 +53,9 @@ import frc.robot.util.Vision;
  */
 public class Drivetrain extends SubsystemBase {
 
-  public Vision m_vision;
+  private ShuffleboardTab m_swerveModulesTab, m_drivetrainTab;
+
+  private Vision m_vision;
 
   // This is left intentionally public
   public final Module[] m_modules;
@@ -124,8 +126,7 @@ public class Drivetrain extends SubsystemBase {
     m_xPosEntry,
     m_yPosEntry,
     m_headingEntry;
-  private ShuffleboardTab m_swerveModulesTab, m_drivetrainTab;
-
+  
   private Double[] m_driveVelFeedForwardSaver = new Double[4];
   private Double[] m_driveStaticFeedForwardSaver = new Double[4];
   private Double[] m_steerVelFeedForwardSaver = new Double[4];
