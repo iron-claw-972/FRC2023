@@ -13,9 +13,9 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.lib.math.Conversions;
-import frc.robot.Constants;
-import frc.robot.Constants.ElevatorConstants;
+import frc.robot.constants.Constants;
+import frc.robot.constants.ElevatorConstants;
+
 
 public class Elevator extends SubsystemBase {
   private final ShuffleboardTab m_elevatorTab;
@@ -41,7 +41,7 @@ public class Elevator extends SubsystemBase {
     m_status = ElevatorStatus.NONE;
     m_isCalibrated = false;
 
-    m_motor = new WPI_TalonFX(ElevatorConstants.kMotorID, ElevatorConstants.kElevatorCAN);
+    m_motor = new WPI_TalonFX(ElevatorConstants.kMotorID);
     configElevatorMotor();
 
     m_bottomLimitSwitch = new DigitalInput(ElevatorConstants.kBottomLimitSwitchPort);
@@ -81,7 +81,7 @@ public class Elevator extends SubsystemBase {
 
     m_motor.setInverted(ElevatorConstants.kMotorInvert);
     m_motor.setNeutralMode(ElevatorConstants.kNeutralMode);
-    m_motor.configVoltageCompSaturation(Constants.kNormalOperatingVoltage);
+    m_motor.configVoltageCompSaturation(Constants.kMaxVoltage);
     m_motor.enableVoltageCompensation(true);
 
     m_motor.configClosedloopRamp(ElevatorConstants.kMotorRamp);
