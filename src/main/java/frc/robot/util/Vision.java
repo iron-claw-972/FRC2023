@@ -127,17 +127,16 @@ public class Vision {
     return getAprilTagFieldLayout().getTagPose(id).get();
   }
 
-  public void logging(){
-    //TODO: fix this, currently breaks because of nulls
-    // DoubleSupplier[] poseSupplier = {
-    //   () -> getPose2d().getX(),
-    //   () -> getPose2d().getY(),
-    //   () -> getPose2d().getRotation().getRadians()
-    // };
-    
-    // LogManager.addDoubleArray("Pose2d", poseSupplier);
-    // LogManager.addInt("Visible April Tags", () -> getEstimatedPoses(getPose2d()).size());
-    
+  public void logPose(Pose2d referencePose){
+    ArrayList<EstimatedRobotPose> poses = getEstimatedPoses(referencePose);
+    for(int i = 0; i < poses.size(); i++){
+      double[] pose = {
+        poses.get(i).estimatedPose.getX(),
+        poses.get(i).estimatedPose.getY(),
+        poses.get(i).estimatedPose.toPose2d().getRotation().getRadians()
+      };
+      LogManager.addDoubleArray("Vision pose", pose);
+    }
   }
   
   public void setupVisionShuffleboard() {
