@@ -1,6 +1,9 @@
 package frc.robot.constants.swerve;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+
 import edu.wpi.first.math.util.Units;
+import lib.COTSFalconSwerveConstants;
 import frc.robot.Robot;
 import frc.robot.Robot.RobotId;
 import frc.robot.constants.Constants;
@@ -19,6 +22,12 @@ public class DriveConstants {
   public static double kTrackWidth = Units.inchesToMeters(20.75);//22.75 swerve bot, 20.75 comp bot
   public static double kDriveGearRatio = 6.75;
   public static double kSteerGearRatio = 21.43;
+
+  /* Drive Motor Characterization Values 
+  * Divide SYSID values by 12 to convert from volts to percent output for CTRE */
+  public static final double kDriveKS = 0.32 / 12.0; // 0.65559
+  public static final double kDriveKV = 1.51 / 12.0; // 1.93074
+  public static final double kDriveKA = 0.27 / 12.0; // 0.00214
 
   public static double kMaxSpeed = (FalconConstants.kMaxRpm / 60.0) / kDriveGearRatio * kWheelRadius * 2 * Math.PI;
 
@@ -128,6 +137,51 @@ public class DriveConstants {
   public static String kSteerMotorCAN = Constants.kCanivoreCAN;
   public static String kSteerEncoderCAN = Constants.kCanivoreCAN;
   public static String kPigeonCAN = Constants.kCanivoreCAN;
+  
+  
+  public static final COTSFalconSwerveConstants kModuleConstants = COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L2);
+
+  /* Swerve Current Limiting */
+  public static final int kAngleContinuousCurrentLimit = 25;
+  public static final int kAnglePeakCurrentLimit = 40;
+  public static final double kAnglePeakCurrentDuration = 0.1;
+  public static final boolean kAngleEnableCurrentLimit = true;
+
+  public static final int kDriveContinuousCurrentLimit = 35;
+  public static final int kDrivePeakCurrentLimit = 60;
+  public static final double kDrivePeakCurrentDuration = 0.1;
+  public static final boolean kDriveEnableCurrentLimit = true;
+
+  /* Motor inversions */
+  public static final boolean kDriveMotorInvert = kModuleConstants.driveMotorInvert;
+  public static final boolean kAngleMotorInvert = kModuleConstants.angleMotorInvert;
+
+  /* Neutral Modes */
+  public static final NeutralMode kDriveNeutralMode = NeutralMode.Brake;
+  public static final NeutralMode kAngleNeutralMode = NeutralMode.Coast;
+
+    /* Drive Motor PID Values */
+  public static final double kDriveP = 0.05;
+  public static final double kDriveI = 0.0;
+  public static final double kDriveD = 0.0;
+  public static final double kDriveF = 0.0;
+
+  /* Ramp values for drive motors in open and closed loop driving */
+  public static final double kOpenLoopRamp = 0.1; // A small open loop ramp (0.25) helps with tread wear, tipping, etc
+  public static final double kClosedLoopRamp = 0.0;
+
+  public static final double kNormalOperatingVoltage = 12.0;
+
+  public static final double kWheelCircumference = kModuleConstants.wheelCircumference;
+
+  public static final boolean kUseTelemetry = true;
+  
+  
+  /* Motor gear ratios */
+  public static final double kAngleGearRatio = kModuleConstants.angleGearRatio;
+
+
+
 
   /**
    * Updates the constants if the RobotId is not the competition robot.
