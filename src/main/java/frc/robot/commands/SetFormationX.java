@@ -30,7 +30,7 @@ public class SetFormationX extends CommandBase {
       new SwerveModuleState(0, new Rotation2d(Units.degreesToRadians(-45))),
       new SwerveModuleState(0, new Rotation2d(Units.degreesToRadians(-45))),
       new SwerveModuleState(0, new Rotation2d(Units.degreesToRadians(45)))
-    });
+    }, true);
   }
 
   @Override

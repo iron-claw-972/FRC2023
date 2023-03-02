@@ -6,7 +6,6 @@ import java.util.function.DoubleSupplier;
 import org.photonvision.EstimatedRobotPose;
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
-import com.pathplanner.lib.PathPlannerTrajectory;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Pair;
@@ -129,11 +128,11 @@ public class Drivetrain extends SubsystemBase {
     m_pigeon.configFactoryDefault();
     setPigeonYaw(DriveConstants.kStartingHeadingDegrees);
 
-    m_modules = new Module[] {
-      Module.create(ModuleConstants.FRONT_LEFT, m_swerveModulesTab),
-      Module.create(ModuleConstants.FRONT_RIGHT, m_swerveModulesTab),
-      Module.create(ModuleConstants.BACK_LEFT, m_swerveModulesTab),
-      Module.create(ModuleConstants.BACK_RIGHT, m_swerveModulesTab)
+    m_modules = new ModuleOld[] {
+      ModuleOld.create(ModuleConstants.FRONT_LEFT, m_swerveModulesTab),
+      ModuleOld.create(ModuleConstants.FRONT_RIGHT, m_swerveModulesTab),
+      ModuleOld.create(ModuleConstants.BACK_LEFT, m_swerveModulesTab),
+      ModuleOld.create(ModuleConstants.BACK_RIGHT, m_swerveModulesTab)
     };
 
     m_prevModule = m_modules[0];
@@ -223,12 +222,13 @@ public class Drivetrain extends SubsystemBase {
   * @param rot angular rate of the robot in rad/s
   * @param fieldRelative whether the provided x and y speeds are relative to the field
   */
-  public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {           
+  public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean isOpenLoop) {           
     setChassisSpeeds((
       fieldRelative
           ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getRotation2d())
           : new ChassisSpeeds(xSpeed, ySpeed, rot)
-      )
+      ),
+      isOpenLoop
     );
   }  
 
@@ -247,7 +247,8 @@ public class Drivetrain extends SubsystemBase {
       fieldRelative
           ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_pigeon.getRotation2d())
           : new ChassisSpeeds(xSpeed, ySpeed, rot)
-      )
+      ),
+      false
     );
   }
 
@@ -256,10 +257,10 @@ public class Drivetrain extends SubsystemBase {
    * 
    * @param chassisSpeeds the target chassis speeds
    */
-  public void setChassisSpeeds(ChassisSpeeds chassisSpeeds) {
+  public void setChassisSpeeds(ChassisSpeeds chassisSpeeds, boolean isOpenLoop) {
     SwerveModuleState[] swerveModuleStates = DriveConstants.kKinematics.toSwerveModuleStates(chassisSpeeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kMaxSpeed);
-    setModuleStates(swerveModuleStates);
+    setModuleStates(swerveModuleStates, isOpenLoop);
   }
 
   /**
@@ -274,7 +275,7 @@ public class Drivetrain extends SubsystemBase {
     double xSpeed = m_xController.calculate(m_poseEstimator.getEstimatedPosition().getX(), x);
     double ySpeed = m_yController.calculate(m_poseEstimator.getEstimatedPosition().getY(), y);
     double rotRadians = m_rotationController.calculate(getAngleHeading(), rot);
-    drive(xSpeed, ySpeed, rotRadians, true);
+    drive(xSpeed, ySpeed, rotRadians, true, false);
   }
   
   /** Updates the field relative position of the robot. */
@@ -400,12 +401,22 @@ public class Drivetrain extends SubsystemBase {
   * 
   * @param swerveModuleStates an array of module states to set swerve modules to. Order of the array matters here!
   */
-  public void setModuleStates(SwerveModuleState[] swerveModuleStates) {
+  public void setModuleStates(SwerveModuleState[] swerveModuleStates, boolean isOpenLoop) {
     for (int i = 0; i < 4; i++) {
-      m_modules[i].setDesiredState(swerveModuleStates[i]);
+      m_modules[i].setDesiredState(swerveModuleStates[i], isOpenLoop);
     }
   }
   
+  /**
+  * Sets the desired states for all swerve modules. Runs closed loop control. USe this function for pathplanner.
+  * 
+  * @param swerveModuleStates an array of module states to set swerve modules to. Order of the array matters here!
+  */
+  public void setModuleStates(SwerveModuleState[] swerveModuleStates) {
+    setModuleStates(swerveModuleStates, false);
+  }
+  
+
   /**
    * Enables or disables the state deadband for all swerve modules. 
    * The state deadband determines if the robot will stop drive and steer motors when inputted drive velocity is low. 
@@ -549,28 +560,23 @@ public class Drivetrain extends SubsystemBase {
       m_steerAngleEntry = m_swerveModulesTab.add("Set Steer Angle", 0).getEntry();
       m_driveStaticFeedforwardEntry = m_swerveModulesTab.add(
         "Drive kS FF", 
-        m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getId()]
+        m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]
       ).getEntry();
 
       m_driveVelocityFeedforwardEntry = m_swerveModulesTab.add(
         "Drive kV FF", 
-        m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getId()]
+        m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]
       ).getEntry();
 
       m_steerStaticFeedforwardEntry = m_swerveModulesTab.add(
         "Steer kS FF", 
-        m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getId()]
+        m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]
       ).getEntry();
 
       m_steerVelocityFeedforwardEntry = m_swerveModulesTab.add(
         "Steer kV FF", 
-        m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getId()]
+        m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]
       ).getEntry();
-
-      
-      for (int i = 0; i < 4; i++) {
-        m_modules[i].setupModulesShuffleboard();
-      }
     }
   }
 
@@ -624,18 +630,18 @@ public class Drivetrain extends SubsystemBase {
     // revert to previous saved feed forward data if changed
     if (m_prevModule != m_moduleChooser.getSelected()) {
       m_driveStaticFeedforwardEntry.setDouble(
-        m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getId()]
+        m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]
       );
       m_driveVelocityFeedforwardEntry.setDouble(
-        m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getId()]
+        m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]
       );
       m_prevModule = m_moduleChooser.getSelected();
     }
     
     // update saved feedforward data
-    m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getId()] = 
+    m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()] = 
       m_driveStaticFeedforwardEntry.getDouble(0);
-    m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getId()] = 
+    m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()] = 
       m_driveVelocityFeedforwardEntry.getDouble(0);
     
     // to set all modules to same feedforward values if all
@@ -647,8 +653,8 @@ public class Drivetrain extends SubsystemBase {
         
     //set selected module
     m_moduleChooser.getSelected().setDriveFeedForwardValues(
-      m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getId()],
-      m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getId()]
+      m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()],
+      m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]
     );
   }
 
@@ -661,18 +667,18 @@ public class Drivetrain extends SubsystemBase {
     //revert to previous saved feed forward data if changed
     if (m_prevModule != m_moduleChooser.getSelected()) {
       m_steerStaticFeedforwardEntry.setDouble(
-        m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getId()]
+        m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]
       );
       m_steerVelocityFeedforwardEntry.setDouble(
-        m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getId()]
+        m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]
       );
       m_prevModule = m_moduleChooser.getSelected();
     }
     
     // update saved feedforward data
-    m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getId()] = 
+    m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()] = 
       m_steerStaticFeedforwardEntry.getDouble(0);
-    m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getId()] = 
+    m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()] = 
       m_steerVelocityFeedforwardEntry.getDouble(0);
     
     //to set all modules to same feedforward values if all
@@ -684,8 +690,8 @@ public class Drivetrain extends SubsystemBase {
     
     //set selected module
     m_moduleChooser.getSelected().setDriveFeedForwardValues(
-      m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getId()],
-      m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getId()]
+      m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()],
+      m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]
     );
   }
   

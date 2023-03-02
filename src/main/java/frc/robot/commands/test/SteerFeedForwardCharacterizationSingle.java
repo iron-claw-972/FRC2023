@@ -59,9 +59,9 @@ public class SteerFeedForwardCharacterizationSingle extends CommandBase {
     m_feedForwardCharacterizationData.process();
     
     //save and print Feed Forward values
-    m_drive.getSteerStaticFeedforwardArray()[m_module.getId()] = 
+    m_drive.getSteerStaticFeedforwardArray()[m_module.getModuleIndex()] = 
       m_feedForwardCharacterizationData.getStatic();
-    m_drive.getSteerVelocityFeedforwardArray()[m_module.getId()] = 
+    m_drive.getSteerVelocityFeedforwardArray()[m_module.getModuleIndex()] = 
       m_feedForwardCharacterizationData.getVelocity();
     System.out.println("Static : " + m_feedForwardCharacterizationData.getStatic());
     System.out.println("Velocity : " + m_feedForwardCharacterizationData.getVelocity());
@@ -72,12 +72,12 @@ public class SteerFeedForwardCharacterizationSingle extends CommandBase {
     // update shuffleboard values.
     m_drive.setSteerStaticFeedforwardEntry(
       m_drive.getSteerStaticFeedforwardArray()[
-        m_drive.getModuleChoosen().getId()
+        m_drive.getModuleChoosen().getModuleIndex()
       ]
     );
     m_drive.setSteerVelocityFeedforwardEntry(
       m_drive.getSteerVelocityFeedforwardArray()[
-          m_drive.getModuleChoosen().getId()
+          m_drive.getModuleChoosen().getModuleIndex()
         ]
       );
   }

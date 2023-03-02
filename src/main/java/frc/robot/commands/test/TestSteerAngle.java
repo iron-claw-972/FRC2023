@@ -42,11 +42,11 @@ public class TestSteerAngle extends CommandBase{
   @Override
   public void execute() {
     m_drive.setModuleStates(new SwerveModuleState[] {
-      new SwerveModuleState(0, new Rotation2d(m_drive.getRequestedSteerAngle(m_drive.m_modules[0].getSteerAngle()))),
-      new SwerveModuleState(0, new Rotation2d(m_drive.getRequestedSteerAngle(m_drive.m_modules[1].getSteerAngle()))),
-      new SwerveModuleState(0, new Rotation2d(m_drive.getRequestedSteerAngle(m_drive.m_modules[2].getSteerAngle()))),
-      new SwerveModuleState(0, new Rotation2d(m_drive.getRequestedSteerAngle(m_drive.m_modules[3].getSteerAngle())))
-    });
+      new SwerveModuleState(0, new Rotation2d(m_drive.getRequestedSteerAngle(m_drive.m_modules[0].getAngle().getRadians()))),
+      new SwerveModuleState(0, new Rotation2d(m_drive.getRequestedSteerAngle(m_drive.m_modules[1].getAngle().getRadians()))),
+      new SwerveModuleState(0, new Rotation2d(m_drive.getRequestedSteerAngle(m_drive.m_modules[2].getAngle().getRadians()))),
+      new SwerveModuleState(0, new Rotation2d(m_drive.getRequestedSteerAngle(m_drive.m_modules[3].getAngle().getRadians())))
+    }, true);
     m_testEntry.setBoolean(
       m_timeAccuracyTests[0].calculate() &&
       m_timeAccuracyTests[1].calculate() &&

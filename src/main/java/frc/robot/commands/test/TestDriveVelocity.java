@@ -31,7 +31,7 @@ public class TestDriveVelocity extends CommandBase{
     for (int i = 0; i < 4; i++){
       Module module = m_drive.m_modules[i];
       m_timeAccuracyTests[i] = new TimeAccuracyTest(
-        () -> module.getDriveVelocity(),
+        () -> module.getState().speedMetersPerSecond,
         () -> m_drive.getRequestedSteerVelocity(0),
         TestConstants.kDriveVelocityError,
         TestConstants.kDriveVelocityTimeError
@@ -46,7 +46,7 @@ public class TestDriveVelocity extends CommandBase{
       new SwerveModuleState(m_drive.getRequestedDriveVelocity(0), new Rotation2d(Units.degreesToRadians(45))),
       new SwerveModuleState(m_drive.getRequestedDriveVelocity(0), new Rotation2d(Units.degreesToRadians(225))),
       new SwerveModuleState(m_drive.getRequestedDriveVelocity(0), new Rotation2d(Units.degreesToRadians(315)))
-    });
+    }, false);
     m_testEntry.setBoolean(
       m_timeAccuracyTests[0].calculate() &&
       m_timeAccuracyTests[1].calculate() &&

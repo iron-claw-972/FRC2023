@@ -20,7 +20,7 @@ import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.ctre.phoenix.sensors.SensorTimeBase;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
 
-public class ModuleChanged {
+public class ModuleChanged extends Module {
   private final ShuffleboardTab m_swerveTab;
 
   private final int m_moduleIndex;
@@ -34,9 +34,11 @@ public class ModuleChanged {
   private final WPI_CANCoder m_CANcoder;
   private SwerveModuleState m_desiredState;
 
-  private boolean m_angleJitterPreventionEnabled;
+  private boolean m_stateDeadband;
 
   SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(DriveConstants.kDriveKS, DriveConstants.kDriveKV, DriveConstants.kDriveKA);
+
+  private boolean m_optimizeStates = true;
 
   public ModuleChanged(ModuleConstants moduleConstants, ShuffleboardTab swerveTab) {
     m_swerveTab = swerveTab;
@@ -44,7 +46,7 @@ public class ModuleChanged {
     m_moduleAbbr = moduleConstants.getType().abbrev;
     m_angleOffset = new Rotation2d(moduleConstants.getSteerOffset());
 
-    m_angleJitterPreventionEnabled = true;
+    m_stateDeadband = true;
 
     /* Angle Encoder Config */
     m_CANcoder = new WPI_CANCoder(moduleConstants.getEncoderPort(), DriveConstants.kSteerEncoderCAN);
@@ -69,7 +71,7 @@ public class ModuleChanged {
      * This is a custom optimize function, since default WPILib optimize assumes
      * continuous controller which CTRE and Rev onboard is not
      */
-    desiredState = CTREModuleState.optimize(desiredState, getState().angle);
+    desiredState = m_optimizeStates ? CTREModuleState.optimize(desiredState, getState().angle) : desiredState;
     m_desiredState = desiredState;
     setAngle(desiredState);
     setSpeed(desiredState, isOpenLoop);
@@ -90,21 +92,25 @@ public class ModuleChanged {
   private void setAngle(SwerveModuleState desiredState) {
     // Prevent rotating module if desired speed < 1%. Prevents Jittering.
     Rotation2d angle = (Math.abs(desiredState.speedMetersPerSecond) <= (DriveConstants.kMaxSpeed * 0.01)
-        && m_angleJitterPreventionEnabled) ? m_lastAngle : desiredState.angle;
+        && m_stateDeadband) ? m_lastAngle : desiredState.angle;
 
     m_angleMotor.set(ControlMode.Position, Conversions.degreesToFalcon(angle.getDegrees(), DriveConstants.kAngleGearRatio));
     m_lastAngle = angle;
   }
 
-  public void toggleAngleJitterPrevention(boolean enabled) {
-    m_angleJitterPreventionEnabled = enabled;
+  public void enableStateDeadband(boolean enabled) {
+    m_stateDeadband = enabled;
+  }
+
+  public void setOptimize(boolean enable) {
+    m_optimizeStates = enable;
   }
 
   public int getModuleIndex() {
     return m_moduleIndex;
   }
 
-  private Rotation2d getAngle() {
+  public Rotation2d getAngle() {
     return Rotation2d.fromDegrees(
         Conversions.falconToDegrees(m_angleMotor.getSelectedSensorPosition(), DriveConstants.kAngleGearRatio));
   }
@@ -157,7 +163,7 @@ public class ModuleChanged {
     m_driveMotor.set(ControlMode.PercentOutput, 1.1 * DriveConstants.kDriveKS);
   }
 
-  public double getAngularVelocity() {
+  public double getSteerVelocity() {
     return Conversions.falconToRPM(m_angleMotor.getSelectedSensorVelocity(), DriveConstants.kAngleGearRatio) * 2 * Math.PI / 60;
   }
 
@@ -203,9 +209,76 @@ public class ModuleChanged {
       m_swerveTab.addDouble(m_moduleAbbr + " Velocity (m/s)", () -> getState().speedMetersPerSecond);
       m_swerveTab.addDouble(m_moduleAbbr + " Desired Velocity (m/s)", () -> m_desiredState.speedMetersPerSecond);
       m_swerveTab.addDouble(m_moduleAbbr + " Desired Angle (deg)", () -> m_desiredState.angle.getDegrees());
-      m_swerveTab.addBoolean(m_moduleAbbr + " Jitter prevention enabled", () -> m_angleJitterPreventionEnabled);
+      m_swerveTab.addBoolean(m_moduleAbbr + " Jitter prevention enabled", () -> m_stateDeadband);
       m_swerveTab.addDouble(m_moduleAbbr + " Drive Current (A)", () -> m_driveMotor.getSupplyCurrent());
       m_swerveTab.addDouble(m_moduleAbbr + " Angle Current (A)", () -> m_angleMotor.getSupplyCurrent());
     }
+  }
+
+  @Override
+  public double getDriveVelocityError() {
+    return m_desiredState.speedMetersPerSecond - getState().speedMetersPerSecond;
+  }
+
+  @Override
+  public double getDriveFeedForwardKV() {
+    return DriveConstants.kDriveKV;
+  }
+
+  @Override
+  public double getDriveFeedForwardKS() {
+    return DriveConstants.kDriveKS;
+  }
+
+  @Override
+  public void stop() {
+    m_driveMotor.stopMotor();
+    m_angleMotor.stopMotor();
+  }
+
+  /**
+   * DUMMY METHOD
+   */
+  @Override
+  public void setDriveVoltage(double volts) {
+    //with voltage compensation enabled do not use setVoltage
+  }
+
+  /**
+   * DUMMY METHOD
+   */
+  @Override
+  public void setSteerVoltage(double voltage) {
+   //with voltage compensation enabled do not use setVoltage
+  }
+
+  @Override
+  /**
+   * DUMMY METHOD
+   */
+  public void setDriveFeedForwardValues(double kS, double kV) {    
+  }
+
+  @Override
+  /**
+   * DUMMY METHOD
+   */
+  public double getSteerFeedForwardKV() {
+    return 0;
+  }
+
+  @Override
+  /**
+   * DUMMY METHOD
+   */
+  public double getSteerFeedForwardKS() {
+    return 0;
+  }
+
+  @Override
+  /**
+   * DUMMY METHOD
+   */
+  public void setAngle(Rotation2d rotation2d) {
   }
 }

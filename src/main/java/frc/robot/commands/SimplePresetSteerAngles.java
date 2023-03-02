@@ -38,7 +38,7 @@ public class SimplePresetSteerAngles extends InstantCommand{
         new SwerveModuleState(0, rotation),
         new SwerveModuleState(0, rotation),
         new SwerveModuleState(0, rotation)
-      });
+      }, true);
      drive.enableStateDeadband(true);
   },drive);
   drive.enableStateDeadband(true);

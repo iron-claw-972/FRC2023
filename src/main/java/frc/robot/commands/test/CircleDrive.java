@@ -35,7 +35,7 @@ public class CircleDrive extends CommandBase {
       new SwerveModuleState(m_drive.getRequestedDriveVelocity(0), new Rotation2d(m_steerPosition)),
       new SwerveModuleState(m_drive.getRequestedDriveVelocity(0), new Rotation2d(m_steerPosition)),
       new SwerveModuleState(m_drive.getRequestedDriveVelocity(0), new Rotation2d(m_steerPosition))
-    });
+    }, false);
     m_prevTime = currentTime;
   }
   

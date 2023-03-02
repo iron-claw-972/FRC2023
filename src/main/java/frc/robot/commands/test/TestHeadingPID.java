@@ -47,7 +47,7 @@ public class TestHeadingPID extends CommandBase {
       new SwerveModuleState(headingPIDOutput, new Rotation2d(Units.degreesToRadians(45))),
       new SwerveModuleState(headingPIDOutput, new Rotation2d(Units.degreesToRadians(225))),
       new SwerveModuleState(headingPIDOutput, new Rotation2d(Units.degreesToRadians(315)))
-    });
+    }, false);
     m_testEntry.setBoolean(m_timeAccuracyTest.calculate());
   }
   

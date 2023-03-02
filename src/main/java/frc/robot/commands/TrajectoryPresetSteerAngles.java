@@ -42,7 +42,7 @@ public class TrajectoryPresetSteerAngles extends InstantCommand {
       for (int i = 0; i < swerveModuleStates.length; i++){
         swerveModuleStates[i].speedMetersPerSecond = 0;
       }
-      drive.setModuleStates(swerveModuleStates);
+      drive.setModuleStates(swerveModuleStates, true);
       drive.enableStateDeadband(true);
     }, 
     drive
