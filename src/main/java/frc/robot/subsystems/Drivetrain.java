@@ -60,13 +60,6 @@ public class Drivetrain extends SubsystemBase {
   // This is left intentionally public
   public final Module[] m_modules;
 
-  private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
-    new Translation2d(DriveConstants.kTrackWidth / 2, DriveConstants.kTrackWidth / 2),
-    new Translation2d(DriveConstants.kTrackWidth / 2, -DriveConstants.kTrackWidth / 2),
-    new Translation2d(-DriveConstants.kTrackWidth / 2, DriveConstants.kTrackWidth / 2),
-    new Translation2d(-DriveConstants.kTrackWidth / 2, -DriveConstants.kTrackWidth / 2)
-  );
-
   // Pigeon
   private final WPI_Pigeon2 m_pigeon = new WPI_Pigeon2(DriveConstants.kPigeon, DriveConstants.kPigeonCAN);
   private boolean m_hasResetYaw = false; // the initial yaw has been set 
@@ -81,35 +74,23 @@ public class Drivetrain extends SubsystemBase {
   
   // PID Controllers
   private final PIDController m_xController = new PIDController(
-    DriveConstants.kTranslationalP, 
-    DriveConstants.kTranslationalI, 
-    DriveConstants.kTranslationalD
+    DriveConstants.kTranslationalP, 0, DriveConstants.kTranslationalD
   );
   private final PIDController m_yController = new PIDController(
-    DriveConstants.kTranslationalP, 
-    DriveConstants.kTranslationalI, 
-    DriveConstants.kTranslationalD
+    DriveConstants.kTranslationalP, 0, DriveConstants.kTranslationalD
   );
   private final PIDController m_rotationController = new PIDController(
-    DriveConstants.kHeadingP, 
-    DriveConstants.kHeadingI, 
-    DriveConstants.kHeadingD
+    DriveConstants.kHeadingP, 0, DriveConstants.kHeadingD
   );
   
   private final PIDController m_pathplannerXController = new PIDController(
-    DriveConstants.kPathplannerTranslationalP, 
-    DriveConstants.kPathplannerTranslationalI, 
-    DriveConstants.kPathplannerTranslationalD
+    DriveConstants.kPathplannerTranslationalP, 0, DriveConstants.kPathplannerTranslationalD
   );
   private final PIDController m_pathplannerYController = new PIDController(
-    DriveConstants.kPathplannerTranslationalP, 
-    DriveConstants.kPathplannerTranslationalI, 
-    DriveConstants.kPathplannerTranslationalD
+    DriveConstants.kPathplannerTranslationalP, 0, DriveConstants.kPathplannerTranslationalD
   );
   private final PIDController m_pathplannerRotationController = new PIDController(
-    DriveConstants.kPathplannerHeadingP, 
-    DriveConstants.kPathplannerHeadingI, 
-    DriveConstants.kPathplannerHeadingD
+    DriveConstants.kPathplannerHeadingP, 0, DriveConstants.kPathplannerHeadingD
   );
 
 
@@ -145,7 +126,6 @@ public class Drivetrain extends SubsystemBase {
    */
   public Drivetrain(ShuffleboardTab drivetrainTab, ShuffleboardTab swerveModulesTab, Vision vision) {
 
-    LiveWindow.disableAllTelemetry();
     m_drivetrainTab = drivetrainTab;
     m_swerveModulesTab = swerveModulesTab;
 
@@ -160,7 +140,7 @@ public class Drivetrain extends SubsystemBase {
     m_prevModule = m_modules[0];
     
     m_poseEstimator = new SwerveDrivePoseEstimator(
-      m_kinematics,
+      DriveConstants.kKinematics,
       m_pigeon.getRotation2d(),
       getModulePositions(),
       new Pose2d() // initial Odometry Location
@@ -192,7 +172,7 @@ public class Drivetrain extends SubsystemBase {
    * @return chassis speed of swerve drive
    */
   public ChassisSpeeds getChassisSpeeds() {
-    return m_kinematics.toChassisSpeeds(
+    return DriveConstants.kKinematics.toChassisSpeeds(
       m_modules[0].getState(),
       m_modules[1].getState(),
       m_modules[2].getState(),
@@ -276,7 +256,7 @@ public class Drivetrain extends SubsystemBase {
    * @param chassisSpeeds the target chassis speeds
    */
   public void setChassisSpeeds(ChassisSpeeds chassisSpeeds) {
-    SwerveModuleState[] swerveModuleStates = m_kinematics.toSwerveModuleStates(chassisSpeeds);
+    SwerveModuleState[] swerveModuleStates = DriveConstants.kKinematics.toSwerveModuleStates(chassisSpeeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kMaxSpeed);
     setModuleStates(swerveModuleStates);
   }
@@ -473,10 +453,7 @@ public class Drivetrain extends SubsystemBase {
   public PIDController getPathplannerRotationController() {
     return m_pathplannerRotationController;
   }
-  public SwerveDriveKinematics getKinematics() {
-    return m_kinematics;
-  }
-
+  
   /**
    * Sets up the shuffleboard tab for the drivetrain.
    */

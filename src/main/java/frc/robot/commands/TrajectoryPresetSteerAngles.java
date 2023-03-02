@@ -8,6 +8,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.Trajectory.State;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.subsystems.Drivetrain;
 
 /**
@@ -37,7 +38,7 @@ public class TrajectoryPresetSteerAngles extends InstantCommand {
   
       ChassisSpeeds chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xVelocity, yVelocity, angularVelo, initialPose.getRotation());
   
-      SwerveModuleState[] swerveModuleStates = drive.getKinematics().toSwerveModuleStates(chassisSpeeds);
+      SwerveModuleState[] swerveModuleStates = DriveConstants.kKinematics.toSwerveModuleStates(chassisSpeeds);
       for (int i = 0; i < swerveModuleStates.length; i++){
         swerveModuleStates[i].speedMetersPerSecond = 0;
       }

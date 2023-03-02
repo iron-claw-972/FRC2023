@@ -2,6 +2,8 @@ package frc.robot.constants.swerve;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import lib.COTSFalconSwerveConstants;
 import frc.robot.Robot;
@@ -41,6 +43,13 @@ public class DriveConstants {
   public static int kPigeon = 0;
 
   public static double kStartingHeadingDegrees = 180;
+
+  public static final SwerveDriveKinematics kKinematics = new SwerveDriveKinematics(
+    new Translation2d(DriveConstants.kTrackWidth / 2, DriveConstants.kTrackWidth / 2),
+    new Translation2d(DriveConstants.kTrackWidth / 2, -DriveConstants.kTrackWidth / 2),
+    new Translation2d(-DriveConstants.kTrackWidth / 2, DriveConstants.kTrackWidth / 2),
+    new Translation2d(-DriveConstants.kTrackWidth / 2, -DriveConstants.kTrackWidth / 2)
+  );
 
   public static int kDriveFrontLeft = 20;
   public static int kSteerFrontLeft = 15;
@@ -104,7 +113,6 @@ public class DriveConstants {
 
   // heading PID
   public static double kHeadingP= 1;//4
-  public static double kHeadingI= 0;
   public static double kHeadingD= 0;
 
    //balance PID
@@ -120,16 +128,13 @@ public class DriveConstants {
 
   //translational PID
   public static double kTranslationalP = 0.25;
-  public static double kTranslationalI = 0;
   public static double kTranslationalD = 0;//0.001
 
   //The PIDs for PathPlanner Command
   public static double kPathplannerHeadingP = 0.02;
-  public static double kPathplannerHeadingI = 0;
   public static double kPathplannerHeadingD = 0;
   
   public static double kPathplannerTranslationalP = 0;
-  public static double kPathplannerTranslationalI = 0;
   public static double kPathplannerTranslationalD = 0;
 
   // CAN

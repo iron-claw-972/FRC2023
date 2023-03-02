@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.DoNothing;
 import frc.robot.constants.AutoConstants;
+import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.util.PathGroupLoader;
 
@@ -52,7 +53,7 @@ public class PathPlannerCommand extends SequentialCommandGroup{
             new PPSwerveControllerCommand(
                 path, 
                 drive::getPose, // Pose supplier
-                drive.getKinematics(), // SwerveDriveKinematics
+                DriveConstants.kKinematics, // SwerveDriveKinematics
                 drive.getPathplannerXController(), // X controller can't normal PID as pathplanner has Feed Forward 
                 drive.getPathplannerYController(), // Y controller can't normal PID as pathplanner has Feed Forward 
                 drive.getPathplannerRotationController(), // Rotation controller can't normal PID as pathplanner has Feed Forward 
