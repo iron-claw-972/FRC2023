@@ -197,7 +197,7 @@ public class ModuleChanged {
   }
 
   private void setupShuffleboard() {
-    if (DriveConstants.kUseTelemetry) {
+    if (Constants.kUseTelemetry) {
       m_swerveTab.addDouble(m_moduleAbbr + " CANcoder Angle (deg)", getCANcoder()::getDegrees);
       m_swerveTab.addDouble(m_moduleAbbr + " FX Angle (deg)", getPosition().angle::getDegrees);
       m_swerveTab.addDouble(m_moduleAbbr + " Velocity (m/s)", () -> getState().speedMetersPerSecond);

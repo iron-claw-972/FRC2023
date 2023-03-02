@@ -174,8 +174,6 @@ public class DriveConstants {
   public static final double kClosedLoopRamp = 0.0;
 
   public static final double kWheelCircumference = kModuleConstants.wheelCircumference;
-
-  public static final boolean kUseTelemetry = true;
   
   /* Motor gear ratios */
   public static final double kAngleGearRatio = kModuleConstants.angleGearRatio;
