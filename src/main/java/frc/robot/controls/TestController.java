@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.DepositTune;
 import frc.robot.commands.arm.ExtendArm;
 import frc.robot.commands.elevator.CalibrateElevator;
-import frc.robot.commands.elevator.ExtendElevator;
+import frc.robot.commands.elevator.MoveElevator;
 import frc.robot.commands.gamePiecePlacement.DepositMiddleNode;
 import frc.robot.commands.gamePiecePlacement.DepositTopNode;
 import frc.robot.constants.ArmConstants;
@@ -45,9 +45,9 @@ public class TestController {
 
       //test.get(DPad.LEFT).onTrue(new InstantCommand(() -> m_elevator.setMotorPower(0), m_elevator));
       test.get(DPad.DOWN).onTrue(new CalibrateElevator(m_elevator));
-      test.get(Button.B).onTrue(new ExtendElevator(m_elevator, ElevatorConstants.kMiddleNodeHeightExtension));
-      test.get(Button.X).onTrue(new ExtendElevator(m_elevator, ElevatorConstants.kTopNodeHeightExtension));
-      test.get(Button.Y).onTrue(new ExtendElevator(m_elevator, ElevatorConstants.kMinExtension));
+      test.get(Button.B).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kMiddleNodeHeightExtension));
+      test.get(Button.X).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kTopNodeHeightExtension));
+      test.get(Button.Y).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kMinExtension));
     
   }
 }

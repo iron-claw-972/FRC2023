@@ -2,7 +2,7 @@ package frc.robot.commands.gamePiecePlacement;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.arm.ExtendArm;
-import frc.robot.commands.elevator.ExtendElevator;
+import frc.robot.commands.elevator.MoveElevator;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.subsystems.Elevator;
@@ -14,7 +14,7 @@ public class Stow extends SequentialCommandGroup {
     addRequirements(elevator, arm);
     addCommands(
       new ExtendArm(arm, ArmConstants.kStowedAbsEncoderPos),
-      new ExtendElevator(elevator, ElevatorConstants.kMinExtension)
+      new MoveElevator(elevator, ElevatorConstants.kMinExtension)
     );
   }
 }

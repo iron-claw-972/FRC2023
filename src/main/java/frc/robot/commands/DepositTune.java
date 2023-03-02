@@ -44,7 +44,7 @@ public class DepositTune extends CommandBase {
     SmartDashboard.putNumber("Deposit Arm Extension", m_position);
 
     // move the elevator to the desired position
-    m_elevator.setTargetExtension(m_height);
+    m_elevator.setDesiredPosition(m_height);
 
     m_elevatorDone = false;
   }
@@ -52,7 +52,7 @@ public class DepositTune extends CommandBase {
   @Override
   public void execute(){
     // implement a trivial sequential command
-    if(!m_elevatorDone && m_elevator.atSetpoint()){
+    if(!m_elevatorDone && ElevatorConstants.kTolerance < Math.abs(m_elevator.getPosition()-m_position)){
       m_elevatorDone = true; 
       m_arm.setArmSetpoint(m_position);
     }

@@ -1,36 +1,37 @@
 package frc.robot.commands.elevator;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.constants.ElevatorConstants;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Elevator.ElevatorMode;
 
 public class CalibrateElevator extends CommandBase {
-  
-  private final Elevator m_elevator; 
-  
-  /**
-   * Resets the elevator by resetting the encoder after it hits the bottom limit switch. 
-   */
+  private final Elevator m_elevator;
+
   public CalibrateElevator(Elevator elevator) {
-    m_elevator = elevator; 
-    addRequirements(m_elevator);
+    m_elevator = elevator;
+    addRequirements(elevator);
   }
 
   @Override
   public void initialize() {
-    m_elevator.setPIDEnabled(false); 
-    m_elevator.setMotorPower(-ElevatorConstants.kCalibrationPower); 
+    m_elevator.setMode(ElevatorMode.CALIBRATION);
+  }
+
+  @Override
+  public void execute() {
   }
 
   @Override
   public void end(boolean interrupted) {
-    m_elevator.resetTalonEncoder();
-    m_elevator.setMotorPower(0); 
+    m_elevator.zeroEncoder();
+    m_elevator.toggleSoftLimits(true);
     m_elevator.setIsCalibrated();
+    m_elevator.setDesiredPosition(0.02);
+    m_elevator.setMode(ElevatorMode.POSITION);
   }
-  
+
   @Override
   public boolean isFinished() {
-    return m_elevator.isBottomSwitchTripped();
+    return m_elevator.isBottomLimitSwitchReached();
   }
 }
