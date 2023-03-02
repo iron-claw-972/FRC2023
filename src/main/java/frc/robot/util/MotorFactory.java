@@ -55,7 +55,7 @@ public class MotorFactory {
     config.continuousCurrentLimit = continuousCurrentLimit;
     config.peakCurrentLimit = peakCurrentLimit;
     config.peakCurrentDuration = peakCurrentDuration;
-    config.voltageCompSaturation = Constants.kMaxVoltage;
+    config.voltageCompSaturation = Constants.kRobotVoltage;
 
     WPI_TalonSRX talon = new WPI_TalonSRX(id);
     talon.configFactoryDefault();
@@ -92,7 +92,7 @@ public class MotorFactory {
   public static CANSparkMax createSparkMAX(int id, MotorType motortype, int stallLimit) {
     CANSparkMax sparkMAX = new CANSparkMax(id, motortype);
     sparkMAX.restoreFactoryDefaults();
-    sparkMAX.enableVoltageCompensation(Constants.kMaxVoltage);
+    sparkMAX.enableVoltageCompensation(Constants.kRobotVoltage);
     sparkMAX.setSmartCurrentLimit(stallLimit);
     sparkMAX.setIdleMode(IdleMode.kBrake);
 
@@ -168,7 +168,7 @@ public class MotorFactory {
     config.supplyCurrLimit = new SupplyCurrentLimitConfiguration(SupplyLimitEnable, SupplyCurrentLimit,
         SupplyTriggerThreshold, SupplyTriggerDuration);
 
-    config.voltageCompSaturation = Constants.kMaxVoltage;
+    config.voltageCompSaturation = Constants.kRobotVoltage;
 
     talon.configFactoryDefault();
     talon.configAllSettings(config);

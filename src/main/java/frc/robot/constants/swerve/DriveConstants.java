@@ -166,11 +166,12 @@ public class DriveConstants {
   public static final double kDriveD = 0.0;
   public static final double kDriveF = 0.0;
 
-  /* Ramp values for drive motors in open and closed loop driving */
-  public static final double kOpenLoopRamp = 0.1; // A small open loop ramp (0.25) helps with tread wear, tipping, etc
+  /* Ramp values for drive motors in open and closed loop driving. */
+  // Open loop prevents throttle from changing too quickly. 
+  // It will limit it to time given (in seconds) to go from zero to full throttle.
+  // A small open loop ramp (0.25) helps with tread wear, tipping, etc
+  public static final double kOpenLoopRamp = 0.1;
   public static final double kClosedLoopRamp = 0.0;
-
-  public static final double kNormalOperatingVoltage = 12.0;
 
   public static final double kWheelCircumference = kModuleConstants.wheelCircumference;
 

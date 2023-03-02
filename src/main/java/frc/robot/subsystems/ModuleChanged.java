@@ -141,18 +141,18 @@ public class ModuleChanged {
     m_angleMotor.config_kF(0, DriveConstants.kModuleConstants.angleKF);
     m_angleMotor.setInverted(DriveConstants.kAngleMotorInvert);
     m_angleMotor.setNeutralMode(DriveConstants.kAngleNeutralMode);
-    m_angleMotor.configVoltageCompSaturation(Constants.kMaxVoltage);
+    m_angleMotor.configVoltageCompSaturation(Constants.kRobotVoltage);
     m_angleMotor.enableVoltageCompensation(true);
     resetToAbsolute();
   }
 
   public void setDriveCharacterizationVoltage(double voltage) {
     m_angleMotor.set(ControlMode.Position, Conversions.degreesToFalcon(0, DriveConstants.kAngleGearRatio));
-    m_driveMotor.set(ControlMode.PercentOutput, voltage / DriveConstants.kNormalOperatingVoltage);
+    m_driveMotor.set(ControlMode.PercentOutput, voltage / Constants.kRobotVoltage);
   }
 
   public void setAngleCharacterizationVoltage(double voltage) {
-    m_angleMotor.set(ControlMode.PercentOutput, voltage / DriveConstants.kNormalOperatingVoltage);
+    m_angleMotor.set(ControlMode.PercentOutput, voltage / Constants.kRobotVoltage);
     // Set the drive motor to just enough to overcome static friction
     m_driveMotor.set(ControlMode.PercentOutput, 1.1 * DriveConstants.kDriveKS);
   }
@@ -177,7 +177,7 @@ public class ModuleChanged {
     m_driveMotor.configClosedloopRamp(DriveConstants.kClosedLoopRamp);
     m_driveMotor.setInverted(DriveConstants.kDriveMotorInvert);
     m_driveMotor.setNeutralMode(DriveConstants.kDriveNeutralMode);
-    m_driveMotor.configVoltageCompSaturation(DriveConstants.kNormalOperatingVoltage);
+    m_driveMotor.configVoltageCompSaturation(Constants.kRobotVoltage);
     m_driveMotor.enableVoltageCompensation(true);
     m_driveMotor.setSelectedSensorPosition(0);
   }

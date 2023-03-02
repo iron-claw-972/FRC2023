@@ -5,7 +5,7 @@ package frc.robot.constants;
  */
 public final class Constants {
   public static final double kGravitationalAccel = 9.8;
-  public static final double kMaxVoltage = 12.0;
+  public static final double kRobotVoltage = 12.0;
   public static final double kLoopTime = 0.02;
   
   public static final double kCancoderResolution = 4096;
