@@ -1,7 +1,7 @@
 package frc.robot.commands.gamePiecePlacement;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.arm.ExtendArm;
-import frc.robot.commands.elevator.ExtendElevator;
+import frc.robot.commands.elevator.MoveElevator;
 import frc.robot.commands.intake.OuttakeGamePiece;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.ElevatorConstants;
@@ -14,7 +14,7 @@ public class DepositMiddleNode extends SequentialCommandGroup {
   public DepositMiddleNode(Elevator elevator, FourBarArm arm, Intake intake) {
     addRequirements(elevator, arm, intake);
     addCommands(
-      new ExtendElevator(elevator, ElevatorConstants.kMiddleNodeHeightExtension),
+      new MoveElevator(elevator, ElevatorConstants.kMiddleNodeHeightExtension),
       new ExtendArm(arm, ArmConstants.kMiddleConeOuttakeAbsEncoderPos),
       new OuttakeGamePiece(intake), 
       new Stow(elevator, arm)

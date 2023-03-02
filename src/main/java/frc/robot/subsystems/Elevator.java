@@ -13,9 +13,6 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.lib.math.Conversions;
-import frc.robot.Constants;
-import frc.robot.Constants.ElevatorConstants;
 
 public class Elevator extends SubsystemBase {
   private final ShuffleboardTab m_elevatorTab;

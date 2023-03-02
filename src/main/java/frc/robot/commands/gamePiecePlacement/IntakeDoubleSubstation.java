@@ -2,7 +2,7 @@ package frc.robot.commands.gamePiecePlacement;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.arm.ExtendArm;
-import frc.robot.commands.elevator.ExtendElevator;
+import frc.robot.commands.elevator.MoveElevator;
 import frc.robot.commands.intake.IntakeGamePiece;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.ElevatorConstants;
@@ -15,7 +15,7 @@ public class IntakeDoubleSubstation extends SequentialCommandGroup {
   public IntakeDoubleSubstation(Elevator elevator, FourBarArm arm, Intake intake) {
     addRequirements(elevator, arm, intake);
     addCommands(
-      new ExtendElevator(elevator, ElevatorConstants.kDoubleSubstationHeightExtension),
+      new MoveElevator(elevator, ElevatorConstants.kDoubleSubstationHeightExtension),
       new ExtendArm(arm, ArmConstants.kShelfPositionAbsEncoderPos),
       new IntakeGamePiece(intake), 
       new ExtendArm(arm, ArmConstants.kStowedAbsEncoderPos)

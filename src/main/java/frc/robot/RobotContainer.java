@@ -192,11 +192,11 @@ public class RobotContainer {
     m_testTab.add("Align to -90 degrees", new TestVisionAlignment(-Math.PI/2, m_drive, m_vision));
     m_testTab.add("Align to 180 degrees", new TestVisionAlignment(Math.PI, m_drive, m_vision));
 
-    SmartDashboard.putNumber("Deposit Elevator Extension", 0.0);
-    SmartDashboard.putNumber("Deposit Arm Extension", 0.0);
-    m_testTab.add("Tune Deposit Locations", new DepositTune(m_elevator, m_arm, m_intake));
-    m_testTab.add("Outtake", new OuttakeGamePiece(m_intake));
-    m_testTab.add("Rotate Outtake", new OuttakeGamePiece(m_intake, true));
+    // SmartDashboard.putNumber("Deposit Elevator Extension", 0.0);
+    // SmartDashboard.putNumber("Deposit Arm Extension", 0.0);
+    // m_testTab.add("Tune Deposit Locations", new DepositTune(m_elevator, m_arm, m_intake));
+    // m_testTab.add("Outtake", new OuttakeGamePiece(m_intake));
+    // m_testTab.add("Rotate Outtake", new OuttakeGamePiece(m_intake, true));
   }
 
   /**
