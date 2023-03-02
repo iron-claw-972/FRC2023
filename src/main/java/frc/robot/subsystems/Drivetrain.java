@@ -55,24 +55,16 @@ public class Drivetrain extends SubsystemBase {
 
   private ShuffleboardTab m_swerveModulesTab, m_drivetrainTab;
 
-  private Vision m_vision;
+  // Odometry
+  private final SwerveDrivePoseEstimator m_poseEstimator;
 
   // This is left intentionally public
   public final Module[] m_modules;
 
-  // Pigeon
   private final WPI_Pigeon2 m_pigeon = new WPI_Pigeon2(DriveConstants.kPigeon, DriveConstants.kPigeonCAN);
-  private boolean m_hasResetYaw = false; // the initial yaw has been set 
+  private Vision m_vision;
 
-  private double m_headingPIDOutput = 0;
-
-  // Odometry
-  private final SwerveDrivePoseEstimator m_poseEstimator;
-
-  // Displays the field with the robots estimated pose on it
-  private final Field2d m_fieldDisplay = new Field2d();
-  
-  // PID Controllers
+  // PID Controllers for chassis movement
   private final PIDController m_xController = new PIDController(
     DriveConstants.kTranslationalP, 0, DriveConstants.kTranslationalD
   );
@@ -82,6 +74,14 @@ public class Drivetrain extends SubsystemBase {
   private final PIDController m_rotationController = new PIDController(
     DriveConstants.kHeadingP, 0, DriveConstants.kHeadingD
   );
+
+  private boolean m_isOnChargeStation = false;
+
+  // Displays the field with the robots estimated pose on it
+  private final Field2d m_fieldDisplay = new Field2d();
+
+  
+  private boolean m_hasResetYaw = false; // the initial yaw has been set
   
   private final PIDController m_pathplannerXController = new PIDController(
     DriveConstants.kPathplannerTranslationalP, 0, DriveConstants.kPathplannerTranslationalD
@@ -240,8 +240,8 @@ public class Drivetrain extends SubsystemBase {
    * @param fieldRelative whether the provided x and y speeds are relative to the field
    */
   public void driveHeading(double xSpeed, double ySpeed, double heading, boolean fieldRelative) {
-    m_headingPIDOutput = m_rotationController.calculate(getAngleHeading(), heading);
-    double rot = m_headingPIDOutput;
+    double rot = m_rotationController.calculate(getAngleHeading(), heading);
+    //SmartDashboard.putNumber("Heading PID Output", rot);
     setChassisSpeeds((
       fieldRelative
           ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_pigeon.getRotation2d())
@@ -453,7 +453,7 @@ public class Drivetrain extends SubsystemBase {
   public PIDController getPathplannerRotationController() {
     return m_pathplannerRotationController;
   }
-  
+
   /**
    * Sets up the shuffleboard tab for the drivetrain.
    */
@@ -474,7 +474,6 @@ public class Drivetrain extends SubsystemBase {
     
     // add angles
     m_drivetrainTab.addNumber("getAngle", () -> getAngleHeading());
-    m_drivetrainTab.addNumber("heading PID output", () -> m_headingPIDOutput);
     m_drivetrainTab.addNumber("estimated X", () -> m_poseEstimator.getEstimatedPosition().getX());
     m_drivetrainTab.addNumber("estimated Y", () -> m_poseEstimator.getEstimatedPosition().getY());
     m_drivetrainTab.addNumber("getPitch", () -> m_pigeon.getPitch());
