@@ -15,7 +15,7 @@ public class IntakeDoubleSubstation extends SequentialCommandGroup {
   public IntakeDoubleSubstation(Elevator elevator, FourBarArm arm, Intake intake) {
     addRequirements(elevator, arm, intake);
     addCommands(
-      new MoveElevator(elevator, ElevatorConstants.kDoubleSubstationHeightExtension),
+      new MoveElevator(elevator, ElevatorConstants.kShelfConeHeight),
       new ExtendArm(arm, ArmConstants.kShelfPositionAbsEncoderPos),
       new IntakeGamePiece(intake), 
       new ExtendArm(arm, ArmConstants.kStowedAbsEncoderPos)

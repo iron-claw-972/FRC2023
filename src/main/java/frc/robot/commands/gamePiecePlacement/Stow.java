@@ -14,7 +14,7 @@ public class Stow extends SequentialCommandGroup {
     addRequirements(elevator, arm);
     addCommands(
       new ExtendArm(arm, ArmConstants.kStowedAbsEncoderPos),
-      new MoveElevator(elevator, ElevatorConstants.kMinExtension)
+      new MoveElevator(elevator, ElevatorConstants.kBottomConeHeight)
     );
   }
 }

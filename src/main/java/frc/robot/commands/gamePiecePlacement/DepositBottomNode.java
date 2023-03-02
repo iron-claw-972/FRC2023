@@ -14,7 +14,7 @@ public class DepositBottomNode extends SequentialCommandGroup {
   public DepositBottomNode(Elevator elevator, FourBarArm arm, Intake intake) {
     addRequirements(elevator, arm, intake);
     addCommands(
-      new MoveElevator(elevator, ElevatorConstants.kHybridNodeOuttakeExtension),
+      new MoveElevator(elevator, ElevatorConstants.kBottomConeHeight),
       new ExtendArm(arm, ArmConstants.kBottomNodePositionAbsEncoderPos),
       new OuttakeGamePiece(intake), 
       new Stow(elevator, arm)
