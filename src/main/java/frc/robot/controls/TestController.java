@@ -45,9 +45,9 @@ public class TestController {
 
       //test.get(DPad.LEFT).onTrue(new InstantCommand(() -> m_elevator.setMotorPower(0), m_elevator));
       test.get(DPad.DOWN).onTrue(new CalibrateElevator(m_elevator));
-      test.get(Button.B).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kMiddleNodeHeightExtension));
-      test.get(Button.X).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kTopNodeHeightExtension));
-      test.get(Button.Y).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kMinExtension));
+      test.get(Button.B).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kMiddleConeHeight));
+      test.get(Button.X).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kTopConeHeight));
+      test.get(Button.Y).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kBottomConeHeight));
     
   }
 }
