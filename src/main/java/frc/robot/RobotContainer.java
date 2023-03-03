@@ -113,8 +113,6 @@ public class RobotContainer {
       m_testController.configureControls();
       m_manualController.configureControls();
 
-      m_elevator.updateLogs();
-
     } else {
 
       DriverStation.reportWarning("Not registering subsystems and controls due to incorrect robot", false);
@@ -149,8 +147,6 @@ public class RobotContainer {
     m_drive.setupModulesShuffleboard();
     m_vision.setupVisionShuffleboard();
     m_driver.setupShuffleboard();
-
-    m_drive.updateLogs();
     
     addTestCommands();
 
