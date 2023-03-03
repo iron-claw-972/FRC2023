@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ArmConstants;
+import frc.robot.constants.Constants;
+import frc.robot.util.LogManager;
 
 public class FourBarArm extends SubsystemBase {
   private final CANSparkMax m_motor;
@@ -64,6 +66,8 @@ public class FourBarArm extends SubsystemBase {
       // set the motor power
       setMotorPower(pidPower + feedforwardPower);
     }
+
+    if (Constants.kLogging) updateLogs();
   }
 
   /**
@@ -75,7 +79,9 @@ public class FourBarArm extends SubsystemBase {
   }
 
   public void setMotorPower(double power){
-    m_motor.set(MathUtil.clamp(power, ArmConstants.kMinMotorPower, ArmConstants.kMaxMotorPower));
+    power = MathUtil.clamp(power, ArmConstants.kMinMotorPower, ArmConstants.kMaxMotorPower);
+    m_motor.set(power);
+    if (Constants.kLogging) LogManager.addDouble("Four Bar/motor power", power);
   }
 
   public void setEnabled(boolean enable)  {
@@ -85,5 +91,9 @@ public class FourBarArm extends SubsystemBase {
 
   public double getAbsEncoderPos(){
     return m_absEncoder.getAbsolutePosition() * -1; 
+  }
+
+  public void updateLogs(){
+    LogManager.addDouble("Four Bar/position", getAbsEncoderPos());
   }
 }

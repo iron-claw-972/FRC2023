@@ -169,7 +169,15 @@ public class Vision {
      */
     public Optional<EstimatedRobotPose> getEstimatedPose(Pose2d referencePose) {
       photonPoseEstimator.setReferencePose(referencePose);
-      return photonPoseEstimator.update();
+      Optional<EstimatedRobotPose> pose = photonPoseEstimator.update();
+      if (pose.isPresent()) LogManager.addDoubleArray("Vison/estimated pose2d", 
+        new double[]{
+          pose.get().estimatedPose.getX(),
+          pose.get().estimatedPose.getY(),
+          pose.get().estimatedPose.getRotation().getZ()
+        }
+      );
+      return pose;
     }
   }
 }
