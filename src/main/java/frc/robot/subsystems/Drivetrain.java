@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constants.Constants;
 import frc.robot.constants.VisionConstants;
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.constants.swerve.ModuleConstants;
@@ -132,12 +133,6 @@ public class Drivetrain extends SubsystemBase {
     m_poseEstimator.setVisionMeasurementStdDevs(VisionConstants.kBaseVisionPoseStdDevs);
 
     m_rotationController.enableContinuousInput(-Math.PI, Math.PI);
-    DoubleSupplier[] poseSupplier = {
-      () -> getPose().getX(),
-      () -> getPose().getY(),
-      () -> getPose().getRotation().getRadians()
-    };
-    LogManager.addDoubleArray("Pose2d", poseSupplier);
     
     m_fieldDisplay.setRobotPose(getPose());
     SmartDashboard.putData("Field", m_fieldDisplay);
@@ -151,6 +146,8 @@ public class Drivetrain extends SubsystemBase {
     updateOdometry();
     
     m_fieldDisplay.setRobotPose(getPose());
+
+    if (Constants.kLogging) updateLogs();
   }
 
   /**
@@ -649,6 +646,40 @@ public class Drivetrain extends SubsystemBase {
 
   public void enableVision(boolean enabled) {
      m_visionEnabled = enabled;
+  }
+
+  public void updateLogs(){
+    double[] pose = {
+      getPose().getX(),
+      getPose().getY(),
+      getPose().getRotation().getRadians()
+    };
+    LogManager.addDoubleArray("Swerve/Pose2d", pose);
+    double[] actualStates = {
+      m_modules[0].getSteerAngle(),
+      m_modules[0].getDriveVelocity(),
+      m_modules[1].getSteerAngle(),
+      m_modules[1].getDriveVelocity(),
+      m_modules[2].getSteerAngle(),
+      m_modules[2].getDriveVelocity(),
+      m_modules[3].getSteerAngle(),
+      m_modules[3].getDriveVelocity()
+    };
+    LogManager.addDoubleArray("Swerve/actual swerve states", actualStates);
+    double[] desiredStates = {
+      m_modules[0].getSteerAngle(),
+      m_modules[0].getDriveVelocity(),
+      m_modules[1].getSteerAngle(),
+      m_modules[1].getDriveVelocity(),
+      m_modules[2].getSteerAngle(),
+      m_modules[2].getDriveVelocity(),
+      m_modules[3].getSteerAngle(),
+      m_modules[3].getDriveVelocity()
+    };
+    LogManager.addDoubleArray("Swerve/desired swerve states", desiredStates);
+    for (int i = 0; i < 4; i++){
+      m_modules[i].updateLogs();
+    }
   }
 
 }
