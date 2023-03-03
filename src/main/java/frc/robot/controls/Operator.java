@@ -70,11 +70,11 @@ public class Operator {
     m_operator.get(Button.A).onTrue(new InstantCommand(() -> selectValue(1, 3)));
   }
 
-  // /**
-  //  * Configures arm controls
-  //  * @param arm The arm
-  //  */
-  // public void configureControls(FourBarArm arm){
+  /**
+   * Configures arm controls
+   * @param arm The arm
+   */
+  public void configureControls(FourBarArm arm){
   //   // Makes the arm go to different heights
   //   m_operator.get(Button.A).onTrue(new ParallelCommandGroup(
   //     new InstantCommand(() -> selectValue(1, 1)),
@@ -97,13 +97,13 @@ public class Operator {
   //   m_operator.get(m_operator.RIGHT_TRIGGER_BUTTON).onFalse(new ExtendArm(arm, ArmConstants.kStowedAbsEncoderPos));
   //   m_operator.get(Button.RB).onTrue(new ExtendArm(arm, ArmConstants.kBottomNodePositionAbsEncoderPos));
   //   m_operator.get(Button.RB).onFalse(new ExtendArm(arm, ArmConstants.kStowedAbsEncoderPos));
-  // }
+  }
 
-  // /**
-  //  * Configures elevator controls
-  //  * @param elevator The elevator
-  //  */
-  // public void configureControls(Elevator elevator){
+  /**
+   * Configures elevator controls
+   * @param elevator The elevator
+   */
+  public void configureControls(Elevator elevator){
   //   // Makes the elevator go to different heights
   //   m_operator.get(Button.A).onTrue(new ExtendElevator(elevator, ElevatorConstants.kHybridNodeOuttakeExtension));
   //   m_operator.get(Button.X).onTrue(new ExtendElevator(elevator, ElevatorConstants.kMiddleNodeHeightExtension));
@@ -118,30 +118,30 @@ public class Operator {
   //   m_operator.get(m_operator.RIGHT_TRIGGER_BUTTON).onFalse(new ExtendElevator(elevator, ElevatorConstants.kMinExtension));
   //   m_operator.get(Button.RB).onTrue(new ExtendElevator(elevator, ElevatorConstants.kGroundIntakeExtension));
   //   m_operator.get(Button.RB).onFalse(new ExtendElevator(elevator, ElevatorConstants.kMinExtension));
-  // }
+  }
 
-  // /**
-  //  * Configures intkae controls
-  //  * @param intake The intake
-  //  */
-  // public void configureControls(Intake intake){
+  /**
+   * Configures intkae controls
+   * @param intake The intake
+   */
+  public void configureControls(Intake intake){
   //   // Intake
   //   m_operator.get(m_operator.RIGHT_TRIGGER_BUTTON).whileTrue(new IntakeGamePiece(intake));
   //   m_operator.get(Button.RB).whileTrue(new IntakeGamePiece(intake));
 
   //   // Outtake
   //   m_operator.get(m_operator.LEFT_TRIGGER_BUTTON).toggleOnTrue(new OuttakeGamePiece(intake));
-  // }
+  }
 
-  // /**
-  //  * Configures deploying bar controls
-  //  * @param deployingBar The deploying bar
-  //  */
-  // public void configureControls(DeployingBar deployingBar){
+  /**
+   * Configures deploying bar controls
+   * @param deployingBar The deploying bar
+   */
+  public void configureControls(DeployingBar deployingBar){
   //   // Extends the bar
   //   m_operator.get(m_operator.RIGHT_TRIGGER_BUTTON).onTrue(new RotateDeployingBar(deployingBar, DeployingBarConstants.kDeployedRotation));
   //   m_operator.get(m_operator.RIGHT_TRIGGER_BUTTON).onFalse(new RotateDeployingBar(deployingBar, DeployingBarConstants.kStowRotation));
-  // }
+  }
 
   public NodeLegecy getSelectedNode(){
     return selectedNode;
