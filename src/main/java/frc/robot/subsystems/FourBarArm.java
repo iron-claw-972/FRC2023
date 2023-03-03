@@ -37,7 +37,6 @@ public class FourBarArm extends SubsystemBase {
     setArmSetpoint(getAbsEncoderPos());
 
     SmartDashboard.putData("4 bar arm PID", m_pid); 
-
   }
 
   /**
@@ -57,7 +56,7 @@ public class FourBarArm extends SubsystemBase {
     if(m_enabled) {
       
       // calculate the PID power level
-      double pidPower = m_pid.calculate(getAbsEncoderPos(),MathUtil.clamp(m_pid.getSetpoint(),ArmConstants.kStowedAbsEncoderPos, ArmConstants.kMaxArmExtensionAbsEncoderPos));
+      double pidPower = m_pid.calculate(getAbsEncoderPos(),MathUtil.clamp(m_pid.getSetpoint(),ArmConstants.kStowedAbsEncoderPos, ArmConstants.kMaxArmExtensionPos));
       // calculate the feedforward power (nothing for now)
       double feedforwardPower = 0.0;
 
@@ -74,14 +73,13 @@ public class FourBarArm extends SubsystemBase {
     return m_pid.atSetpoint();
   }
 
-  public void setMotorPower(double power){
+  public void setMotorPower(double power) {
     m_motor.set(MathUtil.clamp(power, ArmConstants.kMinMotorPower, ArmConstants.kMaxMotorPower));
   }
 
   public void setEnabled(boolean enable)  {
     m_enabled = enable;
   }
-
 
   public double getAbsEncoderPos(){
     return m_absEncoder.getAbsolutePosition() * -1; 

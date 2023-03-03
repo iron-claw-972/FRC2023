@@ -146,10 +146,6 @@ public class Elevator extends SubsystemBase {
     );
   }
 
-  public enum ElevatorMode {
-    CALIBRATION, MANUAL, POSITION, DISABLED
-  }
-
   public void setDesiredPosition(double desiredPosition) {
     m_desiredPosition = desiredPosition;
   }
@@ -182,6 +178,10 @@ public class Elevator extends SubsystemBase {
 
   enum ElevatorStatus {
     BOTTOM, BOTTOM_CONE, TOP, TOP_CONE, NONE
+  }
+
+  public enum ElevatorMode {
+    CALIBRATION, MANUAL, POSITION, DISABLED
   }
 
   private void updateElevatorStatus() {

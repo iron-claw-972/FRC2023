@@ -1,10 +1,10 @@
 package frc.robot.controls;
 
 import frc.robot.commands.deployingbar.RotateDeployingBar;
-import frc.robot.constants.DeployingBarConstants;
+import frc.robot.constants.BarConstants;
 import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.FourBarArm;
-import frc.robot.subsystems.DeployingBar;
+import frc.robot.subsystems.Bar;
 import frc.robot.subsystems.Intake;
 import lib.controllers.GameController;
 import lib.controllers.GameController.Button;
@@ -16,9 +16,9 @@ public class Operator {
   /**
    * Configures the operator controls for the deploying Bar.
    */
-  public void configureControls(DeployingBar deployingBar) {
-    m_operator.get(Button.A).onTrue(new RotateDeployingBar(deployingBar, DeployingBarConstants.kStowRotation));
-    m_operator.get(Button.B).onTrue(new RotateDeployingBar(deployingBar, DeployingBarConstants.kDeployedRotation));
+  public void configureControls(Bar deployingBar) {
+    m_operator.get(Button.A).onTrue(new RotateDeployingBar(deployingBar, BarConstants.kStowRotation));
+    m_operator.get(Button.B).onTrue(new RotateDeployingBar(deployingBar, BarConstants.kDeployedRotation));
   }
 
   /**

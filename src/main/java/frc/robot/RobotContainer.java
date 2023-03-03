@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Robot.RobotId;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.DepositTune;
-import frc.robot.commands.intake.OuttakeGamePiece;
+import frc.robot.commands.scoring.intake.Outtake;
 import frc.robot.commands.test.CircleDrive;
 import frc.robot.commands.test.DriveFeedForwardCharacterization;
 import frc.robot.commands.test.OdometryTestCommand;
@@ -35,7 +35,7 @@ import frc.robot.controls.GameControllerDriverConfig;
 import frc.robot.controls.ManualController;
 import frc.robot.controls.Operator;
 import frc.robot.controls.TestController;
-import frc.robot.subsystems.DeployingBar;
+import frc.robot.subsystems.Bar;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
@@ -73,7 +73,7 @@ public class RobotContainer {
   private final FourBarArm m_arm;
   private final Intake m_intake;
   private final Elevator m_elevator;
-  private final DeployingBar m_deployingBar;
+  private final Bar m_deployingBar;
 
   // Controllers are defined here
   private final BaseDriverConfig m_driver;
@@ -194,8 +194,8 @@ public class RobotContainer {
     SmartDashboard.putNumber("Deposit Elevator Extension", 0.0);
     SmartDashboard.putNumber("Deposit Arm Extension", 0.0);
     m_testTab.add("Tune Deposit Locations", new DepositTune(m_elevator, m_arm));
-    m_testTab.add("Outtake", new OuttakeGamePiece(m_intake));
-    m_testTab.add("Rotate Outtake", new OuttakeGamePiece(m_intake, true));
+    m_testTab.add("Outtake", new Outtake(m_intake));
+    m_testTab.add("Rotate Outtake", new Outtake(m_intake, true));
   }
 
   /**

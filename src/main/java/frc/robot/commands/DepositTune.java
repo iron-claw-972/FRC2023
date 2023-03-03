@@ -37,7 +37,7 @@ public class DepositTune extends CommandBase {
 
     // make sure the parameters are sane
     m_height = MathUtil.clamp(m_height, 0, ElevatorConstants.kMaxPosition);
-    m_position = MathUtil.clamp(m_position, ArmConstants.kStowedAbsEncoderPos, ArmConstants.kMaxArmExtensionAbsEncoderPos); 
+    m_position = MathUtil.clamp(m_position, ArmConstants.kStowPos, ArmConstants.kMaxArmExtensionPos); 
 
     // report the trimmed values on the dashboard
     SmartDashboard.putNumber("Deposit Elevator Extension", m_height);
