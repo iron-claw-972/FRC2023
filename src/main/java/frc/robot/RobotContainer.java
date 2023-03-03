@@ -19,7 +19,6 @@ import frc.robot.Robot.RobotId;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.DepositTune;
 import frc.robot.commands.intake.OuttakeGamePiece;
-import frc.robot.commands.intake.SpinOuttake;
 import frc.robot.commands.test.CircleDrive;
 import frc.robot.commands.test.DriveFeedForwardCharacterization;
 import frc.robot.commands.test.OdometryTestCommand;
