@@ -58,8 +58,8 @@ public class Intake extends SubsystemBase {
     m_leftMotor.setIdleMode(IntakeConstants.kLeftMotorIdleMode);
     m_rightMotor.setIdleMode(IntakeConstants.kRightMotorIdleMode);
 
-    m_leftMotor.enableVoltageCompensation(Constants.kMaxVoltage);
-    m_rightMotor.enableVoltageCompensation(Constants.kMaxVoltage);
+    m_leftMotor.enableVoltageCompensation(Constants.kRobotVoltage);
+    m_rightMotor.enableVoltageCompensation(Constants.kRobotVoltage);
 
     m_leftMotor.setSmartCurrentLimit(IntakeConstants.kMotorCurrentLimit);
     m_rightMotor.setSmartCurrentLimit(IntakeConstants.kMotorCurrentLimit);

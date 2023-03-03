@@ -50,7 +50,7 @@ public class Bar extends SubsystemBase {
     m_motor.setIdleMode(IdleMode.kCoast);
     m_motor.setInverted(BarConstants.kMotorInvert);
 
-    m_motor.enableVoltageCompensation(Constants.kMaxVoltage);
+    m_motor.enableVoltageCompensation(Constants.kRobotVoltage);
 
     m_motor.enableSoftLimit(SoftLimitDirection.kForward, true);
     m_motor.enableSoftLimit(SoftLimitDirection.kReverse, true);

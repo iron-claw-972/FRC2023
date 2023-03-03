@@ -83,7 +83,7 @@ public class Elevator extends SubsystemBase {
 
     m_motor.setInverted(ElevatorConstants.kMotorInvert);
     m_motor.setNeutralMode(ElevatorConstants.kNeutralMode);
-    m_motor.configVoltageCompSaturation(Constants.kMaxVoltage);
+    m_motor.configVoltageCompSaturation(Constants.kRobotVoltage);
     m_motor.enableVoltageCompensation(true);
 
     m_motor.configClosedloopRamp(ElevatorConstants.kMotorRamp);

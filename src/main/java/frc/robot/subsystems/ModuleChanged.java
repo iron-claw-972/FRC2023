@@ -216,6 +216,16 @@ public class ModuleChanged extends Module {
   }
 
   @Override
+  public double getDesiredVelocity() {
+    return m_desiredState.speedMetersPerSecond;
+  }
+
+  @Override
+  public Rotation2d getDesiredAngle() {
+    return m_desiredState.angle;
+  }
+
+  @Override
   public double getDriveVelocityError() {
     return m_desiredState.speedMetersPerSecond - getState().speedMetersPerSecond;
   }
