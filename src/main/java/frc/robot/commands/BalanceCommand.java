@@ -51,22 +51,23 @@ public class BalanceCommand extends CommandBase {
   
   @Override
   public void execute() {
+    // starts the timer if it hasn't already been started
     m_timer.start();
     
+    m_currentAngle = m_usePitch ? m_drive.getPitch().getDegrees() : m_drive.getRoll().getDegrees();
+
     m_output = MathUtil.clamp(m_pid.calculate(m_currentAngle), -DriveConstants.kBalanceMaxOutput, DriveConstants.kBalanceMaxOutput);
-    
+
     if (m_usePitch) {
-      m_currentAngle = m_drive.getPitch().getDegrees();
-      m_drive.driveHeading(-m_output, 0, (m_inverted ? -Math.PI/2 : Math.PI/2), true);
+      m_drive.driveHeading(-m_output, 0, (m_inverted ? 0 : Math.PI), true);
     } else {
-      m_currentAngle = m_drive.getRoll().getDegrees();
-      m_drive.driveHeading(-m_output, 0, (m_inverted ? 0 : Math.PI), true); // TODO: inversion may be incorrect
+      m_drive.driveHeading(-m_output, 0, (m_inverted ? -Math.PI/2 : Math.PI/2), true); // TODO: inversion may be incorrect
     }
     
     if (m_timer.get() >= DriveConstants.kBalanceStartTime && m_timer.get() <= DriveConstants.kBalanceEndTime) {
-       m_drive.stop();
-       m_timer.reset();
-     }
+      m_drive.stop();
+      m_timer.reset();
+    }
   }
   
   @Override
