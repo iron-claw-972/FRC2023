@@ -109,6 +109,7 @@ public class RobotContainer {
       m_operator.configureControls(m_intake);
       m_operator.configureControls(m_arm);
       //TODO: add back controls once deploying bar is installed
+      // onFalse() or toggleOnTrue? There aren't enough buttons for both deploy and undeploy
       //m_operator.configureControls(m_deployingBar);
       m_testController.configureControls();
       m_manualController.configureControls();
@@ -218,5 +219,9 @@ public class RobotContainer {
     CommandScheduler.getInstance().onCommandInitialize(command -> Shuffleboard.addEventMarker("Command initialized", command.getName(), EventImportance.kNormal));
     CommandScheduler.getInstance().onCommandInterrupt(command -> Shuffleboard.addEventMarker("Command interrupted", command.getName(), EventImportance.kNormal));
     CommandScheduler.getInstance().onCommandFinish(command -> Shuffleboard.addEventMarker("Command finished", command.getName(), EventImportance.kNormal));
+  }
+
+  public void logVision(){
+    m_vision.logPose(m_drive.getPose());
   }
 }
