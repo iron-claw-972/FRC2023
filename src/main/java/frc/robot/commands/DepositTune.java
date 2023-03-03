@@ -9,13 +9,13 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
 
 public class DepositTune extends CommandBase {
-  Elevator m_elevator; 
+  Elevator m_elevator;
   FourBarArm m_arm;
 
   double m_height = 0.0;
   double m_position = 0.0;
 
-  boolean m_elevatorDone = false; 
+  boolean m_elevatorDone = false;
 
   /**
    * Moves the elevator and arm to the positions indicated by Smartdashboard

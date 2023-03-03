@@ -85,7 +85,6 @@ public class ElevatorConstants {
     public static final double kShelfCubeHeight = kShelfConeHeight;
     public static final double kStowHeight = Conversions.ElevatorLengthToHeight(Units.inchesToMeters(0));
 
-
     public static final double kCalibrationPower = -0.2;
     public static final double kMotorRamp = 0.2;
 }
