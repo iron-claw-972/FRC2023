@@ -260,7 +260,6 @@ public class Drivetrain extends SubsystemBase {
   
   /** Updates the field relative position of the robot. */
   public void updateOdometry() {
-
     // Updates pose based on encoders and gyro
     m_poseEstimator.update(
       m_pigeon.getRotation2d(),

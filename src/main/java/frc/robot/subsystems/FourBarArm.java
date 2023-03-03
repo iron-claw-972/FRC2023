@@ -79,7 +79,7 @@ public class FourBarArm extends SubsystemBase {
   }
 
   public void setMotorPower(double power){
-    MathUtil.clamp(power, ArmConstants.kMinMotorPower, ArmConstants.kMaxMotorPower);
+    power = MathUtil.clamp(power, ArmConstants.kMinMotorPower, ArmConstants.kMaxMotorPower);
     m_motor.set(power);
     if (Constants.kLogging) LogManager.addDouble("Four Bar/motor power", power);
   }
