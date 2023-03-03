@@ -55,5 +55,14 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
   public double getRawHeadingMagnitude() { 
     return Functions.calculateHypotenuse(kDriver.get(Axis.RIGHT_X), kDriver.get(Axis.RIGHT_Y));
   }
-  
+
+  @Override
+  public boolean getIsSlowMode() {
+    return kDriver.RIGHT_TRIGGER_BUTTON.getAsBoolean();
+  }
+
+  @Override
+  public boolean getIsFieldRelative() {
+    return !kDriver.LEFT_TRIGGER_BUTTON.getAsBoolean();
+  }
 }

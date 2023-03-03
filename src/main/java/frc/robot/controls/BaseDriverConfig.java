@@ -1,5 +1,6 @@
 package frc.robot.controls;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.constants.OIConstants;
@@ -56,15 +57,15 @@ public abstract class BaseDriverConfig {
   }
 
   public double getForwardTranslation() {
-    return m_ySpeedLimiter.calculate(-Functions.expoMS(Functions.deadband(getRawForwardTranslation(), m_translationalDeadband), m_translationalExpo) * DriveConstants.kMaxSpeed * m_translationalSensitivity, m_translationalSlewrate);
+    return -Functions.expoMS(MathUtil.applyDeadband(getRawForwardTranslation(), OIConstants.kDeadband), 2) * DriveConstants.kMaxSpeed * m_translationalSensitivity;
   }
 
   public double getSideTranslation() {
-    return m_xSpeedLimiter.calculate(-Functions.expoMS(Functions.deadband(getRawSideTranslation(), m_translationalDeadband), m_translationalExpo) * DriveConstants.kMaxSpeed * m_translationalSensitivity, m_translationalSlewrate);
+    return -Functions.expoMS(MathUtil.applyDeadband(getRawSideTranslation(), OIConstants.kDeadband), 2) * DriveConstants.kMaxSpeed * m_translationalSensitivity;
   }
   
   public double getRotation() {
-    return m_rotLimiter.calculate(Functions.expoMS(Functions.deadband(getRawRotation(), m_rotationDeadband), m_rotationExpo) * DriveConstants.kMaxAngularSpeed * m_rotationSensitivity, m_rotationSlewrate);
+    return Functions.expoMS(MathUtil.applyDeadband(getRawRotation(), OIConstants.kDeadband), 2) * DriveConstants.kMaxAngularSpeed * m_rotationSensitivity;
   }
 
   public double getHeading() {
@@ -73,7 +74,7 @@ public abstract class BaseDriverConfig {
     return m_previousHeading;
   }
 
-  public Drivetrain getDrivetrain() {
+  protected Drivetrain getDrivetrain() {
     return m_drive;
   }
 
@@ -127,4 +128,6 @@ public abstract class BaseDriverConfig {
   public abstract double getRawRotation();
   public abstract double getRawHeadingAngle();
   public abstract double getRawHeadingMagnitude();
+  public abstract boolean getIsSlowMode();
+  public abstract boolean getIsFieldRelative();
 }
