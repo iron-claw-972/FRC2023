@@ -48,34 +48,32 @@ public class Intake extends SubsystemBase {
   }
 
   public void intake(double speed) {
-    if (Constants.kLogging) {
-      LogManager.addDouble("Intake/left power", speed);
-      LogManager.addDouble("Intake/right power", speed);
-    }
-    m_leftMotor.set(speed);
-    m_rightMotor.set(speed);
+    setLeft(speed);
+    setRight(speed);
   }
 
   public void spinOuttake(double speed){
-    if (Constants.kLogging) {
-      LogManager.addDouble("Intake/left power", speed);
-      LogManager.addDouble("Intake/right power", -speed);
-    }
-    m_leftMotor.set(speed);
-    m_rightMotor.set(-speed);
+    setLeft(speed);
+    setRight(-speed);
+  }
+
+  public void stopIntake() {
+    setLeft(0);
+    setRight(0);
   }
 
   public boolean containsGamePiece(){
     return m_hasCone || m_hasCube;
   }
 
-  public void stopIntake() {
-    if (Constants.kLogging) {
-      LogManager.addDouble("Intake/left power", 0);
-      LogManager.addDouble("Intake/right power", 0);
-    }
-    m_leftMotor.set(0);
-    m_rightMotor.set(0);
+  private void setLeft(double power) {
+    if (Constants.kLogging) LogManager.addDouble("Intake/left power", power);
+    m_leftMotor.set(power);
+  }
+
+  private void setRight(double power) {
+    if (Constants.kLogging) LogManager.addDouble("Intake/right power", power);
+    m_rightMotor.set(power);
   }
 
   @Override
