@@ -7,6 +7,7 @@ import frc.robot.constants.ArmConstants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
+import frc.robot.subsystems.Elevator.ElevatorMode;
 
 public class DepositTune extends CommandBase {
   Elevator m_elevator;
@@ -45,6 +46,7 @@ public class DepositTune extends CommandBase {
 
     // move the elevator to the desired position
     m_elevator.setDesiredPosition(m_height);
+    m_elevator.setMode(ElevatorMode.POSITION);
 
     m_elevatorDone = false;
   }

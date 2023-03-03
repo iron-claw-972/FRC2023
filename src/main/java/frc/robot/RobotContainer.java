@@ -106,10 +106,7 @@ public class RobotContainer {
       m_testController = new TestController(m_arm, m_intake, m_elevator);
       m_manualController = new ManualController(m_arm, m_intake, m_elevator);
 
-      m_operator.configureControls(m_intake);
-      m_operator.configureControls(m_arm);
-      //TODO: add back controls once deploying bar is installed
-      //m_operator.configureControls(m_deployingBar);
+      m_operator.configureControls(m_arm, m_intake, m_elevator, m_deployingBar);
       m_testController.configureControls();
       m_manualController.configureControls();
 
