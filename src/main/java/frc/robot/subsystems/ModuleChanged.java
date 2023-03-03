@@ -232,8 +232,8 @@ public class ModuleChanged extends Module {
 
   @Override
   public void stop() {
-    m_driveMotor.stopMotor();
-    m_angleMotor.stopMotor();
+    m_driveMotor.set(0);
+    m_angleMotor.set(0);
   }
 
   /**

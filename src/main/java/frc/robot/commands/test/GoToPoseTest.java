@@ -30,7 +30,7 @@ public class GoToPoseTest extends CommandBase {
     m_startTime = Timer.getFPGATimestamp();
     m_finalPose = new Pose2d(
       m_drive.getRequestedXPos(m_drive.getPose().getX()), m_drive.getRequestedYPos(m_drive.getPose().getY()), 
-      new Rotation2d(m_drive.getRequestedHeading(m_drive.getAngleHeading()))
+      new Rotation2d(m_drive.getRequestedHeading(m_drive.getYaw().getRadians()))
     );
     
   }
