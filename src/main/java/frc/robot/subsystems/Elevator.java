@@ -47,11 +47,6 @@ public class Elevator extends SubsystemBase {
     m_bottomLimitSwitch = new DigitalInput(ElevatorConstants.kBottomLimitSwitchPort); 
     addChild("Upper Limit",m_topLimitSwitch);
     addChild("Bottom Limit",m_bottomLimitSwitch);
-
-    LogManager.addDouble("Elevator/error", () -> getError());
-    LogManager.addDouble("Elevator/extension", () -> getExtension());
-    LogManager.addBoolean("Elevator/bottomLimitSwitch", () -> isBottomSwitchTripped());
-    LogManager.addBoolean("Elevator/topLimitSwitch", () -> isTopSwitchTripped());
     
     setUpElevatorTab();
   }
@@ -62,6 +57,8 @@ public class Elevator extends SubsystemBase {
       double pidPower = m_elevatorPID.calculate(getExtension(), MathUtil.clamp(m_elevatorPID.getSetpoint(), ElevatorConstants.kMinExtension, ElevatorConstants.kMaxExtension));
       setMotorPower(pidPower);
     }
+    
+    if (Constants.kLogging) updateLogs();
   }
 
   public void close() {
@@ -146,6 +143,13 @@ public class Elevator extends SubsystemBase {
     m_elevatorTab.addBoolean("enabled", () -> m_enabled);
     m_elevatorTab.addBoolean("topLimitSwitch", () -> isTopSwitchTripped() );
     m_elevatorTab.addBoolean("bottomLimitSwitch", () -> isBottomSwitchTripped());
+  }
+
+  public void updateLogs(){
+    LogManager.addDouble("Elevator/error", getError());
+    LogManager.addDouble("Elevator/extension", getExtension());
+    LogManager.addBoolean("Elevator/bottomLimitSwitch", isBottomSwitchTripped());
+    LogManager.addBoolean("Elevator/topLimitSwitch", isTopSwitchTripped());
   }
 }
 

@@ -114,6 +114,7 @@ public class RobotContainer {
       // m_operator.configureControls(m_deployingBar);
       m_testController.configureControls();
       m_manualController.configureControls();
+
     } else {
 
       DriverStation.reportWarning("Not registering subsystems and controls due to incorrect robot", false);
@@ -125,6 +126,7 @@ public class RobotContainer {
 
       m_testController = null;
       m_manualController = null;
+
     }
 
     // This is really annoying so it's disabled
