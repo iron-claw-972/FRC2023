@@ -71,7 +71,7 @@ public class ElevatorConstants {
     // Vertical height of the center of the top surface of the tread hardstop for the carriage when elevator is at minimum height
     public static final double kElevatorBaseHeight = Units.inchesToMeters(12.974338);
     // Angle of elevator from the horizontal axis
-    public static final double kElevatorAngle = 55.0;
+    public static final double kElevatorAngle = Units.degreesToRadians(55.0);
 
     public static final double kIntakeConeHeight = Conversions.ElevatorLengthToHeight(Units.inchesToMeters(0));
     public static final double kIntakeCubeHeight = kIntakeConeHeight;

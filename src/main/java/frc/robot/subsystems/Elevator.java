@@ -15,6 +15,8 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 import frc.robot.constants.ElevatorConstants;
+import frc.robot.util.Conversions;
+import frc.robot.util.LogManager;
 
 
 public class Elevator extends SubsystemBase {
@@ -127,11 +129,11 @@ public class Elevator extends SubsystemBase {
   }
 
   public double getHeight() {
-    return Conversions.ElevatorLengthToHeight(getPosition());
+    return Conversions.ElevatorExtensionToHeight(getPosition());
   }
 
   public void setDesiredHeight(double desiredHeight) {
-    setDesiredPosition(Conversions.ElevatorHeightToLength(desiredHeight));
+    setDesiredPosition(Conversions.ElevatorHeightToExtension(desiredHeight));
   }
 
   /**
@@ -253,6 +255,8 @@ public class Elevator extends SubsystemBase {
         );
         break;
     }
+    
+    if (Constants.kLogging) updateLogs();
   }
 
   private void setupShuffleboard() {
@@ -260,7 +264,7 @@ public class Elevator extends SubsystemBase {
       m_elevatorTab.addDouble("Current Position (m)", this::getPosition);
       m_elevatorTab.addDouble("Current Height (m)", this::getHeight);
       m_elevatorTab.addDouble("Desired Position (m)", () -> m_desiredPosition);
-      m_elevatorTab.addDouble("Desired Height (m)", () -> Conversions.ElevatorLengthToHeight(m_desiredPosition));
+      m_elevatorTab.addDouble("Desired Height (m)", () -> Conversions.ElevatorExtensionToHeight(m_desiredPosition));
       m_elevatorTab.addDouble("Desired Power", () -> m_desiredPower);
       m_elevatorTab.addBoolean("Is Calibrated", () -> m_isCalibrated);
       m_elevatorTab.addBoolean("Reached desired position", this::reachedDesiredPosition);
@@ -273,5 +277,12 @@ public class Elevator extends SubsystemBase {
       m_elevatorTab.addString("Status", () -> m_status.toString());
       m_elevatorTab.addDouble("Gravity compensation", () -> m_gravityCompensation);
     }
+  }
+
+  public void updateLogs(){
+    LogManager.addDouble("Elevator/error", m_desiredPosition - getPosition());
+    LogManager.addDouble("Elevator/extension", getPosition());
+    LogManager.addBoolean("Elevator/bottomLimitSwitch", isBottomLimitSwitchReached());
+    LogManager.addBoolean("Elevator/topLimitSwitch", isTopLimitSwitchReached());
   }
 }

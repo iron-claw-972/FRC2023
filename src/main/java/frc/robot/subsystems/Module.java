@@ -162,15 +162,7 @@ public class Module {
 
     m_driveFeedforward = new SimpleMotorFeedforward(m_driveFeedForwardKS, m_driveFeedForwardKV);
     m_steerFeedForward = new SimpleMotorFeedforward(m_steerFeedForwardKS, m_steerFeedForwardKV);
-  
-    LogManager.addDouble(m_steerMotor.getDescription() + " Steer Absolute Position", () -> m_steerEncoder.getAbsolutePosition());
-    LogManager.addDouble(m_steerMotor.getDescription() + " Steer Velocity", () -> getSteerVelocity());
-    LogManager.addDouble(m_steerMotor.getDescription() + " Steer Error", () -> getSteerAngleError());
-    LogManager.addDouble(m_steerMotor.getDescription() + " Steer Voltage", () -> getSteerOutputVoltage());
-    LogManager.addDouble(m_steerMotor.getDescription() + " Bus to Steer Voltage", () -> getBusToSteerVoltage());
-    LogManager.addDouble(m_driveMotor.getDescription() + " Drive Velocity Filtered", () -> getDriveVelocityFiltered());
-    LogManager.addDouble(m_driveMotor.getDescription() + " Drive Voltage", () -> getDriveOutputVoltage());
-    LogManager.addDouble(m_driveMotor.getDescription() + " Bus to Drive Voltage", () -> getBusToDriveVoltage());
+    
   }
 
 
@@ -476,6 +468,18 @@ public class Module {
     m_moduleTab.addNumber("Steer Vel " + m_moduleType.abbrev, () -> getSteerVelocity());
     //Steer PID
     m_moduleTab.add("Steer PID " + m_moduleType.abbrev, getSteerPID());
+  }
+
+  public void updateLogs(){
+    //the desired and actual states are stored in drivetrain
+    LogManager.addDouble("Swerve/Steer Absolute Position/" + m_moduleType.abbrev, m_steerEncoder.getAbsolutePosition());
+    LogManager.addDouble("Swerve/Steer Velocity/" + m_moduleType.abbrev, getSteerVelocity());
+    LogManager.addDouble("Swerve/Steer Error/" + m_moduleType.abbrev, getSteerAngleError());
+    LogManager.addDouble("Swerve/Drive Velocity/" + m_moduleType.abbrev, getDriveVelocityError());
+    LogManager.addDouble("Swerve/Steer Voltage/" + m_moduleType.abbrev, getSteerOutputVoltage());
+    LogManager.addDouble("Swerve/Bus to Steer Voltage/" + m_moduleType.abbrev, getBusToSteerVoltage());
+    LogManager.addDouble("Swerve/Drive Voltage/" + m_moduleType.abbrev, getDriveOutputVoltage());
+    LogManager.addDouble("Swerve/Bus to Drive Voltage/" + m_moduleType.abbrev, getBusToDriveVoltage());
   }
 
 }
