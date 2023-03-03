@@ -36,7 +36,7 @@ public class DepositTune extends CommandBase {
     m_position = SmartDashboard.getNumber("Deposit Arm Extension", 0);
 
     // make sure the parameters are sane
-    m_height = MathUtil.clamp(m_height, ElevatorConstants.kMinExtension, ElevatorConstants.kMaxExtension);
+    m_height = MathUtil.clamp(m_height, 0, ElevatorConstants.kMaxPosition);
     m_position = MathUtil.clamp(m_position, ArmConstants.kStowedAbsEncoderPos, ArmConstants.kMaxArmExtensionAbsEncoderPos); 
 
     // report the trimmed values on the dashboard
@@ -52,7 +52,7 @@ public class DepositTune extends CommandBase {
   @Override
   public void execute(){
     // implement a trivial sequential command
-    if(!m_elevatorDone && ElevatorConstants.kTolerance < Math.abs(m_elevator.getPosition()-m_position)){
+    if(!m_elevatorDone && m_elevator.reachedDesiredPosition()){
       m_elevatorDone = true; 
       m_arm.setArmSetpoint(m_position);
     }
