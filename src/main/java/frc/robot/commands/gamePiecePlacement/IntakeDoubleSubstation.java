@@ -18,7 +18,7 @@ public class IntakeDoubleSubstation extends SequentialCommandGroup {
       new ExtendElevator(elevator, ElevatorConstants.kDoubleSubstationHeightExtension),
       new ExtendArm(arm, ArmConstants.kShelfPositionAbsEncoderPos),
       new IntakeGamePiece(intake), 
-      new ExtendArm(arm, ArmConstants.kStowedAbsEncoderPos)
+      new Stow(elevator, arm)
       //move the drivetrain back after this command group ends
     );
   }
