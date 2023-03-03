@@ -1,4 +1,4 @@
-package frc.robot.util;
+package lib.math;
 
 import edu.wpi.first.math.util.Units;
 import frc.robot.constants.ElevatorConstants;
@@ -107,11 +107,11 @@ public class Conversions {
         return meters / (circumference / (gearRatio * 2048.0));
     }
 
-    public static double ElevatorHeightToExtension(double height) {
-      return (height - ElevatorConstants.kElevatorBaseHeight) / Math.sin(ElevatorConstants.kElevatorAngle);
+    public static double ElevatorHeightToLength(double height) {
+      return (height - ElevatorConstants.kElevatorBaseHeight) / Math.sin(Units.degreesToRadians(ElevatorConstants.kElevatorAngle));
     }
 
-    public static double ElevatorExtensionToHeight(double extension) {
-      return (extension * Math.sin(ElevatorConstants.kElevatorAngle)) + ElevatorConstants.kElevatorBaseHeight;
+    public static double ElevatorLengthToHeight(double length) {
+      return (length * Math.sin(Units.degreesToRadians(ElevatorConstants.kElevatorAngle))) + ElevatorConstants.kElevatorBaseHeight;
     }
 }

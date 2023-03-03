@@ -21,7 +21,7 @@ import frc.robot.controls.GameControllerDriverConfig;
 import frc.robot.controls.ManualController;
 import frc.robot.controls.Operator;
 import frc.robot.controls.TestController;
-import frc.robot.subsystems.DeployingBar;
+import frc.robot.subsystems.Bar;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
@@ -59,7 +59,7 @@ public class RobotContainer {
   private final FourBarArm m_arm;
   private final Intake m_intake;
   private final Elevator m_elevator;
-  private final DeployingBar m_deployingBar;
+  private final Bar m_deployingBar;
 
   // Controllers are defined here
   private final BaseDriverConfig m_driver;
@@ -85,19 +85,17 @@ public class RobotContainer {
 
       m_arm = new FourBarArm();
       m_intake = new Intake(m_intakeTab);
-      m_elevator = new Elevator(m_elevatorTab);
+      m_elevator = new Elevator(m_elevatorTab, ()->m_intake.containsGamePiece());
       m_deployingBar = null; 
 
       m_operator = new Operator();
       m_testController = new TestController(m_arm, m_intake, m_elevator);
       m_manualController = new ManualController(m_arm, m_intake, m_elevator);
 
-      m_operator.configureControls(m_intake);
-      m_operator.configureControls(m_arm);
-      //TODO: add back controls once deploying bar is installed
-      //m_operator.configureControls(m_deployingBar);
+      m_operator.configureControls(m_arm, m_intake, m_elevator, m_deployingBar);
       m_testController.configureControls();
       m_manualController.configureControls();
+
     } else {
 
       DriverStation.reportWarning("Not registering subsystems and controls due to incorrect robot", false);
@@ -110,6 +108,7 @@ public class RobotContainer {
       m_operator = null;
       m_testController = null;
       m_manualController = null;
+
     }
 
     // This is really annoying so it's disabled
@@ -129,7 +128,6 @@ public class RobotContainer {
     loadCommandSchedulerShuffleboard();
     m_vision.setupVisionShuffleboard();
     m_driver.setupShuffleboard();
-    m_vision.logging();
     
     addTestCommands();
 

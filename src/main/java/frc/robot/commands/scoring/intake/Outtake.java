@@ -1,18 +1,18 @@
-package frc.robot.commands.intake;
+package frc.robot.commands.scoring.intake;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.subsystems.Intake;
 
-public class OuttakeGamePiece extends CommandBase {
-  Intake m_intake; 
-  boolean m_rotate = false;
+public class Outtake extends CommandBase {
+  private Intake m_intake; 
+  private boolean m_rotate = false;
 
   /**
    * Spins the intake to outtake until the game piece is ejected.
    * @param intake the intake subsystem
    */
-  public OuttakeGamePiece(Intake intake) {
+  public Outtake(Intake intake) {
     this(intake, false);
   }
 
@@ -21,7 +21,7 @@ public class OuttakeGamePiece extends CommandBase {
    * @param intake the intake subsystem
    * @param rotate if true, will eject the game piece by spinning the intake wheels in opposite directions
    */
-  public OuttakeGamePiece(Intake intake, boolean rotate) {
+  public Outtake(Intake intake, boolean rotate) {
     m_intake = intake; 
     m_rotate = rotate;
     addRequirements(m_intake);
@@ -30,9 +30,9 @@ public class OuttakeGamePiece extends CommandBase {
   @Override
   public void initialize() {
     if (m_rotate) {
-      m_intake.spinOuttake(IntakeConstants.kOuttakeSpeed);    
+      m_intake.spinOuttake(IntakeConstants.kSpinningPower);    
     } else {
-      m_intake.intake(IntakeConstants.kOuttakeSpeed);
+      m_intake.intake(IntakeConstants.kOuttakePower);
     }
   }
 

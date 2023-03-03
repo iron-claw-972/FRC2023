@@ -148,21 +148,14 @@ public class Drivetrain extends SubsystemBase {
 
     m_xController = new PIDController(DriveConstants.kTranslationalP, 0, DriveConstants.kTranslationalD);
     m_yController = new PIDController(DriveConstants.kTranslationalP, 0, DriveConstants.kTranslationalD);
-    m_rotationController = new PIDController(DriveConstants.kTranslationalP, 0, DriveConstants.kTranslationalD);
+    m_rotationController = new PIDController(DriveConstants.kHeadingP, 0, DriveConstants.kHeadingD);
     m_rotationController.enableContinuousInput(-Math.PI, Math.PI);
-
+    
     m_pathplannerXController = new PIDController(DriveConstants.kPathplannerTranslationalP, 0, DriveConstants.kPathplannerTranslationalD);
     m_pathplannerYController = new PIDController(DriveConstants.kPathplannerTranslationalP, 0, DriveConstants.kPathplannerTranslationalD);
     m_pathplannerRotationController = new PIDController(DriveConstants.kPathplannerHeadingP, 0, DriveConstants.kPathplannerHeadingD);
     m_pathplannerRotationController.enableContinuousInput(-Math.PI, Math.PI);
-  
-    DoubleSupplier[] poseSupplier = {
-      () -> getPose().getX(),
-      () -> getPose().getY(),
-      () -> getPose().getRotation().getRadians()
-    };
-    LogManager.addDoubleArray("Pose2d", poseSupplier);
-    
+
     m_fieldDisplay = new Field2d();
     m_fieldDisplay.setRobotPose(getPose());
 
@@ -176,6 +169,10 @@ public class Drivetrain extends SubsystemBase {
     updateDriveModuleFeedforwardShuffleboard();
 
     updateOdometry();
+    
+    m_fieldDisplay.setRobotPose(getPose());
+
+    if (Constants.kLogging) updateLogs();
   }
 
   // PIDs for Chassis movement
@@ -736,5 +733,35 @@ public class Drivetrain extends SubsystemBase {
         }
       ));
     }
+  }
+  public void updateLogs(){
+    double[] pose = {
+      getPose().getX(),
+      getPose().getY(),
+      getPose().getRotation().getRadians()
+    };
+    LogManager.addDoubleArray("Swerve/Pose2d", pose);
+    double[] actualStates = {
+      m_modules[0].getAngle().getRadians(),
+      m_modules[0].getState().speedMetersPerSecond,
+      m_modules[1].getAngle().getRadians(),
+      m_modules[1].getState().speedMetersPerSecond,
+      m_modules[2].getAngle().getRadians(),
+      m_modules[2].getState().speedMetersPerSecond,
+      m_modules[3].getAngle().getRadians(),
+      m_modules[3].getState().speedMetersPerSecond
+    };
+    LogManager.addDoubleArray("Swerve/actual swerve states", actualStates);
+    double[] desiredStates = {
+      m_modules[0].getDesiredAngle().getRadians(),
+      m_modules[0].getDesiredVelocity(),
+      m_modules[1].getDesiredAngle().getRadians(),
+      m_modules[1].getDesiredVelocity(),
+      m_modules[2].getDesiredAngle().getRadians(),
+      m_modules[2].getDesiredVelocity(),
+      m_modules[3].getDesiredAngle().getRadians(),
+      m_modules[3].getDesiredVelocity()
+    };
+    LogManager.addDoubleArray("Swerve/desired swerve states", desiredStates);
   }
 }

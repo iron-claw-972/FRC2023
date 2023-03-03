@@ -43,5 +43,9 @@ public abstract class Module {
     public abstract double getDriveVelocityError();
 
     public abstract Rotation2d getAngle();
+
+    public abstract double getDesiredVelocity();
+
+    public abstract Rotation2d getDesiredAngle();
     
 }

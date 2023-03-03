@@ -15,13 +15,13 @@ public class ArmConstants {
   public static final double kMinMotorPower = -0.1;
   public static final double kMaxMotorPower = 0.1;
 
-  // TODO: distance values - TBD
-  public static final double kStowedAbsEncoderPos = -0.466;
-  public static final double kShelfPositionAbsEncoderPos = -0.2;
-  public static final double kBottomNodePositionAbsEncoderPos = -0.2;
-  public static final double kMiddleConeOuttakeAbsEncoderPos = -0.2;
-  public static final double kTopConeOuttakeAbsEncoderPos = -0.2;
-  public static final double kMaxArmExtensionAbsEncoderPos = -0.001; 
+  // TODO: different values for cone/cube?
+  public static final double kStowPos = -0.466;
+  public static final double kShelfPos = -0.2;
+  public static final double kBottomNodePos = -0.2;
+  public static final double kMiddleNodePos = -0.2;
+  public static final double kTopNodePos = -0.2;
+  public static final double kIntakePos = kBottomNodePos;
 
-
+  public static final double kMaxArmExtensionPos = -0.001; 
 }

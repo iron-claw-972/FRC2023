@@ -17,4 +17,7 @@ public final class Constants {
 
   /** The key used to access the RobotId name in the RoboRIO's persistent memory. */
   public static final String kRobotIdKey = "RobotId";
+
+  public static final boolean kLogging = true;
+  public static final boolean kUseTelemetry = true;
 }

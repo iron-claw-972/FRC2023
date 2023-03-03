@@ -10,12 +10,15 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.Rev2mDistanceSensor;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.Rev2mDistanceSensor.Port;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constants.Constants;
 import frc.robot.constants.IntakeConstants;
+import frc.robot.util.LogManager;
 
 
 public class Intake extends SubsystemBase {
@@ -30,38 +33,78 @@ public class Intake extends SubsystemBase {
   private double m_timeLastNotSeenCube = 0;
 
   private double m_range = -1;
-  private double m_timestamp = -1;
 
   public Intake(ShuffleboardTab intakeTab) {
     m_leftMotor = new CANSparkMax(IntakeConstants.kLeftMotorPort, MotorType.kBrushless);
     m_rightMotor = new CANSparkMax(IntakeConstants.kRightMotorPort, MotorType.kBrushless);
-    m_leftMotor.restoreFactoryDefaults();
-    m_rightMotor.restoreFactoryDefaults();
-    m_leftMotor.setSmartCurrentLimit(10);
-    m_rightMotor.setSmartCurrentLimit(10);
+
+    configMotors();
+
     m_intakeTab = intakeTab;
+
     m_distSensor.setAutomaticMode(true);
     m_distSensor.setEnabled(true);
+
     setupShuffleboard();
   }
 
+  private void configMotors() {
+    m_leftMotor.restoreFactoryDefaults();
+    m_rightMotor.restoreFactoryDefaults();    
+
+    m_leftMotor.setInverted(IntakeConstants.kLeftMotorInvert);
+    m_rightMotor.setInverted(IntakeConstants.kRightMotorInvert);
+
+    m_leftMotor.setIdleMode(IntakeConstants.kLeftMotorIdleMode);
+    m_rightMotor.setIdleMode(IntakeConstants.kRightMotorIdleMode);
+
+    m_leftMotor.enableVoltageCompensation(Constants.kMaxVoltage);
+    m_rightMotor.enableVoltageCompensation(Constants.kMaxVoltage);
+
+    m_leftMotor.setSmartCurrentLimit(IntakeConstants.kMotorCurrentLimit);
+    m_rightMotor.setSmartCurrentLimit(IntakeConstants.kMotorCurrentLimit);
+  }
+
   public void intake(double speed) {
-    m_leftMotor.set(speed);
-    m_rightMotor.set(speed);
+    setLeft(speed);
+    setRight(speed);
   }
 
   public void spinOuttake(double speed){
-    m_leftMotor.set(speed);
-    m_rightMotor.set(-speed);
-  }
-
-  public boolean containsGamePiece(){
-    return m_hasCone || m_hasCube;
+    setLeft(speed);
+    setRight(-speed);
   }
 
   public void stopIntake() {
-      m_leftMotor.set(0);
-      m_rightMotor.set(0);
+    setLeft(0);
+    setRight(0);
+  }
+
+  public boolean containsGamePiece() {
+    return m_hasCone || m_hasCube;
+  }
+
+  public boolean hasCone() {
+    return m_hasCone;
+  }
+
+  public boolean hasCube() {
+    return m_hasCube;
+  }
+
+  public void setIdleMode(IdleMode idleMode) {
+    m_leftMotor.setIdleMode(idleMode);
+    m_rightMotor.setIdleMode(idleMode);
+  }
+
+  private void setLeft(double power) {
+    if (Constants.kLogging) LogManager.addDouble("Intake/left power", power);
+    m_leftMotor.set(power);
+  }
+
+  private void setRight(double power) {
+    if (Constants.kLogging) LogManager.addDouble("Intake/right power", power);
+    m_rightMotor.set(power);
   }
 
   @Override
@@ -89,23 +132,31 @@ public class Intake extends SubsystemBase {
       }
     }
 
-    m_timestamp = m_distSensor.getTimestamp();
     m_range = m_distSensor.GetRange();
+
+    if (Constants.kLogging) updateLogs();
   }
 
   public double getRange() {
     return m_range;
   }
 
-  public double getTimestamp() {
-    return m_timestamp;
+  private void setupShuffleboard() {
+    if (Constants.kUseTelemetry) {
+      m_intakeTab.addDouble("Proximity (in)", this::getRange);
+      m_intakeTab.addBoolean("Has Cone", this::hasCone);
+      m_intakeTab.addBoolean("Has Cube", this::hasCube);
+      m_intakeTab.addBoolean("Contains piece", this::containsGamePiece);
+      m_intakeTab.addDouble("Time seen cube", () -> Timer.getFPGATimestamp() - m_timeLastNotSeenCube);
+      m_intakeTab.addDouble("Left Output Current (A)", () -> m_leftMotor.getOutputCurrent());
+      m_intakeTab.addDouble("Right Output Current (A)", () -> m_rightMotor.getOutputCurrent());
+    }
   }
 
-
-
-  private void setupShuffleboard() {
-    m_intakeTab.addDouble("Proximity", this::getRange);
-    m_intakeTab.addDouble("Timestamp", this::getTimestamp);
+  public void updateLogs() {
+    LogManager.addBoolean("Intake/contains cube", m_hasCube);
+    LogManager.addBoolean("Intake/contains cone", m_hasCone);
+    LogManager.addDouble("Proximity (in)", getRange());
   }
   
 } 

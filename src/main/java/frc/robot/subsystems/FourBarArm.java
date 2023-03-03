@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ArmConstants;
+import frc.robot.constants.Constants;
+import frc.robot.util.LogManager;
 
 public class FourBarArm extends SubsystemBase {
   private final CANSparkMax m_motor;
@@ -37,7 +39,6 @@ public class FourBarArm extends SubsystemBase {
     setArmSetpoint(getAbsEncoderPos());
 
     SmartDashboard.putData("4 bar arm PID", m_pid); 
-
   }
 
   /**
@@ -57,13 +58,15 @@ public class FourBarArm extends SubsystemBase {
     if(m_enabled) {
       
       // calculate the PID power level
-      double pidPower = m_pid.calculate(getAbsEncoderPos(),MathUtil.clamp(m_pid.getSetpoint(),ArmConstants.kStowedAbsEncoderPos, ArmConstants.kMaxArmExtensionAbsEncoderPos));
+      double pidPower = m_pid.calculate(getAbsEncoderPos(),MathUtil.clamp(m_pid.getSetpoint(),ArmConstants.kStowPos, ArmConstants.kMaxArmExtensionPos));
       // calculate the feedforward power (nothing for now)
       double feedforwardPower = 0.0;
 
       // set the motor power
       setMotorPower(pidPower + feedforwardPower);
     }
+
+    if (Constants.kLogging) updateLogs();
   }
 
   /**
@@ -74,16 +77,21 @@ public class FourBarArm extends SubsystemBase {
     return m_pid.atSetpoint();
   }
 
-  public void setMotorPower(double power){
-    m_motor.set(MathUtil.clamp(power, ArmConstants.kMinMotorPower, ArmConstants.kMaxMotorPower));
+  public void setMotorPower(double power) {
+    power = MathUtil.clamp(power, ArmConstants.kMinMotorPower, ArmConstants.kMaxMotorPower);
+    m_motor.set(power);
+    if (Constants.kLogging) LogManager.addDouble("Four Bar/motor power", power);
   }
 
   public void setEnabled(boolean enable)  {
     m_enabled = enable;
   }
 
-
   public double getAbsEncoderPos(){
     return m_absEncoder.getAbsolutePosition() * -1; 
+  }
+
+  public void updateLogs(){
+    LogManager.addDouble("Four Bar/position", getAbsEncoderPos());
   }
 }
