@@ -57,6 +57,8 @@ public class Elevator extends SubsystemBase {
       double pidPower = m_elevatorPID.calculate(getExtension(), MathUtil.clamp(m_elevatorPID.getSetpoint(), ElevatorConstants.kMinExtension, ElevatorConstants.kMaxExtension));
       setMotorPower(pidPower);
     }
+    
+    if (Constants.kLogging) updateLogs();
   }
 
   public void close() {
@@ -143,7 +145,7 @@ public class Elevator extends SubsystemBase {
     m_elevatorTab.addBoolean("bottomLimitSwitch", () -> isBottomSwitchTripped());
   }
 
-  public void logging(){
+  public void updateLogs(){
     LogManager.addDouble("Elevator/error", () -> getError());
     LogManager.addDouble("Elevator/extension", () -> getExtension());
     LogManager.addBoolean("Elevator/bottomLimitSwitch", () -> isBottomSwitchTripped());

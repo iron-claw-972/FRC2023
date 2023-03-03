@@ -470,16 +470,16 @@ public class Module {
     m_moduleTab.add("Steer PID " + m_moduleType.abbrev, getSteerPID());
   }
 
-  public void logging(){
+  public void updateLogs(){
     //the desired and actual states are stored in drivetrain
-    LogManager.addDouble("Swerve/Steer Absolute Position/" + m_moduleType.abbrev, () -> m_steerEncoder.getAbsolutePosition());
-    LogManager.addDouble("Swerve/Steer Velocity/" + m_moduleType.abbrev, () -> getSteerVelocity());
-    LogManager.addDouble("Swerve/Steer Error/" + m_moduleType.abbrev, () -> getSteerAngleError());
-    LogManager.addDouble("Swerve/Drive Velocity/" + m_moduleType.abbrev, () -> getDriveVelocityError());
-    LogManager.addDouble("Swerve/Steer Voltage/" + m_moduleType.abbrev, () -> getSteerOutputVoltage());
-    LogManager.addDouble("Swerve/Bus to Steer Voltage/" + m_moduleType.abbrev, () -> getBusToSteerVoltage());
-    LogManager.addDouble("Swerve/Drive Voltage/" + m_moduleType.abbrev, () -> getDriveOutputVoltage());
-    LogManager.addDouble("Swerve/Bus to Drive Voltage/" + m_moduleType.abbrev, () -> getBusToDriveVoltage());
+    LogManager.addDouble("Swerve/Steer Absolute Position/" + m_moduleType.abbrev, m_steerEncoder.getAbsolutePosition());
+    LogManager.addDouble("Swerve/Steer Velocity/" + m_moduleType.abbrev, getSteerVelocity());
+    LogManager.addDouble("Swerve/Steer Error/" + m_moduleType.abbrev, getSteerAngleError());
+    LogManager.addDouble("Swerve/Drive Velocity/" + m_moduleType.abbrev, getDriveVelocityError());
+    LogManager.addDouble("Swerve/Steer Voltage/" + m_moduleType.abbrev, getSteerOutputVoltage());
+    LogManager.addDouble("Swerve/Bus to Steer Voltage/" + m_moduleType.abbrev, getBusToSteerVoltage());
+    LogManager.addDouble("Swerve/Drive Voltage/" + m_moduleType.abbrev, getDriveOutputVoltage());
+    LogManager.addDouble("Swerve/Bus to Drive Voltage/" + m_moduleType.abbrev, getBusToDriveVoltage());
   }
 
 }

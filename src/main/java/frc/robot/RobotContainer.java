@@ -113,7 +113,7 @@ public class RobotContainer {
       m_testController.configureControls();
       m_manualController.configureControls();
 
-      m_elevator.logging();
+      m_elevator.updateLogs();
 
     } else {
 
@@ -150,7 +150,7 @@ public class RobotContainer {
     m_vision.setupVisionShuffleboard();
     m_driver.setupShuffleboard();
 
-    m_drive.logging();
+    m_drive.updateLogs();
     
     addTestCommands();
 
