@@ -15,7 +15,9 @@ import com.revrobotics.Rev2mDistanceSensor.Port;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constants.Constants;
 import frc.robot.constants.IntakeConstants;
+import frc.robot.util.LogManager;
 
 
 public class Intake extends SubsystemBase {
@@ -46,22 +48,32 @@ public class Intake extends SubsystemBase {
   }
 
   public void intake(double speed) {
-    m_leftMotor.set(speed);
-    m_rightMotor.set(speed);
+    setLeft(speed);
+    setRight(speed);
   }
 
   public void spinOuttake(double speed){
-    m_leftMotor.set(speed);
-    m_rightMotor.set(-speed);
+    setLeft(speed);
+    setRight(-speed);
+  }
+
+  public void stopIntake() {
+    setLeft(0);
+    setRight(0);
   }
 
   public boolean containsGamePiece(){
     return m_hasCone || m_hasCube;
   }
 
-  public void stopIntake() {
-      m_leftMotor.set(0);
-      m_rightMotor.set(0);
+  private void setLeft(double power) {
+    if (Constants.kLogging) LogManager.addDouble("Intake/left power", power);
+    m_leftMotor.set(power);
+  }
+
+  private void setRight(double power) {
+    if (Constants.kLogging) LogManager.addDouble("Intake/right power", power);
+    m_rightMotor.set(power);
   }
 
   @Override
@@ -91,6 +103,8 @@ public class Intake extends SubsystemBase {
 
     m_timestamp = m_distSensor.getTimestamp();
     m_range = m_distSensor.GetRange();
+
+    if (Constants.kLogging) updateLogs();
   }
 
   public double getRange() {
@@ -101,11 +115,14 @@ public class Intake extends SubsystemBase {
     return m_timestamp;
   }
 
-
-
   private void setupShuffleboard() {
     m_intakeTab.addDouble("Proximity", this::getRange);
     m_intakeTab.addDouble("Timestamp", this::getTimestamp);
+  }
+
+  public void updateLogs(){
+    LogManager.addBoolean("Intake/contains cube", m_hasCube);
+    LogManager.addBoolean("Intake/contains cone", m_hasCone);
   }
   
 } 
