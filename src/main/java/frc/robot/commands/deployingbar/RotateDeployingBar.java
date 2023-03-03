@@ -6,11 +6,12 @@ import frc.robot.subsystems.DeployingBar;
 public class RotateDeployingBar extends CommandBase {
   private final DeployingBar m_deployingBar;
   private double m_setpoint;
+  
   /**
-   * Creates a new RotateDeployingBar
+   * Rotates the deploying bar to a radian position using PID
    *
-   * @param subsystem The subsystem used by this command.
-   * @param setpoint The pid setpoint used by this command.
+   * @param deployingBar The subsystem used by this command.
+   * @param setpoint The target location in radians.
    */
   public RotateDeployingBar(DeployingBar deployingBar, double setpoint) {
     m_deployingBar = deployingBar;
