@@ -23,14 +23,15 @@ public class DefaultDriveCommand extends CommandBase {
 
   @Override
   public void execute() {
-
+    
     double slowFactor = m_driver.getIsSlowMode() ? DriveConstants.kSlowDriveFactor : 1;
+    double slowRotFactor = m_driver.getIsSlowMode() ? DriveConstants.kSlowRotFactor : 1;
 
     /* Drive */
     m_swerve.drive(
-      m_driver.getForwardTranslation() * DriveConstants.kMaxSpeed * slowFactor,
-      m_driver.getSideTranslation() * DriveConstants.kMaxSpeed * slowFactor, 
-      m_driver.getRotation() * DriveConstants.kMaxAngularSpeed * slowFactor, 
+      m_driver.getForwardTranslation() * slowFactor,
+      m_driver.getSideTranslation() * slowFactor, 
+      m_driver.getRotation() * slowRotFactor, 
       m_driver.getIsFieldRelative(), 
       true
     );
