@@ -43,7 +43,7 @@ public class Elevator extends SubsystemBase {
     m_status = ElevatorStatus.NONE;
     m_isCalibrated = false;
 
-    m_motor = new WPI_TalonFX(ElevatorConstants.kMotorID);
+    m_motor = new WPI_TalonFX(ElevatorConstants.kMotorID, Constants.kCanivoreCAN);
     configElevatorMotor();
 
     m_bottomLimitSwitch = new DigitalInput(ElevatorConstants.kBottomLimitSwitchPort);
