@@ -1,52 +1,39 @@
 package frc.robot.commands;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.pathplanner.lib.PathPoint;
+
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.auto.PathPlannerCommand;
 import frc.robot.controls.Operator;
 import frc.robot.subsystems.Drivetrain;
 
-public class GoToNode extends CommandBase {
-  
-  private Drivetrain m_drive;
-  private Operator m_operator;
-
+public class GoToNode extends SequentialCommandGroup {
+  /**
+   * Goes to the selected node using PathPlanner
+   * Creates a new path, uses it, and then stops the robot
+   * @param operator The operator
+   * @param drive The drivetrain
+   */
   public GoToNode(Operator operator, Drivetrain drive) {
-    m_drive = drive;
-    m_operator = operator;
-  }
+    PathPoint point1 = new PathPoint(
+      drive.getPose().getTranslation(), 
+      drive.getPose().getRotation(), 
+      drive.getFieldRelativeHeading()
+    );
+    PathPoint point2 = new PathPoint(
+      operator.getSelectedNode().scorePose.getTranslation(),
+      operator.getSelectedNode().scorePose.getRotation(),
+      operator.getSelectedNode().scorePose.getRotation()
+    );
 
-  /**
-   * Resets the PID
-   */
-  @Override
-  public void initialize(){
-    m_drive.getXController().reset();
-    m_drive.getYController().reset();
-    m_drive.getRotationController().reset();
-  }
-
-  /**
-   * Runs the PID to go to the selected pose
-   */
-  @Override
-  public void execute(){
-    Pose2d pose = m_operator.getSelectedNode().scorePose;
-    m_drive.runChassisPID(pose.getX(), pose.getY(), pose.getRotation().getRadians());
-  }
-
-  /**
-   * Stops the robot
-   * @param interrupted If the command is interrupted
-   */
-  @Override
-  public void end(boolean interrupted){
-    m_drive.stop();
-  }
-
-  @Override
-  public boolean isFinished(){
-    return m_drive.getXController().atSetpoint() &&
-      m_drive.getYController().atSetpoint() &&
-      m_drive.getRotationController().atSetpoint();
+    addRequirements(drive);
+    addCommands(new PathPlannerCommand(
+      new ArrayList<PathPoint>(List.of(point1, point2)), drive, false),
+      new InstantCommand(()->drive.stop())
+    );
   }
 }
