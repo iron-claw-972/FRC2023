@@ -61,8 +61,8 @@ public class Intake extends SubsystemBase {
     m_leftMotor.enableVoltageCompensation(Constants.kRobotVoltage);
     m_rightMotor.enableVoltageCompensation(Constants.kRobotVoltage);
 
-    m_leftMotor.setSmartCurrentLimit(IntakeConstants.kMotorCurrentLimit);
-    m_rightMotor.setSmartCurrentLimit(IntakeConstants.kMotorCurrentLimit);
+    // m_leftMotor.setSmartCurrentLimit(IntakeConstants.kMotorCurrentLimit);
+    // m_rightMotor.setSmartCurrentLimit(IntakeConstants.kMotorCurrentLimit);
   }
 
   public void intake(double speed) {
@@ -110,19 +110,19 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
 
-    double range = m_distSensor.getRange();
+    m_range = m_distSensor.getRange();
 
-    if (range == -1 || range > IntakeConstants.kCubeDistanceThreshold) { // Empty intake
+    if (m_range == -1 || m_range > IntakeConstants.kCubeDistanceThreshold) { // Empty intake
       m_timeLastNotSeenCube = Timer.getFPGATimestamp();
       m_hasCone = false;
       m_hasCube = false;
     } 
-    else if (range < IntakeConstants.kConeDistanceThreshold) { // Cone
+    else if (m_range < IntakeConstants.kConeDistanceThreshold) { // Cone
       m_timeLastNotSeenCube = Timer.getFPGATimestamp();
       m_hasCone = true;
       m_hasCube = false;
     } 
-    else if (range > IntakeConstants.kConeDistanceThreshold && range < IntakeConstants.kCubeDistanceThreshold){ // Cube
+    else if (m_range > IntakeConstants.kConeDistanceThreshold && m_range < IntakeConstants.kCubeDistanceThreshold){ // Cube
       if (Timer.getFPGATimestamp() - m_timeLastNotSeenCube > IntakeConstants.kCubeTimeThreshold) {
         m_hasCone = false;
         m_hasCube = true;
@@ -131,8 +131,6 @@ public class Intake extends SubsystemBase {
         m_hasCube = false;
       }
     }
-
-    m_range = m_distSensor.GetRange();
 
     if (Constants.kLogging) updateLogs();
   }
