@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.swerve.DriveConstants;
@@ -46,6 +47,8 @@ public class BalanceCommand extends CommandBase {
       }
     }
 
+    System.out.println("BALANCING: " + (m_usePitch ? "PITCH" : "ROLL") + (m_inverted ? "INVERTED" : ""));
+
     m_drive.setIsBalancingOnChargeStation(true);
   }
   
@@ -72,7 +75,7 @@ public class BalanceCommand extends CommandBase {
   
   @Override
   public boolean isFinished() {
-    return m_pid.atSetpoint();
+    return DriverStation.isAutonomousEnabled() ? false : m_pid.atSetpoint();
   }
   
   @Override
