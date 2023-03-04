@@ -44,7 +44,7 @@ public class Outtake extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return !m_intake.containsGamePiece(); 
+    return false;//!m_intake.containsGamePiece(); 
   }
 
 }

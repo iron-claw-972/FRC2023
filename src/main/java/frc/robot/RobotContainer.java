@@ -1,7 +1,10 @@
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -12,8 +15,11 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Robot.RobotId;
+import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.commands.auto.PathPlannerCommand;
+import frc.robot.commands.auto.EngageFromLeftDriverSide;
+import frc.robot.commands.auto.EngageFromRightDriverSide;
+import frc.robot.commands.auto.MiddleDepositThenPath;
 import frc.robot.constants.VisionConstants;
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.controls.BaseDriverConfig;
@@ -50,6 +56,7 @@ public class RobotContainer {
   private final ShuffleboardTab m_testTab = Shuffleboard.getTab("Test");
   private final ShuffleboardTab m_elevatorTab = Shuffleboard.getTab("Elevator");
   private final ShuffleboardTab m_intakeTab = Shuffleboard.getTab("Intake");
+  private final ShuffleboardTab m_barTab = Shuffleboard.getTab("Bar");
   
 
   private final Vision m_vision;
@@ -74,6 +81,9 @@ public class RobotContainer {
     DriveConstants.update();
     VisionConstants.update();
 
+    // PowerDistribution m_PDModule = new PowerDistribution(1, ModuleType.kRev);
+    // m_PDModule.clearStickyFaults();
+
     m_vision = new Vision(m_visionTab, VisionConstants.kCameras);
 
     // Create Drivetrain, because every robot will have a drivetrain
@@ -86,10 +96,10 @@ public class RobotContainer {
       m_arm = new FourBarArm();
       m_intake = new Intake(m_intakeTab);
       m_elevator = new Elevator(m_elevatorTab, ()->m_intake.containsGamePiece());
-      m_deployingBar = null; 
+      m_deployingBar = new Bar(m_barTab); 
 
       m_operator = new Operator();
-      m_testController = new TestController(m_arm, m_intake, m_elevator);
+      m_testController = new TestController(m_arm, m_intake, m_elevator, m_deployingBar);
       m_manualController = new ManualController(m_arm, m_intake, m_elevator);
 
       m_operator.configureControls(m_arm, m_intake, m_elevator, m_deployingBar);
@@ -116,6 +126,9 @@ public class RobotContainer {
 
     // load paths before auto starts
     PathGroupLoader.loadPathGroups();
+
+    // add camera display
+    CameraServer.startAutomaticCapture();
 
     m_driver.configureControls();
 
@@ -161,12 +174,21 @@ public class RobotContainer {
   public void autoChooserUpdate() {
     // add commands below with: m_autoCommand.addOption("Example", new ExampleCommand());
     m_autoCommand.setDefaultOption("Do Nothing", new PrintCommand("This will do nothing!"));
-    m_autoCommand.addOption("DriveSidewaysPath", new PathPlannerCommand("DriveSidewaysPath", 0, m_drive));
-    m_autoCommand.addOption("Odometry Test 1", new PathPlannerCommand("Odometry Test 1", 0, m_drive));
-    m_autoCommand.addOption("Figure 8", new PathPlannerCommand("Figure 8", 0, m_drive));
-    m_autoCommand.addOption("To Center And Back", new PathPlannerCommand("To Center And Back", 0, m_drive));
-    m_autoCommand.addOption("Drive out of Community", new PathPlannerCommand("Drive out of Community", 0, m_drive));
-    m_autoCommand.addOption("BottomSimpleLine1", new PathPlannerCommand("Bottom Simple Line1", 0, m_drive));
+    // m_autoCommand.addOption("Figure 8", new PathPlannerCommand("Figure 8", 0, m_drive));
+    // m_autoCommand.addOption("To Center And Back", new PathPlannerCommand("To Center And Back", 0, m_drive));
+    // m_autoCommand.addOption("Grid 9 Mobility (no deposit)", new PathPlannerCommand("Grid 9 Mobility", 0, m_drive));
+
+    m_autoCommand.addOption("Grid 1 Mobility", new MiddleDepositThenPath("Grid 1 Mobility", m_drive, m_elevator, m_arm, m_intake));
+    m_autoCommand.addOption("Grid 9 Mobility", new MiddleDepositThenPath("Grid 9 Mobility", m_drive, m_elevator, m_arm, m_intake));
+
+    // m_autoCommand.addOption("BottomSimpleLine1", new PathPlannerCommand("Bottom Simple Line1", 0, m_drive));
+    
+    m_autoCommand.addOption("Grid 9 Engage", new MiddleDepositThenPath("Grid 9 Engage", m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceCommand(m_drive)));
+    m_autoCommand.addOption("Grid 6 Engage (no mobility)", new MiddleDepositThenPath("Grid 6 Engage", m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceCommand(m_drive)));
+    m_autoCommand.addOption("Grid 1 Engage", new MiddleDepositThenPath("Grid 1 Engage", m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceCommand(m_drive)));
+  
+    m_autoCommand.addOption("Engage Left", new EngageFromLeftDriverSide(m_drive, m_elevator, m_arm));
+    m_autoCommand.addOption("Engage Right", new EngageFromRightDriverSide(m_drive));
    }
 
   /**

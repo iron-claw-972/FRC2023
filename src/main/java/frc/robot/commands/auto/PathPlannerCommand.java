@@ -61,8 +61,7 @@ public class PathPlannerCommand extends SequentialCommandGroup{
                 drive::setModuleStates, // Module states consumer
                 true,
                 drive // Requires this drive subsystem
-            ),
-            new InstantCommand(() -> drive.stop())
+            )
         );
     }
 }

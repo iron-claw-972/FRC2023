@@ -14,6 +14,7 @@ public class CalibrateElevator extends CommandBase {
 
   @Override
   public void initialize() {
+    m_elevator.toggleSoftLimits(false);
     m_elevator.setMode(ElevatorMode.CALIBRATION);
   }
 

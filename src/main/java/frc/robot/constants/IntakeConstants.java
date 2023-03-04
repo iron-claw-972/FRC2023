@@ -8,7 +8,7 @@ public final class IntakeConstants {
   public static final int kRightMotorPort = 11;
 
   // intake speeds
-  public static final double kIntakePower = -0.7;
+  public static final double kIntakePower = -0.4;
   public static final double kOuttakePower = 0.12;
   public static final double kEjectPower = 0.4;
   public static final double kSpinningPower = 0.2;
@@ -23,5 +23,5 @@ public final class IntakeConstants {
   public static final boolean kRightMotorInvert = true;
   public static final IdleMode kLeftMotorIdleMode = IdleMode.kBrake;
   public static final IdleMode kRightMotorIdleMode = IdleMode.kBrake;
-  public static final int kMotorCurrentLimit = 10;
+  public static final int kMotorCurrentLimit = 100;
 }

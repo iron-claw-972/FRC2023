@@ -42,15 +42,12 @@ public class PositionIntake extends SequentialCommandGroup {
           new MoveElevator(elevator, ElevatorConstants.kIntakeConeHeight).alongWith(new ExtendArm(arm, ArmConstants.kIntakePos)),
           new MoveElevator(elevator, ElevatorConstants.kIntakeCubeHeight).alongWith(new ExtendArm(arm, ArmConstants.kIntakePos)),
           isConeColorSupplier
-        )),
-        Map.entry(Position.STOW, 
-          new MoveElevator(elevator, ElevatorConstants.kStowHeight).alongWith(new ExtendArm(arm, ArmConstants.kStowPos))
-        )
+        ))
       ), () -> position)
     );
   }
 
   public enum Position {
-    TOP, MIDDLE, BOTTOM, SHELF, INTAKE, STOW
+    TOP, MIDDLE, BOTTOM, SHELF, INTAKE
   }
 }

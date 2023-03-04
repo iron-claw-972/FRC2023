@@ -1,11 +1,13 @@
 package frc.robot.controls;
 
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Elevator.ElevatorMode;
 import frc.robot.util.Functions;
 import lib.controllers.GameController;
 import lib.controllers.GameController.Axis;
@@ -38,9 +40,13 @@ public class ManualController {
     }
     
     if (m_elevator != null) {
-
+      m_manual.get(Button.RB).onTrue(new FunctionalCommand(
+        () -> m_elevator.setMode(ElevatorMode.MANUAL), 
+        () -> m_elevator.setDesiredPower(m_manual.get(Axis.LEFT_Y)), 
+        interupted -> m_elevator.setMode(ElevatorMode.POSITION), 
+        () -> m_manual.get(Button.LB).getAsBoolean(), 
+        m_elevator));
     }
-    
   }
   public double getManualElevatorPower() {
     return Functions.deadband(m_manual.get(Axis.LEFT_Y), OIConstants.kDeadband);
