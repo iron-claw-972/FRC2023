@@ -6,6 +6,8 @@ import java.util.function.DoubleSupplier;
 import org.photonvision.EstimatedRobotPose;
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -20,6 +22,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -359,6 +362,17 @@ public class Drivetrain extends SubsystemBase {
    */
   public void setPigeonYaw(double degrees) {
     m_pigeon.setYaw(degrees);
+  }
+
+  /**
+   * 
+   * Resets the pigeon IMU's yaw to the trajectory's intial state, flipped for alliance.
+   * 
+   * @param traj the trajectory to reset to.
+   */
+  public void setPigeonYaw(PathPlannerTrajectory traj) {
+    traj = PathPlannerTrajectory.transformTrajectoryForAlliance(traj, DriverStation.getAlliance());
+    setPigeonYaw(traj.getInitialHolonomicPose().getRotation().getDegrees());
   }
 
   public void resetModulesToAbsolute() {

@@ -1,5 +1,9 @@
 package frc.robot.commands.auto;
 
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
+
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -18,7 +22,7 @@ public class MiddleDepositThenPath extends SequentialCommandGroup {
   public MiddleDepositThenPath(String pathName, Drivetrain drive, Elevator elevator, FourBarArm arm, Intake intake) {
     addRequirements(drive, elevator, arm, intake);
     addCommands(
-      new InstantCommand(() -> drive.setPigeonYaw(PathGroupLoader.getPathGroup(pathName).get(0).getInitialHolonomicPose().getRotation().getDegrees())),
+      new InstantCommand(() -> drive.setPigeonYaw(PathGroupLoader.getPathGroup(pathName).get(0))),
       new PositionIntake(elevator, arm, () -> false, Position.MIDDLE).withTimeout(3),
       new Dunk(arm, intake).withTimeout(1.5),
       new ParallelCommandGroup(

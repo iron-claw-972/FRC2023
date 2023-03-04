@@ -8,7 +8,11 @@ import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
+import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
@@ -49,7 +53,7 @@ public class PathPlannerCommand extends SequentialCommandGroup{
         PathPlannerTrajectory path = pathGroup.get(pathIndex);
     
         addCommands(
-            (pathIndex == 0 && resetPose ? new InstantCommand(() -> {drive.setPigeonYaw(path.getInitialHolonomicPose().getRotation().getDegrees()); drive.resetOdometry(path.getInitialHolonomicPose());}) : new DoNothing()),
+            (pathIndex == 0 && resetPose ? new InstantCommand(() -> {drive.setPigeonYaw(path); drive.resetOdometry(path.getInitialHolonomicPose());}) : new DoNothing()),
             new PrintCommand("Number of paths: " + pathGroup.size()),
             new PPSwerveControllerCommand(
                 path, 
