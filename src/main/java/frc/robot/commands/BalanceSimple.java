@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -11,7 +12,7 @@ public class BalanceSimple extends CommandBase {
   private double balanceEffort;
   private double turningEffort;
 
-  private final PIDController m_balancePID = new PIDController(0.05, 0, 0.006);
+  private final PIDController m_balancePID = new PIDController(0.3, 0, 0.006);
 
   public BalanceSimple(Drivetrain drive) {
     m_drive = drive;
@@ -28,7 +29,8 @@ public class BalanceSimple extends CommandBase {
   public void execute() {
     turningEffort = 0;
     balanceEffort = m_balancePID.calculate(m_drive.getPitch().getDegrees());
-    m_drive.drive(balanceEffort, 0, turningEffort, false, true);
+    balanceEffort = MathUtil.clamp(balanceEffort, -0.75, 0.75);
+    m_drive.drive(-balanceEffort, 0, turningEffort, false, true);
   }
 
   @Override

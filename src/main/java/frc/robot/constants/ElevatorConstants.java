@@ -73,7 +73,7 @@ public class ElevatorConstants {
     // Angle of elevator from the horizontal axis
     public static final double kElevatorAngle = Units.degreesToRadians(55.0);
 
-    public static final double kIntakeConeHeight = Conversions.ElevatorExtensionToHeight(Units.inchesToMeters(3.5));
+    public static final double kIntakeConeHeight = Conversions.ElevatorExtensionToHeight(Units.inchesToMeters(4));
     public static final double kIntakeCubeHeight = kIntakeConeHeight;
     public static final double kTopConeHeight = Conversions.ElevatorExtensionToHeight(kMaxPosition);
     public static final double kTopCubeHeight = kTopConeHeight;
@@ -81,7 +81,7 @@ public class ElevatorConstants {
     public static final double kMiddleCubeHeight = kMiddleConeHeight;
     public static final double kBottomConeHeight = Conversions.ElevatorExtensionToHeight(Units.inchesToMeters(6));
     public static final double kBottomCubeHeight = kBottomConeHeight;
-    public static final double kShelfConeHeight = Units.inchesToMeters(56.225);
+    public static final double kShelfConeHeight = Units.inchesToMeters(56.725);
     public static final double kShelfCubeHeight = kShelfConeHeight;
     public static final double kStowHeight = Conversions.ElevatorExtensionToHeight(Units.inchesToMeters(0));
 

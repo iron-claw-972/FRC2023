@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Robot.RobotId;
-import frc.robot.commands.BalanceCommand;
+import frc.robot.commands.BalanceSimple;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.auto.EngageFromLeftDriverSide;
 import frc.robot.commands.auto.EngageFromRightDriverSide;
@@ -102,7 +102,7 @@ public class RobotContainer {
       m_testController = new TestController(m_arm, m_intake, m_elevator, m_deployingBar);
       m_manualController = new ManualController(m_arm, m_intake, m_elevator);
 
-      m_operator.configureControls(m_arm, m_intake, m_elevator, m_deployingBar);
+      m_operator.configureControls(m_arm, m_intake, m_elevator, m_deployingBar, m_vision);
       m_testController.configureControls();
       m_manualController.configureControls();
 
@@ -183,11 +183,12 @@ public class RobotContainer {
 
     // m_autoCommand.addOption("BottomSimpleLine1", new PathPlannerCommand("Bottom Simple Line1", 0, m_drive));
     
-    m_autoCommand.addOption("Grid 9 Engage", new MiddleDepositThenPath("Grid 9 Engage", m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceCommand(m_drive)));
-    m_autoCommand.addOption("Grid 6 Engage (no mobility)", new MiddleDepositThenPath("Grid 6 Engage", m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceCommand(m_drive)));
-    m_autoCommand.addOption("Grid 1 Engage", new MiddleDepositThenPath("Grid 1 Engage", m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceCommand(m_drive)));
+    m_autoCommand.addOption("Grid 9 Engage", new MiddleDepositThenPath("Grid 9 Engage", m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceSimple(m_drive)));
+    m_autoCommand.addOption("Grid 6 Engage (no mobility)", new MiddleDepositThenPath("Grid 6 Engage No Mobility", m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceSimple(m_drive)));
+    m_autoCommand.addOption("Grid 6 Engage (careful)", new MiddleDepositThenPath("Grid 6 Engage", m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceSimple(m_drive)));    
+    m_autoCommand.addOption("Grid 1 Engage", new MiddleDepositThenPath("Grid 1 Engage", m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceSimple(m_drive)));
   
-    m_autoCommand.addOption("Engage Left", new EngageFromLeftDriverSide(m_drive, m_elevator, m_arm));
+    m_autoCommand.addOption("Engage Left", new EngageFromLeftDriverSide(m_drive));
     m_autoCommand.addOption("Engage Right", new EngageFromRightDriverSide(m_drive));
    }
 
