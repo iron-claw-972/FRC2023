@@ -9,7 +9,7 @@ public class ExtendArm extends CommandBase {
   private double m_armSetpoint;
   
   /**
-   * extends four-bar-arm to a radian position using PID
+   * extends four-bar-arm to a position using PID
    */
   public ExtendArm(FourBarArm arm, double setpoint) {
     addRequirements(arm);
