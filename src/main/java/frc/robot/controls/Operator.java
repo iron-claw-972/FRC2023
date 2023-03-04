@@ -95,9 +95,9 @@ public class Operator {
     m_operator.get(m_operator.RIGHT_STICK_DOWN).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.COLUMN, 1)));
     m_operator.get(m_operator.RIGHT_STICK_RIGHT).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.COLUMN, 0)));
     // Selects the row
-    m_operator.get(DPad.LEFT).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.ROW, 2)));
-    m_operator.get(DPad.DOWN).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.ROW, 1)));
-    m_operator.get(DPad.RIGHT).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.ROW, 0)));
+    m_operator.get(Button.Y).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.ROW, 2)));
+    m_operator.get(Button.X).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.ROW, 1)));
+    m_operator.get(Button.A).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.ROW, 0)));
   }
 
   /**
@@ -107,8 +107,8 @@ public class Operator {
    * @param value What value to set it to, between 0 and 2 (0 is lower row (hybrid node), or for column/grid the closest one to field boundry)
    */
   public void selectValue(NodePositionIndex index, int value) {
-    if (value == 0 && DriverStation.getAlliance() == Alliance.Red) value = 2;
-    if (value == 2 && DriverStation.getAlliance() == Alliance.Red) value = 0;
+    // if (value == 0 && DriverStation.getAlliance() == Alliance.Red) value = 2;
+    // if (value == 2 && DriverStation.getAlliance() == Alliance.Red) value = 0;
     selectValues[index.id] = value;
     m_selectedNode = new Node(m_vision, DriverStation.getAlliance(), selectValues[NodePositionIndex.ROW.id]+1, (selectValues[NodePositionIndex.GRID.id]*3)+selectValues[NodePositionIndex.COLUMN.id]+1);
   }
