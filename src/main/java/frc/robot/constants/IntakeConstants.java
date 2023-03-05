@@ -9,7 +9,7 @@ public final class IntakeConstants {
 
   // intake speeds
   public static final double kIntakePower = -0.4;
-  public static final double kOuttakePower = 0.12;
+  public static final double kOuttakePower = 0.1;
   public static final double kEjectPower = 0.4;
   public static final double kSpinningPower = 0.2;
 
