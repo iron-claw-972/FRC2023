@@ -50,7 +50,7 @@ public class Operator {
 
     if (bar != null) {
       m_operator.get(Button.START).onTrue(new CalibrateBar(bar));
-      m_operator.get(Button.RIGHT_JOY).onTrue(new ToggleBar(bar));
+      m_operator.get(m_operator.RIGHT_TRIGGER_BUTTON).onTrue(new ToggleBar(bar));
     }
 
 
@@ -80,7 +80,7 @@ public class Operator {
       .onFalse(new Stow(intake, elevator, arm));
 
     //dunk
-    m_operator.get(m_operator.RIGHT_TRIGGER_BUTTON).onTrue(new Dunk(arm, intake)).onFalse(new Stow(intake, elevator, arm));
+    m_operator.get(Button.RIGHT_JOY).onTrue(new Dunk(arm, intake));
 
     //outtake
     m_operator.get(m_operator.LEFT_TRIGGER_BUTTON).onTrue(new Outtake(intake, false)).onFalse(new Stow(intake, elevator, arm));
