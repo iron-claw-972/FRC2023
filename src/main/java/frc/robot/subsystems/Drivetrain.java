@@ -564,6 +564,8 @@ public class Drivetrain extends SubsystemBase {
     m_drivetrainTab.addNumber("Gyro X", () -> getAngularRate(0));
     m_drivetrainTab.addNumber("Gyro Y", () -> getAngularRate(1));
     m_drivetrainTab.addNumber("Gyro Z", () -> getAngularRate(2));
+
+    m_drivetrainTab.addNumber("Chassis Velocity", () -> getChassisSpeedsMagnitude());
   }
 
   /**
