@@ -95,10 +95,7 @@ public class Node {
         y += 4.978;  
         break;
     }
-
-    double angle = alliance==Alliance.Blue?Math.PI:0;
-
-    scorePose = new Pose2d(x, y, new Rotation2d(angle));
+    scorePose = new Pose2d(x, y, new Rotation2d());
   }
 
 }

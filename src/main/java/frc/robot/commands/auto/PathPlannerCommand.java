@@ -27,29 +27,25 @@ import frc.robot.util.PathGroupLoader;
 public class PathPlannerCommand extends SequentialCommandGroup{
 
     Alliance alliance;
-
-    public PathPlannerCommand(ArrayList<PathPoint> waypoints, Drivetrain drive){
-        this(waypoints, drive, true);
-    }
     
-    public PathPlannerCommand(ArrayList<PathPoint> waypoints, Drivetrain drive, boolean allianceColor) {
+    public PathPlannerCommand(ArrayList<PathPoint> waypoints, Drivetrain drive) {
         this(new ArrayList<PathPlannerTrajectory>(Arrays.asList(PathPlanner.generatePath(
           new PathConstraints(AutoConstants.kMaxAutoSpeed, AutoConstants.kMaxAutoAccel),
           waypoints.get(0),
           waypoints.get(1),
           (PathPoint[]) Arrays.copyOfRange(waypoints.toArray(), 2, waypoints.size())
-        ))), 0, drive, true, allianceColor);
+        ))), 0, drive, true);
     }
 
     public PathPlannerCommand(String pathGroupName, int pathIndex, Drivetrain drive){
-        this(PathGroupLoader.getPathGroup(pathGroupName), pathIndex, drive, true, true); 
+        this(PathGroupLoader.getPathGroup(pathGroupName), pathIndex, drive, true); 
     }
 
     public PathPlannerCommand(String pathGroupName, int pathIndex, Drivetrain drive, boolean resetPose){
-        this(PathGroupLoader.getPathGroup(pathGroupName), pathIndex, drive, resetPose, true); 
+        this(PathGroupLoader.getPathGroup(pathGroupName), pathIndex, drive, resetPose); 
     }
     
-    public PathPlannerCommand(List<PathPlannerTrajectory> pathGroup, int pathIndex, Drivetrain drive, boolean resetPose, boolean allianceColor){
+    public PathPlannerCommand(List<PathPlannerTrajectory> pathGroup, int pathIndex, Drivetrain drive, boolean resetPose){
         addRequirements(drive);
         if (pathIndex < 0 || pathIndex > pathGroup.size() - 1){
             throw new IndexOutOfBoundsException("Path index out of range"); 
@@ -67,7 +63,7 @@ public class PathPlannerCommand extends SequentialCommandGroup{
                 drive.getPathplannerYController(), // Y controller can't normal PID as pathplanner has Feed Forward 
                 drive.getPathplannerRotationController(), // Rotation controller can't normal PID as pathplanner has Feed Forward 
                 drive::setModuleStates, // Module states consumer
-                allianceColor,
+                true,
                 drive // Requires this drive subsystem
             )
         );

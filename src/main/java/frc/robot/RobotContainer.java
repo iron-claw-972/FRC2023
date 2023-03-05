@@ -107,7 +107,6 @@ public class RobotContainer {
       m_testController = new TestController(m_arm, m_intake, m_elevator, m_deployingBar);
       m_manualController = new ManualController(m_arm, m_intake, m_elevator);
 
-      m_driver.configureControls(m_operator);
       m_operator.configureControls(m_arm, m_intake, m_elevator, m_deployingBar, m_vision);
       m_testController.configureControls();
       m_manualController.configureControls();

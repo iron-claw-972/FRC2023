@@ -99,7 +99,7 @@ public class Drivetrain extends SubsystemBase {
   // modules needed to distinguish in chooser
   private Module m_prevModule;
 
-  boolean m_visionEnabled = false;
+  boolean m_visionEnabled = true;
 
   /**
    * Creates a new Swerve Style Drivetrain.
