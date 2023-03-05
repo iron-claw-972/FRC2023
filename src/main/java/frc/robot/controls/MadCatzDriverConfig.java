@@ -2,6 +2,7 @@ package frc.robot.controls;
 
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.commands.GoToNode;
 import frc.robot.commands.SetFormationX;
 import frc.robot.constants.OIConstants;
 import frc.robot.constants.swerve.DriveConstants;
@@ -28,6 +29,11 @@ public class MadCatzDriverConfig extends BaseDriverConfig {
   }
   
   @Override
+  public void configureControls(Operator operator) { 
+    kDriver.get(MadCatzButton.B3).whileTrue(new GoToNode(operator, getDrivetrain()));
+  }
+  
+  @Override
   public double getRawSideTranslation() { 
     return kDriver.get(MadCatzAxis.X);
   }
@@ -50,6 +56,16 @@ public class MadCatzDriverConfig extends BaseDriverConfig {
   @Override
   public double getRawHeadingMagnitude() { 
     return kDriver.get(MadCatzAxis.SLIDER);
+  }
+
+  @Override
+  public boolean getIsSlowMode() {
+    return kDriver.get(MadCatzButton.B6).getAsBoolean();
+  }
+
+  @Override
+  public boolean getIsFieldRelative() {
+    return !kDriver.get(MadCatzButton.B7).getAsBoolean();
   }
   
 }

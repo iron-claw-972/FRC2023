@@ -2,7 +2,8 @@ package frc.robot.controls;
 
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.commands.MoveToSelectedPose;
+import frc.robot.commands.BalanceSimple;
+import frc.robot.commands.GoToNode;
 import frc.robot.commands.SetFormationX;
 import frc.robot.constants.OIConstants;
 import frc.robot.constants.swerve.DriveConstants;
@@ -18,19 +19,21 @@ import lib.controllers.GameController.Button;
 public class GameControllerDriverConfig extends BaseDriverConfig {
   
   private final GameController kDriver = new GameController(OIConstants.kDriverJoy);
-  private final Operator m_operator;
-  public GameControllerDriverConfig(Drivetrain drive, ShuffleboardTab controllerTab, boolean shuffleboardUpdates, Operator operator) {
+  public GameControllerDriverConfig(Drivetrain drive, ShuffleboardTab controllerTab, boolean shuffleboardUpdates) {
     super(drive, controllerTab, shuffleboardUpdates);
-    m_operator=operator;
   }
   
   @Override
   public void configureControls() { 
     kDriver.get(Button.START).onTrue(new InstantCommand(() -> super.getDrivetrain().setPigeonYaw(DriveConstants.kStartingHeadingDegrees)));
-    kDriver.get(Button.A).whileTrue(new SetFormationX(super.getDrivetrain()));
+    kDriver.get(Button.X).whileTrue(new SetFormationX(super.getDrivetrain()));
 
-    // kDriver.get(Button.RB).whileTrue(new AlignToColumn(getDrivetrain()));
-    kDriver.get(Button.RB).whileTrue(new MoveToSelectedPose(getDrivetrain(),m_operator));
+    kDriver.get(Button.B).onTrue(new BalanceSimple(super.getDrivetrain()));
+  }
+
+  @Override
+  public void configureControls(Operator operator){
+    kDriver.get(kDriver.LEFT_TRIGGER_BUTTON).whileTrue(new GoToNode(operator, getDrivetrain()));
   }
   
   @Override
@@ -57,5 +60,14 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
   public double getRawHeadingMagnitude() { 
     return Functions.calculateHypotenuse(kDriver.get(Axis.RIGHT_X), kDriver.get(Axis.RIGHT_Y));
   }
-  
+
+  @Override
+  public boolean getIsSlowMode() {
+    return kDriver.RIGHT_TRIGGER_BUTTON.getAsBoolean();
+  }
+
+  @Override
+  public boolean getIsFieldRelative() {
+    return !kDriver.LEFT_TRIGGER_BUTTON.getAsBoolean();
+  }
 }

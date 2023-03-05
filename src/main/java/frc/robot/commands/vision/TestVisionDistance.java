@@ -61,7 +61,7 @@ public class TestVisionDistance extends CommandBase{
    */
   @Override
   public void execute(){
-    m_drive.drive(m_speed, 0, 0, false);
+    m_drive.drive(m_speed, 0, 0, false, false);
     Pose2d newestPose = m_vision.getPose2d(m_currentPose, m_drive.getPose());
 
     // If the camera can see the apriltag

@@ -1,6 +1,11 @@
 package frc.robot.constants.swerve;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
+import lib.COTSFalconSwerveConstants;
 import frc.robot.Robot;
 import frc.robot.Robot.RobotId;
 import frc.robot.constants.Constants;
@@ -20,11 +25,17 @@ public class DriveConstants {
   public static double kDriveGearRatio = 6.75;
   public static double kSteerGearRatio = 21.43;
 
-  public static double kMaxSpeed = (FalconConstants.kMaxRpm / 60.0) / kDriveGearRatio * kWheelRadius * 2 * Math.PI;
+  /* Drive Motor Characterization Values 
+  * Divide SYSID values by 12 to convert from volts to percent output for CTRE */
+  public static final double kDriveKS = 0.32 / 12.0; // 0.65559
+  public static final double kDriveKV = 1.51 / 12.0; // 1.93074
+  public static final double kDriveKA = 0.27 / 12.0; // 0.00214
+
+  public static double kMaxSpeed = (FalconConstants.kMaxRpm / 60.0) * kWheelRadius * 2 * Math.PI / kDriveGearRatio;
 
   // Need to convert tangential velocity (the m/s of the edge of the robot) to angular velocity (the radians/s of the robot)
   // To do so, divide by the radius. The radius is the diagonal of the square chassis, diagonal = sqrt(2) * side_length.
-  public static double kMaxAngularSpeed = (kMaxSpeed * 2) / ((kTrackWidth/2) * Math.sqrt(2));
+  public static double kMaxAngularSpeed = kMaxSpeed / ((kTrackWidth/2) * Math.sqrt(2));
 
   // TODO: tune this better.
   public static double kMaxAngularAccel = 8 * 2 * Math.PI; // 8 rotations per second per second
@@ -32,6 +43,13 @@ public class DriveConstants {
   public static int kPigeon = 0;
 
   public static double kStartingHeadingDegrees = 180;
+
+  public static final SwerveDriveKinematics kKinematics = new SwerveDriveKinematics(
+    new Translation2d(DriveConstants.kTrackWidth / 2, DriveConstants.kTrackWidth / 2),
+    new Translation2d(DriveConstants.kTrackWidth / 2, -DriveConstants.kTrackWidth / 2),
+    new Translation2d(-DriveConstants.kTrackWidth / 2, DriveConstants.kTrackWidth / 2),
+    new Translation2d(-DriveConstants.kTrackWidth / 2, -DriveConstants.kTrackWidth / 2)
+  );
 
   public static int kDriveFrontLeft = 20;
   public static int kSteerFrontLeft = 15;
@@ -94,15 +112,81 @@ public class DriveConstants {
   public static double kSteerDBackRight = 0;
 
   // heading PID
-  public static double kHeadingP= 4.6;
-  public static double kHeadingI= 0;
-  public static double kHeadingD= 0.4;
+  public static double kHeadingP= 1;//4
+  public static double kHeadingD= 0;
+
+   //balance PID
+   public static double kBalanceP= 0.01;
+   public static double kBalanceI= 0;
+   public static double kBalanceD= 0;
+   public static final double kBalanceMaxOutput = 0.5;
+   public static final double kBalanceTolerance = 0.1;
+
+   //balance timer
+   public static double kBalanceEndTime = 0.8;
+   public static double kBalanceStartTime = 0.5;
+
+  //translational PID
+  public static double kTranslationalP = 0.25;
+  public static double kTranslationalD = 0;//0.001
+
+  //The PIDs for PathPlanner Command
+  public static double kPathplannerHeadingP = 0.02;
+  public static double kPathplannerHeadingD = 0;
+  
+  public static double kPathplannerTranslationalP = 0;
+  public static double kPathplannerTranslationalD = 0;
 
   // CAN
   public static String kDriveMotorCAN = Constants.kCanivoreCAN;
   public static String kSteerMotorCAN = Constants.kCanivoreCAN;
   public static String kSteerEncoderCAN = Constants.kCanivoreCAN;
   public static String kPigeonCAN = Constants.kCanivoreCAN;
+  
+
+  public static final COTSFalconSwerveConstants kModuleConstants = COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L2);
+
+  /* Swerve Current Limiting */
+  public static final int kAngleContinuousCurrentLimit = 25;
+  public static final int kAnglePeakCurrentLimit = 40;
+  public static final double kAnglePeakCurrentDuration = 0.1;
+  public static final boolean kAngleEnableCurrentLimit = true;
+
+  public static final int kDriveContinuousCurrentLimit = 35;
+  public static final int kDrivePeakCurrentLimit = 60;
+  public static final double kDrivePeakCurrentDuration = 0.1;
+  public static final boolean kDriveEnableCurrentLimit = true;
+
+  /* Motor inversions */
+  public static final boolean kDriveMotorInvert = kModuleConstants.driveMotorInvert;
+  public static final boolean kAngleMotorInvert = kModuleConstants.angleMotorInvert;
+
+  /* Neutral Modes */
+  public static final NeutralMode kDriveNeutralMode = NeutralMode.Brake;
+  public static final NeutralMode kAngleNeutralMode = NeutralMode.Coast;
+
+  /* Drive Motor PID Values */
+  public static final double kDriveP = 0.05;
+  public static final double kDriveI = 0.0;
+  public static final double kDriveD = 0.0;
+  public static final double kDriveF = 0.0;
+
+  /* Ramp values for drive motors in open and closed loop driving. */
+  // Open loop prevents throttle from changing too quickly. 
+  // It will limit it to time given (in seconds) to go from zero to full throttle.
+  // A small open loop ramp (0.25) helps with tread wear, tipping, etc
+  public static final double kOpenLoopRamp = 0.1;
+  public static final double kClosedLoopRamp = 0.0;
+
+  public static final double kWheelCircumference = kModuleConstants.wheelCircumference;
+  
+  /* Motor gear ratios */
+  public static final double kAngleGearRatio = kModuleConstants.angleGearRatio;
+
+  public static final boolean kInvertGyro = false; // Make sure gyro is CCW+ CW- // FIXME: Swerve
+  
+  public static final double kSlowDriveFactor = 0.3;
+  public static final double kSlowRotFactor = 0.1;
 
   /**
    * Updates the constants if the RobotId is not the competition robot.
@@ -123,8 +207,8 @@ public class DriveConstants {
       kDrivePFrontLeft = 2*2;
       kDriveIFrontLeft = 0;
       kDriveDFrontLeft = 0;
-      kSteerKSFrontLeft = 1;
-      kSteerKVFrontLeft = 0.5;
+      kSteerKSFrontLeft = 0.7380365018530551;
+      kSteerKVFrontLeft = 0.3777356557786064;
       kSteerPFrontLeft = 12;
       kSteerIFrontLeft = 0;
       kSteerDFrontLeft = 0;
@@ -138,8 +222,8 @@ public class DriveConstants {
       kDrivePFrontRight = 2*2;
       kDriveIFrontRight = 0;
       kDriveDFrontRight = 0;
-      kSteerKSFrontRight = 1;
-      kSteerKVFrontRight = 0.5;
+      kSteerKSFrontRight = 0.6206519356062554;
+      kSteerKVFrontRight = 0.36589750785689507;
       kSteerPFrontRight = 12;
       kSteerIFrontRight = 0;
       kSteerDFrontRight = 0;
@@ -168,8 +252,8 @@ public class DriveConstants {
       kDrivePBackRight = 2.2*2;
       kDriveIBackRight = 0;
       kDriveDBackRight = 0;
-      kSteerKSBackRight = 1;
-      kSteerKVBackRight = 0.5;
+      kSteerKSBackRight = 0.7506108061783936;
+      kSteerKVBackRight = 0.37750397997126794;
       kSteerPBackRight = 12;
       kSteerIBackRight = 0;
       kSteerDBackRight = 0;
