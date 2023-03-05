@@ -2,8 +2,8 @@ package frc.robot.controls;
 
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.BalanceSimple;
+import frc.robot.commands.GoToNode;
 import frc.robot.commands.SetFormationX;
 import frc.robot.constants.OIConstants;
 import frc.robot.constants.swerve.DriveConstants;
@@ -30,6 +30,11 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
     kDriver.get(Button.X).whileTrue(new SetFormationX(super.getDrivetrain()));
 
     kDriver.get(Button.B).onTrue(new BalanceSimple(super.getDrivetrain()));
+  }
+
+  @Override
+  public void configureControls(Operator operator){
+    kDriver.get(kDriver.LEFT_TRIGGER_BUTTON).whileTrue(new GoToNode(operator, getDrivetrain()));
   }
   
   @Override

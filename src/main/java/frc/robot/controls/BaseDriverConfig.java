@@ -122,6 +122,11 @@ public abstract class BaseDriverConfig {
    * Configures the controls for the controller.
    */
   public abstract void configureControls();
+  /**
+   * Configures the controls involving the operator (grid alignment).
+   * @param operator The operator
+   */
+  public abstract void configureControls(Operator operator);
 
   public abstract double getRawSideTranslation();
   public abstract double getRawForwardTranslation();

@@ -2,6 +2,7 @@ package frc.robot.controls;
 
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.commands.GoToNode;
 import frc.robot.commands.SetFormationX;
 import frc.robot.constants.OIConstants;
 import frc.robot.constants.swerve.DriveConstants;
@@ -25,6 +26,11 @@ public class MadCatzDriverConfig extends BaseDriverConfig {
   public void configureControls() { 
     kDriver.get(MadCatzButton.B1).whileTrue(new SetFormationX(super.getDrivetrain()));
     kDriver.get(MadCatzButton.B2).onTrue(new InstantCommand(() -> super.getDrivetrain().setPigeonYaw(DriveConstants.kStartingHeadingDegrees)));
+  }
+  
+  @Override
+  public void configureControls(Operator operator) { 
+    kDriver.get(MadCatzButton.B3).whileTrue(new GoToNode(operator, getDrivetrain()));
   }
   
   @Override

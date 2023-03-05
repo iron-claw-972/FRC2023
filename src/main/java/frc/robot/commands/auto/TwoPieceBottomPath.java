@@ -15,9 +15,9 @@ public class TwoPieceBottomPath extends SequentialCommandGroup{
   public TwoPieceBottomPath(Drivetrain m_drive, FourBarArm m_arm){
     addCommands(
       //deposit preloaded cone in high node
-      new PathPlannerCommand(PathGroupLoader.getPathGroup("To Center And Back"), 0, m_drive, true),
+      new PathPlannerCommand(PathGroupLoader.getPathGroup("To Center And Back"), 0, m_drive, true, true),
       //intake a cone 
-      new PathPlannerCommand(PathGroupLoader.getPathGroup("To Center And Back"), 1, m_drive, false)
+      new PathPlannerCommand(PathGroupLoader.getPathGroup("To Center And Back"), 1, m_drive, false, true)
       //deposit cone in high node
     );
   }

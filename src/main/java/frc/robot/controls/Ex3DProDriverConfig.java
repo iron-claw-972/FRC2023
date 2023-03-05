@@ -2,6 +2,7 @@ package frc.robot.controls;
 
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.commands.GoToNode;
 import frc.robot.commands.SetFormationX;
 import frc.robot.constants.OIConstants;
 import frc.robot.constants.swerve.DriveConstants;
@@ -26,7 +27,12 @@ public class Ex3DProDriverConfig extends BaseDriverConfig {
     kDriver.get(Ex3DProButton.B1).whileTrue(new SetFormationX(super.getDrivetrain()));
     kDriver.get(Ex3DProButton.B2).onTrue(new InstantCommand(() -> super.getDrivetrain().setPigeonYaw(DriveConstants.kStartingHeadingDegrees)));
   }
-  
+
+  @Override
+  public void configureControls(Operator operator) { 
+    kDriver.get(Ex3DProButton.B3).whileTrue(new GoToNode(operator, getDrivetrain()));
+  }
+
   @Override
   public double getRawSideTranslation() { 
     return -kDriver.get(Ex3DProAxis.X);     
