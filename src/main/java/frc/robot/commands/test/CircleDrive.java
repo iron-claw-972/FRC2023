@@ -29,13 +29,13 @@ public class CircleDrive extends CommandBase {
   @Override
   public void execute() {
     double currentTime = WPIUtilJNI.now() * 1e-6;
-    m_steerPosition = MathUtil.angleModulus(m_steerPosition + (currentTime - m_prevTime) * m_drive.getRequestedSteerVelocityEntry().getDouble(0) );
+    m_steerPosition = MathUtil.angleModulus(m_steerPosition + (currentTime - m_prevTime) * m_drive.getRequestedSteerVelocity(0) );
     m_drive.setModuleStates(new SwerveModuleState[] {
-      new SwerveModuleState(m_drive.getRequestedDriveVelocityEntry().getDouble(0),new Rotation2d(m_steerPosition)),
-      new SwerveModuleState(m_drive.getRequestedDriveVelocityEntry().getDouble(0),new Rotation2d(m_steerPosition)),
-      new SwerveModuleState(m_drive.getRequestedDriveVelocityEntry().getDouble(0),new Rotation2d(m_steerPosition)),
-      new SwerveModuleState(m_drive.getRequestedDriveVelocityEntry().getDouble(0),new Rotation2d(m_steerPosition))
-    });
+      new SwerveModuleState(m_drive.getRequestedDriveVelocity(0), new Rotation2d(m_steerPosition)),
+      new SwerveModuleState(m_drive.getRequestedDriveVelocity(0), new Rotation2d(m_steerPosition)),
+      new SwerveModuleState(m_drive.getRequestedDriveVelocity(0), new Rotation2d(m_steerPosition)),
+      new SwerveModuleState(m_drive.getRequestedDriveVelocity(0), new Rotation2d(m_steerPosition))
+    }, false);
     m_prevTime = currentTime;
   }
   

@@ -1,33 +1,30 @@
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Robot.RobotId;
+import frc.robot.commands.BalanceSimple;
 import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.commands.DepositTune;
-import frc.robot.commands.intake.OuttakeGamePiece;
-import frc.robot.commands.test.CircleDrive;
-import frc.robot.commands.test.DriveFeedForwardCharacterization;
-import frc.robot.commands.test.OdometryTestCommand;
-import frc.robot.commands.test.SteerFeedForwardCharacterizationSingle;
-import frc.robot.commands.test.TestDriveVelocity;
-import frc.robot.commands.test.TestHeadingPID;
-import frc.robot.commands.test.TestSteerAngle;
-import frc.robot.commands.vision.TestVisionAlignment;
-import frc.robot.commands.vision.TestVisionDistance;
+import frc.robot.commands.auto.EngageFromLeftDriverSide;
+import frc.robot.commands.auto.EngageFromRightDriverSide;
+import frc.robot.commands.auto.DepositThenPath;
+import frc.robot.commands.auto.PathPlannerCommand;
+import frc.robot.commands.scoring.PositionIntake;
+import frc.robot.commands.scoring.Stow;
+import frc.robot.commands.scoring.PositionIntake.Position;
+import frc.robot.commands.scoring.intake.Outtake;
 import frc.robot.constants.VisionConstants;
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.controls.BaseDriverConfig;
@@ -35,7 +32,7 @@ import frc.robot.controls.GameControllerDriverConfig;
 import frc.robot.controls.ManualController;
 import frc.robot.controls.Operator;
 import frc.robot.controls.TestController;
-import frc.robot.subsystems.DeployingBar;
+import frc.robot.subsystems.Bar;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
@@ -64,6 +61,7 @@ public class RobotContainer {
   private final ShuffleboardTab m_testTab = Shuffleboard.getTab("Test");
   private final ShuffleboardTab m_elevatorTab = Shuffleboard.getTab("Elevator");
   private final ShuffleboardTab m_intakeTab = Shuffleboard.getTab("Intake");
+  private final ShuffleboardTab m_barTab = Shuffleboard.getTab("Bar");
   
 
   private final Vision m_vision;
@@ -73,7 +71,7 @@ public class RobotContainer {
   private final FourBarArm m_arm;
   private final Intake m_intake;
   private final Elevator m_elevator;
-  private final DeployingBar m_deployingBar;
+  private final Bar m_deployingBar;
 
   // Controllers are defined here
   private final BaseDriverConfig m_driver;
@@ -88,6 +86,9 @@ public class RobotContainer {
     DriveConstants.update();
     VisionConstants.update();
 
+    // PowerDistribution m_PDModule = new PowerDistribution(1, ModuleType.kRev);
+    // m_PDModule.clearStickyFaults();
+
     m_vision = new Vision(m_visionTab, VisionConstants.kCameras);
 
     // Create Drivetrain, because every robot will have a drivetrain
@@ -99,17 +100,14 @@ public class RobotContainer {
 
       m_arm = new FourBarArm();
       m_intake = new Intake(m_intakeTab);
-      m_elevator = new Elevator(m_elevatorTab);
-      m_deployingBar = null; 
+      m_elevator = new Elevator(m_elevatorTab, ()->m_intake.containsGamePiece());
+      m_deployingBar = new Bar(m_barTab); 
 
       m_operator = new Operator();
-      m_testController = new TestController(m_arm, m_intake, m_elevator);
+      m_testController = new TestController(m_arm, m_intake, m_elevator, m_deployingBar);
       m_manualController = new ManualController(m_arm, m_intake, m_elevator);
 
-      m_operator.configureControls(m_intake);
-      m_operator.configureControls(m_arm);
-      //TODO: add back controls once deploying bar is installed
-      //m_operator.configureControls(m_deployingBar);
+      m_operator.configureControls(m_arm, m_intake, m_elevator, m_deployingBar, m_vision);
       m_testController.configureControls();
       m_manualController.configureControls();
 
@@ -134,6 +132,9 @@ public class RobotContainer {
     // load paths before auto starts
     PathGroupLoader.loadPathGroups();
 
+    // add camera display
+    CameraServer.startAutomaticCapture();
+
     m_driver.configureControls();
 
     LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
@@ -143,8 +144,6 @@ public class RobotContainer {
     m_autoTab.add("Auto Chooser", m_autoCommand);
 
     loadCommandSchedulerShuffleboard();
-    m_drive.setupDrivetrainShuffleboard();
-    m_drive.setupModulesShuffleboard();
     m_vision.setupVisionShuffleboard();
     m_driver.setupShuffleboard();
     
@@ -153,22 +152,12 @@ public class RobotContainer {
     m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive, m_driver));
   }
 
-  /** 
-   * Resets the yaw of the pigeon, unless it has already been reset. Or use force to reset it no matter what.
-   * 
-   * @param force if the yaw should be reset even if it already has been reset since robot enable.
-   */
-  public void initDriveYaw(boolean force) {
-    m_drive.initializePigeonYaw(force);
-  }
-
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    autoChooserUpdate();
     return m_autoCommand.getSelected();
   }
 
@@ -178,25 +167,8 @@ public class RobotContainer {
   public void addTestCommands() {
     GenericEntry testEntry = m_testTab.add("Test Results", false).getEntry();
     m_testTab.add("Cancel Command", new InstantCommand( () -> CommandScheduler.getInstance().cancelAll()));
-    m_testTab.add("Circle Drive", new CircleDrive(m_drive));
-    m_testTab.add("Drive FeedForward", new DriveFeedForwardCharacterization(m_drive));
-    m_testTab.add("Steer Single FeedForward", new SteerFeedForwardCharacterizationSingle(m_drive));
-    m_testTab.add("Test Drive Velocity", new TestDriveVelocity(m_drive, testEntry));
-    m_testTab.add("Heading PID", new TestHeadingPID(m_drive, testEntry));
-    m_testTab.add("Steer angle", new TestSteerAngle(m_drive, testEntry));
-    m_testTab.add("Odometry Test", new OdometryTestCommand(m_drive, new Transform2d(new Translation2d(1,1), new Rotation2d(Math.PI))));
-    m_testTab.add("Test vision (forward)", new TestVisionDistance(0.2, m_drive, m_vision));
-    m_testTab.add("Test vision (backward)", new TestVisionDistance(-0.2, m_drive, m_vision));
-    m_testTab.add("Align to 0 degrees", new TestVisionAlignment(0, m_drive, m_vision));
-    m_testTab.add("Align to 90 degrees", new TestVisionAlignment(Math.PI/2, m_drive, m_vision));
-    m_testTab.add("Align to -90 degrees", new TestVisionAlignment(-Math.PI/2, m_drive, m_vision));
-    m_testTab.add("Align to 180 degrees", new TestVisionAlignment(Math.PI, m_drive, m_vision));
-
-    SmartDashboard.putNumber("Deposit Elevator Extension", 0.0);
-    SmartDashboard.putNumber("Deposit Arm Extension", 0.0);
-    m_testTab.add("Tune Deposit Locations", new DepositTune(m_elevator, m_arm));
-    m_testTab.add("Outtake", new OuttakeGamePiece(m_intake));
-    m_testTab.add("Rotate Outtake", new OuttakeGamePiece(m_intake, true));
+    m_drive.addTestCommands(m_testTab, testEntry);
+    m_vision.addTestCommands(m_testTab, testEntry, m_drive);
   }
 
   /**
@@ -205,10 +177,32 @@ public class RobotContainer {
    * Do Nothing should stay the default, other autos are added with m_autoCommand.addOption()
    */
   public void autoChooserUpdate() {
-    m_autoCommand.setDefaultOption("Do Nothing", new PrintCommand("This will do nothing!"));
+
+    Position autoDepositPos = Position.TOP;
+
     // add commands below with: m_autoCommand.addOption("Example", new ExampleCommand());
+    m_autoCommand.setDefaultOption("Do Nothing", new PrintCommand("This will do nothing!"));
+    m_autoCommand.addOption("Figure 8", new PathPlannerCommand("Figure 8", 0, m_drive, true));
+    m_autoCommand.addOption("One Meter", new PathPlannerCommand("One Meter", 0, m_drive, true));
+    // m_autoCommand.addOption("To Center And Back", new PathPlannerCommand("To Center And Back", 0, m_drive));
+    // m_autoCommand.addOption("Grid 9 Mobility (no deposit)", new PathPlannerCommand("Grid 9 Mobility", 0, m_drive));
+
+    m_autoCommand.addOption("Hybrid Score", new PositionIntake(m_elevator, m_arm, ()->true, Position.BOTTOM).andThen(new Outtake(m_intake).withTimeout(5)).andThen(new Stow(m_intake, m_elevator, m_arm)));
+
+    m_autoCommand.addOption("Grid 1 Mobility", new DepositThenPath("Grid 1 Mobility", autoDepositPos, m_drive, m_elevator, m_arm, m_intake));
+    m_autoCommand.addOption("Grid 9 Mobility", new DepositThenPath("Grid 9 Mobility", autoDepositPos, m_drive, m_elevator, m_arm, m_intake));
+    m_autoCommand.addOption("Deposit No Mobility", new DepositThenPath("Grid 9 No Mobility", autoDepositPos, m_drive, m_elevator, m_arm, m_intake));
+
+    // m_autoCommand.addOption("BottomSimpleLine1", new PathPlannerCommand("Bottom Simple Line1", 0, m_drive));
     
-  }
+    m_autoCommand.addOption("Grid 9 Engage", new DepositThenPath("Grid 9 Engage", autoDepositPos, m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceSimple(m_drive)));
+    m_autoCommand.addOption("Grid 6 Engage (no mobility)", new DepositThenPath("Grid 6 Engage No Mobility", autoDepositPos, m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceSimple(m_drive)));
+    m_autoCommand.addOption("Grid 6 Engage (careful)", new DepositThenPath("Grid 6 Engage", autoDepositPos, m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceSimple(m_drive)));    
+    m_autoCommand.addOption("Grid 1 Engage", new DepositThenPath("Grid 1 Engage", autoDepositPos, m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceSimple(m_drive)));
+  
+    m_autoCommand.addOption("Engage Left", new EngageFromLeftDriverSide(m_drive));
+    m_autoCommand.addOption("Engage Right", new EngageFromRightDriverSide(m_drive));
+   }
 
   /**
    * Loads the command scheduler shuffleboard which will add event markers whenever a command finishes, ends, or is interrupted.
