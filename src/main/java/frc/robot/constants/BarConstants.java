@@ -8,7 +8,7 @@ public class BarConstants {
   public static final IdleMode kMotorIdleMode = IdleMode.kBrake;
   public static final double kGearRatio = (25.0 / 1.0) * (32.0 / 18.0); // 44.44:1
 
-  public static final double kMotorEncoderDistancePerRotation = 360 / 4096; // FIXME
+  public static final double kMotorEncoderDistancePerRotation = 360.0;//360.0 / 4096.0; // FIXME
 
   public static final double kP = 0.05;
   public static final double kI = 0;

@@ -12,6 +12,7 @@ import frc.robot.commands.scoring.PositionIntake.Position;
 import frc.robot.commands.scoring.arm.ExtendArm;
 import frc.robot.commands.scoring.Stow;
 import frc.robot.commands.scoring.bar.CalibrateBar;
+import frc.robot.commands.scoring.bar.MoveBar;
 import frc.robot.commands.scoring.bar.ToggleBar;
 import frc.robot.commands.scoring.elevator.CalibrateElevator;
 import frc.robot.commands.scoring.elevator.MoveElevator;
@@ -23,6 +24,7 @@ import frc.robot.subsystems.Bar;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Bar.BarPosition;
 import frc.robot.util.Node;
 import frc.robot.util.Vision;
 import lib.controllers.GameController;
@@ -50,11 +52,11 @@ public class Operator {
 
     if (bar != null) {
       m_operator.get(Button.START).onTrue(new CalibrateBar(bar));
-      m_operator.get(Button.RIGHT_JOY).onTrue(new ToggleBar(bar));
+      m_operator.get(DPad.UP).onTrue(new MoveBar(bar, BarPosition.DEPLOY)).onFalse(new MoveBar(bar, BarPosition.STOW));
     }
 
 
-    m_operator.get(DPad.UP).onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
+    m_operator.get(Button.LEFT_JOY).and(m_operator.get(Button.RIGHT_JOY)).onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
 
     //top
     m_operator.get(Button.Y).onTrue(new PositionIntake(elevator, arm, intake::hasCone, Position.TOP));
