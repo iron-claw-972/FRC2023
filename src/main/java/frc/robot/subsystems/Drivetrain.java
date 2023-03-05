@@ -308,6 +308,11 @@ public class Drivetrain extends SubsystemBase {
     }
   }
 
+  PIDController m_balancePID = new PIDController(1, 0, 0.006);
+  public PIDController getBalanceController() {
+    return m_balancePID;
+  }
+
   /**
    * Sets the optimize state for all swerve modules.
    * Optimizing the state means the modules will not turn the steer motors more than 90 degrees for any one movement.
@@ -538,6 +543,8 @@ public class Drivetrain extends SubsystemBase {
     if (!Constants.kUseTelemetry) return;
 
     m_drivetrainTab.add("Field", m_fieldDisplay);
+
+    m_drivetrainTab.add("Balance PID", m_balancePID);
 
     // inputs
     m_headingEntry = m_drivetrainTab.add("Set Heading (-pi to pi)", 0).getEntry();

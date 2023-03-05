@@ -189,6 +189,15 @@ public class RobotContainer {
 
     m_autoCommand.addOption("Hybrid Score", new PositionIntake(m_elevator, m_arm, ()->true, Position.BOTTOM).andThen(new Outtake(m_intake).withTimeout(5)).andThen(new Stow(m_intake, m_elevator, m_arm)));
 
+    // m_autoCommand.addOption("HYBRID MOBILITY", 
+    //   new PositionIntake(m_elevator, m_arm, ()->true, Position.BOTTOM).andThen(
+    //   new PathPlannerCommand("Grid 1 Mobility", 0, m_drive, true).andThen(
+    //   new Outtake(m_intake).withTimeout(4).andThen(
+    //   new Stow(m_intake, m_elevator, m_arm).andThen(
+    //     new PathPlannerCommand("Grid 1 Mobility", 1, m_drive)
+    //   )))
+    // ));
+
     m_autoCommand.addOption("Grid 1 Mobility", new DepositThenPath("Grid 1 Mobility", autoDepositPos, m_drive, m_elevator, m_arm, m_intake));
     m_autoCommand.addOption("Grid 9 Mobility", new DepositThenPath("Grid 9 Mobility", autoDepositPos, m_drive, m_elevator, m_arm, m_intake));
     m_autoCommand.addOption("Deposit No Mobility", new DepositThenPath("Grid 9 No Mobility", autoDepositPos, m_drive, m_elevator, m_arm, m_intake));
@@ -203,6 +212,8 @@ public class RobotContainer {
     m_autoCommand.addOption("Engage Left", new EngageFromLeftDriverSide(m_drive));
     m_autoCommand.addOption("Engage Right", new EngageFromRightDriverSide(m_drive));
    }
+
+  
 
   /**
    * Loads the command scheduler shuffleboard which will add event markers whenever a command finishes, ends, or is interrupted.
