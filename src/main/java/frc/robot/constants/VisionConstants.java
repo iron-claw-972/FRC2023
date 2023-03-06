@@ -46,21 +46,21 @@ public class VisionConstants {
       ));
     } else {
       kCameras = new ArrayList<Pair<String, Transform3d>>(List.of(
-        // new Pair<String, Transform3d>(
-        //   "Camera_1",
-        //   new Transform3d(
-        //     new Translation3d(Units.inchesToMeters(1.25), Units.inchesToMeters(7.125), Units.inchesToMeters(21)),
-        //     new Rotation3d(0, 0, Math.PI)
-        //   )
-        // ),
+        new Pair<String, Transform3d>(
+          "Camera_1",
+          new Transform3d(
+            new Translation3d(Units.inchesToMeters(1.25), Units.inchesToMeters(7.125), Units.inchesToMeters(21)),
+            new Rotation3d(0, 0, Math.PI)
+          )
+        ),
 
-        // new Pair<String, Transform3d>(
-        //   "Camera_2",
-        //   new Transform3d(
-        //     new Translation3d(Units.inchesToMeters(1.25), Units.inchesToMeters(-7.125), Units.inchesToMeters(21)),
-        //     new Rotation3d(0, 0, Math.PI)
-        //   )
-        // )
+        new Pair<String, Transform3d>(
+          "Camera_2",
+          new Transform3d(
+            new Translation3d(Units.inchesToMeters(1.25), Units.inchesToMeters(-7.125), Units.inchesToMeters(21)),
+            new Rotation3d(0, 0, Math.PI)
+          )
+        )
       ));
     }
   }
@@ -70,13 +70,6 @@ public class VisionConstants {
   public static final Matrix<N3, N1> kBaseVisionPoseStdDevs = new MatBuilder<>(Nat.N3(), Nat.N1()).fill(
     0.9, // x in meters (default=0.9)
     0.9, // y in meters (default=0.9)
-    0.9 // heading in radians (default=0.9)
-  );
-  // How much to trust vision measurements when going over the charge station
-  // x is going to be the least accurate, and angle should be correct
-  public static final Matrix<N3, N1> kChargeStationVisionPoseStdDevs = new MatBuilder<>(Nat.N3(), Nat.N1()).fill(
-    0.01, // x in meters
-    0.2, // y in meters
     0.9 // heading in radians (default=0.9)
   );
 

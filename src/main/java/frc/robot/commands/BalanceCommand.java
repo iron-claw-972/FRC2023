@@ -48,8 +48,6 @@ public class BalanceCommand extends CommandBase {
     }
 
     System.out.println("BALANCING: " + (m_usePitch ? "PITCH" : "ROLL") + (m_inverted ? "INVERTED" : ""));
-
-    m_drive.setIsBalancingOnChargeStation(true);
   }
   
   @Override
@@ -81,6 +79,5 @@ public class BalanceCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_drive.stop();
-    m_drive.setIsBalancingOnChargeStation(false);
   }
 }   

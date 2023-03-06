@@ -122,10 +122,6 @@ public class Robot extends TimedRobot {
     if (m_autoCommand != null) {
       m_autoCommand.schedule();
     }
-
-    // Makes it trust vision more if it goes over the charge station
-    // TODO: Change this to whatever commands do that
-    m_robotContainer.setChargeStationAuto(m_autoCommand instanceof DefaultDriveCommand);
   }
 
   /**
@@ -146,9 +142,6 @@ public class Robot extends TimedRobot {
     if (m_autoCommand != null) {
       m_autoCommand.cancel();
     }
-
-    // Trust vision normally in teleop
-    m_robotContainer.setChargeStationAuto(false);
   }
 
   /**
