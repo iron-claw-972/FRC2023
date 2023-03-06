@@ -40,15 +40,15 @@ public class DriveFeedForwardCharacterization extends CommandBase {
     for (int i = 0; i < 4; i++) {
       m_drive.m_modules[i].setDriveVoltage(m_voltage);
     }
-    m_drive.m_modules[0].setSteerAngle(new Rotation2d(Units.degreesToRadians(135)));
-    m_drive.m_modules[1].setSteerAngle(new Rotation2d(Units.degreesToRadians(45)));
-    m_drive.m_modules[2].setSteerAngle(new Rotation2d(Units.degreesToRadians(225)));
-    m_drive.m_modules[3].setSteerAngle(new Rotation2d(Units.degreesToRadians(315)));
+    m_drive.m_modules[0].setAngle(new Rotation2d(Units.degreesToRadians(135)));
+    m_drive.m_modules[1].setAngle(new Rotation2d(Units.degreesToRadians(45)));
+    m_drive.m_modules[2].setAngle(new Rotation2d(Units.degreesToRadians(225)));
+    m_drive.m_modules[3].setAngle(new Rotation2d(Units.degreesToRadians(315)));
 
     if (m_timer.get() > TestConstants.kDriveFeedForwardAccelerationTimeBuffer) {
       for (int i=0; i<4; i++) {
         m_feedForwardCharacterizationData[i].add(
-          m_drive.m_modules[i].getDriveVelocity(), m_voltage
+          m_drive.m_modules[i].getState().speedMetersPerSecond, m_voltage
         );
       }
     }
@@ -83,11 +83,11 @@ public class DriveFeedForwardCharacterization extends CommandBase {
         m_feedForwardCharacterizationData[i].getVariance());
     }
     
-    m_drive.getDriveStaticFeedforwardEntry().setDouble(
-      m_drive.getDriveStaticFeedforwardArray()[m_drive.getModuleChooser().getSelected().getId()]
+    m_drive.setDriveStaticFeedforwardEntry(
+      m_drive.getDriveStaticFeedforwardArray()[m_drive.getModuleChoosen().getModuleIndex()]
     );
-    m_drive.getDriveVelocityFeedforwardEntry().setDouble(
-      m_drive.getDriveVelocityFeedforwardArray()[m_drive.getModuleChooser().getSelected().getId()]
+    m_drive.setDriveVelocityFeedforwardEntry(
+      m_drive.getDriveVelocityFeedforwardArray()[m_drive.getModuleChoosen().getModuleIndex()]
     );
     
     m_drive.stop();

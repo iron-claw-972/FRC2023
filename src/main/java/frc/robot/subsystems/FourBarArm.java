@@ -23,7 +23,7 @@ public class FourBarArm extends SubsystemBase {
     // configure the motor
     m_motor = new CANSparkMax(ArmConstants.kMotorId, MotorType.kBrushless);
     m_motor.setIdleMode(IdleMode.kBrake);
-    m_motor.setInverted(true); 
+    m_motor.setInverted(false); 
 
     // configure the encoder
     m_absEncoder = new DutyCycleEncoder(ArmConstants.kAbsEncoderId); 
@@ -36,10 +36,9 @@ public class FourBarArm extends SubsystemBase {
 
     // TODO: restore stowed position
     // setArmSetpoint(ArmConstants.kStowedAbsEncoderPos);
-    setArmSetpoint(getAbsEncoderPos());
+    setArmSetpoint(ArmConstants.kStowPos);
 
-    SmartDashboard.putData("4 bar arm PID", m_pid); 
-
+    if (Constants.kUseTelemetry) SmartDashboard.putData("4 bar arm PID", m_pid); 
   }
 
   /**
@@ -55,11 +54,12 @@ public class FourBarArm extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Arm Abs Encoder Value", getAbsEncoderPos());
+    if (Constants.kUseTelemetry) SmartDashboard.putNumber("Arm Abs Encoder Value", getAbsEncoderPos());
     if(m_enabled) {
       
       // calculate the PID power level
-      double pidPower = m_pid.calculate(getAbsEncoderPos(),MathUtil.clamp(m_pid.getSetpoint(),ArmConstants.kStowedAbsEncoderPos, ArmConstants.kMaxArmExtensionAbsEncoderPos));
+      double pidPower = m_pid.calculate(getAbsEncoderPos(), MathUtil.clamp(m_pid.getSetpoint(), ArmConstants.kMaxArmExtensionPos, ArmConstants.kStowPos));
+      if (Constants.kLogging) LogManager.addDouble("Four Bar/pidOutput", pidPower);
       // calculate the feedforward power (nothing for now)
       double feedforwardPower = 0.0;
 
@@ -78,7 +78,7 @@ public class FourBarArm extends SubsystemBase {
     return m_pid.atSetpoint();
   }
 
-  public void setMotorPower(double power){
+  public void setMotorPower(double power) {
     power = MathUtil.clamp(power, ArmConstants.kMinMotorPower, ArmConstants.kMaxMotorPower);
     m_motor.set(power);
     if (Constants.kLogging) LogManager.addDouble("Four Bar/motor power", power);
@@ -88,9 +88,8 @@ public class FourBarArm extends SubsystemBase {
     m_enabled = enable;
   }
 
-
   public double getAbsEncoderPos(){
-    return m_absEncoder.getAbsolutePosition() * -1; 
+    return m_absEncoder.getAbsolutePosition(); 
   }
 
   public void updateLogs(){

@@ -70,9 +70,16 @@ public class VisionConstants {
     0.9 // heading in radians (default=0.9)
   );
 
+  public static final Matrix<N3, N1> kChargeStationVisionPoseStdDevs = new MatBuilder<>(Nat.N3(), Nat.N1()).fill(
+    0.01, // x in meters
+    0.01, // y in meters
+    0.01 // heading in radians
+  );
+
   // Increasing this makes pose estimation trust vision measurements less as distance from Apriltags increases
   // This is how much is added to std dev for vision when closest visible Apriltag is 1 meter away
-  public static final double kVisionPoseStdDevFactor = 0.1;
+   //TODO: how much? was 0.1 but richie had zero, WPI recommends not to include measurements >1 m, so maybe should be higher
+  public static final double kVisionPoseStdDevFactor = 0.01;
 
   public static final double kFieldLength = Units.inchesToMeters(54*12 + 3.25);
   public static final double kFieldWidth = Units.inchesToMeters(26*12 + 3.5);

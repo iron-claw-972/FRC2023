@@ -7,15 +7,16 @@ import frc.robot.constants.ArmConstants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
+import frc.robot.subsystems.Elevator.ElevatorMode;
 
 public class DepositTune extends CommandBase {
-  Elevator m_elevator; 
+  Elevator m_elevator;
   FourBarArm m_arm;
 
   double m_height = 0.0;
   double m_position = 0.0;
 
-  boolean m_elevatorDone = false; 
+  boolean m_elevatorDone = false;
 
   /**
    * Moves the elevator and arm to the positions indicated by Smartdashboard
@@ -36,15 +37,16 @@ public class DepositTune extends CommandBase {
     m_position = SmartDashboard.getNumber("Deposit Arm Extension", 0);
 
     // make sure the parameters are sane
-    m_height = MathUtil.clamp(m_height, ElevatorConstants.kMinExtension, ElevatorConstants.kMaxExtension);
-    m_position = MathUtil.clamp(m_position, ArmConstants.kStowedAbsEncoderPos, ArmConstants.kMaxArmExtensionAbsEncoderPos); 
+    m_height = MathUtil.clamp(m_height, 0, ElevatorConstants.kMaxPosition);
+    m_position = MathUtil.clamp(m_position, ArmConstants.kStowPos, ArmConstants.kMaxArmExtensionPos); 
 
     // report the trimmed values on the dashboard
     SmartDashboard.putNumber("Deposit Elevator Extension", m_height);
     SmartDashboard.putNumber("Deposit Arm Extension", m_position);
 
     // move the elevator to the desired position
-    m_elevator.setTargetExtension(m_height);
+    m_elevator.setDesiredPosition(m_height);
+    m_elevator.setMode(ElevatorMode.POSITION);
 
     m_elevatorDone = false;
   }
@@ -52,7 +54,7 @@ public class DepositTune extends CommandBase {
   @Override
   public void execute(){
     // implement a trivial sequential command
-    if(!m_elevatorDone && m_elevator.atSetpoint()){
+    if(!m_elevatorDone && m_elevator.reachedDesiredPosition()){
       m_elevatorDone = true; 
       m_arm.setArmSetpoint(m_position);
     }
