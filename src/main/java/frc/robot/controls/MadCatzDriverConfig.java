@@ -51,5 +51,15 @@ public class MadCatzDriverConfig extends BaseDriverConfig {
   public double getRawHeadingMagnitude() { 
     return kDriver.get(MadCatzAxis.SLIDER);
   }
+
+  @Override
+  public boolean getIsSlowMode() {
+    return kDriver.get(MadCatzButton.B6).getAsBoolean();
+  }
+
+  @Override
+  public boolean getIsFieldRelative() {
+    return !kDriver.get(MadCatzButton.B7).getAsBoolean();
+  }
   
 }

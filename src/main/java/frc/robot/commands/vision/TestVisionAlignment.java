@@ -33,7 +33,7 @@ public class TestVisionAlignment extends CommandBase{
   public void execute() {
     m_mostRecentAngle = getAngle();
     double speed = m_drive.getRotationController().calculate(m_mostRecentAngle, m_setpoint);
-    m_drive.drive(0, 0, speed, false);
+    m_drive.drive(0, 0, speed, false, false);
   }
 
   @Override
