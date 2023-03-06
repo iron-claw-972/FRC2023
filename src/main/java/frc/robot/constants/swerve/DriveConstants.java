@@ -158,7 +158,7 @@ public class DriveConstants {
   public static final boolean kDriveEnableCurrentLimit = true;
 
   /* Motor inversions */
-  public static final boolean kDriveMotorInvert = kModuleConstants.driveMotorInvert;
+  public static final boolean kDriveMotorInvert = true;//kModuleConstants.driveMotorInvert;
   public static final boolean kAngleMotorInvert = kModuleConstants.angleMotorInvert;
 
   /* Neutral Modes */

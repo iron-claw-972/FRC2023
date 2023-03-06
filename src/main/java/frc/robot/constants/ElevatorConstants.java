@@ -20,7 +20,7 @@ public class ElevatorConstants {
     public static final int kBottomLimitSwitchPort = 8;
     public static final int kTopLimitSwitchPort = 9;
 
-    public static final double kPositionTolerance = 0.01;
+    public static final double kPositionTolerance = 0.2;
     public static final double kVelocityTolerance = 0.05; // FIXME: Elevator
     
     // Whether limit switch is normally-closed (activated = open circuit) or normally-open (activated = closed circuit)
@@ -75,13 +75,14 @@ public class ElevatorConstants {
 
     public static final double kIntakeConeHeight = Conversions.ElevatorExtensionToHeight(Units.inchesToMeters(4));
     public static final double kIntakeCubeHeight = kIntakeConeHeight;
-    public static final double kTopConeHeight = Conversions.ElevatorExtensionToHeight(kMaxPosition);
+    public static final double kTopConeHeight = Conversions.ElevatorExtensionToHeight(Units.inchesToMeters(46));
+    
     public static final double kTopCubeHeight = kTopConeHeight;
     public static final double kMiddleConeHeight = Units.inchesToMeters(35);
     public static final double kMiddleCubeHeight = kMiddleConeHeight;
     public static final double kBottomConeHeight = Conversions.ElevatorExtensionToHeight(Units.inchesToMeters(6));
     public static final double kBottomCubeHeight = kBottomConeHeight;
-    public static final double kShelfConeHeight = Units.inchesToMeters(56.725);
+    public static final double kShelfConeHeight = Units.inchesToMeters(58.225);
     public static final double kShelfCubeHeight = kShelfConeHeight;
     public static final double kStowHeight = Conversions.ElevatorExtensionToHeight(Units.inchesToMeters(0));
 

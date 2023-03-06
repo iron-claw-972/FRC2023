@@ -57,15 +57,15 @@ public abstract class BaseDriverConfig {
   }
 
   public double getForwardTranslation() {
-    return -Functions.expoMS(MathUtil.applyDeadband(getRawForwardTranslation(), OIConstants.kDeadband), 2) * DriveConstants.kMaxSpeed * m_translationalSensitivity;
+    return Functions.expoMS(MathUtil.applyDeadband(getRawForwardTranslation(), OIConstants.kDeadband), 2) * DriveConstants.kMaxSpeed * m_translationalSensitivity;
   }
 
   public double getSideTranslation() {
-    return -Functions.expoMS(MathUtil.applyDeadband(getRawSideTranslation(), OIConstants.kDeadband), 2) * DriveConstants.kMaxSpeed * m_translationalSensitivity;
+    return Functions.expoMS(MathUtil.applyDeadband(getRawSideTranslation(), OIConstants.kDeadband), 2) * DriveConstants.kMaxSpeed * m_translationalSensitivity;
   }
   
   public double getRotation() {
-    return Functions.expoMS(MathUtil.applyDeadband(getRawRotation(), OIConstants.kDeadband), 2) * DriveConstants.kMaxAngularSpeed * m_rotationSensitivity;
+    return -Functions.expoMS(MathUtil.applyDeadband(getRawRotation(), OIConstants.kDeadband), 2) * DriveConstants.kMaxAngularSpeed * m_rotationSensitivity;
   }
 
   public double getHeading() {
@@ -122,11 +122,6 @@ public abstract class BaseDriverConfig {
    * Configures the controls for the controller.
    */
   public abstract void configureControls();
-  /**
-   * Configures the controls involving the operator (grid alignment).
-   * @param operator The operator
-   */
-  public abstract void configureControls(Operator operator);
 
   public abstract double getRawSideTranslation();
   public abstract double getRawForwardTranslation();

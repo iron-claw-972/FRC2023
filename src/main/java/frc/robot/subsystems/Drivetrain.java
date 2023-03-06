@@ -99,7 +99,7 @@ public class Drivetrain extends SubsystemBase {
   // modules needed to distinguish in chooser
   private Module m_prevModule;
 
-  boolean m_visionEnabled = false;
+  boolean m_visionEnabled = true;
 
   /**
    * Creates a new Swerve Style Drivetrain.
@@ -306,6 +306,11 @@ public class Drivetrain extends SubsystemBase {
     for (int i = 0; i < 4; i++) {
       m_modules[i].enableStateDeadband(stateDeadBand);
     }
+  }
+
+  PIDController m_balancePID = new PIDController(1, 0, 0.006);
+  public PIDController getBalanceController() {
+    return m_balancePID;
   }
 
   /**
@@ -539,6 +544,8 @@ public class Drivetrain extends SubsystemBase {
 
     m_drivetrainTab.add("Field", m_fieldDisplay);
 
+    m_drivetrainTab.add("Balance PID", m_balancePID);
+
     // inputs
     m_headingEntry = m_drivetrainTab.add("Set Heading (-pi to pi)", 0).getEntry();
     m_xPosEntry = m_drivetrainTab.add("Input X pos(m)",0).getEntry();
@@ -564,6 +571,8 @@ public class Drivetrain extends SubsystemBase {
     m_drivetrainTab.addNumber("Gyro X", () -> getAngularRate(0));
     m_drivetrainTab.addNumber("Gyro Y", () -> getAngularRate(1));
     m_drivetrainTab.addNumber("Gyro Z", () -> getAngularRate(2));
+
+    m_drivetrainTab.addNumber("Chassis Velocity", () -> getChassisSpeedsMagnitude());
   }
 
   /**
