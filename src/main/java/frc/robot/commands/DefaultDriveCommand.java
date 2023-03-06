@@ -1,6 +1,9 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.controls.BaseDriverConfig;
 import frc.robot.subsystems.Drivetrain;
 
@@ -8,31 +11,33 @@ import frc.robot.subsystems.Drivetrain;
  * Default drive command. Drives robot using driver controls.
  */
 public class DefaultDriveCommand extends CommandBase {
-
-  private final Drivetrain m_drive;
+  private final Drivetrain m_swerve;    
   private final BaseDriverConfig m_driver;
-  
-  public DefaultDriveCommand(Drivetrain drive, BaseDriverConfig driver) {
-    m_drive = drive;
+
+  public DefaultDriveCommand(
+    Drivetrain swerve,
+    BaseDriverConfig driver
+  ) {
+    m_swerve = swerve;
     m_driver = driver;
-    
-    addRequirements(drive);
+    addRequirements(swerve);
   }
-  
+
   @Override
   public void execute() {
-    m_drive.setAllOptimize(true);
     
-    m_driver.updateSettings();
-    double xSpeed = m_driver.getForwardTranslation();
-    double ySpeed = m_driver.getSideTranslation();
-    double rot = m_driver.getRotation();
+    double slowFactor = m_driver.getIsSlowMode() ? DriveConstants.kSlowDriveFactor : 1;
+    double slowRotFactor = m_driver.getIsSlowMode() ? DriveConstants.kSlowRotFactor : 1;
 
-    m_drive.drive(xSpeed, ySpeed, rot, true);
-  }
-  
-  @Override
-  public void end(boolean interrupted) {
-    m_drive.drive(0.0, 0.0, 0.0, false);
+    int reversedForRed = DriverStation.getAlliance() == Alliance.Blue ? -1 : 1;
+
+    /* Drive */
+    m_swerve.drive(
+      m_driver.getForwardTranslation() * slowFactor * reversedForRed,
+      m_driver.getSideTranslation() * slowFactor * reversedForRed,
+      m_driver.getRotation() * slowRotFactor,
+      m_driver.getIsFieldRelative(),
+      true
+    );
   }
 }

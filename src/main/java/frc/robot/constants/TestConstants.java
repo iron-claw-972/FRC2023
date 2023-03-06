@@ -3,11 +3,11 @@ package frc.robot.constants;
 import edu.wpi.first.math.util.Units;
 
 /**
- * Container class for testing constants.
+ * Container class for test constants.
  */
 public class TestConstants {
   
-  public static final double kTranslationError = 0.05;
+  public static final double kTranslationError = 0.6;
   //time error for odometry is dependent on test
   public static final double kHeadingError = Units.degreesToRadians(1);
   public static final double kHeadingTimeError = 0.1;

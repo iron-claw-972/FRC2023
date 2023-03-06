@@ -47,7 +47,7 @@ public enum ModuleType {
    * 1 - FRONT_RIGHT
    * 2 - BACK_LEFT
    * 3 - BACK_RIGHT
-   * @deprecated Instead of ModuleType.getID(), used ModuleType.id
+   * @deprecated Instead of ModuleType.id(), used ModuleType.id
    * @return the ID for the swerve module type.
    */
   @Deprecated

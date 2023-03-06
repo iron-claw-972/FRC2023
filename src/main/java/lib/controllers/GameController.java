@@ -13,6 +13,17 @@ public class GameController extends Controller {
       ALL_DOWN = get(DPad.DOWN).or(get(DPad.DOWN_LEFT)).or(get(DPad.DOWN_RIGHT)),
       ALL_LEFT = get(DPad.LEFT).or(get(DPad.UP_LEFT)).or(get(DPad.DOWN_LEFT)),
       ALL_RIGHT = get(DPad.RIGHT).or(get(DPad.UP_RIGHT)).or(get(DPad.DOWN_RIGHT));
+    
+  public final BooleanSupplier 
+    LEFT_STICK_LEFT = () -> get(Axis.LEFT_X) < -0.75,
+    LEFT_STICK_RIGHT = () -> get(Axis.LEFT_X) > 0.75,
+    LEFT_STICK_UP = () -> get(Axis.LEFT_Y) < -0.75,
+    LEFT_STICK_DOWN = () -> get(Axis.LEFT_Y) > 0.75;
+  public final BooleanSupplier 
+    RIGHT_STICK_LEFT = () -> get(Axis.RIGHT_X) < -0.75,
+    RIGHT_STICK_RIGHT = () -> get(Axis.RIGHT_X) > 0.75,
+    RIGHT_STICK_UP = () -> get(Axis.RIGHT_Y) < -0.75,
+    RIGHT_STICK_DOWN = () -> get(Axis.RIGHT_Y) > 0.75;
 
   public GameController(int port) {
     super(port);
@@ -81,24 +92,16 @@ public class GameController extends Controller {
     }
   }
 
-  public JoystickButton get(Button button) {
-    return new JoystickButton(m_controller, button.id);
+  public Trigger get(Button button) {
+    return new Trigger(() -> m_controller.getRawButton(button.id));
   }
 
   public double get(Axis axis) {
     return m_controller.getRawAxis(axis.id);
   }
 
-  public POVButton get(DPad dPad) {
-    return new POVButton(m_controller, dPad.angle);
-  }
-
-  public Trigger get(BooleanSupplier condition) {
-    return new Trigger(condition);
-  }
-
-  public Trigger get(Trigger trigger) {
-    return trigger;
+  public Trigger get(DPad dPad) {
+    return new Trigger(() -> m_controller.getPOV() == dPad.angle);
   }
 
   public Joystick get() {

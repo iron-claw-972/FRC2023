@@ -1,5 +1,6 @@
 package frc.robot.util;
 
+import edu.wpi.first.math.MathUtil;
 import frc.robot.constants.OIConstants;
 
 /**
@@ -50,21 +51,6 @@ public class Functions {
     }
     return finVal;
   }
-  
-  /**
-   * calculates angle of the positive x direction to the origin to the point
-   * defaults to 0 if point given is (0,0)
-   * 
-   * @param x X coordinate
-   * @param y Y coordinate
-   * @return angle of points in radians 
-   * 
-   */
-  public static double calculateAngle(double x, double y) {
-    if (x > 0) return Math.atan(y/x);
-    if (x < 0) return Math.atan(y/x) + Math.PI;
-    return Math.signum(y)* Math.PI/2;
-  }
 
   /**
    * Calculates a points distance from the origin
@@ -76,6 +62,24 @@ public class Functions {
    */
   public static double calculateHypotenuse(double x, double y) {
     return Math.pow(Math.pow(x,2)+Math.pow(y,2), 0.5);
+  }
+
+  /**
+   * Calculates Midpoint of two numbers on modulus number line
+   * 
+   * @param num1 first number
+   * @param num2 second number
+   * @param lowerBound lower bound of modulus number line
+   * @param upperBound upper bound of modulus number line
+   * @return midpoint of 2 numbers on modulus number line
+   */
+  public static double modulusMidpoint(double num1, double num2, double lowerBound, double upperBound){
+    num1 = MathUtil.inputModulus(num1, lowerBound, upperBound);
+    num2 = MathUtil.inputModulus(num2, lowerBound, upperBound);
+    if (Math.abs(num1-num2) > (upperBound-lowerBound)/2){
+      return MathUtil.inputModulus((num1+num2)/2 + (upperBound-lowerBound)/2, lowerBound, upperBound);
+    }
+    return (num1+num2)/2;
   }
   
 }

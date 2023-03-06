@@ -1,29 +1,26 @@
 package frc.robot.commands.test;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.constants.TestConstants;
 import frc.robot.subsystems.Drivetrain;
 
 /**
  * Tests the odometry of the robot by driving a certain distance and calculating the error.
  */
-public class OdometryTestCommand extends CommandBase {
+public class GoToPoseTest extends CommandBase {
 
-  private final Drivetrain m_drive; 
+  private Drivetrain m_drive; 
   
-  private Pose2d m_startPose;
   private double m_startTime;
   private Pose2d m_finalPose;
-  private Transform2d m_distanceToMove;
   private Pose2d m_error;
   
-  public OdometryTestCommand(Drivetrain drive, Transform2d distanceToMove) {
-    m_drive = drive; 
-    // finalPose is position after robot moves from current position-- startPose-- by the values that are inputted-- distanceToMove
-    m_distanceToMove = distanceToMove;
+  public GoToPoseTest(Drivetrain drive) {
+    m_drive = drive;
     
     addRequirements(drive);
   }
@@ -31,8 +28,11 @@ public class OdometryTestCommand extends CommandBase {
   @Override
   public void initialize() {
     m_startTime = Timer.getFPGATimestamp();
-    m_startPose = m_drive.getPose();
-    m_finalPose = m_startPose.transformBy(m_distanceToMove);
+    m_finalPose = new Pose2d(
+      m_drive.getRequestedXPos(m_drive.getPose().getX()), m_drive.getRequestedYPos(m_drive.getPose().getY()), 
+      new Rotation2d(m_drive.getRequestedHeading(m_drive.getYaw().getRadians()))
+    );
+    
   }
   
   @Override
@@ -43,7 +43,7 @@ public class OdometryTestCommand extends CommandBase {
   @Override
   public boolean isFinished() {
     // TODO: the current PID values don't allow the command to finish
-    double errorMarginMeters = 0.1;
+    double errorMarginMeters = TestConstants.kTranslationError;
     double errorMarginRadians = Units.degreesToRadians(10);
     m_error = m_drive.getPose().relativeTo(m_finalPose);
     // if robot thinks its precision is < 0.1 to the target we inputted, it will stop, so then we can see how off it is
@@ -59,4 +59,3 @@ public class OdometryTestCommand extends CommandBase {
     System.out.println(m_error.getRotation().getRadians());
   }
 }
-

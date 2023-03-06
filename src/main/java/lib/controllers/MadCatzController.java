@@ -60,20 +60,16 @@ public class MadCatzController extends Controller {
     }
   }
 
-  public JoystickButton get(MadCatzButton button) {
-    return new JoystickButton(m_controller, button.id);
+  public Trigger get(MadCatzButton button) {
+    return new Trigger(() -> m_controller.getRawButton(button.id));
   }
 
   public double get(MadCatzAxis axis) {
     return m_controller.getRawAxis(axis.id);
   }
 
-  public POVButton get(MadCatzHatSwitch hatSwitch) {
-    return new POVButton(m_controller, hatSwitch.angle);
-  }
-
-  public Trigger get(Trigger trigger) {
-    return trigger;
+  public Trigger get(MadCatzHatSwitch hatSwitch) {
+    return new Trigger(() -> m_controller.getPOV() == hatSwitch.angle);
   }
 
   public Joystick get() {

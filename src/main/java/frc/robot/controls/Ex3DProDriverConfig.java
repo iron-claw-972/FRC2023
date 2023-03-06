@@ -51,5 +51,14 @@ public class Ex3DProDriverConfig extends BaseDriverConfig {
   public double getRawHeadingMagnitude() { 
     return kDriver.get(Ex3DProAxis.SLIDER);
   }
-  
+
+  @Override
+  public boolean getIsSlowMode() {
+    return kDriver.get(Ex3DProButton.B11).getAsBoolean();
+  }
+
+  @Override
+  public boolean getIsFieldRelative() {
+    return !kDriver.get(Ex3DProButton.B12).getAsBoolean();
+  }
 }

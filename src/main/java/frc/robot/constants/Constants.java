@@ -5,7 +5,7 @@ package frc.robot.constants;
  */
 public final class Constants {
   public static final double kGravitationalAccel = 9.8;
-  public static final double kMaxVoltage = 12.0;
+  public static final double kRobotVoltage = 12.0;
   public static final double kLoopTime = 0.02;
   
   public static final double kCancoderResolution = 4096;
@@ -16,4 +16,7 @@ public final class Constants {
 
   /** The key used to access the RobotId name in the RoboRIO's persistent memory. */
   public static final String kRobotIdKey = "RobotId";
+
+  public static final boolean kLogging = true;
+  public static final boolean kUseTelemetry = true;
 }

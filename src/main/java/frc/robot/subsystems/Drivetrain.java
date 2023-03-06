@@ -1,31 +1,46 @@
 package frc.robot.subsystems;
 
+import java.util.ArrayList;
 import java.util.function.DoubleSupplier;
 
+import org.photonvision.EstimatedRobotPose;
+
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commands.test.CircleDrive;
+import frc.robot.commands.test.DriveFeedForwardCharacterization;
+import frc.robot.commands.test.SteerFeedForwardCharacterizationSingle;
+import frc.robot.commands.test.TestDriveVelocity;
+import frc.robot.commands.test.TestHeadingPID;
+import frc.robot.commands.test.TestSteerAngle;
+import frc.robot.constants.Constants;
+import frc.robot.constants.VisionConstants;
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.constants.swerve.ModuleConstants;
 import frc.robot.util.LogManager;
-
+import frc.robot.util.Vision;
 /** 
  * Represents a swerve drive style drivetrain.
  * 
@@ -37,48 +52,44 @@ import frc.robot.util.LogManager;
  */
 public class Drivetrain extends SubsystemBase {
 
-  // This is left intentionally public
-  public final Module[] m_modules;
-  
-  private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
-    new Translation2d(DriveConstants.kTrackWidth / 2, DriveConstants.kTrackWidth / 2),
-    new Translation2d(DriveConstants.kTrackWidth / 2, -DriveConstants.kTrackWidth / 2),
-    new Translation2d(-DriveConstants.kTrackWidth / 2, DriveConstants.kTrackWidth / 2),
-    new Translation2d(-DriveConstants.kTrackWidth / 2, -DriveConstants.kTrackWidth / 2)
-  );
-
-  // Pigeon
-  private final WPI_Pigeon2 m_pigeon = new WPI_Pigeon2(DriveConstants.kPigeon, DriveConstants.kPigeonCAN);
-  private boolean m_hasResetYaw = false; // the initial yaw has been set 
-
-  private double m_headingPIDOutput = 0;
+  private ShuffleboardTab m_swerveModulesTab, m_drivetrainTab;
 
   // Odometry
-  private final SwerveDriveOdometry m_odometry;
-  private Pose2d m_robotPose = new Pose2d();
+  private final SwerveDrivePoseEstimator m_poseEstimator;
+
+  // This is left intentionally public
+  public final Module[] m_modules;
+
+  private final WPI_Pigeon2 m_pigeon;
+  private Vision m_vision;
+
+  // PID Controllers for chassis movement
+  private final PIDController m_xController;
+  private final PIDController m_yController;
+  private final PIDController m_rotationController;
+
+  private boolean m_isOnChargeStation = false;
 
   // Displays the field with the robots estimated pose on it
-  private final Field2d m_fieldDisplay = new Field2d();
-  
-  // PID Controllers
-  // translation controllers have dummy constants that are just good enough to run the odometry test
-  private final PIDController m_xController = new PIDController(0.1, 0, 0);
-  private final PIDController m_yController = new PIDController(0.1, 0, 0);
-  private final PIDController m_rotationController = new PIDController(DriveConstants.kHeadingP, DriveConstants.kHeadingI, DriveConstants.kHeadingD);
+  private final Field2d m_fieldDisplay;
+
+  private final PIDController m_pathplannerXController;
+  private final PIDController m_pathplannerYController;
+  private final PIDController m_pathplannerRotationController;
 
   //Shuffleboard
   private GenericEntry 
-    m_driveVelocity,
-    m_steerVelocity, 
-    m_steerAngle, 
-    m_drivetrainVolts, 
-    m_driveStaticFeedforward, 
-    m_driveVelocityFeedforward, 
-    m_steerStaticFeedforward,
-    m_steerVelocityFeedforward,
-    m_heading;
-  private ShuffleboardTab m_swerveModulesTab, m_drivetrainTab;
-
+    m_driveVelocityEntry,
+    m_steerVelocityEntry, 
+    m_steerAngleEntry,
+    m_driveStaticFeedforwardEntry, 
+    m_driveVelocityFeedforwardEntry, 
+    m_steerStaticFeedforwardEntry,
+    m_steerVelocityFeedforwardEntry,
+    m_xPosEntry,
+    m_yPosEntry,
+    m_headingEntry;
+  
   private Double[] m_driveVelFeedForwardSaver = new Double[4];
   private Double[] m_driveStaticFeedForwardSaver = new Double[4];
   private Double[] m_steerVelFeedForwardSaver = new Double[4];
@@ -88,32 +99,71 @@ public class Drivetrain extends SubsystemBase {
   // modules needed to distinguish in chooser
   private Module m_prevModule;
 
+  boolean m_visionEnabled = true;
+
   /**
    * Creates a new Swerve Style Drivetrain.
    * @param drivetrainTab the shuffleboard tab to display drivetrain data on
    * @param swerveModulesTab the shuffleboard tab to display module data on
    */
-  public Drivetrain(ShuffleboardTab drivetrainTab, ShuffleboardTab swerveModulesTab) {
+  public Drivetrain(ShuffleboardTab drivetrainTab, ShuffleboardTab swerveModulesTab, Vision vision) {
 
-    LiveWindow.disableAllTelemetry();
     m_drivetrainTab = drivetrainTab;
     m_swerveModulesTab = swerveModulesTab;
+
+    m_vision = vision;
     
-    m_modules = new Module[] {
-      Module.create(ModuleConstants.FRONT_LEFT, m_swerveModulesTab),
-      Module.create(ModuleConstants.FRONT_RIGHT, m_swerveModulesTab),
-      Module.create(ModuleConstants.BACK_LEFT, m_swerveModulesTab),
-      Module.create(ModuleConstants.BACK_RIGHT, m_swerveModulesTab)
+    m_pigeon = new WPI_Pigeon2(DriveConstants.kPigeon, DriveConstants.kPigeonCAN);
+    m_pigeon.configFactoryDefault();
+    setPigeonYaw(DriveConstants.kStartingHeadingDegrees);
+
+    // m_modules = new ModuleOld[] {
+    //   ModuleOld.create(ModuleConstants.FRONT_LEFT, m_swerveModulesTab),
+    //   ModuleOld.create(ModuleConstants.FRONT_RIGHT, m_swerveModulesTab),
+    //   ModuleOld.create(ModuleConstants.BACK_LEFT, m_swerveModulesTab),
+    //   ModuleOld.create(ModuleConstants.BACK_RIGHT, m_swerveModulesTab)
+    // };
+
+    m_modules = new ModuleChanged[] {
+      new ModuleChanged(ModuleConstants.FRONT_LEFT, swerveModulesTab),
+      new ModuleChanged(ModuleConstants.FRONT_RIGHT, swerveModulesTab),
+      new ModuleChanged(ModuleConstants.BACK_LEFT, swerveModulesTab),
+      new ModuleChanged(ModuleConstants.BACK_RIGHT, swerveModulesTab),
     };
+
     m_prevModule = m_modules[0];
-    
-    m_odometry = new SwerveDriveOdometry(m_kinematics, m_pigeon.getRotation2d(), getModulePositions(), m_robotPose);
+
+    /*
+     * By pausing init for a second before setting module offsets, we avoid a bug
+     * with inverting motors.
+     * See https://github.com/Team364/BaseFalconSwerve/issues/8 for more info.
+     */
+    Timer.delay(1.0);
+    resetModulesToAbsolute();
+
+    m_poseEstimator = new SwerveDrivePoseEstimator(
+      DriveConstants.kKinematics,
+      m_pigeon.getRotation2d(),
+      getModulePositions(),
+      new Pose2d() // initial Odometry Location
+    );
+    m_poseEstimator.setVisionMeasurementStdDevs(VisionConstants.kBaseVisionPoseStdDevs);
+
+    m_xController = new PIDController(DriveConstants.kTranslationalP, 0, DriveConstants.kTranslationalD);
+    m_yController = new PIDController(DriveConstants.kTranslationalP, 0, DriveConstants.kTranslationalD);
+    m_rotationController = new PIDController(DriveConstants.kHeadingP, 0, DriveConstants.kHeadingD);
     m_rotationController.enableContinuousInput(-Math.PI, Math.PI);
-    DoubleSupplier[] poseSupplier = {() -> getPose().getX(), () -> getPose().getY(), () -> getPose().getRotation().getRadians()};
-    LogManager.addDoubleArray("Pose2d", poseSupplier);
     
+    m_pathplannerXController = new PIDController(DriveConstants.kPathplannerTranslationalP, 0, DriveConstants.kPathplannerTranslationalD);
+    m_pathplannerYController = new PIDController(DriveConstants.kPathplannerTranslationalP, 0, DriveConstants.kPathplannerTranslationalD);
+    m_pathplannerRotationController = new PIDController(DriveConstants.kPathplannerHeadingP, 0, DriveConstants.kPathplannerHeadingD);
+    m_pathplannerRotationController.enableContinuousInput(-Math.PI, Math.PI);
+
+    m_fieldDisplay = new Field2d();
     m_fieldDisplay.setRobotPose(getPose());
-    SmartDashboard.putData("Field", m_fieldDisplay);
+
+    setupDrivetrainShuffleboard();
+    setupModulesShuffleboard();
   }
 
   @Override
@@ -124,31 +174,64 @@ public class Drivetrain extends SubsystemBase {
     updateOdometry();
     
     m_fieldDisplay.setRobotPose(getPose());
+
+    if (Constants.kLogging) updateLogs();
   }
-  
+
+  // PIDs for Chassis movement
+  public PIDController getXController() { return m_xController; }
+  public PIDController getYController() { return m_yController; }
+  public PIDController getRotationController() { return m_rotationController; }
+
+  // PIDs for Pathplanner
+  public PIDController getPathplannerXController() { return m_pathplannerXController; }
+  public PIDController getPathplannerYController() { return m_pathplannerYController; }
+  public PIDController getPathplannerRotationController() { return m_pathplannerRotationController; }
+
   /**
-   * 
-   * Resets the pigeon IMU's yaw.
-   * 
-   * @param degrees the new yaw angle, in degrees.
+   * @return chassis speed of swerve drive
    */
-  public void setPigeonYaw(double degrees) {
-    m_pigeon.setYaw(degrees);
+  public ChassisSpeeds getChassisSpeeds() {
+    return DriveConstants.kKinematics.toChassisSpeeds(getModuleStates());
   }
+
+  public ChassisSpeeds getFieldRelativeChassisSpeeds() {
+    return ChassisSpeeds.fromFieldRelativeSpeeds(
+      getChassisSpeeds(),
+      getPose().getRotation()
+    );
+  }
+
+  public double getChassisSpeedsMagnitude() {
+    return Math.hypot(
+      getFieldRelativeChassisSpeeds().vxMetersPerSecond,
+      getFieldRelativeChassisSpeeds().vyMetersPerSecond
+    );
+  }
+
+  public Rotation2d getFieldRelativeHeading() {
+    return Rotation2d.fromRadians(Math.atan2(
+      getFieldRelativeChassisSpeeds().vxMetersPerSecond,
+      getFieldRelativeChassisSpeeds().vyMetersPerSecond
+    ));
+  }
+
+  public Rotation2d getPitch() {
+    return Rotation2d.fromDegrees(m_pigeon.getPitch());
+  }
+  
+  public Rotation2d getRoll() {
+    return Rotation2d.fromDegrees(m_pigeon.getRoll());
+  }  
   
   /**
-  * Resets the pigeon yaw, but only if it hasn't already been reset. Will reset it to {@link DriveConstants.kStartingHeadingDegrees}
-  *
-  * @param force Will reset the yaw no matter what
+  * @return the pigeon's heading in a Rotation2d
   */
-  public void initializePigeonYaw(boolean force) {
-    if (!m_hasResetYaw || force) {
-      m_hasResetYaw = true;
-      // TODO: reset the yaw to different angles depending on auto start position
-      setPigeonYaw(DriveConstants.kStartingHeadingDegrees);
-    }
+  public Rotation2d getYaw() {
+    return (DriveConstants.kInvertGyro) ? Rotation2d.fromDegrees(MathUtil.inputModulus(360 - m_pigeon.getYaw(), -180, 180))
+        : Rotation2d.fromDegrees(MathUtil.inputModulus(m_pigeon.getYaw(), -180, 180));
   }
-  
+
   /**
   * Method to drive the robot using joystick info.
   *
@@ -156,140 +239,62 @@ public class Drivetrain extends SubsystemBase {
   * @param ySpeed speed of the robot in the y direction (sideways) in m/s
   * @param rot angular rate of the robot in rad/s
   * @param fieldRelative whether the provided x and y speeds are relative to the field
+  * @param isOpenLoop whether to use velocity control for the drive motors
   */
-  public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {           
+  public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean isOpenLoop) {           
     setChassisSpeeds((
       fieldRelative
-          ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getRotation2d())
+          ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getYaw())
           : new ChassisSpeeds(xSpeed, ySpeed, rot)
-      )
-    );
-  }  
-
-  /**
-   * Drives the robot using the provided x speed, y speed, and positional heading.
-   * 
-   * @param xSpeed speed of the robot in the x direction (forward)
-   * @param ySpeed speed of the robot in the y direction (sideways)
-   * @param heading target heading of the robot in radians
-   * @param fieldRelative whether the provided x and y speeds are relative to the field
-   */
-  public void driveHeading(double xSpeed, double ySpeed, double heading, boolean fieldRelative) {
-    m_headingPIDOutput = m_rotationController.calculate(getAngleHeading(), heading);
-    double rot = m_headingPIDOutput;
-    setChassisSpeeds((
-      fieldRelative
-          ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_pigeon.getRotation2d())
-          : new ChassisSpeeds(xSpeed, ySpeed, rot)
-      )
+      ),
+      isOpenLoop
     );
   }
 
   /**
-   * Sets the chassis speeds of the robot.
-   * 
-   * @param chassisSpeeds the target chassis speeds
+   * Stops all swerve modules.
    */
-  public void setChassisSpeeds(ChassisSpeeds chassisSpeeds) {
-    SwerveModuleState[] swerveModuleStates = m_kinematics.toSwerveModuleStates(chassisSpeeds);
-    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kMaxSpeed);
-    setModuleStates(swerveModuleStates);
+  public void stop() {
+    for (int i = 0; i < 4; i++) {
+      m_modules[i].stop();
+    }
+    drive(0, 0, 0, true, true);
   }
 
-  /**
-   * Runs the PID controllers with the provided x, y, and rot values. Then, calls {@link #drive()} using the PID outputs.
-   * This is based on the odometry of the chassis.
-   * 
-   * @param x the position to move to in the x, in meters
-   * @param y the position to move to in the y, in meters
-   * @param rot the angle to move to, in radians
-   */
-  public void runChassisPID(double x, double y, double rot) {
-    double xSpeed = m_xController.calculate(m_odometry.getPoseMeters().getX(), x);
-    double ySpeed = m_yController.calculate(m_odometry.getPoseMeters().getY(), y);
-    double rotRadians = m_rotationController.calculate(getAngleHeading(), rot);
-    drive(xSpeed, ySpeed, rotRadians, true);
-  }
-  
-  /** Updates the field relative position of the robot. */
-  public void updateOdometry() {
-    m_robotPose = m_odometry.update(
-      m_pigeon.getRotation2d(),
-      getModulePositions()
-    );
-  }
-  
-  /**
-  * Returns the angular rate from the pigeon.
-  * 
-  * @param id 0 for x, 1 for y, 2 for z
-  * @return the rate in rads/s from the pigeon
-  */
-  public double getAngularRate(int id) {
-
-    // uses pass by reference and edits reference to array
-    double[] rawGyros = new double[3];
-    m_pigeon.getRawGyro(rawGyros);
-
-    // outputs in deg/s, so convert to rad/s
-    return Units.degreesToRadians(rawGyros[id]);
-  }
-  
-  /**
-  * Gets the current robot pose from the odometry.
-  */
-  public Pose2d getPose() {
-    return m_robotPose;
-  }
-  
-  /**
-  * Resets the odometry to the given pose.
-  * @param pose the pose to reset to.
-  */
-  public void resetOdometry(Pose2d pose) {
-    m_odometry.resetPosition(getRotation2d(), getModulePositions(), pose);
-  }
-  
-  /**
-  * @return the pigeon's heading in a Rotation2d
-  */
-  public Rotation2d getRotation2d() {
-    return m_pigeon.getRotation2d(); 
-  }
-  
-  /**
-  * Gets the angle heading from the pigeon.
-  * 
-  * @return the heading angle in radians, from -pi to pi
-  */
-  public double getAngleHeading() {
-    return MathUtil.angleModulus(m_pigeon.getRotation2d().getRadians());
-  }
-  
-  /**
-  * Gets an array of all the swerve module positions.
-  * 
-  * @return an array of all swerve module positions
-  */
-  public SwerveModulePosition[] getModulePositions() {
-    SwerveModulePosition[] positions = new SwerveModulePosition[] {
-      m_modules[0].getPosition(),
-      m_modules[1].getPosition(),
-      m_modules[2].getPosition(),
-      m_modules[3].getPosition()
-    };
-    return positions;
-  }
-  
   /**
   * Sets the desired states for all swerve modules.
   * 
   * @param swerveModuleStates an array of module states to set swerve modules to. Order of the array matters here!
   */
-  public void setModuleStates(SwerveModuleState[] swerveModuleStates) {
+  public void setModuleStates(SwerveModuleState[] swerveModuleStates, boolean isOpenLoop) {
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kMaxSpeed);
     for (int i = 0; i < 4; i++) {
-      m_modules[i].setDesiredState(swerveModuleStates[i]);
+      m_modules[i].setDesiredState(swerveModuleStates[i], isOpenLoop);
     }
+  }
+  
+  /**
+  * Sets the desired states for all swerve modules. Runs closed loop control. USe this function for pathplanner.
+  * 
+  * @param swerveModuleStates an array of module states to set swerve modules to. Order of the array matters here!
+  */
+  public void setModuleStates(SwerveModuleState[] swerveModuleStates) {
+    setModuleStates(swerveModuleStates, false);
+  }
+
+  /**
+  * Gets the current robot pose from the pose estimator.
+  */
+  public Pose2d getPose() {
+    return m_poseEstimator.getEstimatedPosition();
+  }
+
+  /**
+  * Resets the odometry to the given pose.
+  * @param pose the pose to reset to.
+  */
+  public void resetOdometry(Pose2d pose) {
+    m_poseEstimator.resetPosition(getYaw(), getModulePositions(), pose);
   }
   
   /**
@@ -303,6 +308,11 @@ public class Drivetrain extends SubsystemBase {
     }
   }
 
+  PIDController m_balancePID = new PIDController(1, 0, 0.006);
+  public PIDController getBalanceController() {
+    return m_balancePID;
+  }
+
   /**
    * Sets the optimize state for all swerve modules.
    * Optimizing the state means the modules will not turn the steer motors more than 90 degrees for any one movement.
@@ -312,158 +322,174 @@ public class Drivetrain extends SubsystemBase {
       m_modules[i].setOptimize(optimizeSate);
     }
   }
+
+  /**
+  * Gets an array of SwerveModulePositions, which store the distance travleled by the drive and the steer angle.
+  * 
+  * @return an array of all swerve module positions
+  */
+  public SwerveModulePosition[] getModulePositions() {
+    SwerveModulePosition[] positions = new SwerveModulePosition[4];
+    for (Module mod : m_modules) {
+      positions[mod.getModuleIndex()] = mod.getPosition();
+    }
+    return positions;
+  }
+
+  /**
+   * Gets an array of SwerveModuleStates, which store the drive velocity and steer angle
+   * @return an array of all swerve module positions
+   */
+  public SwerveModuleState[] getModuleStates() {
+    SwerveModuleState[] states = new SwerveModuleState[4];
+    for (Module mod : m_modules) {
+      states[mod.getModuleIndex()] = mod.getState();
+    }
+    return states;
+  }
+
+  /**
+   * Sets the chassis speeds of the robot.
+   * 
+   * @param chassisSpeeds the target chassis speeds
+   * @param isOpenLoop if open loop control should be used for the drive velocity
+   */
+  public void setChassisSpeeds(ChassisSpeeds chassisSpeeds, boolean isOpenLoop) {
+    SwerveModuleState[] swerveModuleStates = DriveConstants.kKinematics.toSwerveModuleStates(chassisSpeeds);
+    setModuleStates(swerveModuleStates, isOpenLoop);
+  }
+
+  /**
+   * 
+   * Resets the pigeon IMU's yaw.
+   * 
+   * @param degrees the new yaw angle, in degrees.
+   */
+  public void setPigeonYaw(double degrees) {
+    m_pigeon.setYaw(degrees);
+  }
+
+  /**
+   * 
+   * Resets the pigeon IMU's yaw to the trajectory's intial state, flipped for alliance.
+   * 
+   * @param traj the trajectory to reset to.
+   */
+  public void setPigeonYaw(PathPlannerTrajectory traj) {
+    traj = PathPlannerTrajectory.transformTrajectoryForAlliance(traj, DriverStation.getAlliance());
+    setPigeonYaw(traj.getInitialHolonomicPose().getRotation().getDegrees());
+  }
+
+  public void resetModulesToAbsolute() {
+    for (Module mod : m_modules) {
+      mod.resetToAbsolute();
+    }
+  }
+
+  /** Updates the field relative position of the robot. */
+  public void updateOdometry() {
+    // Updates pose based on encoders and gyro
+    m_poseEstimator.update(getYaw(), getModulePositions());
+
+    // Updates pose based on vision
+    if (m_visionEnabled) {
+      //TODO: there should be a cleaner way to prosses vision
+
+      // An array list of poses returned by different cameras
+      ArrayList<EstimatedRobotPose> estimatedPoses = m_vision.getEstimatedPoses(m_poseEstimator.getEstimatedPosition());
+      // The current position as a translation
+      Translation2d currentEstimatedPoseTranslation = m_poseEstimator.getEstimatedPosition().getTranslation();
+      for (int i = 0; i < estimatedPoses.size(); i++) {
+        EstimatedRobotPose estimatedPose = estimatedPoses.get(i);
+        // The position of the closest april tag as a translation
+        Translation2d closestTagPoseTranslation = new Translation2d();
+        for (int j = 0; j < estimatedPose.targetsUsed.size(); j++) {
+          // The position of the current april tag
+          Pose3d currentTagPose = m_vision.getTagPose(estimatedPose.targetsUsed.get(j).getFiducialId());
+          // If it can't find the april tag's pose, don't run the rest of the for loop for this tag
+          if(currentTagPose == null){
+            continue;
+          }
+          Translation2d currentTagPoseTranslation = currentTagPose.toPose2d().getTranslation();
+          
+          // If the current april tag position is closer than the closest one, this makes makes it the closest
+          if (j == 0 || currentEstimatedPoseTranslation.getDistance(currentTagPoseTranslation) < currentEstimatedPoseTranslation.getDistance(closestTagPoseTranslation)) {
+            closestTagPoseTranslation = currentTagPoseTranslation;
+          }
+        }
+
+        // Adds the vision measurement for this camera
+        m_poseEstimator.addVisionMeasurement(
+          estimatedPose.estimatedPose.toPose2d(),
+          estimatedPose.timestampSeconds,
+          m_isOnChargeStation ? VisionConstants.kChargeStationVisionPoseStdDevs : VisionConstants.kBaseVisionPoseStdDevs.plus(
+            currentEstimatedPoseTranslation.getDistance(closestTagPoseTranslation) * VisionConstants.kVisionPoseStdDevFactor
+          )
+        );
+      }
+      m_fieldDisplay.setRobotPose(m_poseEstimator.getEstimatedPosition());
+    }
+  }
+
+  public void setIsBalancingOnChargeStation(boolean isBalancing) {
+    m_isOnChargeStation = isBalancing;
+  }
+
+  /**
+   * Drives the robot using the provided x speed, y speed, and positional heading.
+   * 
+   * @param xSpeed speed of the robot in the x direction (forward)
+   * @param ySpeed speed of the robot in the y direction (sideways)
+   * @param heading target heading of the robot in radians
+   * @param fieldRelative whether the provided x and y speeds are relative to the field
+   */
+  public void driveHeading(double xSpeed, double ySpeed, double heading, boolean fieldRelative) {
+    double rot = m_rotationController.calculate(getYaw().getRadians(), heading);
+    //SmartDashboard.putNumber("Heading PID Output", rot);
+    setChassisSpeeds((
+      fieldRelative
+          ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_pigeon.getRotation2d())
+          : new ChassisSpeeds(xSpeed, ySpeed, rot)
+      ),
+      false
+    );
+  }
+
+  /**
+   * Runs the PID controllers with the provided x, y, and rot values. Then, calls {@link #drive()} using the PID outputs.
+   * This is based on the odometry of the chassis.
+   * 
+   * @param x the position to move to in the x, in meters
+   * @param y the position to move to in the y, in meters
+   * @param rot the angle to move to, in radians
+   */
+  public void runChassisPID(double x, double y, double rot) {
+    double xSpeed = m_xController.calculate(m_poseEstimator.getEstimatedPosition().getX(), x);
+    double ySpeed = m_yController.calculate(m_poseEstimator.getEstimatedPosition().getY(), y);
+    double rotRadians = m_rotationController.calculate(getYaw().getRadians(), rot);
+    drive(xSpeed, ySpeed, rotRadians, true, false);
+  }
   
   /**
-   * Stops all swerve modules.
-   */
-  public void stop() {
-    for (int i = 0; i < 4; i++) {
-      m_modules[i].stop();
-    }
+  * Returns the angular rate from the pigeon.
+  * @param id 0 for x, 1 for y, 2 for z
+  * @return the rate in rads/s from the pigeon
+  */
+  public double getAngularRate(int id) {
+
+    // uses pass by reference and edits reference to array
+    double[] rawGyros = new double[3];
+    m_pigeon.getRawGyro(rawGyros);
+
+    // outputs in deg/s, so convert to rad/s
+    return Units.degreesToRadians(rawGyros[id]);
   }
 
-  public PIDController getXController() {
-    return m_xController;
-  }
-  public PIDController getYController() {
-    return m_yController;
-  }
-  public PIDController getRotationController() {
-    return m_rotationController;
+
+  public void enableVision(boolean enabled) {
+    m_visionEnabled = enabled;
   }
 
-  /**
-   * Sets up the shuffleboard tab for the drivetrain.
-   */
-  public void setupDrivetrainShuffleboard() {
-    // inputs
-    m_heading = m_drivetrainTab.add("Set Heading (-pi to pi)", 0).getEntry();
-    
-    // add PID controllers
-    m_drivetrainTab.add("xController", getXController());
-    m_drivetrainTab.add("yController", getYController());
-    m_drivetrainTab.add("rotationController", getRotationController());
-    
-    // add angles
-    m_drivetrainTab.addNumber("getAngle", () -> getAngleHeading());
-    m_drivetrainTab.addNumber("heading PID output", () -> m_headingPIDOutput);
-    
-    m_drivetrainTab.addNumber("Gyro X", () -> getAngularRate(0));
-    m_drivetrainTab.addNumber("Gyro Y", () -> getAngularRate(1));
-    m_drivetrainTab.addNumber("Gyro Z", () -> getAngularRate(2));
-    
-    // m_drivetrainTab.add("odometry", m_odometry);
-    
-    // add the controllers to shuffleboard for tuning
-    m_drivetrainTab.add(getXController());
-    m_drivetrainTab.add(getYController());
-    m_drivetrainTab.add(getRotationController());
-  }
-
-  /**
-   * Sets up the shuffleboard tab for the swerve modules.
-   */
-  public void setupModulesShuffleboard() {
-    setUpModuleChooser();
-    setUpFeedforwardSavers();
-    
-    // inputs
-    m_swerveModulesTab.add("Module Chooser", m_moduleChooser);
-    m_driveVelocity = m_swerveModulesTab.add("Set Drive Velocity", 0).getEntry();
-    m_steerVelocity = m_swerveModulesTab.add("Set Steer Velocity", 0).getEntry();
-    m_steerAngle = m_swerveModulesTab.add("Set Steer Angle", 0).getEntry();
-    m_drivetrainVolts = m_swerveModulesTab.add("Set Volts", 0).getEntry();
-    m_driveStaticFeedforward = m_swerveModulesTab.add("Drive kS FF", m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()]).getEntry();
-    m_driveVelocityFeedforward = m_swerveModulesTab.add("Drive kV FF", m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()]).getEntry();
-    m_steerStaticFeedforward = m_swerveModulesTab.add("Steer kS FF", m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()]).getEntry();
-    m_steerVelocityFeedforward = m_swerveModulesTab.add("Steer kV k FF", m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()]).getEntry();
-    
-    for (int i = 0; i < 4; i++) {
-      m_modules[i].setupModulesShuffleboard();
-    }
-  }
-
-  public GenericEntry getRequestedHeadingEntry() {
-    return m_heading;
-  }
-  public GenericEntry getRequestedDriveVelocityEntry() {
-    return m_driveVelocity;
-  }
-  public GenericEntry getRequestedSteerVelocityEntry() {
-    return m_steerVelocity;
-  }
-  public GenericEntry getRequestedVoltsEntry() {
-    return m_drivetrainVolts;
-  }
-  public GenericEntry getRequestedSteerAngleEntry() {
-    return m_steerAngle;
-  }
-  public GenericEntry getDriveStaticFeedforwardEntry() {
-    return m_driveStaticFeedforward;
-  }
-  public GenericEntry getDriveVelocityFeedforwardEntry() {
-    return m_driveVelocityFeedforward;
-  }
-  public GenericEntry getSteerStaticFeedforwardEntry() {
-    return m_steerStaticFeedforward;
-  }
-  public GenericEntry getSteerVelocityFeedforwardEntry() {
-    return m_steerVelocityFeedforward;
-  }
-
-  /**
-   * Updates the drive module feedforward values on shuffleboard.
-   */
-  public void updateDriveModuleFeedforwardShuffleboard() {
-    // revert to previous saved feed forward data if changed
-    if (m_prevModule != m_moduleChooser.getSelected()) {
-      m_driveStaticFeedforward.setDouble(m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()]);
-      m_driveVelocityFeedforward.setDouble(m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()]);
-      m_prevModule = m_moduleChooser.getSelected();
-    }
-    
-    // update saved feedforward data
-    m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()] = m_driveStaticFeedforward.getDouble(0);
-    m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()] = m_driveVelocityFeedforward.getDouble(0);
-    
-    // to set all modules to same feedforward values if all
-    // if (m_module.getSelected() == m_allModule) {
-    //   for(int i = 0; i < 4; i++) {
-    //     m_modules[i].setDriveFeedForwardValues(m_driveStaticFeedForwardSaver.get(m_module.getSelected()), m_driveVelFeedForwardSaver.get(m_module.getSelected()));
-    //   }
-    // }
-        
-    //set selected module
-    m_moduleChooser.getSelected().setDriveFeedForwardValues(m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()],m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()]);
-  }
-
-  /**
-   * Updates the steer module feedforward values on shuffleboard.
-   */
-  public void updateSteerModuleFeedforwardShuffleboard() {
-    
-    //revert to previous saved feed forward data if changed
-    if (m_prevModule != m_moduleChooser.getSelected()) {
-      m_steerStaticFeedforward.setDouble(m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()]);
-      m_steerVelocityFeedforward.setDouble(m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()]);
-      m_prevModule = m_moduleChooser.getSelected();
-    }
-    
-    // update saved feedforward data
-    m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()] = m_steerStaticFeedforward.getDouble(0);
-    m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()] = m_steerVelocityFeedforward.getDouble(0);
-    
-    //to set all modules to same feedforward values if all
-    // if (m_module.getSelected() == m_allModule) {
-    //   for(int i = 0; i < 4; i++) {
-    //     m_modules[i].setDriveFeedForwardValues(m_steerStaticFeedForwardSaver[m_module.getSelected().getModuleType().getID()], m_steerVelFeedForwardSaver[m_module.getSelected().getModuleType().getID()]);
-    //   }
-    // }
-    
-    //set selected module
-    m_moduleChooser.getSelected().setDriveFeedForwardValues(m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()],m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleType().getID()]);
-  }
-  
   /**
    * Sets up feedforward savers.
    */
@@ -507,18 +533,258 @@ public class Drivetrain extends SubsystemBase {
     return m_steerVelFeedForwardSaver;
   }
 
-  public SendableChooser<Module> getModuleChooser() {
-    return m_moduleChooser;
+
+  // BELOW IS TELEMETRY STUFF
+
+  /**
+   * Sets up the shuffleboard tab for the drivetrain.
+   */
+  private void setupDrivetrainShuffleboard() {
+    if (!Constants.kUseTelemetry) return;
+
+    m_drivetrainTab.add("Field", m_fieldDisplay);
+
+    m_drivetrainTab.add("Balance PID", m_balancePID);
+
+    // inputs
+    m_headingEntry = m_drivetrainTab.add("Set Heading (-pi to pi)", 0).getEntry();
+    m_xPosEntry = m_drivetrainTab.add("Input X pos(m)",0).getEntry();
+    m_yPosEntry = m_drivetrainTab.add("Input Y pos(m)",0).getEntry();
+    
+    // add PID controllers
+    m_drivetrainTab.add("xController", getXController());
+    m_drivetrainTab.add("yController", getYController());
+    m_drivetrainTab.add("rotationController", getRotationController());
+    
+    m_drivetrainTab.add("PP xController", getPathplannerXController());
+    m_drivetrainTab.add("PP yController", getPathplannerYController());
+    m_drivetrainTab.add("PP rotationController", getPathplannerRotationController());
+    
+    // add angles
+    m_drivetrainTab.addNumber("Yaw (deg)", () -> getYaw().getDegrees());
+    m_drivetrainTab.addNumber("estimated X", () -> m_poseEstimator.getEstimatedPosition().getX());
+    m_drivetrainTab.addNumber("estimated Y", () -> m_poseEstimator.getEstimatedPosition().getY());
+    m_drivetrainTab.addNumber("getPitch", () -> m_pigeon.getPitch());
+    m_drivetrainTab.addNumber("getRoll", () -> m_pigeon.getRoll());
+    m_drivetrainTab.addNumber("getYaw", () -> m_pigeon.getYaw());
+    
+    m_drivetrainTab.addNumber("Gyro X", () -> getAngularRate(0));
+    m_drivetrainTab.addNumber("Gyro Y", () -> getAngularRate(1));
+    m_drivetrainTab.addNumber("Gyro Z", () -> getAngularRate(2));
+
+    m_drivetrainTab.addNumber("Chassis Velocity", () -> getChassisSpeedsMagnitude());
   }
 
   /**
-   * Sets up module chooser.
+   * Sets up the shuffleboard tab for the swerve modules.
    */
-  public void setUpModuleChooser() {
-    m_moduleChooser.setDefaultOption("Front Left", m_modules[0]);
-    m_moduleChooser.addOption("Front Right", m_modules[1]);
-    m_moduleChooser.addOption("Back Left", m_modules[2]);
-    m_moduleChooser.addOption("Back Right", m_modules[3]);
+  private void setupModulesShuffleboard() {
+    if (Constants.kUseTelemetry) {
+      
+      m_moduleChooser.setDefaultOption("Front Left", m_modules[0]);
+      m_moduleChooser.addOption("Front Right", m_modules[1]);
+      m_moduleChooser.addOption("Back Left", m_modules[2]);
+      m_moduleChooser.addOption("Back Right", m_modules[3]);
+
+      setUpFeedforwardSavers();
+      
+      // inputs
+      m_swerveModulesTab.add("Module Chooser", m_moduleChooser);
+      m_driveVelocityEntry = m_swerveModulesTab.add("Set Drive Velocity", 0).getEntry();
+      m_steerVelocityEntry = m_swerveModulesTab.add("Set Steer Velocity", 0).getEntry();
+      m_steerAngleEntry = m_swerveModulesTab.add("Set Steer Angle", 0).getEntry();
+      m_driveStaticFeedforwardEntry = m_swerveModulesTab.add(
+        "Drive kS FF", 
+        m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]
+      ).getEntry();
+
+      m_driveVelocityFeedforwardEntry = m_swerveModulesTab.add(
+        "Drive kV FF", 
+        m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]
+      ).getEntry();
+
+      m_steerStaticFeedforwardEntry = m_swerveModulesTab.add(
+        "Steer kS FF", 
+        m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]
+      ).getEntry();
+
+      m_steerVelocityFeedforwardEntry = m_swerveModulesTab.add(
+        "Steer kV FF", 
+        m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]
+      ).getEntry();
+    }
   }
 
+  public double getRequestedHeading(double defaultValue) {
+    if (!Constants.kUseTelemetry) return defaultValue;
+    return m_headingEntry.getDouble(defaultValue);
+  }
+  public double getRequestedDriveVelocity(double defaultValue) {
+    if (!Constants.kUseTelemetry) return defaultValue;
+    return m_driveVelocityEntry.getDouble(defaultValue);
+  }
+  public double getRequestedSteerVelocity(double defaultValue) {
+    if (!Constants.kUseTelemetry) return defaultValue;
+    return m_steerVelocityEntry.getDouble(defaultValue);
+  }
+  public double getRequestedSteerAngle(double defaultValue) {
+    if (!Constants.kUseTelemetry) return defaultValue;
+    return m_steerAngleEntry.getDouble(defaultValue);
+  }
+  public double getRequestedXPos(double defaultValue) {
+    if (!Constants.kUseTelemetry) return defaultValue;
+    return m_xPosEntry.getDouble(defaultValue);
+  }
+  public double getRequestedYPos(double defaultValue) {
+    if (!Constants.kUseTelemetry) return defaultValue;
+    return m_yPosEntry.getDouble(defaultValue);
+  }
+
+  public void setDriveVelocityFeedforwardEntry(double value) {
+    if (!Constants.kUseTelemetry) return;
+    m_driveVelocityFeedforwardEntry.setDouble(value);
+  }
+  public void setDriveStaticFeedforwardEntry(double value) {
+    if (!Constants.kUseTelemetry) return;
+    m_driveStaticFeedforwardEntry.setDouble(value);
+  }
+  public void setSteerStaticFeedforwardEntry(double value) {
+    if (!Constants.kUseTelemetry) return;
+    m_steerStaticFeedforwardEntry.setDouble(value);
+  }
+  public void setSteerVelocityFeedforwardEntry(double value) {
+    if (!Constants.kUseTelemetry) return;
+    m_steerVelocityFeedforwardEntry.setDouble(value);
+  }
+
+  /**
+   * Updates the drive module feedforward values on shuffleboard.
+   */
+  public void updateDriveModuleFeedforwardShuffleboard() {
+    if (!Constants.kUseTelemetry) return;
+    // revert to previous saved feed forward data if changed
+    if (m_prevModule != m_moduleChooser.getSelected()) {
+      m_driveStaticFeedforwardEntry.setDouble(
+        m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]
+      );
+      m_driveVelocityFeedforwardEntry.setDouble(
+        m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]
+      );
+      m_prevModule = m_moduleChooser.getSelected();
+    }
+    
+    // update saved feedforward data
+    m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()] = 
+      m_driveStaticFeedforwardEntry.getDouble(0);
+    m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()] = 
+      m_driveVelocityFeedforwardEntry.getDouble(0);
+    
+    // to set all modules to same feedforward values if all
+    // if (m_module.getSelected() == m_allModule) {
+    //   for(int i = 0; i < 4; i++) {
+    //     m_modules[i].setDriveFeedForwardValues(m_driveStaticFeedForwardSaver.get(m_module.getSelected()), m_driveVelFeedForwardSaver.get(m_module.getSelected()));
+    //   }
+    // }
+        
+    //set selected module
+    m_moduleChooser.getSelected().setDriveFeedForwardValues(
+      m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()],
+      m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]
+    );
+  }
+
+  /**
+   * Updates the steer module feedforward values on shuffleboard.
+   */
+  public void updateSteerModuleFeedforwardShuffleboard() {
+    if (!Constants.kUseTelemetry) return;
+    
+    //revert to previous saved feed forward data if changed
+    if (m_prevModule != m_moduleChooser.getSelected()) {
+      m_steerStaticFeedforwardEntry.setDouble(
+        m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]
+      );
+      m_steerVelocityFeedforwardEntry.setDouble(
+        m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]
+      );
+      m_prevModule = m_moduleChooser.getSelected();
+    }
+    
+    // update saved feedforward data
+    m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()] = 
+      m_steerStaticFeedforwardEntry.getDouble(0);
+    m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()] = 
+      m_steerVelocityFeedforwardEntry.getDouble(0);
+    
+    //to set all modules to same feedforward values if all
+    // if (m_module.getSelected() == m_allModule) {
+    //   for(int i = 0; i < 4; i++) {
+    //     m_modules[i].setDriveFeedForwardValues(m_steerStaticFeedForwardSaver[m_module.getSelected().getId()], m_steerVelFeedForwardSaver[m_module.getSelected().getId()]);
+    //   }
+    // }
+    
+    //set selected module
+    m_moduleChooser.getSelected().setDriveFeedForwardValues(
+      m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()],
+      m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]
+    );
+  }
+  
+  public Module getModuleChoosen() {
+    if (!Constants.kUseTelemetry) return m_modules[0];
+    return m_moduleChooser.getSelected();
+  }
+
+   /**
+   * Adds the test commands to shuffleboard so they can be run that way.
+   */
+  public void addTestCommands(ShuffleboardTab testTab, GenericEntry testEntry)  {
+    if (Constants.kUseTelemetry) {
+      testTab.add("Circle Drive", new CircleDrive(this));
+      testTab.add("Drive FeedForward", new DriveFeedForwardCharacterization(this));
+      testTab.add("Steer Single FeedForward", new SteerFeedForwardCharacterizationSingle(this));
+      testTab.add("Test Drive Velocity", new TestDriveVelocity(this, testEntry));
+      testTab.add("Heading PID", new TestHeadingPID(this, testEntry));
+      testTab.add("Steer angle", new TestSteerAngle(this, testEntry));
+      testTab.add("Reset Pose", new InstantCommand(()-> {
+        this.resetOdometry(
+          new Pose2d(
+            this.getRequestedXPos(0),
+            this.getRequestedYPos(0), 
+            new Rotation2d(this.getRequestedHeading(0))
+          ));
+        }
+      ));
+    }
+  }
+  public void updateLogs(){
+    double[] pose = {
+      getPose().getX(),
+      getPose().getY(),
+      getPose().getRotation().getRadians()
+    };
+    LogManager.addDoubleArray("Swerve/Pose2d", pose);
+    double[] actualStates = {
+      m_modules[0].getAngle().getRadians(),
+      m_modules[0].getState().speedMetersPerSecond,
+      m_modules[1].getAngle().getRadians(),
+      m_modules[1].getState().speedMetersPerSecond,
+      m_modules[2].getAngle().getRadians(),
+      m_modules[2].getState().speedMetersPerSecond,
+      m_modules[3].getAngle().getRadians(),
+      m_modules[3].getState().speedMetersPerSecond
+    };
+    LogManager.addDoubleArray("Swerve/actual swerve states", actualStates);
+    double[] desiredStates = {
+      m_modules[0].getDesiredAngle().getRadians(),
+      m_modules[0].getDesiredVelocity(),
+      m_modules[1].getDesiredAngle().getRadians(),
+      m_modules[1].getDesiredVelocity(),
+      m_modules[2].getDesiredAngle().getRadians(),
+      m_modules[2].getDesiredVelocity(),
+      m_modules[3].getDesiredAngle().getRadians(),
+      m_modules[3].getDesiredVelocity()
+    };
+    LogManager.addDoubleArray("Swerve/desired swerve states", desiredStates);
+  }
 }
