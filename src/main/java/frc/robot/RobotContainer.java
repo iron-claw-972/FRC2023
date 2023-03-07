@@ -142,8 +142,9 @@ public class RobotContainer {
 
     m_driver.configureControls();
 
-    LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
-    LiveWindow.setEnabled(false);
+    // TODO: LiveWindow should not be sending any telemetry in Autonomous or Teleop
+    // LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
+    // LiveWindow.setEnabled(false);
     
     autoChooserUpdate();
     m_autoTab.add("Auto Chooser", m_autoCommand);
@@ -155,11 +156,6 @@ public class RobotContainer {
     addTestCommands();
 
     m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive, m_driver));
-
-    SmartDashboard.putData("FB in", new InstantCommand(() -> m_mechanism.setFourBarAngle(150.0)));
-    SmartDashboard.putData("FB out", new InstantCommand(() -> m_mechanism.setFourBarAngle(0.0)));
-    SmartDashboard.putData("elevator down", new InstantCommand(() -> m_mechanism.setElevatorHeight(0.1)));
-    SmartDashboard.putData("elevator up", new InstantCommand(() -> m_mechanism.setElevatorHeight(1.1)));
   }
 
   /**
@@ -187,6 +183,9 @@ public class RobotContainer {
    * Do Nothing should stay the default, other autos are added with m_autoCommand.addOption()
    */
   public void autoChooserUpdate() {
+
+    // TODO: autoChooserUpdate method kills SimGUI, so escape when a non-competition robot for now
+    if (Robot.kRobotId != RobotId.SwerveCompetition) return;
 
     Position autoDepositPos = Position.TOP;
 
