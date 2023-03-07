@@ -375,8 +375,8 @@ public class Drivetrain extends SubsystemBase {
     if (m_visionEnabled) {
 
       // If the cosine of the picth or roll is less than 1, it is not 0
-      // It should be less than 0.9 if it goes over the charge station
-      if(getPitch().getCos()<0.9 || getRoll().getCos()<0.9){
+      // The cosine should be less than 0.995 (5.73 degrees) if it goes over the charge station
+      if(getPitch().getCos()<0.995 || getRoll().getCos()<0.995){
         m_chargeStationVision=true;
       }
 
