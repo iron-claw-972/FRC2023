@@ -54,12 +54,13 @@ public class Mechanism {
         Color8Bit colorIntake = new Color8Bit(128, 128, 255);
         Color8Bit colorShelf = new Color8Bit(255, 0, 0);
         Color8Bit colorDist =  new Color8Bit(128, 128, 128);
+        Color8Bit colorBumper = new Color8Bit(255, 0, 0);
 
         // Build the grid
 
         // the entire grid is built relative to m_distGrid so the grid can be moved relative to the robot
         // distance of the grid from the root robot center (root)
-        m_distGrid = new MechanismLigament2d("distGrid", 18, 0, 1.0, colorDist);
+        m_distGrid = new MechanismLigament2d("distGrid", 13.0 + 3.5, 0, 1.0, colorDist);
         m_root.append(m_distGrid);
 
         // front of grid is 5 inches high
@@ -67,35 +68,58 @@ public class Mechanism {
         // connect it to the grid
         m_distGrid.append(front);
 
-        // details of the shelves are not clear to me. Fake for now
-        // move from front of grid to low shelf. Distance not clear.
-        MechanismLigament2d spaceShelf = new MechanismLigament2d("spaceShelf", 12, 0, 0.25, colorSpace);
+        // details of the cube nodes.
+        /*
+         * Game Manual page 26:
+         * Each CUBE NODE is a polycarbonate shelf that is 1 ft. 6¼ in. (~46 cm) wide and 1 ft. 5 in. (~43 cm) deep. 
+         * CUBE NODES are surrounded by 3 in. (~8 cm) tall vertical walls, with the exception of the rear wall of the 
+         * top ROW CUBE NODE which is angled. The distance from the FIELD carpet to the top of a middle ROW 
+         * CUBE NODE wall is 1 ft. 11½ in. (~60 cm). The distance from the FIELD carpet to the top of a top ROW 
+         * CUBE NODE wall is 2 ft. 11½ in. (~90 cm). The front of a middle ROW CUBE NODE is 1 ft. 2¼ in. (~36 cm) 
+         * from the front face of the GRID. The front of a top ROW CUBE NODE is 2 ft. 7⅝ in. (~80 cm) from the 
+         * front face of the GRID.
+         */
+        // move from front of grid to middle row cube node is 1 foot 2.25 inches.
+        MechanismLigament2d spaceShelf = new MechanismLigament2d("spaceShelf", 14.25, 0, 0.25, colorSpace);
         m_distGrid.append(spaceShelf);
         // the shelf is 1 foot 11.5 inches (23.5 inches) high
         MechanismLigament2d riserLow = new MechanismLigament2d("lowRiser", 23.5, 90, 1.0, colorShelf);
         spaceShelf.append(riserLow);
-        // unclear how deep the shelf is
-        MechanismLigament2d shelfLow = new MechanismLigament2d("shelfLow", 24, -90, 1.0, colorShelf);
+        // add the lip
+        MechanismLigament2d lipMiddle = new MechanismLigament2d("lipMiddle", 3, 0, 0.25, colorShelf);
+        riserLow.append(lipMiddle);
+        // the shelf is 1 foot 5 inches deep
+        //   does that check? NO!
+        //   front of top row cube node is 2 feet 7 5/8 inches = 31.625 != 14.25 + 17 = 31.25 inches
+        MechanismLigament2d shelfLow = new MechanismLigament2d("shelfLow", 17.0, -90, 1.0, colorShelf);
         riserLow.append(shelfLow);
         // the high riser reaches to 2 feet 11.5 inches (35.5 inches - 23.5 inches = 12 inches)
         MechanismLigament2d riserHigh = new MechanismLigament2d("riserHigh", 12, 90, 1.0, colorShelf);
         shelfLow.append(riserHigh);
-        // unclear how deep the top shelf is
-        MechanismLigament2d shelfHigh = new MechanismLigament2d("shelfHi", 12, -90, 1.0, colorShelf);
+        // add the lip
+        MechanismLigament2d lipHigh = new MechanismLigament2d("lipHigh", 3, 0, 0.25, colorShelf);
+        riserHigh.append(lipHigh);
+        // a shelf is 1 foot 5 inches deep -- but back wall is angled?
+        MechanismLigament2d shelfHigh = new MechanismLigament2d("shelfHi", 17.0, -90, 1.0, colorShelf);
         riserHigh.append(shelfHigh);
         // shelf ends at alliance wall
-        MechanismLigament2d wall = new MechanismLigament2d("wall", 36, 90, 4.0, colorShelf);
-        shelfHigh.append(wall);
+        // does this distance check out? NO! Short 8 inches (slanted back?)
+        //    depth = 14.25 + 17.0 + 17.0 == 48.25 != depth of grid == 4 feet 8.25 inches == 56.25 inches
+        MechanismLigament2d slantBack = new MechanismLigament2d("slantBack", 5*1.41, 45, 1.0, colorShelf);
+        shelfHigh.append(slantBack);
+        // 
+        MechanismLigament2d wall = new MechanismLigament2d("wall", 36, 45, 4.0, colorShelf);
+        slantBack.append(wall);
 
-        // move from the grid to the origin of the middle node
+        // move from the grid to the origin of the middle cone node is 1 foot 10.75 inches
         MechanismLigament2d spaceMiddle = new MechanismLigament2d("spaceMiddle", 22.75, 0.0, 0.25, colorSpace);
         m_distGrid.append(spaceMiddle);
-        // make the middle node (2 feet 10 inches tall = 34 inches)
+        // make the middle cone node (2 feet 10 inches tall = 34 inches)
         MechanismLigament2d nodeMiddle = new MechanismLigament2d("nodeMiddle", 34.0, 90.0, 2.0, colorNode);
         // attach the middle node
         spaceMiddle.append(nodeMiddle);
 
-        // move from front of grid to the origin of the high node
+        // move from front of grid to the origin of the high cone node is 3 feet 3.75 inches
         MechanismLigament2d spaceHigh = new MechanismLigament2d("spaceHigh", 39.75,  0.0, 0.25, colorSpace);
         m_distGrid.append(spaceHigh);
         // make the high node (3 feet 10 inches tall = 46 inches)
@@ -112,8 +136,8 @@ public class Mechanism {
         // The Bumpers
         // the robot is 26 inches by 26 inches.
         // Ignores bumper thickness for now. Should set width and color.
-        MechanismLigament2d bumper1 = new MechanismLigament2d("bumper1", 13, 0);
-        MechanismLigament2d bumper2 = new MechanismLigament2d("bumper2", 13, 180);
+        MechanismLigament2d bumper1 = new MechanismLigament2d("bumper1", 13, 0, 4, colorBumper);
+        MechanismLigament2d bumper2 = new MechanismLigament2d("bumper2", 13, 180, 4, colorBumper);
         m_root.append(bumper1);
         m_root.append(bumper2);
 
