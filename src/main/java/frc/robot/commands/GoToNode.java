@@ -28,6 +28,9 @@ public class GoToNode extends CommandBase {
     m_drive = drive;
   }
 
+  /**
+   * Creates the PathPlanner command and schedules it
+   */
   @Override
   public void initialize(){
     // Gets the current position of the robot for the start of the path
@@ -41,17 +44,30 @@ public class GoToNode extends CommandBase {
       m_operator.getSelectedNode().scorePose.getRotation(),
       m_operator.getSelectedNode().scorePose.getRotation()
     );
+    // Creates the command using the two points
     m_command = new PathPlannerCommand(
-    new ArrayList<PathPoint>(List.of(point1, point2)), m_drive, false);
+      new ArrayList<PathPoint>(List.of(point1, point2)),
+      m_drive,
+      false
+    );
+    // Starts the command
     m_command.schedule();
   }
 
+  /**
+   * Stops the command and the drivetrain
+   * @param interrupted If the command is interrupted
+   */
   @Override
   public void end(boolean interrupted){
-    m_drive.stop();
     m_command.cancel();
+    m_drive.stop();
   }
 
+  /**
+   * Returns if the PathPlannerCommand exists and is finished
+   * @return If the GoToNode command is finished
+   */
   @Override
   public boolean isFinished(){
     return m_command!=null && m_command.isFinished();
