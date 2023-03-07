@@ -30,11 +30,12 @@ public class GoToNode extends CommandBase {
 
   @Override
   public void initialize(){
-    PathPoint point1 = new PathPoint(
-      m_drive.getPose().getTranslation(), 
-      m_drive.getPose().getRotation(), 
-      m_drive.getFieldRelativeHeading()
+    // Gets the current position of the robot for the start of the path
+    PathPoint point1 = PathPoint.fromCurrentHolonomicState(
+      m_drive.getPose(),
+      m_drive.getChassisSpeeds()
     );
+    // Uses the operator's selected node to find the end point for the path
     PathPoint point2 = new PathPoint(
       m_operator.getSelectedNode().scorePose.getTranslation(),
       m_operator.getSelectedNode().scorePose.getRotation(),
