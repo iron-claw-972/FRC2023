@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color8Bit;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 /**
  * Mech2d representation of the robot mechanism and grid.
@@ -170,6 +171,17 @@ public class Mechanism {
 
         // put the Mechanism2D on the dashboard
         SmartDashboard.putData("Mech2d", m_mech2d);
+
+        // We have the Mech2d, so put some commands on the SmartDashboard
+        addCommands(this);
+    }
+
+    private void addCommands(Mechanism mechanism) {
+        // some commands to move the Mech2d diagram
+        SmartDashboard.putData("FB in", new InstantCommand(() -> mechanism.setFourBarAngle(150.0)));
+        SmartDashboard.putData("FB out", new InstantCommand(() -> mechanism.setFourBarAngle(0.0)));
+        SmartDashboard.putData("elevator down", new InstantCommand(() -> mechanism.setElevatorHeight(0.1)));
+        SmartDashboard.putData("elevator up", new InstantCommand(() -> mechanism.setElevatorHeight(1.3)));
     }
 
     /**
