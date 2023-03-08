@@ -74,6 +74,11 @@ public class Vision {
       // April tags that don't exist might return a result that is present but doesn't have a pose
       if (estimatedPose.isPresent() && estimatedPose.get().estimatedPose!=null) {
         estimatedPoses.add(estimatedPose.get());
+        LogManager.addDoubleArray("Vison/estimated pose2d", new double[]{
+          estimatedPose.get().estimatedPose.getX(),
+          estimatedPose.get().estimatedPose.getY(),
+          estimatedPose.get().estimatedPose.getRotation().getZ()
+        });
       }
     }
     return estimatedPoses;
@@ -172,13 +177,6 @@ public class Vision {
     public Optional<EstimatedRobotPose> getEstimatedPose(Pose2d referencePose) {
       photonPoseEstimator.setReferencePose(referencePose);
       Optional<EstimatedRobotPose> pose = photonPoseEstimator.update();
-      if (pose.isPresent()) LogManager.addDoubleArray("Vison/estimated pose2d", 
-        new double[]{
-          pose.get().estimatedPose.getX(),
-          pose.get().estimatedPose.getY(),
-          pose.get().estimatedPose.getRotation().getZ()
-        }
-      );
       return pose;
     }
   }
