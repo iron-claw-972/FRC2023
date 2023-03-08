@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.BalanceSimple;
 import frc.robot.commands.GoToNode;
+import frc.robot.commands.GoToNodePID;
 import frc.robot.commands.SetFormationX;
 import frc.robot.constants.OIConstants;
 import frc.robot.constants.swerve.DriveConstants;
@@ -33,8 +34,10 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
 
     kDriver.get(Button.B).onTrue(new BalanceSimple(super.getDrivetrain()));
 
-    // Moves to the selected scoring position
+    // Moves to the selected scoring position using Path Planner
     kDriver.get(kDriver.LEFT_TRIGGER_BUTTON).whileTrue(new GoToNode(m_operator, getDrivetrain()));
+    // Moves to the selected scoring position using the PID
+    kDriver.get(Button.LB).whileTrue(new GoToNodePID(m_operator, getDrivetrain()));
   }
   
   @Override
