@@ -73,6 +73,11 @@ public class Vision {
       // If the camera can see an april tag, add it to the array list
       if (estimatedPose.isPresent() && estimatedPose.get().estimatedPose!=null) {
         estimatedPoses.add(estimatedPose.get());
+        LogManager.addDoubleArray("Vison/estimated pose2d", new double[]{
+          estimatedPose.get().estimatedPose.getX(),
+          estimatedPose.get().estimatedPose.getY(),
+          estimatedPose.get().estimatedPose.getRotation().getZ()
+        });
       }
     }
     return estimatedPoses;
@@ -162,13 +167,6 @@ public class Vision {
     public Optional<EstimatedRobotPose> getEstimatedPose(Pose2d referencePose) {
       photonPoseEstimator.setReferencePose(referencePose);
       Optional<EstimatedRobotPose> pose = photonPoseEstimator.update();
-      if (pose.isPresent()) LogManager.addDoubleArray("Vison/estimated pose2d", 
-        new double[]{
-          pose.get().estimatedPose.getX(),
-          pose.get().estimatedPose.getY(),
-          pose.get().estimatedPose.getRotation().getZ()
-        }
-      );
       return pose;
     }
   }
