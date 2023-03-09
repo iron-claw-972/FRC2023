@@ -374,9 +374,8 @@ public class Drivetrain extends SubsystemBase {
     // Updates pose based on vision
     if (m_visionEnabled) {
 
-      // If the cosine of the picth or roll is less than 1, it is not 0
-      // The cosine should be less than 0.995 (5.73 degrees) if it goes over the charge station
-      if(getPitch().getCos()<0.995 || getRoll().getCos()<0.995){
+      // The angle should be greater than 5 degrees if it goes over the charge station
+      if(Math.abs(getPitch().getDegrees())>5 || Math.abs(getRoll().getDegrees())>5){
         m_chargeStationVision=true;
       }
 
@@ -407,9 +406,9 @@ public class Drivetrain extends SubsystemBase {
         m_poseEstimator.addVisionMeasurement(
           estimatedPose.estimatedPose.toPose2d(),
           estimatedPose.timestampSeconds,
-          m_chargeStationVision ? VisionConstants.kChargeStationVisionPoseStdDevs : VisionConstants.kBaseVisionPoseStdDevs.plus(
+          m_chargeStationVision ? VisionConstants.kChargeStationVisionPoseStdDevs.plus(
             currentEstimatedPoseTranslation.getDistance(closestTagPoseTranslation) * VisionConstants.kVisionPoseStdDevFactor
-          )
+          ):VisionConstants.kBaseVisionPoseStdDevs
         );
       }
       
