@@ -3,43 +3,42 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxAlternateEncoder;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ArmConstants;
+import frc.robot.constants.Constants;
+import frc.robot.util.LogManager;
 
 public class FourBarArm extends SubsystemBase {
   private final CANSparkMax m_motor;
   private final PIDController m_pid;
-  private final RelativeEncoder m_encoder;
-  private boolean m_enabled = false;
+  private final DutyCycleEncoder m_absEncoder;
+  private boolean m_enabled = true;
 
   public FourBarArm() {
     // configure the motor
     m_motor = new CANSparkMax(ArmConstants.kMotorId, MotorType.kBrushless);
     m_motor.setIdleMode(IdleMode.kBrake);
+    m_motor.setInverted(false); 
 
     // configure the encoder
-    // TODO: use a kConstant instead of the 8192
-    m_encoder = m_motor.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, 8192);
-    // The RelativeEncoder reports angles in native revolutions by default.
-    // See https://codedocs.revrobotics.com/java/com/revrobotics/relativeencoder
-    // Change the encoder's reported value to radians (1 revolution = 2 pi radians).
-    m_encoder.setPositionConversionFactor(2*Math.PI);
-    // The RelativeEncoder reports RPM by default.
-    // Change the velocity to radians per second (1 RPM = 2 pi radians / 60 seconds)
-    m_encoder.setVelocityConversionFactor(2.0 * Math.PI / 60.0);  
+    m_absEncoder = new DutyCycleEncoder(ArmConstants.kAbsEncoderId); 
 
- 
     // make the PID controller
     m_pid = new PIDController(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD);
     // set the PID controller's tolerance
     m_pid.setTolerance(ArmConstants.kTolerance);
     // go to the initial position (use the class method)
-    setArmSetpoint(ArmConstants.kInitialPosition);
+
+    // TODO: restore stowed position
+    // setArmSetpoint(ArmConstants.kStowedAbsEncoderPos);
+    setArmSetpoint(ArmConstants.kStowPos);
+
+    if (Constants.kUseTelemetry) SmartDashboard.putData("4 bar arm PID", m_pid); 
   }
 
   /**
@@ -55,15 +54,20 @@ public class FourBarArm extends SubsystemBase {
 
   @Override
   public void periodic() {
+    if (Constants.kUseTelemetry) SmartDashboard.putNumber("Arm Abs Encoder Value", getAbsEncoderPos());
     if(m_enabled) {
+      
       // calculate the PID power level
-      double pidPower = m_pid.calculate(m_encoder.getPosition());
+      double pidPower = m_pid.calculate(getAbsEncoderPos(), MathUtil.clamp(m_pid.getSetpoint(), ArmConstants.kMaxArmExtensionPos, ArmConstants.kStowPos));
+      if (Constants.kLogging) LogManager.addDouble("Four Bar/pidOutput", pidPower);
       // calculate the feedforward power (nothing for now)
       double feedforwardPower = 0.0;
 
       // set the motor power
       setMotorPower(pidPower + feedforwardPower);
     }
+
+    if (Constants.kLogging) updateLogs();
   }
 
   /**
@@ -74,11 +78,21 @@ public class FourBarArm extends SubsystemBase {
     return m_pid.atSetpoint();
   }
 
-  public void setMotorPower(double power){
-    m_motor.set(MathUtil.clamp(power, ArmConstants.kMinMotorPower, ArmConstants.kMaxMotorPower));
+  public void setMotorPower(double power) {
+    power = MathUtil.clamp(power, ArmConstants.kMinMotorPower, ArmConstants.kMaxMotorPower);
+    m_motor.set(power);
+    if (Constants.kLogging) LogManager.addDouble("Four Bar/motor power", power);
   }
 
   public void setEnabled(boolean enable)  {
     m_enabled = enable;
+  }
+
+  public double getAbsEncoderPos(){
+    return m_absEncoder.getAbsolutePosition(); 
+  }
+
+  public void updateLogs(){
+    LogManager.addDouble("Four Bar/position", getAbsEncoderPos());
   }
 }

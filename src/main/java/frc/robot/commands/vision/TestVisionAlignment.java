@@ -1,13 +1,8 @@
 package frc.robot.commands.vision;
 
-import java.util.ArrayList;
-import org.photonvision.EstimatedRobotPose;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.constants.TestConstants;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.util.Functions;
 import frc.robot.util.Vision;
 
 // TODO: COMMENTS!
@@ -38,7 +33,7 @@ public class TestVisionAlignment extends CommandBase{
   public void execute() {
     m_mostRecentAngle = getAngle();
     double speed = m_drive.getRotationController().calculate(m_mostRecentAngle, m_setpoint);
-    m_drive.drive(0, 0, speed, false);
+    m_drive.drive(0, 0, speed, false, false);
   }
 
   @Override

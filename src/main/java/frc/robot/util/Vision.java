@@ -20,9 +20,13 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import frc.robot.commands.vision.TestVisionAlignment;
+import frc.robot.commands.vision.TestVisionDistance;
 import frc.robot.constants.VisionConstants;
+import frc.robot.subsystems.Drivetrain;
 
 public class Vision {
   // The field layout
@@ -126,19 +130,6 @@ public class Vision {
     }
     return getAprilTagFieldLayout().getTagPose(id).get();
   }
-
-  public void logging(){
-    //TODO: fix this, currently breaks because of nulls
-    // DoubleSupplier[] poseSupplier = {
-    //   () -> getPose2d().getX(),
-    //   () -> getPose2d().getY(),
-    //   () -> getPose2d().getRotation().getRadians()
-    // };
-    
-    // LogManager.addDoubleArray("Pose2d", poseSupplier);
-    // LogManager.addInt("Visible April Tags", () -> getEstimatedPoses(getPose2d()).size());
-    
-  }
   
   public void setupVisionShuffleboard() {
   }
@@ -170,7 +161,24 @@ public class Vision {
      */
     public Optional<EstimatedRobotPose> getEstimatedPose(Pose2d referencePose) {
       photonPoseEstimator.setReferencePose(referencePose);
-      return photonPoseEstimator.update();
+      Optional<EstimatedRobotPose> pose = photonPoseEstimator.update();
+      if (pose.isPresent()) LogManager.addDoubleArray("Vison/estimated pose2d", 
+        new double[]{
+          pose.get().estimatedPose.getX(),
+          pose.get().estimatedPose.getY(),
+          pose.get().estimatedPose.getRotation().getZ()
+        }
+      );
+      return pose;
     }
+  }
+
+  public void addTestCommands(ShuffleboardTab testTab, GenericEntry testEntry, Drivetrain drive){
+    testTab.add("Test vision (forward)", new TestVisionDistance(0.2, drive, this));
+    testTab.add("Test vision (backward)", new TestVisionDistance(-0.2, drive, this));
+    testTab.add("Align to 0 degrees", new TestVisionAlignment(0, drive, this));
+    testTab.add("Align to 90 degrees", new TestVisionAlignment(Math.PI/2, drive, this));
+    testTab.add("Align to -90 degrees", new TestVisionAlignment(-Math.PI/2, drive, this));
+    testTab.add("Align to 180 degrees", new TestVisionAlignment(Math.PI, drive, this));
   }
 }
