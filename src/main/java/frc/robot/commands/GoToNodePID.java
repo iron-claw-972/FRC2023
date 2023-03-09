@@ -41,6 +41,8 @@ public class GoToNodePID extends CommandBase {
   @Override
   public boolean isFinished(){
     return m_operator.getSelectedNode().scorePose.getTranslation().getDistance(
-      m_drive.getPose().getTranslation()) < 0.01;
+      m_drive.getPose().getTranslation()) < 0.01 &&
+      Math.abs(m_operator.getSelectedNode().scorePose.getRotation().getDegrees() -
+      Math.abs(m_drive.getPose().getRotation().getDegrees()))<1;
   }
 }

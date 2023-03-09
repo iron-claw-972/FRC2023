@@ -6,6 +6,8 @@ import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.BalanceSimple;
 import frc.robot.commands.GoToNode;
 import frc.robot.commands.GoToNodePID;
+import frc.robot.commands.GoToShelf;
+import frc.robot.commands.GoToShelfPID;
 import frc.robot.commands.SetFormationX;
 import frc.robot.constants.OIConstants;
 import frc.robot.constants.swerve.DriveConstants;
@@ -38,6 +40,11 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
     kDriver.get(kDriver.LEFT_TRIGGER_BUTTON).whileTrue(new GoToNode(m_operator, getDrivetrain()));
     // Moves to the selected scoring position using the PID
     kDriver.get(Button.LB).whileTrue(new GoToNodePID(m_operator, getDrivetrain()));
+
+    // Moves to the shelf using Path Planner
+    kDriver.get(kDriver.RIGHT_TRIGGER_BUTTON).whileTrue(new GoToShelf(getDrivetrain()));
+    // Moves to the shelf using the PID
+    kDriver.get(Button.RB).whileTrue(new GoToShelfPID(getDrivetrain()));
   }
   
   @Override
