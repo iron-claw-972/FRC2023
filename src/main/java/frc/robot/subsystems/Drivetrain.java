@@ -545,6 +545,7 @@ public class Drivetrain extends SubsystemBase {
     if (!Constants.kUseTelemetry) return;
 
     m_drivetrainTab.add("Field", m_fieldDisplay);
+    SmartDashboard.putData("Field Display", m_fieldDisplay);
 
     m_drivetrainTab.add("Balance PID", m_balancePID);
 

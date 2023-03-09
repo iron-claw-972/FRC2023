@@ -72,6 +72,10 @@ public class Robot extends TimedRobot {
     // report the RobotId to the SmartDashboard
     SmartDashboard.putString("RobotID", kRobotId.name());
 
+    if (isSimulation()) {
+      kRobotId = RobotId.SwerveCompetition;
+    }
+
     // build the RobotContainer
     m_robotContainer = new RobotContainer();
   }

@@ -9,9 +9,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.Rev2mDistanceSensor;
 import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.Rev2mDistanceSensor.Port;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -26,7 +24,7 @@ public class Intake extends SubsystemBase {
   private final CANSparkMax m_leftMotor;
   private final CANSparkMax m_rightMotor;
   private final ShuffleboardTab m_intakeTab;
-  private final Rev2mDistanceSensor m_distSensor = new Rev2mDistanceSensor(Port.kOnboard);
+  // private final Rev2mDistanceSensor m_distSensor = new Rev2mDistanceSensor(Port.kOnboard);
 
   private boolean m_hasCone = false;
   private boolean m_hasCube = false;
@@ -42,8 +40,8 @@ public class Intake extends SubsystemBase {
 
     m_intakeTab = intakeTab;
 
-    m_distSensor.setAutomaticMode(true);
-    m_distSensor.setEnabled(true);
+    // m_distSensor.setAutomaticMode(true);
+    // m_distSensor.setEnabled(true);
 
     setupShuffleboard();
   }
@@ -110,7 +108,7 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
 
-    m_range = m_distSensor.getRange();
+    m_range = -1;//m_distSensor.getRange();
 
     if (m_range == -1 || m_range > IntakeConstants.kCubeDistanceThreshold) { // Empty intake
       m_timeLastNotSeenCube = Timer.getFPGATimestamp();
