@@ -124,11 +124,11 @@ public class Drivetrain extends SubsystemBase {
     //   ModuleOld.create(ModuleConstants.BACK_RIGHT, m_swerveModulesTab)
     // };
 
-    m_modules = new ModuleChanged[] {
-      new ModuleChanged(ModuleConstants.FRONT_LEFT, swerveModulesTab),
-      new ModuleChanged(ModuleConstants.FRONT_RIGHT, swerveModulesTab),
-      new ModuleChanged(ModuleConstants.BACK_LEFT, swerveModulesTab),
-      new ModuleChanged(ModuleConstants.BACK_RIGHT, swerveModulesTab),
+    m_modules = new Module[] {
+      new Module(ModuleConstants.FRONT_LEFT, swerveModulesTab),
+      new Module(ModuleConstants.FRONT_RIGHT, swerveModulesTab),
+      new Module(ModuleConstants.BACK_LEFT, swerveModulesTab),
+      new Module(ModuleConstants.BACK_RIGHT, swerveModulesTab),
     };
 
     m_prevModule = m_modules[0];
