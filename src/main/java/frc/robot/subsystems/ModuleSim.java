@@ -73,4 +73,9 @@ public class ModuleSim extends Module {
       new Rotation2d(m_currentSteerPositionRad)
     );
   }
+
+  @Override
+  public SwerveModuleState getDesiredState() {
+    return getState();
+  }
 }

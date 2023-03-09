@@ -22,6 +22,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -126,12 +127,21 @@ public class Drivetrain extends SubsystemBase {
     //   ModuleOld.create(ModuleConstants.BACK_RIGHT, m_swerveModulesTab)
     // };
 
-    m_modules = new Module[] {
-      new Module(ModuleConstants.FRONT_LEFT, swerveModulesTab),
-      new Module(ModuleConstants.FRONT_RIGHT, swerveModulesTab),
-      new Module(ModuleConstants.BACK_LEFT, swerveModulesTab),
-      new Module(ModuleConstants.BACK_RIGHT, swerveModulesTab),
-    };
+    if (RobotBase.isReal()) {
+      m_modules = new Module[] {
+        new Module(ModuleConstants.FRONT_LEFT, swerveModulesTab),
+        new Module(ModuleConstants.FRONT_RIGHT, swerveModulesTab),
+        new Module(ModuleConstants.BACK_LEFT, swerveModulesTab),
+        new Module(ModuleConstants.BACK_RIGHT, swerveModulesTab),
+      };
+    } else {
+      m_modules = new ModuleSim[] {
+        new ModuleSim(ModuleConstants.FRONT_LEFT, swerveModulesTab),
+        new ModuleSim(ModuleConstants.FRONT_RIGHT, swerveModulesTab),
+        new ModuleSim(ModuleConstants.BACK_LEFT, swerveModulesTab),
+        new ModuleSim(ModuleConstants.BACK_RIGHT, swerveModulesTab),
+      };
+    }
 
     m_prevModule = m_modules[0];
 
