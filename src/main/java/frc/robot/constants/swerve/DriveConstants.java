@@ -121,7 +121,6 @@ public class DriveConstants {
   public static double kBalanceD = 0;
   // max output in m/s
   public static final double kBalanceMaxOutput = 0.5;
-  public static final double kBalanceToleranceDegrees = 2;
 
   //balance timer
   // when the balance command starts, it will run the pid normally for

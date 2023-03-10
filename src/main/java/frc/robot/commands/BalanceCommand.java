@@ -19,10 +19,16 @@ public class BalanceCommand extends CommandBase {
   private boolean m_isStopping = false;
   private Timer m_timer = new Timer();
   
+  /**
+   * Attempts to balance the robot on the charge station. The robot must start partially on
+   * the charge station.
+   * <p>Uses a PID, and after a short time will stutter up the charge station to allow the charge station to balance
+   * naturally. Currently the command does not end.
+   * @param drive the drive subsystem
+   */
   public BalanceCommand(Drivetrain drive) {
     m_drive = drive;
     m_pid = drive.getBalanceController();
-    m_pid.setTolerance(DriveConstants.kBalanceToleranceDegrees);
     addRequirements(drive);
   }
   
