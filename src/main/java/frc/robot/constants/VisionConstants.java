@@ -32,9 +32,8 @@ public class VisionConstants {
   /**
    * Update the camera list based on the robot id detected from rio preferences.
    */
-  // TODO: Maybe we should move this to the if/else block in RobotContainer.java, where subsystems are initialized/not initialized based on robotid
-  public static void update() {
-    if (Robot.kRobotId == RobotId.SwerveTest) {
+  public static void update(RobotId robotID) {
+    if (robotID == RobotId.SwerveTest) {
       kCameras = new ArrayList<Pair<String, Transform3d>>(List.of(
         new Pair<String, Transform3d>(
           "Camera_2",
