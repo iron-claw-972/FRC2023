@@ -8,6 +8,7 @@ import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -19,6 +20,7 @@ import frc.robot.commands.DoNothing;
 import frc.robot.constants.AutoConstants;
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.util.Conversions;
 import frc.robot.util.PathGroupLoader;
 
 
@@ -45,18 +47,23 @@ public class PathPlannerCommand extends SequentialCommandGroup{
     
     public PathPlannerCommand(List<PathPlannerTrajectory> pathGroup, int pathIndex, Drivetrain drive, boolean resetPose){
         addRequirements(drive);
-        if (pathIndex < 0 || pathIndex > pathGroup.size() - 1){
+        if (pathIndex < 0 || pathIndex > pathGroup.size() - 1) {
             throw new IndexOutOfBoundsException("Path index out of range"); 
-        } 
-        PathPlannerTrajectory path = PathPlannerTrajectory.transformTrajectoryForAlliance(pathGroup.get(pathIndex),
-            DriverStation.getAlliance());
+        }
 
-        addCommands(
-            (pathIndex == 0 && resetPose ? new InstantCommand(() -> {drive.setPigeonYaw(path); drive.resetOdometry(path.getInitialHolonomicPose());}) : new DoNothing()),
-            new PrintCommand("Number of paths: " + pathGroup.size()),
-            new PPSwerveControllerCommand(
+        addCommands(new InstantCommand( () -> {
+            PathPlannerTrajectory path = PathPlannerTrajectory.transformTrajectoryForAlliance(
+                pathGroup.get(pathIndex),DriverStation.getAlliance());
+            if (resetPose) {
+                drive.setPigeonYaw(path); 
+                drive.resetOdometry(Conversions.absolutePoseToPathPlannerPose(
+                    path.getInitialHolonomicPose(), DriverStation.getAlliance()));
+            }
+            System.out.println("Number of paths: " + pathGroup.size());
+            addCommands( new PPSwerveControllerCommand(
                 path, 
-                drive::getPose, // Pose supplier
+                () -> Conversions.absolutePoseToPathPlannerPose(
+                    drive.getPose(), DriverStation.getAlliance()), // Pose supplier
                 DriveConstants.kKinematics, // SwerveDriveKinematics
                 drive.getPathplannerXController(), // X controller can't normal PID as pathplanner has Feed Forward 
                 drive.getPathplannerYController(), // Y controller can't normal PID as pathplanner has Feed Forward 
@@ -64,7 +71,7 @@ public class PathPlannerCommand extends SequentialCommandGroup{
                 drive::setModuleStates, // Module states consumer
                 false,
                 drive // Requires this drive subsystem
-            )
-        );
+            ));
+        }));
     }
 }
