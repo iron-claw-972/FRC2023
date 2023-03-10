@@ -44,8 +44,9 @@ public class FieldElementTest {
     double outerHybrid = 2.0 * 12 + 1.75;
     // other hybrid nodes are 1 feet 6.5 inches wide (Game Manual)
     double innerHybrid = 1.0 * 12 + 6.5;
-    // width of bar (consistent value chosen from Game Manual dimensions)
-    double bar = 3.5;
+    // width of the bar at the foot of grid (consistent value chosen from Game Manual dimensions)
+    // drawings call them Dividers
+    double widthBar = 3.5;
 
     @BeforeEach
     public void prepare() {
@@ -79,13 +80,13 @@ public class FieldElementTest {
         // outerHybrid = 25.75
         // 2 * innerHyrid = 37.0
         // total hybrid is 62.75 leaves diff of 12.25
-        assertEquals(outerGrid, 3.5 * bar + outerHybrid + 2.0 * innerHybrid, 0.001);
+        assertEquals(outerGrid, 3.5 * widthBar + outerHybrid + 2.0 * innerHybrid, 0.001);
 
         // Test the width of an inner grid
         // 0.5 bar + inner + bar + inner + bar + inner + 0.5 bar = 5 feet 6 inches == innerGrid
         // looking for 5 feet 6 inches = 66 inches
         // 3 innerHybrid = 55.5 inches leaves diff of 10.5
-        assertEquals(innerGrid, 3.0 * bar + 3.0 * innerHybrid, 0.001);
+        assertEquals(innerGrid, 3.0 * widthBar + 3.0 * innerHybrid, 0.001);
     }
 
     /**
@@ -119,7 +120,7 @@ public class FieldElementTest {
         assertEquals(y2, outerGrid + 0.5 * innerGrid + 0.19, 0.001);
 
         // The cone node y-coordinates will be slightly offset from the cube values
-        double delta = innerHybrid + bar;
+        double delta = innerHybrid + widthBar;
 
         // These are the values from Node.java...
         // TODO: These y-values have errors of 4 to 18 millimeters
