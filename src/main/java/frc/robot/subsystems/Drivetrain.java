@@ -120,13 +120,6 @@ public class Drivetrain extends SubsystemBase {
     m_pigeon.configFactoryDefault();
     setPigeonYaw(DriveConstants.kStartingHeadingDegrees);
 
-    // m_modules = new ModuleOld[] {
-    //   ModuleOld.create(ModuleConstants.FRONT_LEFT, m_swerveModulesTab),
-    //   ModuleOld.create(ModuleConstants.FRONT_RIGHT, m_swerveModulesTab),
-    //   ModuleOld.create(ModuleConstants.BACK_LEFT, m_swerveModulesTab),
-    //   ModuleOld.create(ModuleConstants.BACK_RIGHT, m_swerveModulesTab)
-    // };
-
     if (RobotBase.isReal()) {
       m_modules = new Module[] {
         new Module(ModuleConstants.FRONT_LEFT, swerveModulesTab),
