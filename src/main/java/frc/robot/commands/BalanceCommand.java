@@ -22,7 +22,7 @@ public class BalanceCommand extends CommandBase {
   public BalanceCommand(Drivetrain drive) {
     m_drive = drive;
     m_pid = drive.getBalanceController();
-    m_pid.setTolerance(DriveConstants.kBalanceTolerance);
+    m_pid.setTolerance(DriveConstants.kBalanceToleranceDegrees);
     addRequirements(drive);
   }
   
@@ -57,20 +57,15 @@ public class BalanceCommand extends CommandBase {
     // starts the timer if it hasn't already been started
     m_timer.start();
     
-    m_currentAngle = m_usePitch ? m_drive.getPitch().getDegrees() :  m_drive.getRoll().getDegrees();
+    m_currentAngle = m_usePitch ? m_drive.getPitch().getDegrees() : m_drive.getRoll().getDegrees();
 
     m_output = MathUtil.clamp(m_pid.calculate(m_currentAngle), -DriveConstants.kBalanceMaxOutput, DriveConstants.kBalanceMaxOutput);
 
-    System.out.println("power: " + m_output + (m_usePitch ? "     pitch: " : "     roll: ") + m_currentAngle);
-
-    if (m_usePitch) {
-      m_drive.drive(-m_output, 0, 0, true, true);//(m_inverted ? 0 : Math.PI), true);
-    } else {
-      m_drive.drive(-m_output, 0, 0, true, true);//(m_inverted ? -Math.PI/2 : Math.PI/2), true); // TODO: inversion may be incorrect
-    }
+    // TODO: consider using heading PID to keep drive straight
+    m_drive.drive(-m_output, 0, 0, true, true);
     
+    // after DriveConstants.kBalanceNoStopPeriod, will stop periodically to give charge station time to balance. See constants.
     if (m_isStopping && m_timer.get() >= DriveConstants.kBalanceStopInterval) {
-      System.out.println("stopping");
       m_drive.stop();
       if (m_timer.get() >= DriveConstants.kBalanceStopDuration + DriveConstants.kBalanceStopInterval) {
         m_timer.reset();
