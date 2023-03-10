@@ -11,19 +11,17 @@ import frc.robot.subsystems.Drivetrain;
 public class BalanceCommand extends CommandBase {
   
   private Drivetrain m_drive;
-  private final PIDController m_pid = new PIDController(
-    DriveConstants.kBalanceP, 
-    DriveConstants.kBalanceI, 
-    DriveConstants.kBalanceD
-  );
+  private final PIDController m_pid;
   
   private double m_currentAngle, m_output;
   private boolean m_usePitch;
   private boolean m_inverted;
+  private boolean m_isStopping = false;
   private Timer m_timer = new Timer();
   
   public BalanceCommand(Drivetrain drive) {
     m_drive = drive;
+    m_pid = drive.getBalanceController();
     m_pid.setTolerance(DriveConstants.kBalanceTolerance);
     addRequirements(drive);
   }
@@ -50,6 +48,8 @@ public class BalanceCommand extends CommandBase {
     System.out.println("BALANCING: " + (m_usePitch ? "PITCH" : "ROLL") + (m_inverted ? "INVERTED" : ""));
 
     m_drive.setIsBalancingOnChargeStation(true);
+    m_timer.reset();
+    m_isStopping = false;
   }
   
   @Override
@@ -57,25 +57,34 @@ public class BalanceCommand extends CommandBase {
     // starts the timer if it hasn't already been started
     m_timer.start();
     
-    m_currentAngle = m_usePitch ? m_drive.getPitch().getDegrees() : m_drive.getRoll().getDegrees();
+    m_currentAngle = m_usePitch ? m_drive.getPitch().getDegrees() :  m_drive.getRoll().getDegrees();
 
     m_output = MathUtil.clamp(m_pid.calculate(m_currentAngle), -DriveConstants.kBalanceMaxOutput, DriveConstants.kBalanceMaxOutput);
 
+    System.out.println("power: " + m_output + (m_usePitch ? "     pitch: " : "     roll: ") + m_currentAngle);
+
     if (m_usePitch) {
-      m_drive.driveHeading(-m_output, 0, (m_inverted ? 0 : Math.PI), true);
+      m_drive.drive(-m_output, 0, 0, true, true);//(m_inverted ? 0 : Math.PI), true);
     } else {
-      m_drive.driveHeading(-m_output, 0, (m_inverted ? -Math.PI/2 : Math.PI/2), true); // TODO: inversion may be incorrect
+      m_drive.drive(-m_output, 0, 0, true, true);//(m_inverted ? -Math.PI/2 : Math.PI/2), true); // TODO: inversion may be incorrect
     }
     
-    if (m_timer.get() >= DriveConstants.kBalanceStartTime && m_timer.get() <= DriveConstants.kBalanceEndTime) {
+    if (m_isStopping && m_timer.get() >= DriveConstants.kBalanceStopInterval) {
+      System.out.println("stopping");
       m_drive.stop();
-      m_timer.reset();
+      if (m_timer.get() >= DriveConstants.kBalanceStopDuration + DriveConstants.kBalanceStopInterval) {
+        m_timer.reset();
+      }
+    }
+
+    if (m_timer.get() > DriveConstants.kBalanceNoStopPeriod) {
+      m_isStopping = true;
     }
   }
   
   @Override
   public boolean isFinished() {
-    return DriverStation.isAutonomousEnabled() ? false : m_pid.atSetpoint();
+    return false;
   }
   
   @Override

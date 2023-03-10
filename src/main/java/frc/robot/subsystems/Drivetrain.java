@@ -99,7 +99,7 @@ public class Drivetrain extends SubsystemBase {
   // modules needed to distinguish in chooser
   private Module m_prevModule;
 
-  boolean m_visionEnabled = true;
+  boolean m_visionEnabled = false;
 
   /**
    * Creates a new Swerve Style Drivetrain.
@@ -115,7 +115,6 @@ public class Drivetrain extends SubsystemBase {
     
     m_pigeon = new WPI_Pigeon2(DriveConstants.kPigeon, DriveConstants.kPigeonCAN);
     m_pigeon.configFactoryDefault();
-    setPigeonYaw(DriveConstants.kStartingHeadingDegrees);
 
     // m_modules = new ModuleOld[] {
     //   ModuleOld.create(ModuleConstants.FRONT_LEFT, m_swerveModulesTab),
@@ -143,12 +142,14 @@ public class Drivetrain extends SubsystemBase {
 
     m_poseEstimator = new SwerveDrivePoseEstimator(
       DriveConstants.kKinematics,
-      m_pigeon.getRotation2d(),
+      getYaw(),
       getModulePositions(),
       new Pose2d() // initial Odometry Location
     );
     m_poseEstimator.setVisionMeasurementStdDevs(VisionConstants.kBaseVisionPoseStdDevs);
 
+    setPigeonYaw(DriveConstants.kStartingHeadingDegrees);
+    
     m_xController = new PIDController(DriveConstants.kTranslationalP, 0, DriveConstants.kTranslationalD);
     m_yController = new PIDController(DriveConstants.kTranslationalP, 0, DriveConstants.kTranslationalD);
     m_rotationController = new PIDController(DriveConstants.kHeadingP, 0, DriveConstants.kHeadingD);
@@ -217,18 +218,20 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public Rotation2d getPitch() {
-    return Rotation2d.fromDegrees(m_pigeon.getPitch());
+    // THE PIGEON'S ROLL IS THE ROBOT'S PITCH! THIS SHOULD BE getRoll()!
+    return Rotation2d.fromDegrees(m_pigeon.getRoll());
   }
   
   public Rotation2d getRoll() {
-    return Rotation2d.fromDegrees(m_pigeon.getRoll());
+    // THE PIGEON'S PITCH IS THE ROBOT'S ROLL! THIS SHOULD BE getPitch()!
+    return Rotation2d.fromDegrees(m_pigeon.getPitch());
   }  
   
   /**
   * @return the pigeon's heading in a Rotation2d
   */
   public Rotation2d getYaw() {
-    return (DriveConstants.kInvertGyro) ? Rotation2d.fromDegrees(MathUtil.inputModulus(360 - m_pigeon.getYaw(), -180, 180))
+    return (DriveConstants.kInvertGyro) ? Rotation2d.fromDegrees(MathUtil.inputModulus(180 - m_pigeon.getYaw(), -180, 180))
         : Rotation2d.fromDegrees(MathUtil.inputModulus(m_pigeon.getYaw(), -180, 180));
   }
 
@@ -308,7 +311,7 @@ public class Drivetrain extends SubsystemBase {
     }
   }
 
-  PIDController m_balancePID = new PIDController(1, 0, 0.006);
+  PIDController m_balancePID = new PIDController(DriveConstants.kBalanceP, DriveConstants.kBalanceI, DriveConstants.kBalanceD);
   public PIDController getBalanceController() {
     return m_balancePID;
   }
@@ -367,6 +370,7 @@ public class Drivetrain extends SubsystemBase {
    */
   public void setPigeonYaw(double degrees) {
     m_pigeon.setYaw(degrees);
+    resetOdometry(getPose());
   }
 
   /**
@@ -562,6 +566,8 @@ public class Drivetrain extends SubsystemBase {
     
     // add angles
     m_drivetrainTab.addNumber("Yaw (deg)", () -> getYaw().getDegrees());
+    m_drivetrainTab.addNumber("Yaw from pose estim (deg)", () -> getPose().getRotation().getDegrees());
+
     m_drivetrainTab.addNumber("estimated X", () -> m_poseEstimator.getEstimatedPosition().getX());
     m_drivetrainTab.addNumber("estimated Y", () -> m_poseEstimator.getEstimatedPosition().getY());
     m_drivetrainTab.addNumber("getPitch", () -> m_pigeon.getPitch());

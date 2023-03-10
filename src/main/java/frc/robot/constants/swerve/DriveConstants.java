@@ -115,16 +115,23 @@ public class DriveConstants {
   public static double kHeadingP= 1;//4
   public static double kHeadingD= 0;
 
-   //balance PID
-   public static double kBalanceP= 0.01;
-   public static double kBalanceI= 0;
-   public static double kBalanceD= 0;
-   public static final double kBalanceMaxOutput = 0.5;
-   public static final double kBalanceTolerance = 0.1;
+  //balance PID
+  public static double kBalanceP= 0.05;
+  public static double kBalanceI= 0;
+  public static double kBalanceD= 0;
+  public static final double kBalanceMaxOutput = 0.5;
+  public static final double kBalanceTolerance = 2;
 
-   //balance timer
-   public static double kBalanceEndTime = 0.8;
-   public static double kBalanceStartTime = 0.5;
+  //balance timer
+  // when the balance command starts, it will run the pid normally for
+  // kBalanceNoStopPeriod seconds. Then, every kBalanceStopInterval seconds,
+  // it will stop the motors for kBalanceStopDuration seconds to help give
+  // the charge station some time to balance.
+  // "A non-linear system requires non-linear control" - jerry
+  // "If it's stupid but it works..."
+  public static double kBalanceNoStopPeriod = 2;
+  public static double kBalanceStopInterval = 0.5;
+  public static double kBalanceStopDuration = 0.2;
 
   //translational PID
   public static double kTranslationalP = 0.25;
@@ -158,7 +165,7 @@ public class DriveConstants {
   public static final boolean kDriveEnableCurrentLimit = true;
 
   /* Motor inversions */
-  public static final boolean kDriveMotorInvert = true;//kModuleConstants.driveMotorInvert;
+  public static final boolean kDriveMotorInvert = kModuleConstants.driveMotorInvert;
   public static final boolean kAngleMotorInvert = kModuleConstants.angleMotorInvert;
 
   /* Neutral Modes */
