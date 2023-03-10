@@ -57,12 +57,11 @@ public class PathPlannerCommand extends SequentialCommandGroup{
             new PPSwerveControllerCommand(
                 path, 
                 drive::getPose, // Pose supplier
-                DriveConstants.kKinematics, // SwerveDriveKinematics
                 drive.getPathplannerXController(), // X controller can't normal PID as pathplanner has Feed Forward 
                 drive.getPathplannerYController(), // Y controller can't normal PID as pathplanner has Feed Forward 
                 drive.getPathplannerRotationController(), // Rotation controller can't normal PID as pathplanner has Feed Forward 
-                drive::setModuleStates, // Module states consumer
-                false,
+                (chassisSpeeds) -> { drive.setChassisSpeeds(chassisSpeeds, false); }, // chassis Speeds consumer
+                false,  // use Alliance color
                 drive // Requires this drive subsystem
             )
         );

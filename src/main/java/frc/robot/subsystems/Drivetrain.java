@@ -367,6 +367,10 @@ public class Drivetrain extends SubsystemBase {
    * @param isOpenLoop if open loop control should be used for the drive velocity
    */
   public void setChassisSpeeds(ChassisSpeeds chassisSpeeds, boolean isOpenLoop) {
+    if (!RobotBase.isReal()) {
+      m_pigeon.getSimCollection().addHeading(
+      + Units.radiansToDegrees(chassisSpeeds.omegaRadiansPerSecond * Constants.kLoopTime));
+    }
     SwerveModuleState[] swerveModuleStates = DriveConstants.kKinematics.toSwerveModuleStates(chassisSpeeds);
     setModuleStates(swerveModuleStates, isOpenLoop);
   }
