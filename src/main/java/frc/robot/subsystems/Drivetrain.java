@@ -229,7 +229,7 @@ public class Drivetrain extends SubsystemBase {
   * @return the pigeon's heading in a Rotation2d
   */
   public Rotation2d getYaw() {
-    return (DriveConstants.kInvertGyro) ? Rotation2d.fromDegrees(MathUtil.inputModulus(360 - m_pigeon.getYaw(), -180, 180))
+    return (DriveConstants.kInvertGyro) ? Rotation2d.fromDegrees(MathUtil.inputModulus(180 - m_pigeon.getYaw(), -180, 180))
         : Rotation2d.fromDegrees(MathUtil.inputModulus(m_pigeon.getYaw(), -180, 180));
   }
 
