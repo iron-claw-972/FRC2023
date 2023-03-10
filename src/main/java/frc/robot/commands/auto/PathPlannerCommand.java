@@ -39,7 +39,7 @@ public class PathPlannerCommand extends SequentialCommandGroup{
           waypoints.get(0),
           waypoints.get(1),
           (PathPoint[]) Arrays.copyOfRange(waypoints.toArray(), 2, waypoints.size())
-        ))), 0, drive, true, useAllianceColor);
+        ))), 0, drive, false, useAllianceColor);
     }
 
     public PathPlannerCommand(String pathGroupName, int pathIndex, Drivetrain drive){
