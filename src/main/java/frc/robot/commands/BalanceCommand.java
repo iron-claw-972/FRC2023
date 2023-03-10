@@ -70,7 +70,8 @@ public class BalanceCommand extends CommandBase {
     // TODO: consider using heading PID to keep drive straight
     m_drive.drive(-m_output, 0, 0, true, true);
     
-    // after DriveConstants.kBalanceNoStopPeriod, will stop periodically to give charge station time to balance. See constants.
+    // after DriveConstants.kBalanceNoStopPeriod, will stop every DriveConstants.kBalanceStopInterval seconds 
+    // for DriveConstants.kBalanceStopDuration seconds, to give charge station time to balance. See DriveConstants.java
     if (m_isStopping && m_timer.get() >= DriveConstants.kBalanceStopInterval) {
       m_drive.stop();
       if (m_timer.get() >= DriveConstants.kBalanceStopDuration + DriveConstants.kBalanceStopInterval) {
