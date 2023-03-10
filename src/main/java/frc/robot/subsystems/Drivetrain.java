@@ -6,6 +6,7 @@ import java.util.function.DoubleSupplier;
 import org.photonvision.EstimatedRobotPose;
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
+import com.ctre.phoenix.sensors.Pigeon2.AxisDirection;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 
@@ -115,6 +116,8 @@ public class Drivetrain extends SubsystemBase {
     
     m_pigeon = new WPI_Pigeon2(DriveConstants.kPigeon, DriveConstants.kPigeonCAN);
     m_pigeon.configFactoryDefault();
+    // Our pigeon is mounted with X forward, and z upward
+    m_pigeon.configMountPose(AxisDirection.PositiveX, AxisDirection.PositiveZ);
 
     // m_modules = new ModuleOld[] {
     //   ModuleOld.create(ModuleConstants.FRONT_LEFT, m_swerveModulesTab),
@@ -218,13 +221,11 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public Rotation2d getPitch() {
-    // THE PIGEON'S ROLL IS THE ROBOT'S PITCH! THIS SHOULD BE getRoll()!
-    return Rotation2d.fromDegrees(m_pigeon.getRoll());
+    return Rotation2d.fromDegrees(m_pigeon.getPitch());
   }
   
   public Rotation2d getRoll() {
-    // THE PIGEON'S PITCH IS THE ROBOT'S ROLL! THIS SHOULD BE getPitch()!
-    return Rotation2d.fromDegrees(m_pigeon.getPitch());
+    return Rotation2d.fromDegrees(m_pigeon.getRoll());
   }  
   
   /**
