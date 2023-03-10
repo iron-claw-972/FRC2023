@@ -91,11 +91,13 @@ public class Module {
 
   private void setAngle(SwerveModuleState desiredState) {
     // Prevent rotating module if desired speed < 1%. Prevents Jittering.
-    Rotation2d angle = (Math.abs(desiredState.speedMetersPerSecond) <= (DriveConstants.kMaxSpeed * 0.01)
-        && m_stateDeadband) ? m_lastAngle : desiredState.angle;
+    if (m_stateDeadband && (Math.abs(desiredState.speedMetersPerSecond) <= (DriveConstants.kMaxSpeed * 0.01))) {
+      stop();
+      return;
+    }
 
-    m_angleMotor.set(ControlMode.Position, Conversions.degreesToFalcon(angle.getDegrees(), DriveConstants.kAngleGearRatio));
-    m_lastAngle = angle;
+    m_angleMotor.set(ControlMode.Position, Conversions.degreesToFalcon(desiredState.angle.getDegrees(), DriveConstants.kAngleGearRatio));
+    m_lastAngle = desiredState.angle;
   }
 
   public void enableStateDeadband(boolean enabled) {
