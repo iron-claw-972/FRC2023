@@ -375,8 +375,8 @@ public class Drivetrain extends SubsystemBase {
     if (m_visionEnabled) {
 
       // The angle should be greater than 5 degrees if it goes over the charge station
-      if(Math.abs(getPitch().getDegrees())>5 || Math.abs(getRoll().getDegrees())>5){
-        m_chargeStationVision=true;
+      if (Math.abs(getPitch().getDegrees()) > 5 || Math.abs(getRoll().getDegrees()) > 5) {
+        m_chargeStationVision = true;
       }
 
       // An array list of poses returned by different cameras
@@ -391,7 +391,7 @@ public class Drivetrain extends SubsystemBase {
           // The position of the current april tag
           Pose3d currentTagPose = m_vision.getTagPose(estimatedPose.targetsUsed.get(j).getFiducialId());
           // If it can't find the april tag's pose, don't run the rest of the for loop for this tag
-          if(currentTagPose == null){
+          if (currentTagPose == null) {
             continue;
           }
           Translation2d currentTagPoseTranslation = currentTagPose.toPose2d().getTranslation();
@@ -408,12 +408,12 @@ public class Drivetrain extends SubsystemBase {
           estimatedPose.timestampSeconds,
           m_chargeStationVision ? VisionConstants.kChargeStationVisionPoseStdDevs.plus(
             currentEstimatedPoseTranslation.getDistance(closestTagPoseTranslation) * VisionConstants.kVisionPoseStdDevFactor
-          ):VisionConstants.kBaseVisionPoseStdDevs
+          ) : VisionConstants.kBaseVisionPoseStdDevs
         );
       }
       
       // If it used vision after going over the charge station, it should trust vision normally again
-      if(estimatedPoses.size()>0){
+      if (estimatedPoses.size()>0) {
         m_chargeStationVision = false;
       }
       m_fieldDisplay.setRobotPose(m_poseEstimator.getEstimatedPosition());
