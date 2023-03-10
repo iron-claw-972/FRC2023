@@ -116,8 +116,8 @@ public class Drivetrain extends SubsystemBase {
     
     m_pigeon = new WPI_Pigeon2(DriveConstants.kPigeon, DriveConstants.kPigeonCAN);
     m_pigeon.configFactoryDefault();
-    // Our pigeon is mounted with X forward, and z upward
-    m_pigeon.configMountPose(AxisDirection.PositiveX, AxisDirection.PositiveZ);
+    // Our pigeon is mounted with y forward, and z upward
+    m_pigeon.configMountPose(AxisDirection.PositiveY, AxisDirection.PositiveZ);
 
     // m_modules = new ModuleOld[] {
     //   ModuleOld.create(ModuleConstants.FRONT_LEFT, m_swerveModulesTab),
