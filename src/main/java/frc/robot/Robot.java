@@ -61,10 +61,6 @@ public class Robot extends TimedRobot {
     // save the identity in a global
     kRobotId = robotId;
 
-    if (isSimulation()) {
-      kRobotId = RobotId.SwerveCompetition;
-    }
-
     // build the RobotContainer
     m_robotContainer = new RobotContainer(robotId);
   }
