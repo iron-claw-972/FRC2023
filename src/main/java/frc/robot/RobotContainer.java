@@ -3,8 +3,6 @@ package frc.robot;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -15,16 +13,11 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Robot.RobotId;
-import frc.robot.commands.BalanceSimple;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.auto.EngageFromLeftDriverSide;
 import frc.robot.commands.auto.EngageFromRightDriverSide;
-import frc.robot.commands.auto.DepositThenPath;
 import frc.robot.commands.auto.PathPlannerCommand;
-import frc.robot.commands.scoring.PositionIntake;
-import frc.robot.commands.scoring.Stow;
 import frc.robot.commands.scoring.PositionIntake.Position;
-import frc.robot.commands.scoring.intake.Outtake;
 import frc.robot.constants.VisionConstants;
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.controls.BaseDriverConfig;
@@ -37,6 +30,8 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.Intake;
+import frc.robot.util.AutoStartPosition;
+import frc.robot.util.Node.NodeType;
 import frc.robot.util.PathGroupLoader;
 import frc.robot.util.Vision;
 
@@ -50,6 +45,9 @@ public class RobotContainer {
 
   // Shuffleboard auto chooser
   private final SendableChooser<Command> m_autoCommand = new SendableChooser<>();
+  private final SendableChooser<Position> m_autoDeposit = new SendableChooser<>();
+  private final SendableChooser<AutoStartPosition> m_autoStart = new SendableChooser<>();
+  private final SendableChooser<NodeType> m_autoNodeType = new SendableChooser<>();
 
   //shuffleboard tabs
   private final ShuffleboardTab m_mainTab = Shuffleboard.getTab("Main");
@@ -62,7 +60,6 @@ public class RobotContainer {
   private final ShuffleboardTab m_elevatorTab = Shuffleboard.getTab("Elevator");
   private final ShuffleboardTab m_intakeTab = Shuffleboard.getTab("Intake");
   private final ShuffleboardTab m_barTab = Shuffleboard.getTab("Bar");
-  
 
   private final Vision m_vision;
 
@@ -190,6 +187,8 @@ public class RobotContainer {
     
     autoChooserUpdate();
     m_autoTab.add("Auto Chooser", m_autoCommand);
+    m_autoTab.add("Deposit Row", m_autoDeposit);
+    m_autoTab.add("Start Position", m_autoStart);
 
     loadCommandSchedulerShuffleboard();
     
@@ -228,7 +227,17 @@ public class RobotContainer {
    */
   public void autoChooserUpdate() {
 
-    Position autoDepositPos = Position.TOP;
+    m_autoDeposit.setDefaultOption("Top", Position.TOP);
+    m_autoDeposit.addOption("Middle", Position.MIDDLE);
+    m_autoDeposit.addOption("Bottom", Position.BOTTOM);
+
+    m_autoStart.setDefaultOption("Left", AutoStartPosition.LEFT);
+    m_autoStart.addOption("Center", AutoStartPosition.CENTER);
+    m_autoStart.addOption("Right", AutoStartPosition.RIGHT);
+
+    m_autoNodeType.setDefaultOption("Cone", NodeType.CONE);
+    m_autoNodeType.addOption("Cube", NodeType.CUBE);
+    m_autoNodeType.addOption("Hybrid", NodeType.HYBRID);
 
     // add commands below with: m_autoCommand.addOption("Example", new ExampleCommand());
     m_autoCommand.setDefaultOption("Do Nothing", new PrintCommand("This will do nothing!"));
@@ -244,7 +253,8 @@ public class RobotContainer {
     }
 
     if (m_drive != null && m_elevator != null && m_arm != null && m_intake != null) {
-      m_autoCommand.addOption("Hybrid Score", new PositionIntake(m_elevator, m_arm, ()->true, Position.BOTTOM).andThen(new Outtake(m_intake).withTimeout(5)).andThen(new Stow(m_intake, m_elevator, m_arm)));
+
+      // m_autoCommand.addOption("Hybrid Score", new PositionIntake(m_elevator, m_arm, ()->true, Position.BOTTOM).andThen(new Outtake(m_intake).withTimeout(5)).andThen(new Stow(m_intake, m_elevator, m_arm)));
 
       // m_autoCommand.addOption("HYBRID MOBILITY", 
       //   new PositionIntake(m_elevator, m_arm, ()->true, Position.BOTTOM).andThen(
@@ -255,16 +265,17 @@ public class RobotContainer {
       //   )))
       // ));
 
-      m_autoCommand.addOption("Grid 1 Mobility", new DepositThenPath("Grid 1 Mobility", autoDepositPos, m_drive, m_elevator, m_arm, m_intake));
-      m_autoCommand.addOption("Grid 9 Mobility", new DepositThenPath("Grid 9 Mobility", autoDepositPos, m_drive, m_elevator, m_arm, m_intake));
-      m_autoCommand.addOption("Deposit No Mobility", new DepositThenPath("Grid 9 No Mobility", autoDepositPos, m_drive, m_elevator, m_arm, m_intake));
+      // working
+      // m_autoCommand.addOption("Grid 1 Mobility", new DepositThenPath("Grid 1 Mobility", m_autoDeposit, m_drive, m_elevator, m_arm, m_intake));
+      // m_autoCommand.addOption("Grid 9 Mobility", new DepositThenPath("Grid 9 Mobility", m_autoDeposit, m_drive, m_elevator, m_arm, m_intake));
+      // m_autoCommand.addOption("Deposit No Mobility", new DepositThenPath("Grid 9 No Mobility", m_autoDeposit, m_drive, m_elevator, m_arm, m_intake));
 
       // m_autoCommand.addOption("BottomSimpleLine1", new PathPlannerCommand("Bottom Simple Line1", 0, m_drive));
     
-      m_autoCommand.addOption("Grid 9 Engage", new DepositThenPath("Grid 9 Engage", autoDepositPos, m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceSimple(m_drive)));
-      m_autoCommand.addOption("Grid 6 Engage (no mobility)", new DepositThenPath("Grid 6 Engage No Mobility", autoDepositPos, m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceSimple(m_drive)));
-      m_autoCommand.addOption("Grid 6 Engage (careful)", new DepositThenPath("Grid 6 Engage", autoDepositPos, m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceSimple(m_drive)));    
-      m_autoCommand.addOption("Grid 1 Engage", new DepositThenPath("Grid 1 Engage", autoDepositPos, m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceSimple(m_drive)));
+      // m_autoCommand.addOption("Grid 9 Engage", new DepositThenPath("Grid 9 Engage", m_autoDeposit, m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceSimple(m_drive)));
+      // m_autoCommand.addOption("Grid 6 Engage (no mobility)", new DepositThenPath("Grid 6 Engage No Mobility", m_autoDeposit, m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceSimple(m_drive)));
+      // m_autoCommand.addOption("Grid 6 Engage (careful)", new DepositThenPath("Grid 6 Engage", m_autoDeposit, m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceSimple(m_drive)));    
+      // m_autoCommand.addOption("Grid 1 Engage", new DepositThenPath("Grid 1 Engage", m_autoDeposit, m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceSimple(m_drive)));
     }
   }
 

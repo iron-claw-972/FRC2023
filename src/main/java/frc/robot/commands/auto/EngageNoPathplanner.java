@@ -1,19 +1,12 @@
 package frc.robot.commands.auto;
 
-import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
-
-import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.scoring.Stow;
 import frc.robot.commands.scoring.Dunk;
 import frc.robot.commands.scoring.PositionIntake;
 import frc.robot.commands.scoring.PositionIntake.Position;
+import frc.robot.commands.scoring.Stow;
 import frc.robot.commands.scoring.elevator.CalibrateElevator;
 import frc.robot.commands.scoring.elevator.MoveElevator;
 import frc.robot.commands.scoring.intake.Outtake;
@@ -22,30 +15,34 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.Intake;
-import frc.robot.util.PathGroupLoader;
-import frc.robot.util.Node.NodeType;
+import frc.robot.util.AutoStartPosition;
 
-public class DepositThenPath extends SequentialCommandGroup {
+/**
+ * Deposits preloaded game piece, then exits community and engages with charge station.
+ */
+public class EngageNoPathplanner extends SequentialCommandGroup {
 
-  public DepositThenPath(String pathName, Position depositPosition, NodeType type, Drivetrain drive, Elevator elevator, FourBarArm arm, Intake intake) {
+  public EngageNoPathplanner(SendableChooser<Position> depositSelector, SendableChooser<AutoStartPosition> startSelector, Drivetrain drive, Elevator elevator, FourBarArm arm, Intake intake) {
     addRequirements(drive, elevator, arm, intake);
 
+    Position depositPosition = depositSelector.getSelected();
+    AutoStartPosition startPosition = startSelector.getSelected();
+    
     addCommands(
-      new InstantCommand(() -> drive.setPigeonYaw(PathGroupLoader.getPathGroup(pathName).get(0))),
       new CalibrateElevator(elevator),
       depositPosition == Position.MIDDLE ?
         new PositionIntake(elevator, arm, () -> false, depositPosition).withTimeout(1.5) : 
         new MoveElevator(elevator, ElevatorConstants.kMiddleConeHeight).withTimeout(1).andThen(new PositionIntake(elevator, arm, () -> false, Position.TOP).withTimeout(1.5)),
       depositPosition == Position.MIDDLE ? 
         new Dunk(arm, intake).withTimeout(1.5) : new Outtake(intake).withTimeout(1.5),
-      new PathPlannerCommand(pathName, 0, drive, true),
       new Stow(intake, elevator, arm),
-      new PathPlannerCommand(pathName, 1, drive, true)
+      startPosition == AutoStartPosition.LEFT
+        ? new EngageFromLeftDriverSide(drive)
+        : startPosition == AutoStartPosition.RIGHT
+          ? new EngageFromRightDriverSide(drive)
+          : new EngageFromCenterGrid(drive)
     );
-  }
 
-  public DepositThenPath(String pathName, SendableChooser<Position> depositSelector, SendableChooser<NodeType> typeSelector, Drivetrain drive, Elevator elevator, FourBarArm arm, Intake intake) {
-    this(pathName, depositSelector.getSelected(), typeSelector.getSelected(), drive, elevator, arm, intake);
   }
 
 }

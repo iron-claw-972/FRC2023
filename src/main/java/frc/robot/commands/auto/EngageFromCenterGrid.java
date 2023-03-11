@@ -25,7 +25,6 @@ public class EngageFromCenterGrid extends SequentialCommandGroup{
             new InstantCommand(() -> m_drive.setPigeonYaw(startRot.getDegrees()), m_drive),
             new GoToPose(m_drive, poseCharge),
             new BalanceCommand(m_drive)
-
         );
     }
 }
