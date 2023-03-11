@@ -80,62 +80,110 @@ public class RobotContainer {
   private final ManualController m_manualController;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer() {
-
-    // Update drive constants based off of robot type
-    DriveConstants.update();
-    VisionConstants.update();
+  public RobotContainer(RobotId robotId) {
 
     // PowerDistribution m_PDModule = new PowerDistribution(1, ModuleType.kRev);
     // m_PDModule.clearStickyFaults();
 
-    m_vision = new Vision(m_visionTab, VisionConstants.kCameras);
+    switch (robotId) {
+      case SwerveCompetition:
+        // Update drive constants based off of robot type
+        DriveConstants.update(robotId);
+        VisionConstants.update(robotId);
 
-    // Create Drivetrain, because every robot will have a drivetrain
-    m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab, m_vision);
-    m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
+        m_vision = new Vision(m_visionTab, VisionConstants.kCameras);
 
-    // If the robot is the competition robot, create the arm and intake
-    if (Robot.kRobotId == RobotId.SwerveCompetition) {
+        // Create Drivetrain
+        m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab, m_vision);
+        m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
+    
+        m_arm = new FourBarArm();
+        m_intake = new Intake(m_intakeTab);
+        m_elevator = new Elevator(m_elevatorTab, ()->m_intake.containsGamePiece());
+        m_deployingBar = new Bar(m_barTab); 
+  
+        m_operator = new Operator();
+        m_testController = new TestController(m_arm, m_intake, m_elevator, m_deployingBar);
+        m_manualController = new ManualController(m_arm, m_intake, m_elevator);
+  
+        m_operator.configureControls(m_arm, m_intake, m_elevator, m_deployingBar, m_vision);
+        m_testController.configureControls();
+        m_manualController.configureControls();
+  
+        // load paths before auto starts
+        PathGroupLoader.loadPathGroups();
 
-      m_arm = new FourBarArm();
-      m_intake = new Intake(m_intakeTab);
-      m_elevator = new Elevator(m_elevatorTab, ()->m_intake.containsGamePiece());
-      m_deployingBar = new Bar(m_barTab); 
+        // add camera display
+        CameraServer.startAutomaticCapture();
 
-      m_operator = new Operator();
-      m_testController = new TestController(m_arm, m_intake, m_elevator, m_deployingBar);
-      m_manualController = new ManualController(m_arm, m_intake, m_elevator);
+        m_driver.configureControls();
 
-      m_operator.configureControls(m_arm, m_intake, m_elevator, m_deployingBar, m_vision);
-      m_testController.configureControls();
-      m_manualController.configureControls();
+        m_vision.setupVisionShuffleboard();
+        m_driver.setupShuffleboard();
 
-    } else {
+        m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive, m_driver));
 
-      DriverStation.reportWarning("Not registering subsystems and controls due to incorrect robot", false);
+        break;
 
-      m_arm = null;
-      m_intake = null;
-      m_elevator = null;
-      m_deployingBar = null;
+      case SwerveTest:
+        // Update drive constants based off of robot type
+        DriveConstants.update(robotId);
+        VisionConstants.update(robotId);
 
-      m_operator = null;
-      m_testController = null;
-      m_manualController = null;
+        m_vision = new Vision(m_visionTab, VisionConstants.kCameras);
 
+        // Create Drivetrain, because every robot will have a drivetrain
+        m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab, m_vision);
+        m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
+
+        DriverStation.reportWarning("Not registering subsystems and controls due to incorrect robot", false);
+
+        // TODO: construct dummy subsystems so SwerveTest can run all auto routines
+        m_arm = null;
+        m_intake = null;
+        m_elevator = null;
+        m_deployingBar = null;
+  
+        m_operator = null;
+        m_testController = null;
+        m_manualController = null;
+
+        // load paths before auto starts
+        PathGroupLoader.loadPathGroups();
+
+        // add camera display
+        CameraServer.startAutomaticCapture();
+
+        m_driver.configureControls();
+
+        m_vision.setupVisionShuffleboard();
+        m_driver.setupShuffleboard();
+
+        m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive, m_driver));
+        
+        break;
+
+      default:
+        DriverStation.reportWarning("Not registering subsystems and controls due to incorrect robot", false);
+
+        m_vision = null;
+
+        m_driver = null;
+        m_drive = null;
+
+        m_arm = null;
+        m_intake = null;
+        m_elevator = null;
+        m_deployingBar = null;
+
+        m_operator = null;
+        m_testController = null;
+        m_manualController = null;
+        break;
     }
 
     // This is really annoying so it's disabled
     DriverStation.silenceJoystickConnectionWarning(true);
-
-    // load paths before auto starts
-    PathGroupLoader.loadPathGroups();
-
-    // add camera display
-    CameraServer.startAutomaticCapture();
-
-    m_driver.configureControls();
 
     LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
     LiveWindow.setEnabled(false);
@@ -144,12 +192,8 @@ public class RobotContainer {
     m_autoTab.add("Auto Chooser", m_autoCommand);
 
     loadCommandSchedulerShuffleboard();
-    m_vision.setupVisionShuffleboard();
-    m_driver.setupShuffleboard();
     
     addTestCommands();
-
-    m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive, m_driver));
   }
 
   /**
@@ -167,8 +211,14 @@ public class RobotContainer {
   public void addTestCommands() {
     GenericEntry testEntry = m_testTab.add("Test Results", false).getEntry();
     m_testTab.add("Cancel Command", new InstantCommand( () -> CommandScheduler.getInstance().cancelAll()));
-    m_drive.addTestCommands(m_testTab, testEntry);
-    m_vision.addTestCommands(m_testTab, testEntry, m_drive);
+
+    if (m_drive != null) {
+      m_drive.addTestCommands(m_testTab, testEntry);
+    }
+
+    if (m_vision != null) {
+      m_vision.addTestCommands(m_testTab, testEntry, m_drive);
+    }
   }
 
   /**
@@ -182,38 +232,41 @@ public class RobotContainer {
 
     // add commands below with: m_autoCommand.addOption("Example", new ExampleCommand());
     m_autoCommand.setDefaultOption("Do Nothing", new PrintCommand("This will do nothing!"));
-    m_autoCommand.addOption("Figure 8", new PathPlannerCommand("Figure 8", 0, m_drive, true));
-    m_autoCommand.addOption("One Meter", new PathPlannerCommand("One Meter", 0, m_drive, true));
-    // m_autoCommand.addOption("To Center And Back", new PathPlannerCommand("To Center And Back", 0, m_drive));
-    // m_autoCommand.addOption("Grid 9 Mobility (no deposit)", new PathPlannerCommand("Grid 9 Mobility", 0, m_drive));
 
-    m_autoCommand.addOption("Hybrid Score", new PositionIntake(m_elevator, m_arm, ()->true, Position.BOTTOM).andThen(new Outtake(m_intake).withTimeout(5)).andThen(new Stow(m_intake, m_elevator, m_arm)));
+    if (m_drive != null) {
+      m_autoCommand.addOption("Figure 8", new PathPlannerCommand("Figure 8", 0, m_drive, true));
+      m_autoCommand.addOption("One Meter", new PathPlannerCommand("One Meter", 0, m_drive, true));
+      // m_autoCommand.addOption("To Center And Back", new PathPlannerCommand("To Center And Back", 0, m_drive));
+      // m_autoCommand.addOption("Grid 9 Mobility (no deposit)", new PathPlannerCommand("Grid 9 Mobility", 0, m_drive));
 
-    // m_autoCommand.addOption("HYBRID MOBILITY", 
-    //   new PositionIntake(m_elevator, m_arm, ()->true, Position.BOTTOM).andThen(
-    //   new PathPlannerCommand("Grid 1 Mobility", 0, m_drive, true).andThen(
-    //   new Outtake(m_intake).withTimeout(4).andThen(
-    //   new Stow(m_intake, m_elevator, m_arm).andThen(
-    //     new PathPlannerCommand("Grid 1 Mobility", 1, m_drive)
-    //   )))
-    // ));
+      m_autoCommand.addOption("Engage Left", new EngageFromLeftDriverSide(m_drive));
+      m_autoCommand.addOption("Engage Right", new EngageFromRightDriverSide(m_drive));
+    }
 
-    m_autoCommand.addOption("Grid 1 Mobility", new DepositThenPath("Grid 1 Mobility", autoDepositPos, m_drive, m_elevator, m_arm, m_intake));
-    m_autoCommand.addOption("Grid 9 Mobility", new DepositThenPath("Grid 9 Mobility", autoDepositPos, m_drive, m_elevator, m_arm, m_intake));
-    m_autoCommand.addOption("Deposit No Mobility", new DepositThenPath("Grid 9 No Mobility", autoDepositPos, m_drive, m_elevator, m_arm, m_intake));
+    if (m_drive != null && m_elevator != null && m_arm != null && m_intake != null) {
+      m_autoCommand.addOption("Hybrid Score", new PositionIntake(m_elevator, m_arm, ()->true, Position.BOTTOM).andThen(new Outtake(m_intake).withTimeout(5)).andThen(new Stow(m_intake, m_elevator, m_arm)));
 
-    // m_autoCommand.addOption("BottomSimpleLine1", new PathPlannerCommand("Bottom Simple Line1", 0, m_drive));
+      // m_autoCommand.addOption("HYBRID MOBILITY", 
+      //   new PositionIntake(m_elevator, m_arm, ()->true, Position.BOTTOM).andThen(
+      //   new PathPlannerCommand("Grid 1 Mobility", 0, m_drive, true).andThen(
+      //   new Outtake(m_intake).withTimeout(4).andThen(
+      //   new Stow(m_intake, m_elevator, m_arm).andThen(
+      //     new PathPlannerCommand("Grid 1 Mobility", 1, m_drive)
+      //   )))
+      // ));
+
+      m_autoCommand.addOption("Grid 1 Mobility", new DepositThenPath("Grid 1 Mobility", autoDepositPos, m_drive, m_elevator, m_arm, m_intake));
+      m_autoCommand.addOption("Grid 9 Mobility", new DepositThenPath("Grid 9 Mobility", autoDepositPos, m_drive, m_elevator, m_arm, m_intake));
+      m_autoCommand.addOption("Deposit No Mobility", new DepositThenPath("Grid 9 No Mobility", autoDepositPos, m_drive, m_elevator, m_arm, m_intake));
+
+      // m_autoCommand.addOption("BottomSimpleLine1", new PathPlannerCommand("Bottom Simple Line1", 0, m_drive));
     
-    m_autoCommand.addOption("Grid 9 Engage", new DepositThenPath("Grid 9 Engage", autoDepositPos, m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceSimple(m_drive)));
-    m_autoCommand.addOption("Grid 6 Engage (no mobility)", new DepositThenPath("Grid 6 Engage No Mobility", autoDepositPos, m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceSimple(m_drive)));
-    m_autoCommand.addOption("Grid 6 Engage (careful)", new DepositThenPath("Grid 6 Engage", autoDepositPos, m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceSimple(m_drive)));    
-    m_autoCommand.addOption("Grid 1 Engage", new DepositThenPath("Grid 1 Engage", autoDepositPos, m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceSimple(m_drive)));
-  
-    m_autoCommand.addOption("Engage Left", new EngageFromLeftDriverSide(m_drive));
-    m_autoCommand.addOption("Engage Right", new EngageFromRightDriverSide(m_drive));
-   }
-
-  
+      m_autoCommand.addOption("Grid 9 Engage", new DepositThenPath("Grid 9 Engage", autoDepositPos, m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceSimple(m_drive)));
+      m_autoCommand.addOption("Grid 6 Engage (no mobility)", new DepositThenPath("Grid 6 Engage No Mobility", autoDepositPos, m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceSimple(m_drive)));
+      m_autoCommand.addOption("Grid 6 Engage (careful)", new DepositThenPath("Grid 6 Engage", autoDepositPos, m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceSimple(m_drive)));    
+      m_autoCommand.addOption("Grid 1 Engage", new DepositThenPath("Grid 1 Engage", autoDepositPos, m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceSimple(m_drive)));
+    }
+  }
 
   /**
    * Loads the command scheduler shuffleboard which will add event markers whenever a command finishes, ends, or is interrupted.
