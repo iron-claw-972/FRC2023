@@ -22,6 +22,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -118,19 +119,21 @@ public class Drivetrain extends SubsystemBase {
     m_pigeon = new WPI_Pigeon2(DriveConstants.kPigeon, DriveConstants.kPigeonCAN);
     m_pigeon.configFactoryDefault();
 
-    // m_modules = new ModuleOld[] {
-    //   ModuleOld.create(ModuleConstants.FRONT_LEFT, m_swerveModulesTab),
-    //   ModuleOld.create(ModuleConstants.FRONT_RIGHT, m_swerveModulesTab),
-    //   ModuleOld.create(ModuleConstants.BACK_LEFT, m_swerveModulesTab),
-    //   ModuleOld.create(ModuleConstants.BACK_RIGHT, m_swerveModulesTab)
-    // };
-
-    m_modules = new Module[] {
-      new Module(ModuleConstants.FRONT_LEFT, swerveModulesTab),
-      new Module(ModuleConstants.FRONT_RIGHT, swerveModulesTab),
-      new Module(ModuleConstants.BACK_LEFT, swerveModulesTab),
-      new Module(ModuleConstants.BACK_RIGHT, swerveModulesTab),
-    };
+    if (RobotBase.isReal()) {
+      m_modules = new Module[] {
+        new Module(ModuleConstants.FRONT_LEFT, swerveModulesTab),
+        new Module(ModuleConstants.FRONT_RIGHT, swerveModulesTab),
+        new Module(ModuleConstants.BACK_LEFT, swerveModulesTab),
+        new Module(ModuleConstants.BACK_RIGHT, swerveModulesTab),
+      };
+    } else {
+      m_modules = new ModuleSim[] {
+        new ModuleSim(ModuleConstants.FRONT_LEFT, swerveModulesTab),
+        new ModuleSim(ModuleConstants.FRONT_RIGHT, swerveModulesTab),
+        new ModuleSim(ModuleConstants.BACK_LEFT, swerveModulesTab),
+        new ModuleSim(ModuleConstants.BACK_RIGHT, swerveModulesTab),
+      };
+    }
 
     m_prevModule = m_modules[0];
 
@@ -338,6 +341,10 @@ public class Drivetrain extends SubsystemBase {
    * @param isOpenLoop if open loop control should be used for the drive velocity
    */
   public void setChassisSpeeds(ChassisSpeeds chassisSpeeds, boolean isOpenLoop) {
+    if (!RobotBase.isReal()) {
+      m_pigeon.getSimCollection().addHeading(
+      + Units.radiansToDegrees(chassisSpeeds.omegaRadiansPerSecond * Constants.kLoopTime));
+    }
     SwerveModuleState[] swerveModuleStates = DriveConstants.kKinematics.toSwerveModuleStates(chassisSpeeds);
     setModuleStates(swerveModuleStates, isOpenLoop);
   }
