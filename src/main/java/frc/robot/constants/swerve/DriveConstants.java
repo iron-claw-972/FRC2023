@@ -55,61 +55,21 @@ public class DriveConstants {
   public static int kSteerFrontLeft = 15;
   public static int kEncoderFrontLeft = 40;
   public static double kSteerOffsetFrontLeft = 0.058291152119637;//-3.060285486280918+Math.PI;
-  public static double kDriveKSFrontLeft = 0.5309532917741253;
-  public static double kDriveKVFrontLeft = 2.3335800153688133;
-  public static double kDrivePFrontLeft = 5.5;
-  public static double kDriveIFrontLeft = 0;
-  public static double kDriveDFrontLeft = 0;
-  public static double kSteerKSFrontLeft = 0.7799787873000478;
-  public static double kSteerKVFrontLeft = 0.37367610423475633;
-  public static double kSteerPFrontLeft = 14;
-  public static double kSteerIFrontLeft = 0;
-  public static double kSteerDFrontLeft = 0;
   
   public static int kDriveFrontRight = 33; 
   public static int kSteerFrontRight = 30;
   public static int kEncoderFrontRight = 41; 
   public static double kSteerOffsetFrontRight = -2.994324445724487;//-3.001994334161282;
-  public static double kDriveKSFrontRight = 0.705225250399035;
-  public static double kDriveKVFrontRight = 2.1932870453571005;
-  public static double kDrivePFrontRight = 5.5;
-  public static double kDriveIFrontRight = 0;
-  public static double kDriveDFrontRight = 0;
-  public static double kSteerKSFrontRight = 0.7922475586517754;
-  public static double kSteerKVFrontRight = 0.37485552675539596;
-  public static double kSteerPFrontRight = 14;
-  public static double kSteerIFrontRight = 0;
-  public static double kSteerDFrontRight = 0;
   
   public static int kDriveBackLeft = 16;
   public static int kSteerBackLeft = 18;
   public static int kEncoderBackLeft = 42; 
   public static double kSteerOffsetBackLeft = -2.540267050266266;//0.650406539440155+Math.PI;
-  public static double kDriveKSBackLeft = 0.486459484740409;
-  public static double kDriveKVBackLeft = 2.4125110222062958;
-  public static double kDrivePBackLeft = 5.5;
-  public static double kDriveIBackLeft = 0;
-  public static double kDriveDBackLeft = 0;
-  public static double kSteerKSBackLeft = 0.7858221245795006;
-  public static double kSteerKVBackLeft = 0.3836595789584776;
-  public static double kSteerPBackLeft = 14;
-  public static double kSteerIBackLeft = 0;
-  public static double kSteerDBackLeft = 0;
   
   public static int kDriveBackRight = 32;
   public static int kSteerBackRight = 35;
   public static int kEncoderBackRight = 43; 
   public static double kSteerOffsetBackRight = 2.626169800758362;//2.771897681057453;
-  public static double kDriveKSBackRight = 0.6282516293779395;
-  public static double kDriveKVBackRight = 2.2812532747924257;
-  public static double kDrivePBackRight = 5.5;
-  public static double kDriveIBackRight = 0;
-  public static double kDriveDBackRight = 0;
-  public static double kSteerKSBackRight = 0.7914079268516959;
-  public static double kSteerKVBackRight = 0.388059634963963;
-  public static double kSteerPBackRight = 14;
-  public static double kSteerIBackRight = 0;
-  public static double kSteerDBackRight = 0;
 
   // heading PID
   public static double kHeadingP= 1;//4
@@ -202,65 +162,24 @@ public class DriveConstants {
       kSteerFrontLeft = 2;
       kEncoderFrontLeft = 3;
       kSteerOffsetFrontLeft = -1.58+Math.PI;
-      kDriveKSFrontLeft = 0.61534;
-      kDriveKVFrontLeft = 4.45071*2;
-      kDrivePFrontLeft = 2*2;
-      kDriveIFrontLeft = 0;
-      kDriveDFrontLeft = 0;
-      kSteerKSFrontLeft = 0.7380365018530551;
-      kSteerKVFrontLeft = 0.3777356557786064;
-      kSteerPFrontLeft = 12;
-      kSteerIFrontLeft = 0;
-      kSteerDFrontLeft = 0;
       
       kDriveFrontRight = 4; 
       kSteerFrontRight = 5;
       kEncoderFrontRight = 6; 
       kSteerOffsetFrontRight = 1.935+Math.PI;
-      kDriveKSFrontRight = 0.61283;
-      kDriveKVFrontRight = 4.45431*2;
-      kDrivePFrontRight = 2*2;
-      kDriveIFrontRight = 0;
-      kDriveDFrontRight = 0;
-      kSteerKSFrontRight = 0.6206519356062554;
-      kSteerKVFrontRight = 0.36589750785689507;
-      kSteerPFrontRight = 12;
-      kSteerIFrontRight = 0;
-      kSteerDFrontRight = 0;
       
       kDriveBackLeft = 7;
       kSteerBackLeft = 8;
       kEncoderBackLeft = 9; 
       kSteerOffsetBackLeft = -3.1415+Math.PI;
-      kDriveKSBackLeft = 0.54150;
-      kDriveKVBackLeft = 4.53909*2;
-      kDrivePBackLeft = 2*2;
-      kDriveIBackLeft = 0;
-      kDriveDBackLeft = 0;
-      kSteerKSBackLeft = 1;
-      kSteerKVBackLeft = 0.5;
-      kSteerPBackLeft = 12;
-      kSteerIBackLeft = 0;
-      kSteerDBackLeft = 0;
       
       kDriveBackRight = 10;
       kSteerBackRight = 11;
       kEncoderBackRight = 12; 
       kSteerOffsetBackRight = -0.383494421839714+Math.PI;
-      kDriveKSBackRight = 0.49599;
-      kDriveKVBackRight = 4.75897*2;
-      kDrivePBackRight = 2.2*2;
-      kDriveIBackRight = 0;
-      kDriveDBackRight = 0;
-      kSteerKSBackRight = 0.7506108061783936;
-      kSteerKVBackRight = 0.37750397997126794;
-      kSteerPBackRight = 12;
-      kSteerIBackRight = 0;
-      kSteerDBackRight = 0;
   
       // CAN
       kDriveMotorCAN = Constants.kRioCAN;
     }
   }
-
 }
