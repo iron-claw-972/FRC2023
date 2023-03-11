@@ -10,6 +10,7 @@ import frc.robot.constants.Constants;
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.constants.swerve.ModuleConstants;
 import frc.robot.util.Conversions;
+import frc.robot.util.LogManager;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
@@ -73,6 +74,12 @@ public class Module {
     m_desiredState = desiredState;
     setAngle(desiredState);
     setSpeed(desiredState, isOpenLoop);
+
+    if(Constants.kLogging){
+        LogManager.addDoubleArray("Swerve/DesiredState", new double[]{
+            m_moduleIndex, desiredState.speedMetersPerSecond, desiredState.angle.getDegrees()
+        });
+    }
   }
 
   private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
