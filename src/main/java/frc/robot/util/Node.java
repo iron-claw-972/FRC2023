@@ -1,11 +1,15 @@
 package frc.robot.util;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.constants.FieldConstants;
+import frc.robot.constants.VisionConstants;
 
 /**
  * Class to store data about scoring locations
@@ -41,7 +45,7 @@ public class Node {
    * @param column
    *  column from field boundary to other boundary (1 to 9)
    */
-  public Node(Vision vision, Alliance alliance, int row, int column) {
+  public Node(Alliance alliance, int row, int column) {
 
     this.alliance = alliance;
     this.row = row;
@@ -54,48 +58,38 @@ public class Node {
           : NodeType.CONE;
 
     // Starting locations
-    double x = (alliance == Alliance.Blue ? 
-      FieldConstants.kBlueAllianceNodeStartX : 
-      FieldConstants.kRedAllianceNodeStartX
-    );
+    double x = 0;
+    if (alliance == Alliance.Blue) {
+      x = VisionConstants.kAprilTags.get(5).pose.getX() + FieldConstants.kAprilTagOffset + FieldConstants.kRobotDistanceFromNodeTape;
+    } else {
+      x = VisionConstants.kAprilTags.get(2).pose.getX() - FieldConstants.kAprilTagOffset - FieldConstants.kRobotDistanceFromNodeTape;
+    }
 
-    double y = FieldConstants.kNodeStartY;
+    double y = 0;  
 
-    
-    // add or subtract Robot offset from node tape
-    x += FieldConstants.kRobotOffsetX * (alliance == Alliance.Blue ? 1 : -1);
+    double yOffset = 0;
 
     // Distance from the field boundary to the boundary separating the grid and loading zone
-    switch (column) {
-      case 1:
-        y += 0.508;  
-        break;
-      case 2:
-        y += 1.056; 
-        break;
-      case 3:
-        y += 1.613;  
-        break;
-      case 4:
-        y += 2.182;
-        break;
-      case 5:
-        y += 2.732;  
-        break;
-      case 6:
-        y += 3.302;  
-        break;
-      case 7:
-        y += 3.861;  
-        break;
-      case 8:
-        y += 4.409;  
-        break;
-      case 9:
-        y += 4.978;  
-        break;
+    if (column % 3 == 0) {
+      yOffset = FieldConstants.kConeNodeOffset;
+    } else if (column % 3 == 1) {
+      yOffset = -FieldConstants.kConeNodeOffset;
     }
-    scorePose = new Pose2d(x, y, new Rotation2d());
+
+    if (column <= 3) {
+      y = VisionConstants.kAprilTags.get(7).pose.getY();
+    } else if (column <= 6) {
+      y = VisionConstants.kAprilTags.get(6).pose.getY();
+    } else {
+      y = VisionConstants.kAprilTags.get(5).pose.getY();
+    }
+    y += yOffset;
+
+    Rotation2d rotation = new Rotation2d();
+    if (alliance == Alliance.Blue) {
+      rotation = new Rotation2d(Math.toRadians(180));
+    }
+    scorePose = new Pose2d(x, y, rotation);
   }
 
 }

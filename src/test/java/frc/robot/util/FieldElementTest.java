@@ -124,8 +124,18 @@ public class FieldElementTest {
 
         // These are the values from Node.java...
         // TODO: These y-values have errors of 4 to 18 millimeters
-        double[] ay = {0.508, 1.056, 1.613, 2.182, 2.732, 3.302, 3.861, 4.409, 4.978};
-        double eps = 0.018;
+        double[] ay = {
+            new Node(Alliance.Blue, 1, 1).scorePose.getY(),
+            new Node(Alliance.Blue, 1, 2).scorePose.getY(),
+            new Node(Alliance.Blue, 1, 3).scorePose.getY(),
+            new Node(Alliance.Blue, 1, 4).scorePose.getY(),
+            new Node(Alliance.Blue, 1, 5).scorePose.getY(),
+            new Node(Alliance.Blue, 1, 6).scorePose.getY(),
+            new Node(Alliance.Blue, 1, 7).scorePose.getY(),
+            new Node(Alliance.Blue, 1, 8).scorePose.getY(),
+            new Node(Alliance.Blue, 1, 9).scorePose.getY()
+        };
+        double eps = 0.0001;
 
         // for each column (0 to 8)
         for (int i = 0; i < 9; i++) {
@@ -145,26 +155,24 @@ public class FieldElementTest {
                 case 2: y += delta; break;
             }
 
-            System.out.printf("%8f, %8f, %8f\n", Units.inchesToMeters(y), ay[i], Units.inchesToMeters(y) - ay[i]);
+            // System.out.printf("%8f, %8f, %8f\n", Units.inchesToMeters(y), ay[i], Units.inchesToMeters(y) - ay[i]);
             assertEquals(Units.inchesToMeters(y), ay[i], eps);
 
             // check the Node
-            Node n = new Node((Vision)null, Alliance.Blue, 2, i+1);
+            Node node = new Node(Alliance.Blue, 2, i+1);
             // TODO: Why do these have a kNodeStartY offset?
-            assertEquals(Units.inchesToMeters(y), n.scorePose.getY()-FieldConstants.kNodeStartY, eps);
+            assertEquals(Units.inchesToMeters(y), node.scorePose.getY(), eps);
 
             // while we are at it, check the NodeType
-            assertTrue(n.type == (((i%3) == 1) ? NodeType.CUBE : NodeType.CONE));
+            assertTrue(node.type == (((i%3) == 1) ? NodeType.CUBE : NodeType.CONE));
         }
     }
 
-    // TODO: starting Rotation2d points the wrong direction
-    @Disabled
     @Test
     public void testBlueNodeRotation() {
         // The scorePose should have the correct rotation
 
-        Node n = new Node((Vision)null, Alliance.Blue, 2, 5);
+        Node n = new Node( Alliance.Blue, 2, 5);
         double ang = n.scorePose.getRotation().getRadians() - Math.PI;
         ang = Math.IEEEremainder(ang, 2 * Math.PI);
         assertEquals(0.0, ang, 0.000001);
@@ -174,7 +182,7 @@ public class FieldElementTest {
     public void testRedNodeRotation() {
         // The scorePose should have the correct rotation
 
-        Node n = new Node((Vision)null, Alliance.Red, 2, 5);
+        Node n = new Node(Alliance.Red, 2, 5);
         double ang = n.scorePose.getRotation().getRadians();
         ang = Math.IEEEremainder(ang, 2 * Math.PI);
         assertEquals(0.0, ang, 0.000001);
