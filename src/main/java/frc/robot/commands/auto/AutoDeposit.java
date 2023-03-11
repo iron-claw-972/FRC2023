@@ -21,8 +21,10 @@ public class AutoDeposit extends SequentialCommandGroup {
       new MoveElevator(elevator, 
         position == Position.BOTTOM  && isCone ? ElevatorConstants.kBottomConeHeight : 
         position == Position.MIDDLE && isCone ? ElevatorConstants.kMiddleConeHeight :
-        position == Position.TOP && isCone ? ElevatorConstants.kTopConeHeight :
-        ElevatorConstants.kBottomCubeHeight
+        position == Position.TOP && isCone ? ElevatorConstants.kTopConeHeight : 
+        position == Position.BOTTOM && !isCone ? ElevatorConstants.kBottomCubeHeight :
+        position == Position.MIDDLE && !isCone ? ElevatorConstants.kMiddleCubeHeight :
+       ElevatorConstants.kTopCubeHeight 
       ),
       new PositionIntake(elevator, arm, () -> isCone, position).withTimeout(1),
       new Outtake(intake), 
