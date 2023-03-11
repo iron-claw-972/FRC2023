@@ -18,18 +18,17 @@ public class IntakeGamePiece extends CommandBase {
 
   @Override
   public void initialize() {
-    m_intake.intake(IntakeConstants.kIntakePower);
   }
 
   @Override
   public void end(boolean interrupted) {
-    m_intake.stopIntake(); 
+
   }
   
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;//m_intake.containsGamePiece(); 
+    return false; 
   }
 
 }

@@ -16,8 +16,8 @@ import frc.robot.commands.scoring.bar.ToggleBar;
 import frc.robot.commands.scoring.elevator.CalibrateElevator;
 import frc.robot.commands.scoring.elevator.MoveElevator;
 import frc.robot.commands.scoring.intake.IntakeGamePiece;
-import frc.robot.commands.scoring.intake.Outtake;
 import frc.robot.constants.ElevatorConstants;
+import frc.robot.subsystems.Intake.IntakeMode;
 import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.Bar;
 import frc.robot.subsystems.Elevator;
@@ -56,12 +56,12 @@ public class Operator {
 
     m_operator.get(DPad.UP).onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
 
-    //top
-    m_operator.get(Button.Y).onTrue(new PositionIntake(elevator, arm, intake::hasCone, Position.TOP));
-    //middle
-    m_operator.get(Button.X).onTrue(new PositionIntake(elevator, arm, intake::hasCone, Position.MIDDLE));
-    //bottom
-    m_operator.get(Button.A).onTrue(new PositionIntake(elevator, arm, intake::hasCone, Position.BOTTOM));
+    m_operator.get(Button.A).onTrue(new InstantCommand(()-> intake.setIntakeMode(IntakeMode.INTAKE_CUBE))).onFalse(new InstantCommand(()-> intake.setIntakeMode(IntakeMode.DISABLED)));
+    m_operator.get(Button.B).onTrue(new InstantCommand(()-> intake.setIntakeMode(IntakeMode.OUTTAKE_CUBE))).onFalse(new InstantCommand(()-> intake.setIntakeMode(IntakeMode.DISABLED)));
+    m_operator.get(Button.X).onTrue(new InstantCommand(()-> intake.setIntakeMode(IntakeMode.INTAKE_CONE))).onFalse(new InstantCommand(()-> intake.setIntakeMode(IntakeMode.DISABLED)));
+    m_operator.get(Button.Y).onTrue(new InstantCommand(()-> intake.setIntakeMode(IntakeMode.OUTTAKE_CONE))).onFalse(new InstantCommand(()-> intake.setIntakeMode(IntakeMode.DISABLED)));
+
+    
     //shelf
     m_operator.get(Button.B).onTrue(new PositionIntake(elevator, arm, intake::hasCone, Position.SHELF).alongWith(new IntakeGamePiece(intake)))
       .onFalse(new SequentialCommandGroup( 
