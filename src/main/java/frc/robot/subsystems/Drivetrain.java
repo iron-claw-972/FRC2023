@@ -574,8 +574,6 @@ public class Drivetrain extends SubsystemBase {
     
     // add angles
     m_drivetrainTab.addNumber("Yaw (deg)", () -> getYaw().getDegrees());
-    m_drivetrainTab.addNumber("Yaw from pose estim (deg)", () -> getPose().getRotation().getDegrees());
-
     m_drivetrainTab.addNumber("estimated X", () -> m_poseEstimator.getEstimatedPosition().getX());
     m_drivetrainTab.addNumber("estimated Y", () -> m_poseEstimator.getEstimatedPosition().getY());
     m_drivetrainTab.addNumber("getPitch", () -> m_pigeon.getPitch());
