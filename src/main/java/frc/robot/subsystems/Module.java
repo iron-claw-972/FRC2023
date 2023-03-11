@@ -95,7 +95,6 @@ public class Module {
     }
 
     m_angleMotor.set(ControlMode.Position, Conversions.degreesToFalcon(desiredState.angle.getDegrees(), DriveConstants.kAngleGearRatio));
-    m_lastAngle = desiredState.angle;
   }
 
   public void enableStateDeadband(boolean enabled) {
