@@ -70,7 +70,7 @@ public class Drivetrain extends SubsystemBase {
   private final PIDController m_yController;
   private final PIDController m_rotationController;
 
-  private boolean m_isOnChargeStation = false;
+  private boolean m_chargeStationVision = false;
 
   // Displays the field with the robots estimated pose on it
   private final Field2d m_fieldDisplay;
@@ -254,16 +254,6 @@ public class Drivetrain extends SubsystemBase {
   }
 
   /**
-   * Stops all swerve modules.
-   */
-  public void stop() {
-    for (int i = 0; i < 4; i++) {
-      m_modules[i].stop();
-    }
-    drive(0, 0, 0, true, true);
-  }
-
-  /**
   * Sets the desired states for all swerve modules.
   * 
   * @param swerveModuleStates an array of module states to set swerve modules to. Order of the array matters here!
@@ -313,16 +303,6 @@ public class Drivetrain extends SubsystemBase {
   PIDController m_balancePID = new PIDController(1, 0, 0.006);
   public PIDController getBalanceController() {
     return m_balancePID;
-  }
-
-  /**
-   * Sets the optimize state for all swerve modules.
-   * Optimizing the state means the modules will not turn the steer motors more than 90 degrees for any one movement.
-   */
-  public void setAllOptimize(Boolean optimizeSate) {
-    for (int i = 0; i < 4; i++) {
-      m_modules[i].setOptimize(optimizeSate);
-    }
   }
 
   /**
@@ -395,7 +375,11 @@ public class Drivetrain extends SubsystemBase {
 
     // Updates pose based on vision
     if (m_visionEnabled) {
-      //TODO: there should be a cleaner way to prosses vision
+
+      // The angle should be greater than 5 degrees if it goes over the charge station
+      if (Math.abs(getPitch().getDegrees()) > 5 || Math.abs(getRoll().getDegrees()) > 5) {
+        m_chargeStationVision = true;
+      }
 
       // An array list of poses returned by different cameras
       ArrayList<EstimatedRobotPose> estimatedPoses = m_vision.getEstimatedPoses(m_poseEstimator.getEstimatedPosition());
@@ -409,7 +393,7 @@ public class Drivetrain extends SubsystemBase {
           // The position of the current april tag
           Pose3d currentTagPose = m_vision.getTagPose(estimatedPose.targetsUsed.get(j).getFiducialId());
           // If it can't find the april tag's pose, don't run the rest of the for loop for this tag
-          if(currentTagPose == null){
+          if (currentTagPose == null) {
             continue;
           }
           Translation2d currentTagPoseTranslation = currentTagPose.toPose2d().getTranslation();
@@ -424,17 +408,18 @@ public class Drivetrain extends SubsystemBase {
         m_poseEstimator.addVisionMeasurement(
           estimatedPose.estimatedPose.toPose2d(),
           estimatedPose.timestampSeconds,
-          m_isOnChargeStation ? VisionConstants.kChargeStationVisionPoseStdDevs : VisionConstants.kBaseVisionPoseStdDevs.plus(
+          m_chargeStationVision ? VisionConstants.kChargeStationVisionPoseStdDevs.plus(
             currentEstimatedPoseTranslation.getDistance(closestTagPoseTranslation) * VisionConstants.kVisionPoseStdDevFactor
-          )
+          ) : VisionConstants.kBaseVisionPoseStdDevs
         );
+      }
+      
+      // If it used vision after going over the charge station, it should trust vision normally again
+      if (estimatedPoses.size()>0) {
+        m_chargeStationVision = false;
       }
       m_fieldDisplay.setRobotPose(m_poseEstimator.getEstimatedPosition());
     }
-  }
-
-  public void setIsBalancingOnChargeStation(boolean isBalancing) {
-    m_isOnChargeStation = isBalancing;
   }
 
   /**
@@ -490,6 +475,25 @@ public class Drivetrain extends SubsystemBase {
 
   public void enableVision(boolean enabled) {
     m_visionEnabled = enabled;
+  }
+
+  /**
+   * Sets the optimize state for all swerve modules.
+   * Optimizing the state means the modules will not turn the steer motors more than 90 degrees for any one movement.
+   */
+  public void setAllOptimize(Boolean optimizeSate) {
+    for (int i = 0; i < 4; i++) {
+      m_modules[i].setOptimize(optimizeSate);
+    }
+  }
+  
+  /**
+   * Stops all swerve modules.
+   */
+  public void stop() {
+    for (int i = 0; i < 4; i++) {
+      m_modules[i].stop();
+    }
   }
 
   /**

@@ -23,7 +23,6 @@ public class BalanceSimple extends CommandBase {
   @Override
   public void initialize() {
     m_balancePID.setSetpoint(0);
-    m_drive.setIsBalancingOnChargeStation(true);
   }
 
   @Override
@@ -37,7 +36,6 @@ public class BalanceSimple extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_drive.stop();
-    m_drive.setIsBalancingOnChargeStation(false);
   }
 
   @Override
