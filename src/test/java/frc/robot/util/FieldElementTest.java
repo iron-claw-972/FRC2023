@@ -70,7 +70,7 @@ public class FieldElementTest {
     @Test
     public void testGridWidth() {
         // Test the width of 3 Grids (2 outer and 1 inner)
-        // It's 0.5 inches off
+        // TODO: width of 3 Gris is 0.5 inches off
         assertEquals(wholeGrid, 2 * outerGrid + innerGrid, 0.501);
 
         // Test the width of an outer grid
@@ -367,11 +367,22 @@ public class FieldElementTest {
         //   front of middle cube node is 14.28 inches from front of grid (close to GM).
         //   depth of grid is 54.05 inches
         //   that puts the front of Blue middle cube note at 54.05 - 14.28 = 39.77
+        // CAD says 14.06 inches - 0.26 for AprilTag
         //
         // The AprilTag is mounted on the front of the middle cube node
         //   The x-coordinate for the AprilTag is 40.45 inches. That's an error of 0.68 inches.
         // The AprilTag is spaced out some amount, but I do not think it is 0.75. Maybe 0.25 between Alliance wall and Grid?
         // TODO: check AprilTag spacing from front of middle cube node.
+        // spacing is apparently 0.26 inches: 0.25 for the plexiglass and 0.01 for the sticker?
+        //
+        // 54.05 - 14.06 = 39.99
+        // add 0.26 for AprilTag = 40.25 -- that's 0.20 inches off of actual location.
+        // If I add 0.19 for field margin, then I'm within 0.01 inch.
+        double marginField = 0.19;
+        double thickAprilTag = 0.26;
+        double depthHybrid = 14.06;
+        double depthGrid = 54.05;
+        assertEquals(40.45, depthGrid - depthHybrid + thickAprilTag + marginField, 0.02);
      }
       
 }
