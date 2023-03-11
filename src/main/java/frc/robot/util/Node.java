@@ -93,6 +93,6 @@ public class Node {
         y += 4.978;  
         break;
     }
-    scorePose = new Pose2d(x, y, new Rotation2d());
+    scorePose = new Pose2d(x, y, new Rotation2d(alliance==Alliance.Red?0:Math.PI));
   }
 }
