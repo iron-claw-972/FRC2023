@@ -7,80 +7,94 @@ import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 import frc.robot.constants.WristConstants;
-
+import frc.robot.util.LogManager;
 public class Wrist extends SubsystemBase {
     private final WPI_TalonFX m_motor;
+    private final PIDController m_pid;
     private final DutyCycleEncoder m_absEncoder;
-    private WristMode m_mode;
-    private double m_desiredPower = 0;
-    private double m_desiredPosition = 0;
-
+    private boolean m_FFenabled =false;
+    private boolean m_enabled = true;
     public Wrist() {
-        m_motor = new WPI_TalonFX(WristConstants.kMotorID, Constants.kCanivoreCAN);
-        configWristMotor();
+    // configure the motor
+    m_motor = new WPI_TalonFX(WristConstants.kMotorID, Constants.kCanivoreCAN);
+    m_motor.setNeutralMode(NeutralMode.Brake);
+    m_motor.setInverted(false); 
 
-        m_absEncoder = new DutyCycleEncoder(WristConstants.kAbsEncoderPort);
-        configAbsEncoder();
-
-        m_mode = WristMode.DISABLED;
-    }
-
-    private void configWristMotor() {
-        m_motor.configFactoryDefault();
-        m_motor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(
-            WristConstants.kEnableCurrentLimit,
-            WristConstants.kContinuousCurrentLimit,
-            WristConstants.kPeakCurrentLimit,
-            WristConstants.kPeakCurrentDuration
-        ));
-        m_motor.config_kP(0, WristConstants.kP);
-        m_motor.config_kI(0, WristConstants.kI);
-        m_motor.config_kD(0, WristConstants.kD);
-        m_motor.config_kF(0, WristConstants.kF);
-        m_motor.setInverted(WristConstants.kMotorInvert);
-        m_motor.setNeutralMode(WristConstants.kNeutralMode);
-        m_motor.configVoltageCompSaturation(Constants.kRobotVoltage);
-        m_motor.enableVoltageCompensation(true);
-    }
-
-    private void configAbsEncoder() {
-        m_absEncoder.setDistancePerRotation(1);
-    }
-
-    public void calibrateEncoder() {}
+    // configure the encoder
+    m_absEncoder = new DutyCycleEncoder(WristConstants.kAbsEncoderPort); 
     
-    public enum WristMode {
-        DISABLED, MANUAL, POSITION
+    // make the PID controller
+    m_pid = new PIDController(WristConstants.kP, WristConstants.kI, WristConstants.kD);
+    // set the PID controller's tolerance
+    m_pid.setTolerance(WristConstants.kTolerance);
+    // go to the initial position (use the class method)
+
+    // TODO: restore stowed position
+    // setArmSetpoint(ArmConstants.kStowedAbsEncoderPos);
+    setArmSetpoint(WristConstants.kStowPos);
+
+    if (Constants.kUseTelemetry) SmartDashboard.putData("4 bar arm PID", m_pid); 
+  }
+
+  /**
+   * Set the FourBarArm's desired position.
+   * @param setpoint the desired arm position (in radians)
+   */
+  public void setArmSetpoint(double setpoint) {
+    // set the PID integration error to zero.
+    m_pid.reset();
+    // set the PID desired position
+    m_pid.setSetpoint(setpoint);
+  }
+
+  @Override
+  public void periodic() {
+    if (Constants.kUseTelemetry) SmartDashboard.putNumber("Arm Abs Encoder Value", getAbsEncoderPos());
+    if(m_enabled) {
+      
+      // calculate the PID power level
+      double pidPower = m_pid.calculate(getAbsEncoderPos(), MathUtil.clamp(m_pid.getSetpoint(), WristConstants.kMaxArmExtensionPos, WristConstants.kStowPos));
+      if (Constants.kLogging) LogManager.addDouble("Four Bar/pidOutput", pidPower);
+      // calculate the value of kGravityCompensation
+      double feedforwardPower = WristConstants.kGravityCompensation*Math.cos(getAbsEncoderPos()*Math.PI*2);
+
+      // set the motor power
+      setMotorPower(pidPower + (m_FFenabled ? feedforwardPower:0));
     }
 
-    public void setMode(WristMode mode) {
-        m_mode = mode;
-    }
+    if (Constants.kLogging) updateLogs();
+  }
 
-    public void setDesiredPower(double desiredPower) {
-        m_desiredPower = desiredPower;
-    }
+  /**
+   * Whether the FourBarArm has reached its commanded position.
+   * @returns true when position has been reached
+   */
+  public boolean reachedSetpoint() {
+    return m_pid.atSetpoint();
+  }
 
-    public void setDesiredPosition(double desiredPosition) {
-        m_desiredPosition = desiredPosition;
-    }
+  public void setMotorPower(double power) {
+    power = MathUtil.clamp(power, WristConstants.kMinMotorPower, WristConstants.kMaxMotorPower);
+    m_motor.set(power);
+    if (Constants.kLogging) LogManager.addDouble("Four Bar/motor power", power);
+  }
 
-    @Override
-    public void periodic() {
-        switch(m_mode) {
-            case DISABLED:
-                m_motor.stopMotor();
-                break;
-            case MANUAL:
-                m_motor.set(TalonFXControlMode.PercentOutput, m_desiredPower);
-                break;
-            case POSITION:
-                m_motor.set(TalonFXControlMode.Position, m_desiredPosition, DemandType.ArbitraryFeedForward, 1.5 * Math.cos(0));
-                break;
-        }
-    }
+  public void setEnabled(boolean enable)  {
+    m_enabled = enable;
+  }
+
+  public double getAbsEncoderPos(){
+    return m_absEncoder.getAbsolutePosition(); 
+  }
+
+  public void updateLogs(){
+    LogManager.addDouble("Four Bar/position", getAbsEncoderPos());
+  }
 }
