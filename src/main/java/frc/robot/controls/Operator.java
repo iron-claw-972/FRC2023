@@ -57,7 +57,7 @@ public class Operator {
     m_operator.get(DPad.UP).onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
 
     //top
-    m_operator.get(Button.Y).onTrue(new PositionIntake(elevator, arm, intake::hasCone, Position.TOP));
+    m_operator.get(Button.Y).onTrue(new PositionIntake(elevator, arm, m_operator.get(m_operator.RIGHT_TRIGGER_BUTTON), Position.TOP));
     //middle
     m_operator.get(Button.X).onTrue(new PositionIntake(elevator, arm, intake::hasCone, Position.MIDDLE));
     //bottom
