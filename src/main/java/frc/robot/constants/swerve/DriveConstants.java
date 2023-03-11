@@ -198,8 +198,8 @@ public class DriveConstants {
   /**
    * Updates the constants if the RobotId is not the competition robot.
    */
-  public static void update() {
-    if (Robot.kRobotId == RobotId.SwerveTest) {
+  public static void update(RobotId robotId) {
+    if (robotId == RobotId.SwerveTest) {
   
       kTrackWidth = Units.inchesToMeters(22.75); //22.75 swerve bot, 20.75 comp bot
   

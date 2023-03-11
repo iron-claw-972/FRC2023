@@ -25,7 +25,6 @@ public class Module {
 
   private final int m_moduleIndex;
   private Rotation2d m_angleOffset;
-  private Rotation2d m_lastAngle;
 
   private final String m_moduleAbbr;
 
@@ -60,8 +59,7 @@ public class Module {
     m_driveMotor = new WPI_TalonFX(moduleConstants.getDrivePort(), DriveConstants.kDriveMotorCAN);
     configDriveMotor();
 
-    m_lastAngle = getState().angle;
-    setDesiredState(new SwerveModuleState(0, m_lastAngle), false);
+    setDesiredState(new SwerveModuleState(0, getAngle()), false);
 
     setupShuffleboard();
   }
@@ -91,13 +89,12 @@ public class Module {
 
   private void setAngle(SwerveModuleState desiredState) {
     // Prevent rotating module if desired speed < 1%. Prevents Jittering.
-    if ((Math.abs(desiredState.speedMetersPerSecond) <= (DriveConstants.kMaxSpeed * 0.01) && m_stateDeadband)) {
+    if (m_stateDeadband && (Math.abs(desiredState.speedMetersPerSecond) <= (DriveConstants.kMaxSpeed * 0.01))) {
       stop();
       return;
     }
 
     m_angleMotor.set(ControlMode.Position, Conversions.degreesToFalcon(desiredState.angle.getDegrees(), DriveConstants.kAngleGearRatio));
-    m_lastAngle = desiredState.angle;
   }
 
   public void enableStateDeadband(boolean enabled) {
