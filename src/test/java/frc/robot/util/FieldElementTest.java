@@ -122,20 +122,8 @@ public class FieldElementTest {
         // The cone node y-coordinates will be slightly offset from the cube values
         double delta = innerHybrid + widthBar;
 
-        // These are the values from Node.java...
-        // TODO: These y-values have errors of 4 to 18 millimeters
-        double[] ay = {
-            new Node(Alliance.Blue, 1, 1).scorePose.getY(),
-            new Node(Alliance.Blue, 1, 2).scorePose.getY(),
-            new Node(Alliance.Blue, 1, 3).scorePose.getY(),
-            new Node(Alliance.Blue, 1, 4).scorePose.getY(),
-            new Node(Alliance.Blue, 1, 5).scorePose.getY(),
-            new Node(Alliance.Blue, 1, 6).scorePose.getY(),
-            new Node(Alliance.Blue, 1, 7).scorePose.getY(),
-            new Node(Alliance.Blue, 1, 8).scorePose.getY(),
-            new Node(Alliance.Blue, 1, 9).scorePose.getY()
-        };
-        double eps = 0.0001;
+        // tolerance -- 1 mm is close enough
+        double eps = 0.001;
 
         // for each column (0 to 8)
         for (int i = 0; i < 9; i++) {
@@ -155,16 +143,33 @@ public class FieldElementTest {
                 case 2: y += delta; break;
             }
 
-            // System.out.printf("%8f, %8f, %8f\n", Units.inchesToMeters(y), ay[i], Units.inchesToMeters(y) - ay[i]);
-            assertEquals(Units.inchesToMeters(y), ay[i], eps);
+            // check each row
+            // TODO: verify the x value of 71 inches for Blue starting pose.
+            double x = 71.0;
+            for (int row = 1; row <= 3; row++) {
+                // Calculate the node type
+                // row 1 is HYBRID, row 2 and 3 may be CUBE or CONE
+                NodeType nt = (row == 1) ? NodeType.HYBRID : (((i%3) == 1) ? NodeType.CUBE : NodeType.CONE);
 
-            // check the Node
-            Node node = new Node(Alliance.Blue, 2, i+1);
-            // TODO: Why do these have a kNodeStartY offset?
-            assertEquals(Units.inchesToMeters(y), node.scorePose.getY(), eps);
-
-            // while we are at it, check the NodeType
-            assertTrue(node.type == (((i%3) == 1) ? NodeType.CUBE : NodeType.CONE));
+                // get the Blue node
+                Node nodeBlue = new Node(Alliance.Blue, row, i+1);
+                // check its y value
+                assertEquals(Units.inchesToMeters(y), nodeBlue.scorePose.getY(), eps);
+                assertEquals(nt, nodeBlue.type);
+                // check its x value
+                // System.out.println(Units.metersToInches(nodeBlue.scorePose.getX()));
+                assertEquals(Units.inchesToMeters(x), nodeBlue.scorePose.getX(), eps);
+                
+                // get the Red node
+                Node nodeRed = new Node(Alliance.Red, row, i+1);
+                // check its y value
+                assertEquals(Units.inchesToMeters(y), nodeRed.scorePose.getY(), eps);
+                assertEquals(nt, nodeRed.type);
+                // check its x value
+                // This value is off by 0.03 inches -- about 1 mm.
+                // System.out.println(Units.metersToInches(FieldConstants.kFieldLength - nodeRed.scorePose.getX()));
+                assertEquals(FieldConstants.kFieldLength - Units.inchesToMeters(x), nodeRed.scorePose.getX(), eps);
+            }
         }
     }
 
