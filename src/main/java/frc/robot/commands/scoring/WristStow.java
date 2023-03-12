@@ -13,10 +13,10 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Wrist;
 
 public class WristStow extends SequentialCommandGroup {
-    /*
+    /**
      * stows the elevator, wrist, and intake
      */
-    public WristStow(Intake intake, Wrist wrist, Elevator elevator) {
+    public WristStow(Intake intake, Elevator elevator, Wrist wrist) {
         addRequirements(intake, wrist, elevator);
         addCommands(
             // change intake type if needed

@@ -9,20 +9,26 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.scoring.Dunk;
 import frc.robot.commands.scoring.PositionIntake;
 import frc.robot.commands.scoring.PositionIntake.Position;
+import frc.robot.commands.scoring.PositionRollerIntake;
+import frc.robot.commands.scoring.PositionRollerIntake.RollerPosition;
 import frc.robot.commands.scoring.arm.ExtendArm;
 import frc.robot.commands.scoring.Stow;
+import frc.robot.commands.scoring.WristDunk;
+import frc.robot.commands.scoring.WristStow;
 import frc.robot.commands.scoring.bar.CalibrateBar;
 import frc.robot.commands.scoring.bar.ToggleBar;
 import frc.robot.commands.scoring.elevator.CalibrateElevator;
 import frc.robot.commands.scoring.elevator.MoveElevator;
 import frc.robot.commands.scoring.intake.IntakeGamePiece;
 import frc.robot.commands.scoring.intake.Outtake;
+import frc.robot.commands.scoring.wrist.RotateWrist;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.Bar;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Wrist;
 import frc.robot.util.Node;
 import frc.robot.util.Vision;
 import lib.controllers.GameController;
@@ -40,7 +46,7 @@ public class Operator {
   private Vision m_vision;
   
   /**
-   * Configures the operator controls for the deploying Bar.
+   * Configures the operator controls with the old intake and four bar arm
    */
   public void configureControls(FourBarArm arm, Intake intake, Elevator elevator, Bar bar, Vision vision) {
 
@@ -84,6 +90,60 @@ public class Operator {
 
     //outtake
     m_operator.get(m_operator.LEFT_TRIGGER_BUTTON).onTrue(new Outtake(intake, false)).onFalse(new Stow(intake, elevator, arm));
+  
+  
+    // Selects which grid to score in
+    m_operator.get(m_operator.LEFT_STICK_LEFT).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.GRID, 2)));
+    m_operator.get(m_operator.LEFT_STICK_DOWN).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.GRID, 1)));
+    m_operator.get(m_operator.LEFT_STICK_RIGHT).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.GRID, 0)));
+    // Selects which column in the grid to score in
+    m_operator.get(m_operator.RIGHT_STICK_LEFT).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.COLUMN, 2)));
+    m_operator.get(m_operator.RIGHT_STICK_DOWN).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.COLUMN, 1)));
+    m_operator.get(m_operator.RIGHT_STICK_RIGHT).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.COLUMN, 0)));
+    // Selects the row
+    m_operator.get(DPad.LEFT).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.ROW, 2)));
+    m_operator.get(DPad.DOWN).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.ROW, 1)));
+    m_operator.get(DPad.RIGHT).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.ROW, 0)));
+  }
+
+  /**
+   * Configures the operator controls with the roller intake and wrist
+   */
+  public void ConfigureRollerIntakeControls(Wrist wrist, Intake intake, Elevator elevator, Vision vision) {
+    m_vision = vision; //should be in constructor
+
+    m_operator.get(Button.BACK).onTrue(new CalibrateElevator(elevator));
+
+    m_operator.get(DPad.UP).onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
+
+    //top
+    m_operator.get(Button.Y).onTrue(new PositionRollerIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, RollerPosition.TOP));
+    //middle
+    m_operator.get(Button.X).onTrue(new PositionRollerIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, RollerPosition.MIDDLE));
+    //bottom
+    m_operator.get(Button.A).onTrue(new PositionRollerIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, RollerPosition.BOTTOM));
+    //shelf
+    m_operator.get(Button.B).onTrue(new PositionRollerIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, RollerPosition.SHELF).alongWith(new IntakeGamePiece(intake)))
+      .onFalse(new SequentialCommandGroup( 
+        new InstantCommand(() -> intake.stopIntake()),
+        new RotateWrist(wrist, 0.8),
+        new MoveElevator(elevator, ElevatorConstants.kStowHeight),
+        new WristStow(intake, elevator, wrist)
+      ));
+    
+    //stow
+    m_operator.get(Button.RB).onTrue(new WristStow(intake, elevator, wrist));
+
+    //intake
+    m_operator.get(Button.LB).onTrue(
+      new PositionRollerIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, RollerPosition.INTAKE).alongWith(new IntakeGamePiece(intake)))
+      .onFalse(new WristStow(intake, elevator, wrist));
+
+    //dunk
+    m_operator.get(m_operator.RIGHT_TRIGGER_BUTTON).onTrue(new WristDunk(wrist, intake)).onFalse(new WristStow(intake, elevator, wrist));
+
+    //outtake
+    m_operator.get(m_operator.LEFT_TRIGGER_BUTTON).onTrue(new Outtake(intake, false)).onFalse(new WristStow(intake, elevator, wrist));
   
   
     // Selects which grid to score in
