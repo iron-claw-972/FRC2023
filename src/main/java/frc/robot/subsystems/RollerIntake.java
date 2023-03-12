@@ -38,8 +38,8 @@ public class RollerIntake extends SubsystemBase {
   private double m_power;
 
   public RollerIntake(ShuffleboardTab intakeTab) {
-    m_intakeMotor = MotorFactory.createTalonFX(IntakeConstants.kIntakeMotorId, Constants.kCanivoreCAN);
-    
+    m_intakeMotor = MotorFactory.createTalonFX(IntakeConstants.kIntakeMotorId, Constants.kRioCAN);
+
     m_power = 0;
     m_mode = IntakeMode.DISABLED;
     // During auto, this doesn't really matter, so we can just set it to NONE
@@ -63,18 +63,23 @@ public class RollerIntake extends SubsystemBase {
   public void periodic() {
 
     switch (m_mode) {
-      case INTAKE_CUBE: 
+      case INTAKE_CUBE:
         m_power = IntakeConstants.kIntakeCubePower;
+        break;
       case OUTTAKE_CUBE: 
-        m_power = IntakeConstants.kOuttakeCubePower;   
+        m_power = IntakeConstants.kOuttakeCubePower;
+        break;  
       case INTAKE_CONE: 
-        m_power = IntakeConstants.kIntakeConePower;        
+        m_power = IntakeConstants.kIntakeConePower;
+        break;       
       case OUTTAKE_CONE: 
-        m_power = IntakeConstants.kOuttakeConePower;        
+        m_power = IntakeConstants.kOuttakeConePower; 
+        break;       
       case DISABLED: 
-        m_power = 0;       
+        m_power = 0;
+        break;
     }
-    m_power = MathUtil.clamp(m_power, -IntakeConstants.kClampValue, IntakeConstants.kClampValue);
+    // System.out.println(m_mode);
     setMotorPower(m_power);
 
     if (Constants.kLogging) {

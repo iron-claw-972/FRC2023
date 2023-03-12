@@ -10,18 +10,10 @@ public final class IntakeConstants {
   public static final int kIntakeMotorId = 9;
 
   // intake speeds
-  // TODO: tune these values
-  public static final double kIntakeCubePower = 0.05;
-  public static final double kOuttakeCubePower = -0.05;
-  public static final double kIntakeConePower = -0.05;
-  public static final double kOuttakeConePower = 0.05;
-
-  /**
-   * The value to clamp the intake motor power at.
-   * Uses MathUtil.clamp(power, -kClampValue, kClampValue)
-   */
-  // TODO: tune this value
-  public static final double kClampValue = 0.2;
+  public static final double kIntakeCubePower = 0.2;
+  public static final double kOuttakeCubePower = -0.2;
+  public static final double kIntakeConePower = -0.2;
+  public static final double kOuttakeConePower = 0.2;
 
   public static final NeutralMode kNeutralMode = NeutralMode.Brake;
 
