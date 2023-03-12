@@ -28,7 +28,7 @@ public class Intake extends SubsystemBase {
     INTAKE_CUBE, OUTTAKE_CUBE, INTAKE_CONE, OUTTAKE_CONE, DISABLED
   }
 
-  public enum IntakeObject {
+  public enum IntakeGamePiece {
     CUBE, CONE, NONE
   }
 
@@ -36,7 +36,7 @@ public class Intake extends SubsystemBase {
   private final ShuffleboardTab m_intakeTab;
 
   private IntakeMode m_mode;
-  private IntakeObject m_object;
+  private IntakeGamePiece m_heldPiece;
 
   private double m_power;
 
@@ -47,7 +47,7 @@ public class Intake extends SubsystemBase {
     m_power = 0;
     m_mode = IntakeMode.DISABLED;
     // During auto, this doesn't really matter, so we can just set it to NONE
-    m_object = IntakeObject.NONE;
+    m_heldPiece = IntakeGamePiece.NONE;
     m_intakeTab = intakeTab;
 
     setupShuffleboard();
@@ -91,34 +91,36 @@ public class Intake extends SubsystemBase {
 
   private void setupShuffleboard() {
     m_intakeTab.addString("Intake Mode", () -> m_mode.name());
-
+    m_intakeTab.addDouble("Intake Motor Current", () -> m_intakeMotor.getStatorCurrent());
+    m_intakeTab.addDouble("Intake Power", () -> m_power);
+    m_intakeTab.addString("Held Game Piece", () -> m_heldPiece.name());
   }
   
   public void updateLogs() {
     
   }
   
-  public boolean hasObject() {
-    return m_object != IntakeObject.NONE;
+  public boolean hasGamePiece() {
+    return m_heldPiece != IntakeGamePiece.NONE;
   }
 
   public boolean hasCone() {
-    return m_object == IntakeObject.CONE;
+    return m_heldPiece == IntakeGamePiece.CONE;
   }
 
   public boolean hasCube() {
-    return m_object == IntakeObject.CUBE;
+    return m_heldPiece == IntakeGamePiece.CUBE;
   }
 
   public WPI_TalonFX getIntakeMotor() {
     return m_intakeMotor;
   }
 
-  public IntakeObject getObject() {
-    return m_object;
+  public IntakeGamePiece getHeldGamePiece() {
+    return m_heldPiece;
   }
 
-  public void setObject(IntakeObject object) {
-    m_object = object;
+  public void setHeldGamePiece(IntakeGamePiece object) {
+    m_heldPiece = object;
   }
 } 
