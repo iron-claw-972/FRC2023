@@ -33,6 +33,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.commands.test.CircleDrive;
 import frc.robot.commands.test.DriveFeedForwardCharacterization;
 import frc.robot.commands.test.SteerFeedForwardCharacterizationSingle;
@@ -344,7 +345,7 @@ public class Drivetrain extends SubsystemBase {
    * @param isOpenLoop if open loop control should be used for the drive velocity
    */
   public void setChassisSpeeds(ChassisSpeeds chassisSpeeds, boolean isOpenLoop) {
-    if (obotBase.isSimulation()) {
+    if (Robot.isSimulation()) {
       m_pigeon.getSimCollection().addHeading(
       + Units.radiansToDegrees(chassisSpeeds.omegaRadiansPerSecond * Constants.kLoopTime));
     }
