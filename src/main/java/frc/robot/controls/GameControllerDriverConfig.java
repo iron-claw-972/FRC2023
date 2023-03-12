@@ -3,7 +3,6 @@ package frc.robot.controls;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.BalanceCommand;
-import frc.robot.commands.BalanceSimple;
 import frc.robot.commands.GoToNode;
 import frc.robot.commands.GoToNodePID;
 import frc.robot.commands.GoToShelf;
@@ -34,8 +33,6 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
     kDriver.get(Button.START).onTrue(new InstantCommand(() -> super.getDrivetrain().setPigeonYaw(DriveConstants.kStartingHeadingDegrees)));
     kDriver.get(Button.X).whileTrue(new SetFormationX(super.getDrivetrain()));
 
-    kDriver.get(Button.B).onTrue(new BalanceSimple(super.getDrivetrain()));
-
     // Moves to the selected scoring position using Path Planner
     kDriver.get(kDriver.LEFT_TRIGGER_BUTTON).whileTrue(new GoToNode(m_operator, getDrivetrain()));
     // Moves to the selected scoring position using the PID
@@ -45,6 +42,8 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
     kDriver.get(kDriver.RIGHT_TRIGGER_BUTTON).whileTrue(new GoToShelf(getDrivetrain()));
     // Moves to the shelf using the PID
     kDriver.get(Button.RB).whileTrue(new GoToShelfPID(getDrivetrain()));
+    
+    kDriver.get(Button.B).whileTrue(new BalanceCommand(super.getDrivetrain()));
   }
   
   @Override
