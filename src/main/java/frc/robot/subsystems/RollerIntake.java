@@ -70,7 +70,7 @@ public class RollerIntake extends SubsystemBase {
       case OUTTAKE_CONE: 
         m_power = IntakeConstants.kOuttakeConePower;        
       case DISABLED: 
-        m_power = IntakeConstants.kStopPower;       
+        m_power = 0;       
     }
     setMotorPower(m_power);
 

@@ -14,7 +14,6 @@ public final class IntakeConstants {
   public static final double kOuttakeCubePower = -0.05;
   public static final double kIntakeConePower = -0.05;
   public static final double kOuttakeConePower = 0.05;
-  public static final double kStopPower = 0;
 
   public static final NeutralMode kNeutralMode = NeutralMode.Brake;
 
