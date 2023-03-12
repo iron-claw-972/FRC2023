@@ -266,12 +266,11 @@ public class RobotContainer {
       m_autoCommand.addOption("Grid 6 Engage (no mobility)", new DepositThenPath("Grid 6 Engage No Mobility", autoDepositPos, m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceCommand(m_drive)));
       
       m_autoCommand.addOption("NO DEPOSIT Grid 6 Engage (no mobility)",
-        new PathPlannerCommand("Grid 6 Engage No Mobility Copy", 0, m_drive, true).andThen(
-        new PathPlannerCommand("Grid 6 Engage No Mobility Copy", 1, m_drive, true)).andThen(
+        new PathPlannerCommand("Grid 6 Engage No Mobility", 0, m_drive, true).andThen(
+        new PathPlannerCommand("Grid 6 Engage No Mobility", 1, m_drive, true)).andThen(
         new BalanceCommand(m_drive))
       );
 
-      m_autoCommand.addOption("Grid 6 Engage (careful)", new DepositThenPath("Grid 6 Engage", autoDepositPos, m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceCommand(m_drive)));    
       m_autoCommand.addOption("Grid 1 Engage", new DepositThenPath("Grid 1 Engage", autoDepositPos, m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceCommand(m_drive)));
     
       m_autoCommand.addOption("Engage Left", new EngageFromLeftDriverSide(m_drive));
