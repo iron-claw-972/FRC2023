@@ -41,22 +41,6 @@ public class LogManager {
   private static HashMap<String, IntegerLogEntry> individualIntegerLogs = new HashMap<>();
 
   /**
-   * Records the metadata supplied by gversion (https://github.com/lessthanoptimal/gversion-plugin) in BuildData.java.
-   */
-  public static void recordMetadata() {
-    new StringLogEntry(log, "BuildData/Maven Group").append(BuildData.MAVEN_GROUP);
-    new StringLogEntry(log, "BuildData/Maven Name").append(BuildData.MAVEN_NAME); // The name of the repository
-    new StringLogEntry(log, "BuildData/Version").append(BuildData.VERSION);
-    new IntegerLogEntry(log, "BuildData/Git Revision").append(BuildData.GIT_REVISION);
-    new StringLogEntry(log, "BuildData/Git SHA").append(BuildData.GIT_SHA); // The SHA code for the latest commit
-    new StringLogEntry(log, "BuildData/Git date").append(BuildData.GIT_DATE);
-    new StringLogEntry(log, "BuildData/Git Branch").append(BuildData.GIT_BRANCH); // The branch name
-    new StringLogEntry(log, "BuildData/Build Date").append(BuildData.BUILD_DATE);
-    new IntegerLogEntry(log, "BuildData/Build Unix Time").append(BuildData.BUILD_UNIX_TIME);
-    new IntegerLogEntry(log, "BuildData/Dirty").append(BuildData.DIRTY);
-  }
-
-  /**
    * Starts logging a double from a function. This should only be called once in an initialization, the double supplier will be periodically
    * called for values. If your value is not always there, consider using the other addDouble that takes a single value at a time.
    * 

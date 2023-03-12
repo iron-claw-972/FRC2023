@@ -10,18 +10,22 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 import frc.robot.constants.WristConstants;
 import frc.robot.util.LogManager;
 public class Wrist extends SubsystemBase {
-    private final WPI_TalonFX m_motor;
-    private final PIDController m_pid;
-    private final DutyCycleEncoder m_absEncoder;
-    private boolean m_FFenabled =false;
-    private boolean m_enabled = true;
-    public Wrist() {
+  private final WPI_TalonFX m_motor;
+  private final PIDController m_pid;
+  private final DutyCycleEncoder m_absEncoder;
+  private final ShuffleboardTab m_wristTab;
+  private boolean m_FFenabled =false;
+  private boolean m_enabled = true;
+
+  public Wrist(ShuffleboardTab wristTab) {
     // configure the motor
     m_motor = new WPI_TalonFX(WristConstants.kMotorID, Constants.kCanivoreCAN);
     m_motor.setNeutralMode(NeutralMode.Brake);
@@ -40,7 +44,11 @@ public class Wrist extends SubsystemBase {
     // setArmSetpoint(ArmConstants.kStowedAbsEncoderPos);
     setArmSetpoint(WristConstants.kStowPos);
 
-    if (Constants.kUseTelemetry) SmartDashboard.putData("4 bar arm PID", m_pid); 
+    if (Constants.kUseTelemetry) {
+      m_wristTab = wristTab;
+      setupShuffleboardTab();
+      SmartDashboard.putData("4 bar arm PID", m_pid); 
+    }
   }
 
   /**
@@ -96,5 +104,9 @@ public class Wrist extends SubsystemBase {
 
   public void updateLogs(){
     LogManager.addDouble("Four Bar/position", getAbsEncoderPos());
+  }
+
+  public void setupShuffleboardTab() {
+    m_wristTab.add("PID", m_pid);
   }
 }

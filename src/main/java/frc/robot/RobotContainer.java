@@ -38,6 +38,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.RollerIntake;
+import frc.robot.subsystems.Wrist;
 import frc.robot.util.PathGroupLoader;
 import frc.robot.util.Vision;
 
@@ -63,7 +64,7 @@ public class RobotContainer {
   private final ShuffleboardTab m_elevatorTab = Shuffleboard.getTab("Elevator");
   private final ShuffleboardTab m_intakeTab = Shuffleboard.getTab("Intake");
   private final ShuffleboardTab m_barTab = Shuffleboard.getTab("Bar");
-  
+  private final ShuffleboardTab m_wristTab = Shuffleboard.getTab("Wrist");
 
   private final Vision m_vision;
 
@@ -73,6 +74,7 @@ public class RobotContainer {
   private final RollerIntake m_intake;
   private final Elevator m_elevator;
   private final Bar m_deployingBar;
+  private final Wrist m_wrist;
 
   // Controllers are defined here
   private final BaseDriverConfig m_driver;
@@ -102,12 +104,13 @@ public class RobotContainer {
         m_intake = new RollerIntake(m_intakeTab);
         m_elevator = new Elevator(m_elevatorTab, () -> m_intake.containsGamePiece());
         m_deployingBar = new Bar(m_barTab); 
+        m_wrist = new Wrist(m_wristTab);
   
         m_operator = new Operator();
-        m_testController = new TestController(m_arm, m_intake, m_elevator, m_deployingBar);
+        m_testController = new TestController(m_arm, m_intake, m_elevator, m_deployingBar, m_wrist);
         m_manualController = new ManualController(m_arm, m_intake, m_elevator);
   
-        m_operator.configureControls(m_arm, m_intake, m_elevator, m_deployingBar, m_vision);
+        m_operator.configureRollerIntakeControls(m_wrist, m_intake, m_elevator, m_vision);
         m_testController.configureControls();
         m_manualController.configureControls();
   
@@ -144,6 +147,7 @@ public class RobotContainer {
         m_intake = null;
         m_elevator = null;
         m_deployingBar = null;
+        m_wrist = null;
   
         m_operator = null;
         m_testController = null;
@@ -176,6 +180,7 @@ public class RobotContainer {
         m_intake = null;
         m_elevator = null;
         m_deployingBar = null;
+        m_wrist = null;
 
         m_operator = null;
         m_testController = null;

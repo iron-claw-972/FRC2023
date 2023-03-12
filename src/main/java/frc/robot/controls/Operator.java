@@ -18,15 +18,17 @@ import frc.robot.commands.scoring.bar.ToggleBar;
 import frc.robot.commands.scoring.elevator.CalibrateElevator;
 import frc.robot.commands.scoring.elevator.MoveElevator;
 import frc.robot.commands.scoring.intake.IntakeGamePiece;
-import frc.robot.commands.scoring.intake.Outtake;
+import frc.robot.commands.scoring.intake.OuttakeGamePiece;
 import frc.robot.commands.scoring.wrist.RotateWrist;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.Bar;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.RollerIntake;
 import frc.robot.subsystems.Wrist;
+import frc.robot.subsystems.RollerIntake.IntakeMode;
+import frc.robot.subsystems.RollerIntake.IntakePiece;
 import frc.robot.util.Node;
 import frc.robot.util.Vision;
 import lib.controllers.GameController;
@@ -111,7 +113,7 @@ public class Operator {
   /**
    * Configures the operator controls with the roller intake and wrist
    */
-  public void ConfigureRollerIntakeControls(Wrist wrist, Intake intake, Elevator elevator, Vision vision) {
+  public void configureRollerIntakeControls(Wrist wrist, RollerIntake intake, Elevator elevator, Vision vision) {
     m_vision = vision; //should be in constructor
 
     m_operator.get(Button.BACK).onTrue(new CalibrateElevator(elevator));
@@ -125,9 +127,9 @@ public class Operator {
     //bottom
     m_operator.get(Button.A).onTrue(new PositionRollerIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, RollerPosition.BOTTOM));
     //shelf
-    m_operator.get(Button.B).onTrue(new PositionRollerIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, RollerPosition.SHELF).alongWith(new IntakeGamePiece(intake)))
+    m_operator.get(Button.B).onTrue(new PositionRollerIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, RollerPosition.SHELF).alongWith(new IntakeGamePiece(intake, m_operator.RIGHT_TRIGGER_BUTTON.getAsBoolean()? IntakePiece.CONE: IntakePiece.CUBE)))
       .onFalse(new SequentialCommandGroup( 
-        new InstantCommand(() -> intake.stopIntake()),
+        new InstantCommand(() -> intake.setIntakeMode(IntakeMode.DISABLED)),
         new RotateWrist(wrist, 0.8),
         new MoveElevator(elevator, ElevatorConstants.kStowHeight),
         new WristStow(intake, elevator, wrist)
@@ -138,14 +140,14 @@ public class Operator {
 
     //intake
     m_operator.get(Button.LB).onTrue(
-      new PositionRollerIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, RollerPosition.INTAKE).alongWith(new IntakeGamePiece(intake)))
+      new PositionRollerIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, RollerPosition.INTAKE).alongWith(new IntakeGamePiece(intake, m_operator.RIGHT_TRIGGER_BUTTON.getAsBoolean()? IntakePiece.CONE: IntakePiece.CUBE)))
       .onFalse(new WristStow(intake, elevator, wrist));
 
     //dunk
     m_operator.get(m_operator.RIGHT_TRIGGER_BUTTON).onTrue(new WristDunk(wrist, intake)).onFalse(new WristStow(intake, elevator, wrist));
 
     //outtake
-    m_operator.get(m_operator.LEFT_TRIGGER_BUTTON).onTrue(new Outtake(intake, false)).onFalse(new WristStow(intake, elevator, wrist));
+    m_operator.get(m_operator.LEFT_TRIGGER_BUTTON).onTrue(new OuttakeGamePiece(intake)).onFalse(new WristStow(intake, elevator, wrist));
   
   
     // Selects which grid to score in

@@ -10,13 +10,16 @@ import frc.robot.commands.scoring.bar.CalibrateBar;
 import frc.robot.commands.scoring.elevator.CalibrateElevator;
 import frc.robot.commands.scoring.intake.IntakeGamePiece;
 import frc.robot.commands.scoring.intake.OuttakeGamePiece;
+import frc.robot.commands.scoring.wrist.RotateWrist;
 import frc.robot.constants.OIConstants;
+import frc.robot.constants.WristConstants;
 import frc.robot.subsystems.Bar;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.RollerIntake;
 import frc.robot.subsystems.RollerIntake.IntakeMode;
 import frc.robot.subsystems.RollerIntake.IntakePiece;
+import frc.robot.subsystems.Wrist;
 import lib.controllers.GameController;
 import lib.controllers.GameController.Button;
 import lib.controllers.GameController.DPad;
@@ -28,12 +31,14 @@ public class TestController {
   private RollerIntake m_intake;
   private Elevator m_elevator;
   private Bar m_bar;
+  private Wrist m_wrist;
   
-  public TestController(FourBarArm arm, RollerIntake intake, Elevator elevator, Bar bar) {
+  public TestController(FourBarArm arm, RollerIntake intake, Elevator elevator, Bar bar, Wrist wrist) {
     m_arm = arm;
     m_intake = intake;
     m_elevator = elevator;
     m_bar = bar;
+    m_wrist = wrist;
   }
   
   public void configureControls() {
@@ -64,6 +69,12 @@ public class TestController {
     // test.get(Button.A).onTrue(new ExtendArm(m_arm, ArmConstants.kBottomNodePos));
     // test.get(Button.B).onTrue(new ExtendArm(m_arm, ArmConstants.kShelfPos));
     // test.get(Button.RB).onTrue(new ExtendArm(m_arm, ArmConstants.kIntakePos));
+
+    test.get(Button.Y).onTrue(new RotateWrist(m_wrist, WristConstants.kTopNodePos));
+    test.get(Button.X).onTrue(new RotateWrist(m_wrist, WristConstants.kMiddleNodePos));
+    test.get(Button.A).onTrue(new RotateWrist(m_wrist, WristConstants.kBottomNodePos));
+    test.get(Button.B).onTrue(new RotateWrist(m_wrist, WristConstants.kShelfPos));
+    test.get(Button.RB).onTrue(new RotateWrist(m_wrist, WristConstants.kIntakePos));
 
     // test.get(Button.LB).onTrue(new IntakeGamePiece(m_intake));
 
