@@ -67,7 +67,7 @@ public class BalanceCommand extends CommandBase {
     m_output = MathUtil.clamp(m_pid.calculate(m_currentAngle), -DriveConstants.kBalanceMaxOutput, DriveConstants.kBalanceMaxOutput);
 
     // TODO: consider using heading PID to keep drive straight
-    m_drive.drive(-m_output, 0, 0, true, true);
+    m_drive.drive( (m_inverted ? -1 : 1) * m_output, 0, 0, true, true);
     
     // after DriveConstants.kBalanceNoStopPeriod, will stop every DriveConstants.kBalanceStopInterval seconds 
     // for DriveConstants.kBalanceStopDuration seconds, to give charge station time to balance. See DriveConstants.java
