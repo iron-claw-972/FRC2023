@@ -9,7 +9,6 @@ import frc.robot.commands.GoToShelf;
 import frc.robot.commands.GoToShelfPID;
 import frc.robot.commands.SetFormationX;
 import frc.robot.constants.OIConstants;
-import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.util.Functions;
 import lib.controllers.GameController;
@@ -30,7 +29,7 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
   
   @Override
   public void configureControls() { 
-    kDriver.get(Button.START).onTrue(new InstantCommand(() -> super.getDrivetrain().setPigeonYaw(DriveConstants.kStartingHeadingDegrees)));
+    kDriver.get(Button.START).onTrue(new InstantCommand(() -> getDrivetrain().setYaw(0)));
     kDriver.get(Button.X).whileTrue(new SetFormationX(super.getDrivetrain()));
 
     // Moves to the selected scoring position using Path Planner
