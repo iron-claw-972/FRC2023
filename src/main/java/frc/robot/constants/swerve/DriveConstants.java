@@ -6,7 +6,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import lib.COTSFalconSwerveConstants;
-import frc.robot.Robot;
 import frc.robot.Robot.RobotId;
 import frc.robot.constants.Constants;
 import frc.robot.constants.FalconConstants;
@@ -22,8 +21,10 @@ public class DriveConstants {
   public static double kWheelRadius = Units.inchesToMeters(2);
 
   public static double kTrackWidth = Units.inchesToMeters(20.75);//22.75 swerve bot, 20.75 comp bot
-  public static double kDriveGearRatio = 6.75;
-  public static double kSteerGearRatio = 21.43;
+
+  // use the gear ratios
+  public static double kDriveGearRatio = (50.0 / 14.0) * (17.0 / 27.0) * (45.0 / 15.0);
+  public static double kSteerGearRatio = 150.0 / 7.0;
 
   /* Drive Motor Characterization Values 
   * Divide SYSID values by 12 to convert from volts to percent output for CTRE */
