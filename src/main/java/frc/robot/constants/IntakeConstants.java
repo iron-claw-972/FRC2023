@@ -5,7 +5,8 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import frc.robot.subsystems.RollerIntake.IntakePiece;
 
 public final class IntakeConstants {
-  // motor ports
+  
+  // motor port
   public static final int kIntakeMotorId = 9;
 
   // intake speeds

@@ -45,7 +45,7 @@ public class RollerIntake extends SubsystemBase {
     m_heldPiece = IntakePiece.NONE;
     m_intakeTab = intakeTab;
 
-    setupShuffleboard();
+    if (Constants.kUseTelemetry) setupShuffleboard();
 
   }
 
@@ -85,10 +85,6 @@ public class RollerIntake extends SubsystemBase {
     m_intakeTab.addDouble("Intake Motor Current", () -> m_intakeMotor.getStatorCurrent());
     m_intakeTab.addDouble("Intake Power", () -> m_power);
     m_intakeTab.addString("Held Game Piece", () -> m_heldPiece.name());
-  }
-  
-  public void updateLogs() {
-    
   }
   
   public boolean containsGamePiece() {
