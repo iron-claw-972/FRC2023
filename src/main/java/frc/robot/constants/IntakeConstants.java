@@ -28,7 +28,6 @@ public final class IntakeConstants {
   /**
    * How many seconds the outtake will run for. This needs to be tested.
    */
+  // TODO: set this to a tested value
   public static final double kOuttakeTime = 0.5;
-
-  public static final int kMotorCurrentLimit = 100;
 }
