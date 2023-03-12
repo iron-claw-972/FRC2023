@@ -38,7 +38,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.Intake;
-import frc.robot.util.Mechanism;
+import frc.robot.util.DrawMechanism;
 import frc.robot.util.PathGroupLoader;
 import frc.robot.util.Vision;
 
@@ -82,7 +82,7 @@ public class RobotContainer {
   private final ManualController m_manualController;
 
   /** The mech2d drawing of the robot. Use this instance to show the state of the robot. */
-  public Mechanism m_mechanism = Mechanism.getInstance();
+  public DrawMechanism m_mechanism = DrawMechanism.getInstance();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer(RobotId robotId) {
