@@ -8,12 +8,16 @@ import frc.robot.commands.DepositTune;
 import frc.robot.commands.scoring.Stow;
 import frc.robot.commands.scoring.bar.CalibrateBar;
 import frc.robot.commands.scoring.elevator.CalibrateElevator;
+import frc.robot.commands.scoring.intake.IntakeGamePiece;
+import frc.robot.commands.scoring.intake.OuttakeGamePiece;
 import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.Bar;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Intake.IntakePiece;
 import lib.controllers.GameController;
+import lib.controllers.GameController.Button;
 import lib.controllers.GameController.DPad;
 
 public class TestController {
@@ -42,6 +46,10 @@ public class TestController {
 
 
     test.get(DPad.UP).onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
+
+    test.get(Button.A).onTrue(new IntakeGamePiece(m_intake, IntakePiece.CONE));
+    test.get(Button.B).onTrue(new IntakeGamePiece(m_intake, IntakePiece.CUBE));
+    test.get(Button.X).onTrue(new OuttakeGamePiece(m_intake));
 
     // test.get(Button.Y).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kTopConeHeight));
     // test.get(Button.X).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kMiddleConeHeight));
