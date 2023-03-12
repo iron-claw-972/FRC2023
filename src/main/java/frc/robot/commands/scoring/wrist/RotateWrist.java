@@ -20,6 +20,7 @@ public class RotateWrist extends CommandBase {
     public void initialize() {
         m_wrist.setEnabled(true);
         m_wrist.setArmSetpoint(m_wristSetpoint);
+        System.out.println(m_wrist.getMotorvoltage());
     }
 
     @Override

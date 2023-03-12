@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -60,6 +61,11 @@ public class Robot extends TimedRobot {
 
     // save the identity in a global
     kRobotId = robotId;
+
+    if (RobotBase.isSimulation()) {
+      kRobotId = RobotId.SwerveCompetition;
+      robotId = RobotId.SwerveCompetition;
+    }
 
     // build the RobotContainer
     m_robotContainer = new RobotContainer(robotId);

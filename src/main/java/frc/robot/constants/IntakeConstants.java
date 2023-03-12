@@ -6,6 +6,8 @@ import com.revrobotics.CANSparkMax.IdleMode;
 public final class IntakeConstants {
   // motor ports
   public static final int kIntakeMotorId = 0;
+  public static final int kLeftMotorPort = 0;
+  public static final int kRightMotorPort = 0;
 
   // intake speeds
   public static final double kIntakeCubePower = 0.2;
@@ -27,4 +29,9 @@ public final class IntakeConstants {
   public static final double kOuttakeTime = 0.5;
 
   public static final int kMotorCurrentLimit = 100;
+
+  public static final boolean kLeftMotorInvert = false;
+  public static final boolean kRightMotorInvert = false;
+
+
 }

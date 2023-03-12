@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.scoring.PositionIntake;
 import frc.robot.commands.scoring.PositionIntake.Position;
@@ -115,7 +116,7 @@ public class Operator {
    */
   public void configureRollerIntakeControls(Wrist wrist, RollerIntake intake, Elevator elevator, Vision vision) {
     m_vision = vision; //should be in constructor
-
+    System.out.println("configure controls");
     m_operator.get(Button.BACK).onTrue(new CalibrateElevator(elevator));
 
     m_operator.get(DPad.UP).onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
@@ -125,7 +126,7 @@ public class Operator {
     //middle
     m_operator.get(Button.X).onTrue(new PositionRollerIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, RollerPosition.MIDDLE));
     //bottom
-    m_operator.get(Button.A).onTrue(new PositionRollerIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, RollerPosition.BOTTOM));
+    m_operator.get(Button.RB).onTrue(new PositionRollerIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, RollerPosition.BOTTOM));
     //shelf
     m_operator.get(Button.B).onTrue(new PositionRollerIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, RollerPosition.SHELF).alongWith(new IntakeGamePiece(intake, m_operator.RIGHT_TRIGGER_BUTTON.getAsBoolean()? IntakePiece.CONE: IntakePiece.CUBE)))
       .onFalse(new SequentialCommandGroup( 
@@ -136,7 +137,9 @@ public class Operator {
       ));
     
     //stow
-    m_operator.get(Button.RB).onTrue(new WristStow(intake, elevator, wrist));
+    m_operator.get(Button.A).whileTrue(
+      (new PrintCommand("works")).andThen(new WristStow(intake, elevator, wrist)
+      ));
 
     //intake
     m_operator.get(Button.LB).onTrue(
