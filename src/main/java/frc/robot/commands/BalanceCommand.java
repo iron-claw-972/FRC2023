@@ -11,20 +11,24 @@ import frc.robot.subsystems.Drivetrain;
 public class BalanceCommand extends CommandBase {
   
   private Drivetrain m_drive;
-  private final PIDController m_pid = new PIDController(
-    DriveConstants.kBalanceP, 
-    DriveConstants.kBalanceI, 
-    DriveConstants.kBalanceD
-  );
+  private final PIDController m_pid;
   
   private double m_currentAngle, m_output;
   private boolean m_usePitch;
   private boolean m_inverted;
+  private boolean m_isStopping = false;
   private Timer m_timer = new Timer();
   
+  /**
+   * Attempts to balance the robot on the charge station. The robot must start partially on
+   * the charge station.
+   * <p>Uses a PID, and after a short time will stutter up the charge station to allow the charge station to balance
+   * naturally. Currently the command does not end.
+   * @param drive the drive subsystem
+   */
   public BalanceCommand(Drivetrain drive) {
     m_drive = drive;
-    m_pid.setTolerance(DriveConstants.kBalanceTolerance);
+    m_pid = drive.getBalanceController();
     addRequirements(drive);
   }
   
@@ -48,6 +52,9 @@ public class BalanceCommand extends CommandBase {
     }
 
     System.out.println("BALANCING: " + (m_usePitch ? "PITCH" : "ROLL") + (m_inverted ? "INVERTED" : ""));
+
+    m_timer.reset();
+    m_isStopping = false;
   }
   
   @Override
@@ -59,21 +66,26 @@ public class BalanceCommand extends CommandBase {
 
     m_output = MathUtil.clamp(m_pid.calculate(m_currentAngle), -DriveConstants.kBalanceMaxOutput, DriveConstants.kBalanceMaxOutput);
 
-    if (m_usePitch) {
-      m_drive.driveHeading(-m_output, 0, (m_inverted ? 0 : Math.PI), true);
-    } else {
-      m_drive.driveHeading(-m_output, 0, (m_inverted ? -Math.PI/2 : Math.PI/2), true); // TODO: inversion may be incorrect
-    }
+    // TODO: consider using heading PID to keep drive straight
+    m_drive.drive(-m_output, 0, 0, true, true);
     
-    if (m_timer.get() >= DriveConstants.kBalanceStartTime && m_timer.get() <= DriveConstants.kBalanceEndTime) {
+    // after DriveConstants.kBalanceNoStopPeriod, will stop every DriveConstants.kBalanceStopInterval seconds 
+    // for DriveConstants.kBalanceStopDuration seconds, to give charge station time to balance. See DriveConstants.java
+    if (m_isStopping && m_timer.get() >= DriveConstants.kBalanceStopInterval) {
       m_drive.stop();
-      m_timer.reset();
+      if (m_timer.get() >= DriveConstants.kBalanceStopDuration + DriveConstants.kBalanceStopInterval) {
+        m_timer.reset();
+      }
+    }
+
+    if (m_timer.get() > DriveConstants.kBalanceNoStopPeriod) {
+      m_isStopping = true;
     }
   }
   
   @Override
   public boolean isFinished() {
-    return DriverStation.isAutonomousEnabled() ? false : m_pid.atSetpoint();
+    return false;
   }
   
   @Override
