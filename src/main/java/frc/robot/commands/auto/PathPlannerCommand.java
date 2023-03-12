@@ -48,8 +48,8 @@ public class PathPlannerCommand extends SequentialCommandGroup{
         if (pathIndex < 0 || pathIndex > pathGroup.size() - 1){
             throw new IndexOutOfBoundsException("Path index out of range"); 
         } 
-        PathPlannerTrajectory path = PathPlannerTrajectory.transformTrajectoryForAlliance(pathGroup.get(pathIndex),
-            DriverStation.getAlliance());
+        
+        PathPlannerTrajectory path = pathGroup.get(pathIndex);
 
         addCommands(
             (pathIndex == 0 && resetPose ? new InstantCommand(() -> {drive.setPigeonYaw(path); drive.resetOdometry(path.getInitialHolonomicPose());}) : new DoNothing()),
@@ -61,7 +61,7 @@ public class PathPlannerCommand extends SequentialCommandGroup{
                 drive.getPathplannerYController(), // Y controller can't normal PID as pathplanner has Feed Forward 
                 drive.getPathplannerRotationController(), // Rotation controller can't normal PID as pathplanner has Feed Forward 
                 (chassisSpeeds) -> { drive.setChassisSpeeds(chassisSpeeds, false); }, // chassis Speeds consumer
-                false,  // use Alliance color
+                true,  // use Alliance color
                 drive // Requires this drive subsystem
             )
         );
