@@ -93,6 +93,9 @@ public class DriveConstants {
   public static double kBalanceStopInterval = 0.5;
   public static double kBalanceStopDuration = 0.2;
 
+  // speed of the robot going of the charge station, m/s
+  public static double kDriveChargeStationSpeed = 0.5;
+
   //translational PID
   public static double kTranslationalP = 0.25;
   public static double kTranslationalD = 0;//0.001

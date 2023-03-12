@@ -19,6 +19,7 @@ import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.auto.EngageFromLeftDriverSide;
 import frc.robot.commands.auto.EngageFromRightDriverSide;
+import frc.robot.commands.auto.MobilityEngage;
 import frc.robot.commands.auto.DepositThenPath;
 import frc.robot.commands.auto.PathPlannerCommand;
 import frc.robot.commands.scoring.PositionIntake;
@@ -271,12 +272,28 @@ public class RobotContainer {
         new BalanceCommand(m_drive))
       );
 
+      // NOT WORKING
       m_autoCommand.addOption("Grid 6 Engage (careful)", new DepositThenPath("Grid 6 Engage", autoDepositPos, m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceCommand(m_drive)));    
+      
+      //NOT WORKING
+      m_autoCommand.addOption("Mobility Engage NOT WORKING",
+        new PathPlannerCommand("Grid 6 Engage No Mobility Copy", 0, m_drive, true).andThen(
+        new PathPlannerCommand("Grid 6 Engage No Mobility Copy", 1, m_drive, true)).andThen(
+        new MobilityEngage(m_drive))
+      );
+
       m_autoCommand.addOption("Grid 1 Engage", new DepositThenPath("Grid 1 Engage", autoDepositPos, m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceCommand(m_drive)));
     
       m_autoCommand.addOption("Engage Left", new EngageFromLeftDriverSide(m_drive));
       m_autoCommand.addOption("Engage Right", new EngageFromRightDriverSide(m_drive));
     }
+  }
+
+  public void checkModules() {
+    System.out.println("Module FL angle diff: " + (m_drive.m_modules[0].getAngle().getDegrees() - m_drive.m_modules[0].getCANcoder().getDegrees() + Units.radiansToDegrees(DriveConstants.kSteerOffsetFrontLeft)));
+    System.out.println("Module FR angle diff: " + (m_drive.m_modules[1].getAngle().getDegrees() - m_drive.m_modules[1].getCANcoder().getDegrees() + Units.radiansToDegrees(DriveConstants.kSteerOffsetFrontRight)));
+    System.out.println("Module BL angle diff: " + (m_drive.m_modules[2].getAngle().getDegrees() - m_drive.m_modules[2].getCANcoder().getDegrees() + Units.radiansToDegrees(DriveConstants.kSteerOffsetBackLeft)));
+    System.out.println("Module BR angle diff: " + (m_drive.m_modules[3].getAngle().getDegrees() - m_drive.m_modules[3].getCANcoder().getDegrees() + Units.radiansToDegrees(DriveConstants.kSteerOffsetBackRight)));
   }
 
   
