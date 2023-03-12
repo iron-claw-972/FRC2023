@@ -5,7 +5,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import frc.robot.subsystems.RollerIntake.IntakePiece;
 
 public final class IntakeConstants {
-  
+
   // motor port
   public static final int kIntakeMotorId = 9;
 
@@ -15,6 +15,12 @@ public final class IntakeConstants {
   public static final double kOuttakeCubePower = -0.05;
   public static final double kIntakeConePower = -0.05;
   public static final double kOuttakeConePower = 0.05;
+
+  /**
+   * The value to clamp the intake motor power at. This needs to be tested.
+   * Uses MathUtil.clamp(power, -kClampValue, kClampValue)
+   */
+  public static final double kClampValue = 0.2;
 
   public static final NeutralMode kNeutralMode = NeutralMode.Brake;
 

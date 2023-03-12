@@ -9,6 +9,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
@@ -72,6 +73,7 @@ public class RollerIntake extends SubsystemBase {
       case DISABLED: 
         m_power = 0;       
     }
+    m_power = MathUtil.clamp(m_power, -IntakeConstants.kClampValue, IntakeConstants.kClampValue);
     setMotorPower(m_power);
 
     if (Constants.kLogging) {
