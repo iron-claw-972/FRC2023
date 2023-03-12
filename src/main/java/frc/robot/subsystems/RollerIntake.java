@@ -37,7 +37,6 @@ public class RollerIntake extends SubsystemBase {
 
   public RollerIntake(ShuffleboardTab intakeTab) {
     m_intakeMotor = MotorFactory.createTalonFX(IntakeConstants.kIntakeMotorId, Constants.kCanivoreCAN);
-    configMotors();
     
     m_power = 0;
     m_mode = IntakeMode.DISABLED;
@@ -47,16 +46,7 @@ public class RollerIntake extends SubsystemBase {
     m_intakeTab = intakeTab;
 
     setupShuffleboard();
-  
-    if (Constants.kLogging) {
-      LogManager.addDouble("Intake Motor Current", () -> m_intakeMotor.getStatorCurrent());
-      LogManager.addDouble("Intake Power", () -> m_power);
-    }
 
-  }
-
-  private void configMotors() {
-    m_intakeMotor.setNeutralMode(IntakeConstants.kNeutralMode);
   }
 
   public void setIntakeMode(IntakeMode mode){
@@ -83,6 +73,11 @@ public class RollerIntake extends SubsystemBase {
         m_power = IntakeConstants.kStopPower;       
     }
     setMotorPower(m_power);
+
+    if (Constants.kLogging) {
+      LogManager.addDouble("Intake Motor Current", m_intakeMotor.getStatorCurrent());
+      LogManager.addDouble("Intake Power", m_power);
+    }
   }
 
   private void setupShuffleboard() {

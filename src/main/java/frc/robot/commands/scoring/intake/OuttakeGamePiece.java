@@ -10,24 +10,38 @@ import frc.robot.subsystems.RollerIntake.IntakePiece;
 public class OuttakeGamePiece extends CommandBase {
 
   private final RollerIntake m_intake; 
+  private final IntakePiece m_heldPiece;
   private final Timer m_timer;
 
   /**
-   * Spins the intake until the game piece is inside the intake.
+   * Spins the outtake for a set amount of time.
    * @param intake the intake subsystem
    */
   public OuttakeGamePiece(RollerIntake intake) {
+    this(intake, intake.getHeldGamePiece());
+  }
+
+  /**
+   * Spins the outtake for a set amount of time.
+   * @param intake the intake subsystem
+   * @param piece the piece to outtake
+   */
+  public OuttakeGamePiece(RollerIntake intake, IntakePiece piece) {
     m_intake = intake; 
+    m_heldPiece = piece;
     m_timer = new Timer();
     addRequirements(m_intake);
   }
 
   @Override
   public void initialize() {
-    if (m_intake.getHeldGamePiece() == IntakePiece.CUBE) {
+    if (m_heldPiece == IntakePiece.CUBE) {
       m_intake.setIntakeMode(IntakeMode.OUTTAKE_CUBE);
-    } else if (m_intake.getHeldGamePiece() == IntakePiece.CONE) {
+    } else if (m_heldPiece == IntakePiece.CONE) {
       m_intake.setIntakeMode(IntakeMode.OUTTAKE_CONE);
+    } else {
+      end(true);
+      return;
     }
     m_timer.start();
   }
