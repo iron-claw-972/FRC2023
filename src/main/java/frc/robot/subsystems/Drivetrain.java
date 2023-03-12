@@ -6,6 +6,7 @@ import java.util.function.DoubleSupplier;
 import org.photonvision.EstimatedRobotPose;
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
+import com.ctre.phoenix.sensors.Pigeon2.AxisDirection;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 
@@ -32,6 +33,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.commands.test.CircleDrive;
 import frc.robot.commands.test.DriveFeedForwardCharacterization;
 import frc.robot.commands.test.SteerFeedForwardCharacterizationSingle;
@@ -118,6 +120,8 @@ public class Drivetrain extends SubsystemBase {
     
     m_pigeon = new WPI_Pigeon2(DriveConstants.kPigeon, DriveConstants.kPigeonCAN);
     m_pigeon.configFactoryDefault();
+    // Our pigeon is mounted with y forward, and z upward
+    m_pigeon.configMountPose(AxisDirection.PositiveY, AxisDirection.PositiveZ);
 
     if (RobotBase.isReal()) {
       m_modules = new Module[] {
@@ -305,7 +309,7 @@ public class Drivetrain extends SubsystemBase {
     }
   }
 
-  PIDController m_balancePID = new PIDController(1, 0, 0.006);
+  PIDController m_balancePID = new PIDController(DriveConstants.kBalanceP, DriveConstants.kBalanceI, DriveConstants.kBalanceD);
   public PIDController getBalanceController() {
     return m_balancePID;
   }
@@ -342,7 +346,7 @@ public class Drivetrain extends SubsystemBase {
    * @param isOpenLoop if open loop control should be used for the drive velocity
    */
   public void setChassisSpeeds(ChassisSpeeds chassisSpeeds, boolean isOpenLoop) {
-    if (!RobotBase.isReal()) {
+    if (Robot.isSimulation()) {
       m_pigeon.getSimCollection().addHeading(
       + Units.radiansToDegrees(chassisSpeeds.omegaRadiansPerSecond * Constants.kLoopTime));
     }
@@ -357,7 +361,6 @@ public class Drivetrain extends SubsystemBase {
    * @param degrees the new yaw angle, in degrees.
    */
   public void setYaw(double degrees) {
-    m_pigeon.setYaw(degrees);
     // the odometry stores an offset from the current pigeon angle
     // changing the angle makes that offset inaccurate, so must reset the pose as well.
     // keep the same translation, but set the odometry angle to what we want the angle to be.
