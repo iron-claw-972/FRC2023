@@ -40,7 +40,7 @@ public class OuttakeGamePiece extends CommandBase {
     } else if (m_heldPiece == IntakePiece.CONE) {
       m_intake.setIntakeMode(IntakeMode.OUTTAKE_CONE);
     } else {
-      end(true);
+      cancel();
       return;
     }
     m_timer.start();
