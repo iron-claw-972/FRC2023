@@ -48,16 +48,14 @@ public class TestController {
 
     SmartDashboard.putNumber("Deposit Elevator Extension", 0);
     SmartDashboard.putNumber("Deposit Arm Extension", 0);
-    test.get(DPad.RIGHT).onTrue(new DepositTune(m_elevator, m_arm));
-
 
     test.get(DPad.UP).onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
 
-    test.get(Button.A).onTrue(new IntakeGamePiece(m_intake, IntakePiece.CONE));
+    /*test.get(Button.A).onTrue(new IntakeGamePiece(m_intake, IntakePiece.CONE));
     test.get(Button.B).onTrue(new IntakeGamePiece(m_intake, IntakePiece.CUBE));
     test.get(Button.X).onTrue(new OuttakeGamePiece(m_intake));
     test.get(Button.Y).onTrue(new InstantCommand(() -> m_intake.setIntakeMode(IntakeMode.DISABLED), m_intake));
-
+    */
     // test.get(Button.Y).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kTopConeHeight));
     // test.get(Button.X).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kMiddleConeHeight));
     // test.get(Button.A).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kBottomConeHeight));
