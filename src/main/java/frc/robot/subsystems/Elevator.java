@@ -279,8 +279,8 @@ public class Elevator extends SubsystemBase {
     }
   }
 
-  public void updateLogs(){
-    LogManager.addDouble("Elevator/error", m_desiredPosition - getPosition());
+  public void updateLogs() {
+    LogManager.addDouble("Elevator/desiredPosition", m_desiredPosition);
     LogManager.addDouble("Elevator/extension", getPosition());
     LogManager.addBoolean("Elevator/bottomLimitSwitch", isBottomLimitSwitchReached());
     LogManager.addBoolean("Elevator/topLimitSwitch", isTopLimitSwitchReached());
