@@ -5,13 +5,9 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.scoring.PositionIntake;
-import frc.robot.commands.scoring.PositionIntake.Position;
 import frc.robot.commands.scoring.PositionRollerIntake;
 import frc.robot.commands.scoring.PositionRollerIntake.RollerPosition;
-import frc.robot.commands.scoring.arm.ExtendArm;
 import frc.robot.commands.scoring.Stow;
-import frc.robot.commands.scoring.WristDunk;
 import frc.robot.commands.scoring.WristStow;
 import frc.robot.commands.scoring.bar.CalibrateBar;
 import frc.robot.commands.scoring.bar.ToggleBar;
@@ -135,7 +131,7 @@ public class Operator {
         new WristStow(intake, elevator, wrist)
       ));
     
-    //stow
+    // stow
     m_operator.get(Button.RB).onTrue(new WristStow(intake, elevator, wrist));
 
     //intake
@@ -143,8 +139,9 @@ public class Operator {
       new PositionRollerIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, RollerPosition.INTAKE).alongWith(new IntakeGamePiece(intake, m_operator.RIGHT_TRIGGER_BUTTON.getAsBoolean()? IntakePiece.CONE: IntakePiece.CUBE)))
       .onFalse(new WristStow(intake, elevator, wrist));
 
-    //dunk
-    m_operator.get(m_operator.RIGHT_TRIGGER_BUTTON).onTrue(new WristDunk(wrist, intake)).onFalse(new WristStow(intake, elevator, wrist));
+    // TODO: Use new dunk command
+    // dunk
+    // m_operator.get(m_operator.RIGHT_TRIGGER_BUTTON).onTrue(new Dunk(arm, intake)).onFalse(new Stow(intake, elevator, arm));
 
     //outtake
     m_operator.get(m_operator.LEFT_TRIGGER_BUTTON).onTrue(new OuttakeGamePiece(intake)).onFalse(new WristStow(intake, elevator, wrist));
