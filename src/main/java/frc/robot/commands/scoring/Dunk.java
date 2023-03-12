@@ -1,5 +1,6 @@
 package frc.robot.commands.scoring;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -17,7 +18,7 @@ public class Dunk extends SequentialCommandGroup {
         addRequirements(arm, intake);
         addCommands(
             new ExtendArm(arm, ArmConstants.kDunkPos),
-            new InstantCommand(() -> intake.setIdleMode(IdleMode.kCoast))
+            new InstantCommand(() -> intake.setNeutralMode(NeutralMode.Coast))
         );
     }
 }

@@ -56,8 +56,10 @@ public class Operator {
 
     m_operator.get(DPad.UP).onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
 
+    //TODO: Need to figure out keybindings for intake: 
     m_operator.get(Button.A).onTrue(new InstantCommand(()-> intake.setIntakeMode(IntakeMode.INTAKE_CUBE))).onFalse(new InstantCommand(()-> intake.setIntakeMode(IntakeMode.DISABLED)));
-    m_operator.get(Button.B).onTrue(new InstantCommand(()-> intake.setIntakeMode(IntakeMode.OUTTAKE_CUBE))).onFalse(new InstantCommand(()-> intake.setIntakeMode(IntakeMode.DISABLED)));
+    //m_operator.get(Button.B).onTrue(new InstantCommand(()-> intake.setIntakeMode(IntakeMode.OUTTAKE_CUBE))).onFalse(new InstantCommand(()-> intake.setIntakeMode(IntakeMode.DISABLED)));
+    //avbove is commented because Button.B keybinding is used already
     m_operator.get(Button.X).onTrue(new InstantCommand(()-> intake.setIntakeMode(IntakeMode.INTAKE_CONE))).onFalse(new InstantCommand(()-> intake.setIntakeMode(IntakeMode.DISABLED)));
     m_operator.get(Button.Y).onTrue(new InstantCommand(()-> intake.setIntakeMode(IntakeMode.OUTTAKE_CONE))).onFalse(new InstantCommand(()-> intake.setIntakeMode(IntakeMode.DISABLED)));
 
@@ -65,7 +67,7 @@ public class Operator {
     //shelf
     m_operator.get(Button.B).onTrue(new PositionIntake(elevator, arm, intake::hasCone, Position.SHELF).alongWith(new IntakeGamePiece(intake)))
       .onFalse(new SequentialCommandGroup( 
-        new InstantCommand(() -> intake.stopIntake()),
+        new InstantCommand(() ->  intake.setIntakeMode(IntakeMode.DISABLED)),
         new ExtendArm(arm, 0.8),
         new MoveElevator(elevator, ElevatorConstants.kStowHeight),
         new Stow(intake, elevator, arm)

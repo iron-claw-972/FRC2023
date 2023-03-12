@@ -10,7 +10,6 @@ import frc.robot.commands.scoring.bar.CalibrateBar;
 import frc.robot.commands.scoring.elevator.CalibrateElevator;
 import frc.robot.commands.scoring.elevator.MoveElevator;
 import frc.robot.commands.scoring.intake.IntakeGamePiece;
-import frc.robot.commands.scoring.intake.Outtake;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.Bar;
@@ -37,6 +36,7 @@ public class TestController {
   }
   
   public void configureControls() {
+    //TODO: Need to figure out keybindings for intake 
 
     test.get(DPad.DOWN).onTrue(new CalibrateElevator(m_elevator));
     test.get(DPad.LEFT).onTrue(new CalibrateBar(m_bar));
@@ -62,7 +62,6 @@ public class TestController {
 
     test.get(Button.LB).onTrue(new IntakeGamePiece(m_intake));
 
-    test.get(Button.RB).onTrue(new Outtake(m_intake, false));
 
     //TODO: cleaner
     new Trigger(test.LEFT_TRIGGER_BUTTON).onTrue(new Stow(m_intake, m_elevator, m_arm));

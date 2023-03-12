@@ -1,5 +1,6 @@
 package frc.robot.commands.scoring;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -16,7 +17,7 @@ public class Stow extends SequentialCommandGroup {
   public Stow(Intake intake, Elevator elevator, FourBarArm arm) {
     addRequirements(intake, elevator, arm);
     addCommands(
-      new InstantCommand(() -> intake.setIdleMode(IdleMode.kBrake)),
+      new InstantCommand(() -> intake.setNeutralMode(NeutralMode.Brake)),
       new ExtendArm(arm, ArmConstants.kStowPos),
       new MoveElevator(elevator, ElevatorConstants.kStowHeight)
     );

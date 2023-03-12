@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -37,6 +38,10 @@ public class Intake extends SubsystemBase {
 
   }
 
+  public void setNeutralMode(NeutralMode mode){
+    m_intakeMotor.setNeutralMode(mode);
+
+  }
 
   private void configMotors() {
     //m_intakeMotor.setInverted(true); 
@@ -58,14 +63,19 @@ public class Intake extends SubsystemBase {
   public void periodic() {
     switch(m_mode){
       case INTAKE_CUBE: 
+        setNeutralMode(NeutralMode.Brake);
         setMotorPower(IntakeConstants.kIntakeCubePower); 
-      case OUTTAKE_CUBE: 
+      case OUTTAKE_CUBE:
+        setNeutralMode(NeutralMode.Brake);
         setMotorPower(IntakeConstants.kOuttakeCubePower);   
       case INTAKE_CONE: 
+        setNeutralMode(NeutralMode.Brake);
         setMotorPower(IntakeConstants.kIntakeConePower);        
       case OUTTAKE_CONE: 
+        setNeutralMode(NeutralMode.Brake);
         setMotorPower(IntakeConstants.kOuttakeConePower);        
       case DISABLED: 
+        setNeutralMode(NeutralMode.Brake);
         setMotorPower(IntakeConstants.kStopPower);       
       }
     }
