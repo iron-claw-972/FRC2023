@@ -6,6 +6,7 @@ import java.util.function.DoubleSupplier;
 import org.photonvision.EstimatedRobotPose;
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
+import com.ctre.phoenix.sensors.Pigeon2.AxisDirection;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 
@@ -118,6 +119,8 @@ public class Drivetrain extends SubsystemBase {
     
     m_pigeon = new WPI_Pigeon2(DriveConstants.kPigeon, DriveConstants.kPigeonCAN);
     m_pigeon.configFactoryDefault();
+    // Our pigeon is mounted with y forward, and z upward
+    m_pigeon.configMountPose(AxisDirection.PositiveY, AxisDirection.PositiveZ);
 
     if (RobotBase.isReal()) {
       m_modules = new Module[] {
@@ -304,7 +307,7 @@ public class Drivetrain extends SubsystemBase {
     }
   }
 
-  PIDController m_balancePID = new PIDController(1, 0, 0.006);
+  PIDController m_balancePID = new PIDController(DriveConstants.kBalanceP, DriveConstants.kBalanceI, DriveConstants.kBalanceD);
   public PIDController getBalanceController() {
     return m_balancePID;
   }

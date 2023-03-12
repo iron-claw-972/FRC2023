@@ -1,10 +1,8 @@
 package frc.robot.controls;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.commands.BalanceSimple;
+import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.SetFormationX;
 import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.Drivetrain;
@@ -29,7 +27,7 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
     kDriver.get(Button.START).onTrue(new InstantCommand(() -> getDrivetrain().setYaw(0)));
     kDriver.get(Button.X).whileTrue(new SetFormationX(super.getDrivetrain()));
 
-    kDriver.get(Button.B).onTrue(new BalanceSimple(super.getDrivetrain()));
+    kDriver.get(Button.B).whileTrue(new BalanceCommand(super.getDrivetrain()));
   }
   
   @Override
