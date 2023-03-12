@@ -1,4 +1,3 @@
-
 package frc.robot.commands.auto;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -8,13 +7,13 @@ import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.GoToPose;
 import frc.robot.subsystems.Drivetrain;
 
-public class EngageFromLeftDriverSide extends SequentialCommandGroup{
+public class NoPathEngageFromGrid9 extends SequentialCommandGroup{
 
     private Drivetrain m_drive;
     private Pose2d rightUnrotatedPose, chargePose, centerPose, rightRotatedPose;
     private Rotation2d rot, startRot;
 
-    public EngageFromLeftDriverSide(Drivetrain drive)  {
+    public NoPathEngageFromGrid9(Drivetrain drive)  {
         //DRIVES OUT OF COMMUNITY, THEN MOVES TO RIGHT AND BACK TO ENGAGE. THIS PATH IS FOR THE GRID POSITION CLOSEST TO BARRIER
         m_drive = drive;
 

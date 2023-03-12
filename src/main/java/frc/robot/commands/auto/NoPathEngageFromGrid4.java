@@ -7,14 +7,14 @@ import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.GoToPose;
 import frc.robot.subsystems.Drivetrain;
 
-public class EngageFromCenterGrid extends SequentialCommandGroup{
+public class NoPathEngageFromGrid4 extends SequentialCommandGroup{
 
     private Drivetrain m_drive;
     private Pose2d poseCharge;
     private Rotation2d startRot;
 
-    public EngageFromCenterGrid(Drivetrain drive)  {
-        //DRIVES TO CHARGE STATION AND ENGAGES. STARTS FROM CENTER GRID
+    public NoPathEngageFromGrid4(Drivetrain drive)  {
+        //DRIVES TO CHARGE STATION AND ENGAGES. STARTS FROM GRID 4
         m_drive = drive;
 
         startRot = new Rotation2d(0);

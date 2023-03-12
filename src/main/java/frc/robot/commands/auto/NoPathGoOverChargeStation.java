@@ -8,13 +8,13 @@ import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.GoToPose;
 import frc.robot.subsystems.Drivetrain;
 
-public class GoOverChargeStation extends SequentialCommandGroup{
+public class NoPathGoOverChargeStation extends SequentialCommandGroup{
 
     private Drivetrain m_drive;
     private Pose2d chargePose, gamePiecePose;
     private Rotation2d startRot;
 
-    public GoOverChargeStation(Drivetrain drive)  {
+    public NoPathGoOverChargeStation(Drivetrain drive)  {
         m_drive = drive;
 
         startRot = new Rotation2d(0);

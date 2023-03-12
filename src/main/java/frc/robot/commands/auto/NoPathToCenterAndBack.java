@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.GoToPose;
 import frc.robot.subsystems.Drivetrain;
 
-public class ToCenterAndBack extends SequentialCommandGroup{
+public class NoPathToCenterAndBack extends SequentialCommandGroup{
 
     private Drivetrain m_drive;
     private Pose2d centerPose, initialPose;
@@ -16,7 +16,7 @@ public class ToCenterAndBack extends SequentialCommandGroup{
      * Drives to center line, then drives back. Can be done on either side of drivestation. 
      * @param drive drivetrain
      */
-    public ToCenterAndBack(Drivetrain drive)  {
+    public NoPathToCenterAndBack(Drivetrain drive)  {
         m_drive = drive;
         
         startRot = new Rotation2d(0);
@@ -28,7 +28,6 @@ public class ToCenterAndBack extends SequentialCommandGroup{
         addCommands(
             new GoToPose(m_drive, centerPose), 
             new GoToPose(m_drive, initialPose)
-           
         );
     }
 }

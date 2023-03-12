@@ -13,6 +13,13 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Robot.RobotId;
 import frc.robot.commands.DefaultDriveCommand;
+import frc.robot.commands.auto.EngageFromGrid1;
+import frc.robot.commands.auto.EngageFromGrid9;
+import frc.robot.commands.auto.NoPathEngageFromCenter;
+import frc.robot.commands.auto.NoPathEngageFromGrid1;
+import frc.robot.commands.auto.NoPathEngageFromGrid9;
+import frc.robot.commands.auto.NoPathGoOverChargeStation;
+import frc.robot.commands.auto.NoPathToCenterAndBack;
 import frc.robot.commands.auto.PathPlannerCommand;
 import frc.robot.constants.VisionConstants;
 import frc.robot.constants.swerve.DriveConstants;
@@ -59,7 +66,7 @@ public class RobotContainer {
   private final Intake m_intake;
   private final Elevator m_elevator;
   private final DeployingBar m_deployingBar;
-
+  
   // Controllers are defined here
   private final BaseDriverConfig m_driver;
   private final Operator m_operator;
@@ -173,14 +180,25 @@ public class RobotContainer {
    */
   public void autoChooserUpdate() {
     // add commands below with: m_autoCommand.addOption("Example", new ExampleCommand());
+    //test auto commands:
     m_autoCommand.setDefaultOption("Do Nothing", new PrintCommand("This will do nothing!"));
     m_autoCommand.addOption("DriveSidewaysPath", new PathPlannerCommand("DriveSidewaysPath", 0, m_drive));
     m_autoCommand.addOption("Odometry Test 1", new PathPlannerCommand("Odometry Test 1", 0, m_drive));
     m_autoCommand.addOption("Figure 8", new PathPlannerCommand("Figure 8", 0, m_drive));
     m_autoCommand.addOption("To Center And Back", new PathPlannerCommand("To Center And Back", 0, m_drive));
-    m_autoCommand.addOption("Drive out of Community", new PathPlannerCommand("Drive out of Community", 0, m_drive));
-    m_autoCommand.addOption("BottomSimpleLine1", new PathPlannerCommand("Bottom Simple Line1", 0, m_drive));
-   }
+   //auto routines:
+    m_autoCommand.addOption( "Engage From Grid 4", new PathPlannerCommand(PathGroupLoader.getPathGroup("Engage From Grid 4"), 0 , m_drive, true));
+    m_autoCommand.addOption( "Engage From Grid 6", new PathPlannerCommand(PathGroupLoader.getPathGroup("Engage From Grid 6"), 0 , m_drive, true)); 
+    m_autoCommand.addOption( "Drive Out of Community Grid 1", new PathPlannerCommand(PathGroupLoader.getPathGroup("Drive Out of Community Grid 1"), 0 , m_drive, true)); 
+    m_autoCommand.addOption( "Drive Out of Community Grid 9", new PathPlannerCommand("Drive Out of Community Grid 9", 0, m_drive));
+    m_autoCommand.addOption( "Engage From Grid 1", new EngageFromGrid1(m_drive)); 
+    m_autoCommand.addOption( "Engage From Grid 9", new EngageFromGrid9(m_drive)); 
+    m_autoCommand.addOption( "No Pathplanner Engage From Center", new NoPathEngageFromCenter(m_drive)); 
+    m_autoCommand.addOption( "No Pathplanner Go Over Charge Station", new NoPathGoOverChargeStation(m_drive));
+    m_autoCommand.addOption( "No Pathplanner To Center And Back", new NoPathToCenterAndBack(m_drive)); 
+    m_autoCommand.addOption( "No Pathplanner Engage From Grid 1", new NoPathEngageFromGrid1(m_drive)); 
+    m_autoCommand.addOption( "No Pathplanner Engage From Grid 9", new NoPathEngageFromGrid9(m_drive)); 
+  }
 
   /**
    * Loads the command scheduler shuffleboard which will add event markers whenever a command finishes, ends, or is interrupted.
