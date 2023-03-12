@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -38,7 +37,6 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.Intake;
-import frc.robot.util.DrawMechanism;
 import frc.robot.util.PathGroupLoader;
 import frc.robot.util.Vision;
 
@@ -80,9 +78,6 @@ public class RobotContainer {
   private final Operator m_operator;
   private final TestController m_testController;
   private final ManualController m_manualController;
-
-  /** The mech2d drawing of the robot. Use this instance to show the state of the robot. */
-  public DrawMechanism m_mechanism = DrawMechanism.getInstance();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer(RobotId robotId) {
@@ -190,9 +185,8 @@ public class RobotContainer {
     // This is really annoying so it's disabled
     DriverStation.silenceJoystickConnectionWarning(true);
 
-    // TODO: LiveWindow should not be sending any telemetry in Autonomous or Teleop
-    // LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
-    // LiveWindow.setEnabled(false);
+    LiveWindow.disableAllTelemetry(); // LiveWindow is causing periodic loop overruns
+    LiveWindow.setEnabled(false);
     
     autoChooserUpdate();
     m_autoTab.add("Auto Chooser", m_autoCommand);
@@ -233,9 +227,6 @@ public class RobotContainer {
    * Do Nothing should stay the default, other autos are added with m_autoCommand.addOption()
    */
   public void autoChooserUpdate() {
-
-    // TODO: autoChooserUpdate method kills SimGUI, so escape when a non-competition robot for now
-    if (Robot.kRobotId != RobotId.SwerveCompetition) return;
 
     Position autoDepositPos = Position.TOP;
 
