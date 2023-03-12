@@ -89,7 +89,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     CommandScheduler.getInstance().cancelAll();
-    // TODO: This method was called in robotInit(); is it needed here to reset Pathplanner paths?
+    // TODO: This method was called in robotInit(); is it needed here?
     m_robotContainer.autoChooserUpdate();
   }
 
