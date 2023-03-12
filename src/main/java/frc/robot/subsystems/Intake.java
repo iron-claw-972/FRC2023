@@ -116,7 +116,7 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
 
-    m_range = -1;//m_distSensor.getRange();
+    m_range = (m_distSensor != null) ? m_distSensor.getRange() : -1;
 
     if (m_range == -1 || m_range > IntakeConstants.kCubeDistanceThreshold) { // Empty intake
       m_timeLastNotSeenCube = Timer.getFPGATimestamp();
