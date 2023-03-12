@@ -12,7 +12,6 @@ import frc.robot.commands.scoring.PositionRollerIntake;
 import frc.robot.commands.scoring.PositionRollerIntake.RollerPosition;
 import frc.robot.commands.scoring.arm.ExtendArm;
 import frc.robot.commands.scoring.Stow;
-import frc.robot.commands.scoring.WristDunk;
 import frc.robot.commands.scoring.WristStow;
 import frc.robot.commands.scoring.bar.CalibrateBar;
 import frc.robot.commands.scoring.bar.ToggleBar;
@@ -145,9 +144,6 @@ public class Operator {
     m_operator.get(Button.LB).onTrue(
       new PositionRollerIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, RollerPosition.INTAKE).alongWith(new IntakeGamePiece(intake, m_operator.RIGHT_TRIGGER_BUTTON.getAsBoolean()? IntakePiece.CONE: IntakePiece.CUBE)))
       .onFalse(new WristStow(intake, elevator, wrist));
-
-    //dunk
-    m_operator.get(m_operator.RIGHT_TRIGGER_BUTTON).onTrue(new WristDunk(wrist, intake)).onFalse(new WristStow(intake, elevator, wrist));
 
     //outtake
     m_operator.get(m_operator.LEFT_TRIGGER_BUTTON).onTrue(new OuttakeGamePiece(intake)).onFalse(new WristStow(intake, elevator, wrist));

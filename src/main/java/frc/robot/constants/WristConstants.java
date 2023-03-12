@@ -8,11 +8,11 @@ import edu.wpi.first.math.util.Units;
 import frc.robot.constants.swerve.DriveConstants;
 
 public class WristConstants {
-  public static final int kMotorID = 0;
+  public static final int kMotorID = 16;
   public static final boolean kEnableCurrentLimit = true;
-  public static final int kContinuousCurrentLimit = 25;
-  public static final int kPeakCurrentLimit = 40;
-  public static final double kPeakCurrentDuration = 0.1;
+  public static final int kContinuousCurrentLimit = 30;
+  public static final int kPeakCurrentLimit = 45;
+  public static final double kPeakCurrentDuration = 0.5;
 
   public static final double kP = 0;
   public static final double kI = 0;
@@ -30,16 +30,15 @@ public class WristConstants {
   public static final NeutralMode kNeutralMode = NeutralMode.Brake;
 
   public static final int kAbsEncoderPort = 0;
+  public static final double kEncoderOffset = 0;
 
   public static final double kStowPos = 0.96;
   public static final double kBottomNodePos = 0.49;
   public static final double kMiddleNodePos = 0.8;
   public static final double kTopNodePos = 0.712;
-  public static final double kIntakePos = kBottomNodePos;
-  public static final double kDunkPos = 0.55;
-  public static final double kShelfPos = kBottomNodePos;
-
-  public static final double kMaxArmExtensionPos = kIntakePos;
+  public static final double kIntakeConePos = 0.49;
+  public static final double kShelfPos = 0.49;
+  public static final double kIntakeCubePos = 0.49;
   
   //SIM
   public static final DCMotor kGearBox = DCMotor.getFalcon500(1);
@@ -70,5 +69,7 @@ public class WristConstants {
   // public static final double kArmLength = Units.inchesToMeters(30);
   // public static final double kMinAngleRads = Units.degreesToRadians(-75);
   // public static final double kMaxAngleRads = Units.degreesToRadians(255);
+
+  public static final double kMaxArmExtensionPos = 0.49; 
 
 }

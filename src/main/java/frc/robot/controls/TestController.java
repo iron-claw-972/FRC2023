@@ -48,16 +48,14 @@ public class TestController {
 
     SmartDashboard.putNumber("Deposit Elevator Extension", 0);
     SmartDashboard.putNumber("Deposit Arm Extension", 0);
-    test.get(DPad.RIGHT).onTrue(new DepositTune(m_elevator, m_arm));
-
 
     test.get(DPad.UP).onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
 
-    test.get(Button.A).onTrue(new IntakeGamePiece(m_intake, IntakePiece.CONE));
+    /*test.get(Button.A).onTrue(new IntakeGamePiece(m_intake, IntakePiece.CONE));
     test.get(Button.B).onTrue(new IntakeGamePiece(m_intake, IntakePiece.CUBE));
     test.get(Button.X).onTrue(new OuttakeGamePiece(m_intake));
     test.get(Button.Y).onTrue(new InstantCommand(() -> m_intake.setIntakeMode(IntakeMode.DISABLED), m_intake));
-
+    */
     // test.get(Button.Y).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kTopConeHeight));
     // test.get(Button.X).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kMiddleConeHeight));
     // test.get(Button.A).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kBottomConeHeight));
@@ -74,7 +72,10 @@ public class TestController {
     test.get(Button.X).onTrue(new RotateWrist(m_wrist, WristConstants.kMiddleNodePos));
     test.get(Button.A).onTrue(new RotateWrist(m_wrist, WristConstants.kBottomNodePos));
     test.get(Button.B).onTrue(new RotateWrist(m_wrist, WristConstants.kShelfPos));
-    test.get(Button.RB).onTrue(new RotateWrist(m_wrist, WristConstants.kIntakePos));
+    test.get(Button.RB).onTrue(new RotateWrist(m_wrist, WristConstants.kIntakeConePos));
+    test.get(Button.LB).onTrue(new RotateWrist(m_wrist, WristConstants.kIntakeCubePos));
+    test.get(test.RIGHT_TRIGGER_BUTTON).onTrue(new RotateWrist(m_wrist, WristConstants.kStowPos));
+
 
     // test.get(Button.LB).onTrue(new IntakeGamePiece(m_intake));
 
