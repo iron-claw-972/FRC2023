@@ -136,9 +136,7 @@ public class Operator {
       ));
     
     //stow
-    m_operator.get(Button.A).whileTrue(
-      (new PrintCommand("works")).andThen(new WristStow(intake, elevator, wrist)
-      ));
+    m_operator.get(Button.RB).whileTrue(new WristStow(intake, elevator, wrist));
 
     //intake
     m_operator.get(Button.LB).onTrue(

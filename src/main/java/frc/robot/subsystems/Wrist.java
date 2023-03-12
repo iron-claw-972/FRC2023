@@ -66,7 +66,7 @@ public class Wrist extends SubsystemBase {
     // configure the motor.
     m_motor = MotorFactory.createTalonFXSupplyLimit(WristConstants.kMotorID, Constants.kRioCAN, WristConstants.kContinuousCurrentLimit, WristConstants.kPeakCurrentLimit, WristConstants.kPeakCurrentDuration);
     m_motor.setNeutralMode(NeutralMode.Brake);
-    m_motor.setInverted(false); 
+    m_motor.setInverted(WristConstants.kMotorInvert); 
     
     //SIM
     SmartDashboard.putData("Arm Sim", m_mech2d);
