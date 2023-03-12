@@ -5,24 +5,24 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.scoring.Dunk;
 import frc.robot.commands.scoring.PositionIntake;
 import frc.robot.commands.scoring.PositionIntake.Position;
-import frc.robot.commands.scoring.arm.ExtendArm;
 import frc.robot.commands.scoring.Stow;
+import frc.robot.commands.scoring.arm.ExtendArm;
 import frc.robot.commands.scoring.bar.CalibrateBar;
 import frc.robot.commands.scoring.bar.ToggleBar;
 import frc.robot.commands.scoring.elevator.CalibrateElevator;
 import frc.robot.commands.scoring.elevator.MoveElevator;
 import frc.robot.commands.scoring.intake.IntakeGamePiece;
+import frc.robot.commands.scoring.intake.OuttakeGamePiece;
 import frc.robot.constants.ElevatorConstants;
-import frc.robot.subsystems.Intake.IntakeMode;
 import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.Bar;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.RollerIntake;
+import frc.robot.subsystems.RollerIntake.IntakeMode;
+import frc.robot.subsystems.RollerIntake.IntakePiece;
 import frc.robot.util.Node;
 import frc.robot.util.Vision;
 import lib.controllers.GameController;
@@ -42,7 +42,7 @@ public class Operator {
   /**
    * Configures the operator controls for the deploying Bar.
    */
-  public void configureControls(FourBarArm arm, Intake intake, Elevator elevator, Bar bar, Vision vision) {
+  public void configureControls(FourBarArm arm, RollerIntake intake, Elevator elevator, Bar bar, Vision vision) {
 
     m_vision = vision; //should be in constructor
 
@@ -62,7 +62,23 @@ public class Operator {
     //avbove is commented because Button.B keybinding is used already
     m_operator.get(Button.X).onTrue(new InstantCommand(()-> intake.setIntakeMode(IntakeMode.INTAKE_CONE))).onFalse(new InstantCommand(()-> intake.setIntakeMode(IntakeMode.DISABLED)));
     m_operator.get(Button.Y).onTrue(new InstantCommand(()-> intake.setIntakeMode(IntakeMode.OUTTAKE_CONE))).onFalse(new InstantCommand(()-> intake.setIntakeMode(IntakeMode.DISABLED)));
+    // TODO: Update Operator controls to fit new intake
+    // Old code, commented out due to errors
+    // top
+    // m_operator.get(Button.Y).onTrue(new PositionIntake(elevator, arm, intake::hasCone, Position.TOP));
+    // middle
+    // m_operator.get(Button.X).onTrue(new PositionIntake(elevator, arm, intake::hasCone, Position.MIDDLE));
+    // bottom
+    // m_operator.get(Button.A).onTrue(new PositionIntake(elevator, arm, intake::hasCone, Position.BOTTOM));
 
+    // shelf
+    // m_operator.get(Button.B).onTrue(new PositionIntake(elevator, arm, intake::hasCone, Position.SHELF).alongWith(new IntakeGamePiece(intake)))
+    //   .onFalse(new SequentialCommandGroup( 
+    //     new InstantCommand(() -> intake.stopIntake()),
+    //     new ExtendArm(arm, 0.8),
+    //     new MoveElevator(elevator, ElevatorConstants.kStowHeight),
+    //     new Stow(intake, elevator, arm)
+    //   ));
     
     //shelf
     m_operator.get(Button.B).onTrue(new PositionIntake(elevator, arm, intake::hasCone, Position.SHELF).alongWith(new IntakeGamePiece(intake)))
@@ -76,16 +92,17 @@ public class Operator {
     //stow
     m_operator.get(Button.RB).onTrue(new Stow(intake, elevator, arm));
 
-    //intake
-    m_operator.get(Button.LB).onTrue(
-      new PositionIntake(elevator, arm, intake::hasCone, Position.INTAKE).alongWith(new IntakeGamePiece(intake)))
-      .onFalse(new Stow(intake, elevator, arm));
+    // Old code, commented out due to errors
+    // intake
+    // m_operator.get(Button.LB).onTrue(
+    //   new PositionIntake(elevator, arm, intake::hasCone, Position.INTAKE).alongWith(new IntakeGamePiece(intake)))
+    //     .onFalse(new Stow(intake, elevator, arm));
 
-    //dunk
-    m_operator.get(m_operator.RIGHT_TRIGGER_BUTTON).onTrue(new Dunk(arm, intake)).onFalse(new Stow(intake, elevator, arm));
+    // dunk
+    // m_operator.get(m_operator.RIGHT_TRIGGER_BUTTON).onTrue(new Dunk(arm, intake)).onFalse(new Stow(intake, elevator, arm));
 
-    //outtake
-    m_operator.get(m_operator.LEFT_TRIGGER_BUTTON).onTrue(new Outtake(intake, false)).onFalse(new Stow(intake, elevator, arm));
+    // outtake
+    // m_operator.get(m_operator.LEFT_TRIGGER_BUTTON).onTrue(new Outtake(intake, false)).onFalse(new Stow(intake, elevator, arm));
   
   
     // Selects which grid to score in

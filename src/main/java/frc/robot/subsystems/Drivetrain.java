@@ -6,6 +6,7 @@ import java.util.function.DoubleSupplier;
 import org.photonvision.EstimatedRobotPose;
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
+import com.ctre.phoenix.sensors.Pigeon2.AxisDirection;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 
@@ -115,7 +116,8 @@ public class Drivetrain extends SubsystemBase {
     
     m_pigeon = new WPI_Pigeon2(DriveConstants.kPigeon, DriveConstants.kPigeonCAN);
     m_pigeon.configFactoryDefault();
-    setPigeonYaw(DriveConstants.kStartingHeadingDegrees);
+    // Our pigeon is mounted with y forward, and z upward
+    m_pigeon.configMountPose(AxisDirection.PositiveY, AxisDirection.PositiveZ);
 
     // m_modules = new ModuleOld[] {
     //   ModuleOld.create(ModuleConstants.FRONT_LEFT, m_swerveModulesTab),
@@ -143,11 +145,13 @@ public class Drivetrain extends SubsystemBase {
 
     m_poseEstimator = new SwerveDrivePoseEstimator(
       DriveConstants.kKinematics,
-      m_pigeon.getRotation2d(),
+      getYaw(),
       getModulePositions(),
       new Pose2d() // initial Odometry Location
     );
     m_poseEstimator.setVisionMeasurementStdDevs(VisionConstants.kBaseVisionPoseStdDevs);
+
+    setPigeonYaw(DriveConstants.kStartingHeadingDegrees);
 
     m_xController = new PIDController(DriveConstants.kTranslationalP, 0, DriveConstants.kTranslationalD);
     m_yController = new PIDController(DriveConstants.kTranslationalP, 0, DriveConstants.kTranslationalD);
@@ -228,7 +232,7 @@ public class Drivetrain extends SubsystemBase {
   * @return the pigeon's heading in a Rotation2d
   */
   public Rotation2d getYaw() {
-    return (DriveConstants.kInvertGyro) ? Rotation2d.fromDegrees(MathUtil.inputModulus(360 - m_pigeon.getYaw(), -180, 180))
+    return (DriveConstants.kInvertGyro) ? Rotation2d.fromDegrees(MathUtil.inputModulus(180 - m_pigeon.getYaw(), -180, 180))
         : Rotation2d.fromDegrees(MathUtil.inputModulus(m_pigeon.getYaw(), -180, 180));
   }
 
@@ -298,7 +302,7 @@ public class Drivetrain extends SubsystemBase {
     }
   }
 
-  PIDController m_balancePID = new PIDController(1, 0, 0.006);
+  PIDController m_balancePID = new PIDController(DriveConstants.kBalanceP, DriveConstants.kBalanceI, DriveConstants.kBalanceD);
   public PIDController getBalanceController() {
     return m_balancePID;
   }
@@ -347,6 +351,10 @@ public class Drivetrain extends SubsystemBase {
    */
   public void setPigeonYaw(double degrees) {
     m_pigeon.setYaw(degrees);
+    // the odometry stores an offset from the current pigeon angle
+    // changing the angle makes that offset inaccurate, so must reset the pose as well.
+    // keep the same translation, but set the odometry angle to what we want the angle to be.
+    resetOdometry(new Pose2d(getPose().getTranslation(), Rotation2d.fromDegrees(degrees)));
   }
 
   /**

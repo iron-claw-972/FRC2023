@@ -6,8 +6,9 @@ import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Elevator.ElevatorMode;
 import frc.robot.subsystems.FourBarArm;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Intake.IntakeMode;
+import frc.robot.subsystems.RollerIntake;
+import frc.robot.subsystems.RollerIntake.IntakePiece;
+import frc.robot.subsystems.RollerIntake.IntakeMode;
 import frc.robot.util.Functions;
 import lib.controllers.GameController;
 import lib.controllers.GameController.Axis;
@@ -16,10 +17,10 @@ import lib.controllers.GameController.Button;
 public class ManualController {
   GameController m_manual = new GameController(OIConstants.kManualJoy);
   private FourBarArm m_arm;
-  private Intake m_intake;
+  private RollerIntake m_intake;
   private Elevator m_elevator;
   
-  public ManualController(FourBarArm arm, Intake intake, Elevator elevator) {
+  public ManualController(FourBarArm arm, RollerIntake intake, Elevator elevator) {
     m_arm = arm;
     m_intake = intake;
     m_elevator = elevator;
@@ -33,6 +34,11 @@ public class ManualController {
       m_manual.get(Button.Y).onTrue(new InstantCommand(()-> m_intake.setIntakeMode(IntakeMode.OUTTAKE_CONE))).onFalse(new InstantCommand(()-> m_intake.setIntakeMode(IntakeMode.DISABLED)));
   
       
+      // Commented out due to outdated code
+      // TODO: Update to new intake commands
+      // m_manual.get(DPad.DOWN).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kIntakePower), m_intake));
+      // m_manual.get(DPad.UP).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kOuttakePower),m_intake));
+      // m_manual.get(DPad.LEFT).onTrue(new InstantCommand(() -> m_intake.stopIntake(), m_intake));  
     }
 
     if (m_arm != null) {
