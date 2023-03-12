@@ -10,7 +10,7 @@ import frc.robot.commands.scoring.bar.CalibrateBar;
 import frc.robot.commands.scoring.elevator.CalibrateElevator;
 import frc.robot.commands.scoring.elevator.MoveElevator;
 import frc.robot.commands.scoring.intake.IntakeGamePiece;
-import frc.robot.commands.scoring.intake.Outtake;
+import frc.robot.commands.scoring.intake.OuttakeGamePiece;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.Bar;
@@ -48,11 +48,11 @@ public class TestController {
 
     test.get(DPad.UP).onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
 
-    test.get(Button.Y).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kTopConeHeight));
-    test.get(Button.X).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kMiddleConeHeight));
-    test.get(Button.A).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kBottomConeHeight));
-    test.get(Button.B).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kShelfConeHeight));
-    test.get(Button.RB).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kIntakeConeHeight));
+    // test.get(Button.Y).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kTopConeHeight));
+    // test.get(Button.X).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kMiddleConeHeight));
+    // test.get(Button.A).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kBottomConeHeight));
+    // test.get(Button.B).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kShelfConeHeight));
+    // test.get(Button.RB).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kIntakeConeHeight));
 
     // test.get(Button.Y).onTrue(new ExtendArm(m_arm, ArmConstants.kTopNodePos));
     // test.get(Button.X).onTrue(new ExtendArm(m_arm, ArmConstants.kMiddleNodePos));
@@ -60,9 +60,9 @@ public class TestController {
     // test.get(Button.B).onTrue(new ExtendArm(m_arm, ArmConstants.kShelfPos));
     // test.get(Button.RB).onTrue(new ExtendArm(m_arm, ArmConstants.kIntakePos));
 
-    test.get(Button.LB).onTrue(new IntakeGamePiece(m_intake));
+    // test.get(Button.LB).onTrue(new IntakeGamePiece(m_intake));
 
-    test.get(Button.RB).onTrue(new Outtake(m_intake, false));
+    // test.get(Button.RB).onTrue(new OuttakeGamePiece(m_intake, false));
 
     //TODO: cleaner
     new Trigger(test.LEFT_TRIGGER_BUTTON).onTrue(new Stow(m_intake, m_elevator, m_arm));

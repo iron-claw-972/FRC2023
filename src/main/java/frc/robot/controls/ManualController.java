@@ -2,12 +2,15 @@ package frc.robot.controls;
 
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.commands.scoring.intake.IntakeGamePiece;
+import frc.robot.commands.scoring.intake.OuttakeGamePiece;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Elevator.ElevatorMode;
+import frc.robot.subsystems.Intake.IntakeObject;
 import frc.robot.util.Functions;
 import lib.controllers.GameController;
 import lib.controllers.GameController.Axis;
@@ -28,9 +31,9 @@ public class ManualController {
   
   public void configureControls() {
     if (m_intake != null) {
-      m_manual.get(DPad.DOWN).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kIntakePower), m_intake));
-      m_manual.get(DPad.UP).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kOuttakePower),m_intake));
-      m_manual.get(DPad.LEFT).onTrue(new InstantCommand(() -> m_intake.stopIntake(), m_intake));  
+      m_manual.get(DPad.DOWN).onTrue(new IntakeGamePiece(m_intake, IntakeObject.CUBE));
+      m_manual.get(DPad.LEFT).onTrue(new IntakeGamePiece(m_intake, IntakeObject.CONE));
+      m_manual.get(DPad.UP).onTrue(new OuttakeGamePiece(m_intake));
     }
 
     if (m_arm != null) {

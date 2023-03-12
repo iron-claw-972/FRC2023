@@ -5,24 +5,24 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.scoring.Dunk;
 import frc.robot.commands.scoring.PositionIntake;
 import frc.robot.commands.scoring.PositionIntake.Position;
-import frc.robot.commands.scoring.arm.ExtendArm;
 import frc.robot.commands.scoring.Stow;
+import frc.robot.commands.scoring.arm.ExtendArm;
 import frc.robot.commands.scoring.bar.CalibrateBar;
 import frc.robot.commands.scoring.bar.ToggleBar;
 import frc.robot.commands.scoring.elevator.CalibrateElevator;
 import frc.robot.commands.scoring.elevator.MoveElevator;
 import frc.robot.commands.scoring.intake.IntakeGamePiece;
+import frc.robot.commands.scoring.intake.OuttakeGamePiece;
 import frc.robot.constants.ElevatorConstants;
-import frc.robot.subsystems.Intake.IntakeMode;
 import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.Bar;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Intake.IntakeMode;
+import frc.robot.subsystems.Intake.IntakeObject;
 import frc.robot.util.Node;
 import frc.robot.util.Vision;
 import lib.controllers.GameController;
@@ -56,16 +56,16 @@ public class Operator {
 
     m_operator.get(DPad.UP).onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
 
-    m_operator.get(Button.A).onTrue(new InstantCommand(()-> intake.setIntakeMode(IntakeMode.INTAKE_CUBE))).onFalse(new InstantCommand(()-> intake.setIntakeMode(IntakeMode.DISABLED)));
-    m_operator.get(Button.B).onTrue(new InstantCommand(()-> intake.setIntakeMode(IntakeMode.OUTTAKE_CUBE))).onFalse(new InstantCommand(()-> intake.setIntakeMode(IntakeMode.DISABLED)));
-    m_operator.get(Button.X).onTrue(new InstantCommand(()-> intake.setIntakeMode(IntakeMode.INTAKE_CONE))).onFalse(new InstantCommand(()-> intake.setIntakeMode(IntakeMode.DISABLED)));
-    m_operator.get(Button.Y).onTrue(new InstantCommand(()-> intake.setIntakeMode(IntakeMode.OUTTAKE_CONE))).onFalse(new InstantCommand(()-> intake.setIntakeMode(IntakeMode.DISABLED)));
+    // m_operator.get(Button.A).onTrue(new InstantCommand(()-> intake.setIntakeMode(IntakeMode.INTAKE_CUBE))).onFalse(new InstantCommand(()-> intake.setIntakeMode(IntakeMode.DISABLED)));
+    // m_operator.get(Button.B).onTrue(new InstantCommand(()-> intake.setIntakeMode(IntakeMode.OUTTAKE_CUBE))).onFalse(new InstantCommand(()-> intake.setIntakeMode(IntakeMode.DISABLED)));
+    // m_operator.get(Button.X).onTrue(new InstantCommand(()-> intake.setIntakeMode(IntakeMode.INTAKE_CONE))).onFalse(new InstantCommand(()-> intake.setIntakeMode(IntakeMode.DISABLED)));
+    // m_operator.get(Button.Y).onTrue(new InstantCommand(()-> intake.setIntakeMode(IntakeMode.OUTTAKE_CONE))).onFalse(new InstantCommand(()-> intake.setIntakeMode(IntakeMode.DISABLED)));
 
     
     //shelf
-    m_operator.get(Button.B).onTrue(new PositionIntake(elevator, arm, intake::hasCone, Position.SHELF).alongWith(new IntakeGamePiece(intake)))
+    m_operator.get(Button.B).onTrue(new PositionIntake(elevator, arm, intake::hasCone, Position.SHELF).alongWith(new InstantCommand(() -> intake.setIntakeMode(IntakeMode.INTAKE_CONE))))
       .onFalse(new SequentialCommandGroup( 
-        new InstantCommand(() -> intake.stopIntake()),
+        new InstantCommand(() -> intake.setIntakeMode(IntakeMode.DISABLED)),
         new ExtendArm(arm, 0.8),
         new MoveElevator(elevator, ElevatorConstants.kStowHeight),
         new Stow(intake, elevator, arm)
@@ -75,15 +75,15 @@ public class Operator {
     m_operator.get(Button.RB).onTrue(new Stow(intake, elevator, arm));
 
     //intake
-    m_operator.get(Button.LB).onTrue(
-      new PositionIntake(elevator, arm, intake::hasCone, Position.INTAKE).alongWith(new IntakeGamePiece(intake)))
+    m_operator.get(Button.A).onTrue(
+      new PositionIntake(elevator, arm, intake::hasCone, Position.INTAKE).alongWith(new IntakeGamePiece(intake, IntakeObject.CONE)))
+      .onFalse(new Stow(intake, elevator, arm));
+    m_operator.get(Button.B).onTrue(
+      new PositionIntake(elevator, arm, intake::hasCone, Position.INTAKE).alongWith(new IntakeGamePiece(intake, IntakeObject.CUBE)))
       .onFalse(new Stow(intake, elevator, arm));
 
-    //dunk
-    m_operator.get(m_operator.RIGHT_TRIGGER_BUTTON).onTrue(new Dunk(arm, intake)).onFalse(new Stow(intake, elevator, arm));
-
     //outtake
-    m_operator.get(m_operator.LEFT_TRIGGER_BUTTON).onTrue(new Outtake(intake, false)).onFalse(new Stow(intake, elevator, arm));
+    m_operator.get(m_operator.LEFT_TRIGGER_BUTTON).onTrue(new OuttakeGamePiece(intake)).onFalse(new Stow(intake, elevator, arm));
   
   
     // Selects which grid to score in
