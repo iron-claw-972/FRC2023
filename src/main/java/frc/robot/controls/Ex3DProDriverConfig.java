@@ -24,7 +24,7 @@ public class Ex3DProDriverConfig extends BaseDriverConfig {
   @Override
   public void configureControls() { 
     kDriver.get(Ex3DProButton.B1).whileTrue(new SetFormationX(super.getDrivetrain()));
-    kDriver.get(Ex3DProButton.B2).onTrue(new InstantCommand(() -> super.getDrivetrain().setPigeonYaw(DriveConstants.kStartingHeadingDegrees)));
+    kDriver.get(Ex3DProButton.B2).onTrue(new InstantCommand(() -> super.getDrivetrain().setYaw(DriveConstants.kStartingHeadingDegrees)));
   }
   
   @Override
