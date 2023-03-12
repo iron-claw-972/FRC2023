@@ -16,6 +16,7 @@ public class WristDunk extends SequentialCommandGroup {
     public WristDunk(Wrist wrist, Intake intake) {
         addRequirements(wrist, intake);
         addCommands(
+            // change intake type if needed
             new RotateWrist(wrist, WristConstants.kDunkPos),
             new InstantCommand(() -> intake.setIdleMode(IdleMode.kCoast))
         );
