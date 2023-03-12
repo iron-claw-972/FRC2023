@@ -21,7 +21,20 @@ import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.ctre.phoenix.sensors.SensorTimeBase;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
 
-public class Module {
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constants.Constants;
+import frc.robot.constants.swerve.DriveConstants;
+import frc.robot.constants.swerve.ModuleConstants;
+import frc.robot.util.Conversions;
+import lib.CTREModuleState;
+
+public class Module extends SubsystemBase {
   private final ShuffleboardTab m_swerveTab;
 
   private final int m_moduleIndex;
@@ -246,28 +259,37 @@ public class Module {
   }
 
   private void setupShuffleboard() {
-    if (Constants.kUseTelemetry) {
+    if (Constants.kUseTelemetry && RobotBase.isReal()) {
       m_swerveTab.addDouble(m_moduleAbbr + " CANcoder Angle (deg)", getCANcoder()::getDegrees);
       m_swerveTab.addDouble(m_moduleAbbr + " FX Angle (deg)", getPosition().angle::getDegrees);
       m_swerveTab.addDouble(m_moduleAbbr + " Velocity (m/s)", () -> getState().speedMetersPerSecond);
-      m_swerveTab.addDouble(m_moduleAbbr + " Desired Velocity (m/s)", () -> m_desiredState.speedMetersPerSecond);
-      m_swerveTab.addDouble(m_moduleAbbr + " Desired Angle (deg)", () -> m_desiredState.angle.getDegrees());
+      m_swerveTab.addDouble(m_moduleAbbr + " Desired Velocity (m/s)", () -> getDesiredState().speedMetersPerSecond);
+      m_swerveTab.addDouble(m_moduleAbbr + " Desired Angle (deg)", () -> getDesiredState().angle.getDegrees());
       m_swerveTab.addBoolean(m_moduleAbbr + " Jitter prevention enabled", () -> m_stateDeadband);
       m_swerveTab.addDouble(m_moduleAbbr + " Drive Current (A)", () -> m_driveMotor.getSupplyCurrent());
       m_swerveTab.addDouble(m_moduleAbbr + " Angle Current (A)", () -> m_angleMotor.getSupplyCurrent());
     }
   }
 
+  @Override
+  public void periodic() {
+    
+  }
+
+  public SwerveModuleState getDesiredState() {
+    return m_desiredState;
+  }
+
   public double getDesiredVelocity() {
-    return m_desiredState.speedMetersPerSecond;
+    return getDesiredState().speedMetersPerSecond;
   }
 
   public Rotation2d getDesiredAngle() {
-    return m_desiredState.angle;
+    return getDesiredState().angle;
   }
 
   public double getDriveVelocityError() {
-    return m_desiredState.speedMetersPerSecond - getState().speedMetersPerSecond;
+    return getDesiredState().speedMetersPerSecond - getState().speedMetersPerSecond;
   }
 
   public double getDriveFeedForwardKV() {
