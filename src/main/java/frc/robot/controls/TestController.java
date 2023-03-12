@@ -40,16 +40,16 @@ public class TestController {
 
     test.get(DPad.UP).onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
 
-    test.get(Button.A).onTrue(new IntakeGamePiece(m_intake, IntakePiece.CONE));
-    test.get(Button.B).onTrue(new IntakeGamePiece(m_intake, IntakePiece.CUBE));
-    test.get(Button.X).onTrue(new OuttakeGamePiece(m_intake));
-    test.get(Button.Y).onTrue(new InstantCommand(() -> m_intake.setIntakeMode(IntakeMode.DISABLED), m_intake));
+    test.get(Button.A).whileTrue(new IntakeGamePiece(m_intake, IntakePiece.CONE));
+    test.get(Button.B).whileTrue(new IntakeGamePiece(m_intake, IntakePiece.CUBE));
+    test.get(Button.X).whileTrue(new OuttakeGamePiece(m_intake));
+    test.get(Button.Y).whileTrue(new InstantCommand(() -> m_intake.setIntakeMode(IntakeMode.DISABLED), m_intake));
 
-    test.get(Button.RB).whileTrue(new InstantCommand(() -> m_intake.setIntakeMode(IntakeMode.INTAKE_CUBE), m_intake));
-    test.get(Button.LB).whileTrue(new InstantCommand(() -> m_intake.setIntakeMode(IntakeMode.INTAKE_CONE), m_intake));
+    test.get(Button.RB).onTrue(new InstantCommand(() -> m_intake.setIntakeMode(IntakeMode.INTAKE_CUBE), m_intake)).onFalse(new InstantCommand(() -> m_intake.setIntakeMode(IntakeMode.DISABLED), m_intake));
+    test.get(Button.LB).onTrue(new InstantCommand(() -> m_intake.setIntakeMode(IntakeMode.INTAKE_CONE), m_intake)).onFalse(new InstantCommand(() -> m_intake.setIntakeMode(IntakeMode.DISABLED), m_intake));
 
-    test.get(test.RIGHT_TRIGGER_BUTTON).whileTrue(new InstantCommand(() -> m_intake.setIntakeMode(IntakeMode.OUTTAKE_CUBE), m_intake));
-    test.get(test.LEFT_TRIGGER_BUTTON).whileTrue(new InstantCommand(() -> m_intake.setIntakeMode(IntakeMode.OUTTAKE_CONE), m_intake));
+    test.get(test.RIGHT_TRIGGER_BUTTON).onTrue(new InstantCommand(() -> m_intake.setIntakeMode(IntakeMode.OUTTAKE_CUBE), m_intake)).onFalse(new InstantCommand(() -> m_intake.setIntakeMode(IntakeMode.DISABLED), m_intake));
+    test.get(test.LEFT_TRIGGER_BUTTON).onTrue(new InstantCommand(() -> m_intake.setIntakeMode(IntakeMode.OUTTAKE_CONE), m_intake)).onFalse(new InstantCommand(() -> m_intake.setIntakeMode(IntakeMode.DISABLED), m_intake));
 
     // test.get(Button.Y).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kTopConeHeight));
     // test.get(Button.X).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kMiddleConeHeight));
