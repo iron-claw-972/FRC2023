@@ -39,10 +39,11 @@ public class PositionRollerIntake extends SequentialCommandGroup {
           isConeSupplier
         )),
         Map.entry(RollerPosition.INTAKE, new ConditionalCommand(
-          new MoveElevator(elevator, ElevatorConstants.kIntakeConeHeight).alongWith(new RotateWrist(wrist, WristConstants.kIntakePos)),
-          new MoveElevator(elevator, ElevatorConstants.kIntakeCubeHeight).alongWith(new RotateWrist(wrist, WristConstants.kIntakePos)),
+          new MoveElevator(elevator, ElevatorConstants.kIntakeConeHeight).alongWith(new RotateWrist(wrist, WristConstants.kIntakeConePos)),
+          new MoveElevator(elevator, ElevatorConstants.kIntakeCubeHeight).alongWith(new RotateWrist(wrist, WristConstants.kIntakeCubePos)),
           isConeSupplier
         ))
+        
       ), () -> position)
     );
   }

@@ -32,8 +32,10 @@ public class WristConstants {
   public static final double kBottomNodePos = 0.49;
   public static final double kMiddleNodePos = 0.8;
   public static final double kTopNodePos = 0.712;
-  public static final double kIntakePos = 0.49;
+  public static final double kIntakeConePos = 0.49;
   public static final double kShelfPos = 0.49;
+  public static final double kIntakeCubePos = 0.49;
+
 
   public static final double kMaxArmExtensionPos = 0.49; 
 
