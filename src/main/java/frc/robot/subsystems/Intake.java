@@ -100,7 +100,7 @@ public class Intake extends SubsystemBase {
     
   }
   
-  public boolean hasGamePiece() {
+  public boolean containsGamePiece() {
     return m_heldPiece != IntakeGamePiece.NONE;
   }
 
