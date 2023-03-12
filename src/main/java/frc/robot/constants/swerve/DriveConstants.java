@@ -89,7 +89,7 @@ public class DriveConstants {
   // it will stop the motors for kBalanceStopDuration seconds to help give
   // the charge station some time to balance.
   // "A non-linear system requires non-linear control" - jerry
-  // "If it's stupid but it works..."
+  // "If it's stupid but it works..." - Richie
   public static double kBalanceNoStopPeriod = 2;
   public static double kBalanceStopInterval = 0.5;
   public static double kBalanceStopDuration = 0.2;

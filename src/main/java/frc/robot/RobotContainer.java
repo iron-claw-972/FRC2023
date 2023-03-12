@@ -271,6 +271,13 @@ public class RobotContainer {
         new BalanceCommand(m_drive))
       );
 
+      m_autoCommand.addOption("NO DEPOSIT Grid 1 Engage",
+        new PathPlannerCommand("Grid 1 Engage", 0, m_drive, true).andThen(
+        new PathPlannerCommand("Grid 1 Engage", 1, m_drive, true)).andThen(
+        new BalanceCommand(m_drive))
+      );
+
+
       m_autoCommand.addOption("Grid 1 Engage", new DepositThenPath("Grid 1 Engage", autoDepositPos, m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceCommand(m_drive)));
     
       m_autoCommand.addOption("Engage Left", new EngageFromLeftDriverSide(m_drive));

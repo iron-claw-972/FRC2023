@@ -24,7 +24,7 @@ public class GoOverChargeStation extends SequentialCommandGroup{
         gamePiecePose = new Pose2d(6, 0, startRot);//6.5 previously, was too much. will define precise values with more testing
         
         addCommands(
-            new InstantCommand(() -> m_drive.setPigeonYaw(startRot.getDegrees()), m_drive),
+            new InstantCommand(() -> m_drive.setYaw(startRot.getDegrees()), m_drive),
             new SimplePresetSteerAngles(m_drive), //pre align wheels reduce rotation time
             new GoToPose(m_drive, gamePiecePose), //go to game pice pose
             new GoToPose(m_drive, chargePose),// drive to charge station
