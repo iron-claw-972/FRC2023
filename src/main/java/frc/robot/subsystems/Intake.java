@@ -27,7 +27,7 @@ public class Intake extends SubsystemBase {
   private final CANSparkMax m_leftMotor;
   private final CANSparkMax m_rightMotor;
   private final ShuffleboardTab m_intakeTab;
-  private final Rev2mDistanceSensor m_distSensor = new Rev2mDistanceSensor(Port.kOnboard);
+  private final Rev2mDistanceSensor m_distSensor;
 
   private boolean m_hasCone = false;
   private boolean m_hasCube = false;
@@ -43,8 +43,13 @@ public class Intake extends SubsystemBase {
 
     m_intakeTab = intakeTab;
 
-    m_distSensor.setAutomaticMode(true);
-    m_distSensor.setEnabled(Robot.isReal());
+    if (Robot.isReal()) {
+      m_distSensor = new Rev2mDistanceSensor(Port.kOnboard);
+      m_distSensor.setAutomaticMode(true);
+      m_distSensor.setEnabled(Robot.isReal());
+    } else {
+      m_distSensor = null;
+    }
 
     setupShuffleboard();
   }
