@@ -5,11 +5,10 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
-import lib.COTSFalconSwerveConstants;
-import frc.robot.Robot;
 import frc.robot.Robot.RobotId;
 import frc.robot.constants.Constants;
 import frc.robot.constants.FalconConstants;
+import lib.COTSFalconSwerveConstants;
 
 /**
  * Constants, are by default, for the competition robot. Constants get changed if the RobotId detected is not the competition robot.
@@ -17,7 +16,7 @@ import frc.robot.constants.FalconConstants;
  */
 public class DriveConstants {
 
-  public static double kRobotWidthWithBumpers = Units.inchesToMeters(26 + 3.75 * 2);
+  public static double kRobotWidthWithBumpers = Units.inchesToMeters(26 + 3.25 * 2);
 
   public static double kWheelRadius = Units.inchesToMeters(2);
 
