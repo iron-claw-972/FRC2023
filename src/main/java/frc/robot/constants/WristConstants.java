@@ -3,9 +3,6 @@ package frc.robot.constants;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 
-import edu.wpi.first.math.util.Units;
-import frc.robot.constants.swerve.DriveConstants;
-
 public class WristConstants {
   public static final int kMotorID = 0;
   public static final boolean kEnableCurrentLimit = true;
