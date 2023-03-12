@@ -175,8 +175,8 @@ public class Vision {
   }
 
   public void addTestCommands(ShuffleboardTab testTab, GenericEntry testEntry, Drivetrain drive){
-    testTab.add("Test vision (forward)", new TestVisionDistance(0.2, drive, this));
-    testTab.add("Test vision (backward)", new TestVisionDistance(-0.2, drive, this));
+    testTab.add("Test vision (forward)", new TestVisionDistance(0.2, drive, this, m_shuffleboardTab));
+    testTab.add("Test vision (backward)", new TestVisionDistance(-0.2, drive, this, m_shuffleboardTab));
     testTab.add("Align to 0 degrees", new TestVisionAlignment(0, drive, this));
     testTab.add("Align to 90 degrees", new TestVisionAlignment(Math.PI/2, drive, this));
     testTab.add("Align to -90 degrees", new TestVisionAlignment(-Math.PI/2, drive, this));
