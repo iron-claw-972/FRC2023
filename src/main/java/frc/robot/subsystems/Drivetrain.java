@@ -106,6 +106,8 @@ public class Drivetrain extends SubsystemBase {
 
   boolean m_visionEnabled = true;
 
+  int m_loggerStep = 0;
+
   /**
    * Creates a new Swerve Style Drivetrain.
    * @param drivetrainTab the shuffleboard tab to display drivetrain data on
@@ -779,13 +781,20 @@ public class Drivetrain extends SubsystemBase {
       ));
     }
   }
-  public void updateLogs(){
+
+  public void updateLogs() {
+
+    m_loggerStep++;
+    if (m_loggerStep < 4) return;
+    m_loggerStep = 0;
+
     double[] pose = {
       getPose().getX(),
       getPose().getY(),
       getPose().getRotation().getRadians()
     };
     LogManager.addDoubleArray("Swerve/Pose2d", pose);
+
     double[] actualStates = {
       m_modules[0].getAngle().getRadians(),
       m_modules[0].getState().speedMetersPerSecond,
@@ -797,6 +806,7 @@ public class Drivetrain extends SubsystemBase {
       m_modules[3].getState().speedMetersPerSecond
     };
     LogManager.addDoubleArray("Swerve/actual swerve states", actualStates);
+
     double[] desiredStates = {
       m_modules[0].getDesiredAngle().getRadians(),
       m_modules[0].getDesiredVelocity(),
