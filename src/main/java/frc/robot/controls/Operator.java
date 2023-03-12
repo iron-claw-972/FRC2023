@@ -63,7 +63,7 @@ public class Operator {
 
     
     //shelf
-    m_operator.get(Button.B).onTrue(new PositionIntake(elevator, arm, intake::hasCone, Position.SHELF).alongWith(new InstantCommand(() -> intake.setIntakeMode(IntakeMode.INTAKE_CONE))))
+    m_operator.get(Button.B).onTrue(new PositionIntake(elevator, arm, intake::containsCone, Position.SHELF).alongWith(new InstantCommand(() -> intake.setIntakeMode(IntakeMode.INTAKE_CONE))))
       .onFalse(new SequentialCommandGroup( 
         new InstantCommand(() -> intake.setIntakeMode(IntakeMode.DISABLED)),
         new ExtendArm(arm, 0.8),
@@ -76,10 +76,10 @@ public class Operator {
 
     //intake
     m_operator.get(Button.A).onTrue(
-      new PositionIntake(elevator, arm, intake::hasCone, Position.INTAKE).alongWith(new IntakeGamePiece(intake, IntakePiece.CONE)))
+      new PositionIntake(elevator, arm, intake::containsCone, Position.INTAKE).alongWith(new IntakeGamePiece(intake, IntakePiece.CONE)))
       .onFalse(new Stow(intake, elevator, arm));
     m_operator.get(Button.B).onTrue(
-      new PositionIntake(elevator, arm, intake::hasCone, Position.INTAKE).alongWith(new IntakeGamePiece(intake, IntakePiece.CUBE)))
+      new PositionIntake(elevator, arm, intake::containsCone, Position.INTAKE).alongWith(new IntakeGamePiece(intake, IntakePiece.CUBE)))
       .onFalse(new Stow(intake, elevator, arm));
 
     //outtake

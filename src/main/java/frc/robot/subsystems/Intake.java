@@ -104,11 +104,11 @@ public class Intake extends SubsystemBase {
     return m_heldPiece != IntakePiece.NONE;
   }
 
-  public boolean hasCone() {
+  public boolean containsCone() {
     return m_heldPiece == IntakePiece.CONE;
   }
 
-  public boolean hasCube() {
+  public boolean containsCube() {
     return m_heldPiece == IntakePiece.CUBE;
   }
 
