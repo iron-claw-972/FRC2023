@@ -39,9 +39,9 @@ public class IntakeGamePiece extends CommandBase {
   @Override
   public boolean isFinished() {
     if (m_type == IntakePiece.CUBE) {
-      return m_intake.getIntakeMotor().getStatorCurrent() >= IntakeConstants.kCubeIntakeCurrentStopPoint;
+      return Math.abs(m_intake.getIntakeMotor().getStatorCurrent()) >= IntakeConstants.kCubeIntakeCurrentStopPoint;
     } else if (m_type == IntakePiece.CONE) {
-      return m_intake.getIntakeMotor().getStatorCurrent() >= IntakeConstants.kConeIntakeCurrentStopPoint;
+      return Math.abs(m_intake.getIntakeMotor().getStatorCurrent()) >= IntakeConstants.kConeIntakeCurrentStopPoint;
     }
     return false;
   }
