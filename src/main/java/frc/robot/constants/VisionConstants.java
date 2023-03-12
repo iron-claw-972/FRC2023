@@ -32,9 +32,8 @@ public class VisionConstants {
   /**
    * Update the camera list based on the robot id detected from rio preferences.
    */
-  // TODO: Maybe we should move this to the if/else block in RobotContainer.java, where subsystems are initialized/not initialized based on robotid
-  public static void update() {
-    if (Robot.kRobotId == RobotId.SwerveTest) {
+  public static void update(RobotId robotID) {
+    if (robotID == RobotId.SwerveTest) {
       kCameras = new ArrayList<Pair<String, Transform3d>>(List.of(
         new Pair<String, Transform3d>(
           "Camera_2",
@@ -46,21 +45,21 @@ public class VisionConstants {
       ));
     } else {
       kCameras = new ArrayList<Pair<String, Transform3d>>(List.of(
-        // new Pair<String, Transform3d>(
-        //   "Camera_1",
-        //   new Transform3d(
-        //     new Translation3d(Units.inchesToMeters(1.25), Units.inchesToMeters(7.125), Units.inchesToMeters(21)),
-        //     new Rotation3d(0, 0, Math.PI)
-        //   )
-        // ),
+        new Pair<String, Transform3d>(
+          "Camera_1",
+          new Transform3d(
+            new Translation3d(Units.inchesToMeters(1.25), Units.inchesToMeters(7.125), Units.inchesToMeters(21)),
+            new Rotation3d(0, 0, 0)
+          )
+        ),
 
-        // new Pair<String, Transform3d>(
-        //   "Camera_2",
-        //   new Transform3d(
-        //     new Translation3d(Units.inchesToMeters(1.25), Units.inchesToMeters(-7.125), Units.inchesToMeters(21)),
-        //     new Rotation3d(0, 0, Math.PI)
-        //   )
-        // )
+        new Pair<String, Transform3d>(
+          "Camera_2",
+          new Transform3d(
+            new Translation3d(Units.inchesToMeters(1.25), Units.inchesToMeters(-7.125), Units.inchesToMeters(21)),
+            new Rotation3d(0, 0, 0)
+          )
+        )
       ));
     }
   }
