@@ -76,9 +76,9 @@ public class Module {
     setSpeed(desiredState, isOpenLoop);
 
     if(Constants.kLogging){
-        LogManager.addDoubleArray("Swerve/DesiredState", new double[]{
-            m_moduleIndex, desiredState.speedMetersPerSecond, desiredState.angle.getDegrees()
-        });
+      LogManager.addDoubleArray("Swerve/Modules/"+m_moduleAbbr+"/DesiredState", new double[]{
+        m_moduleIndex, desiredState.speedMetersPerSecond, desiredState.angle.getDegrees()
+      });
     }
   }
 
@@ -92,6 +92,19 @@ public class Module {
       m_driveMotor.set(ControlMode.Velocity, velocity, DemandType.ArbitraryFeedForward,
           feedforward.calculate(desiredState.speedMetersPerSecond));
     }
+    if(Constants.kLogging){
+      LogManager.addDoubleArray("Swerve/Modules/"+m_moduleAbbr+"/DriveValues",
+        new double[]{
+          desiredState.speedMetersPerSecond, 
+          Conversions.falconToMPS(m_driveMotor.getSelectedSensorVelocity(), DriveConstants.kWheelCircumference,
+            DriveConstants.kDriveGearRatio),
+          Conversions.falconToMPS(m_driveMotor.getSelectedSensorVelocity(), DriveConstants.kWheelCircumference,
+            DriveConstants.kDriveGearRatio)-desiredState.speedMetersPerSecond,
+          m_driveMotor.getMotorOutputVoltage(), 
+          m_driveMotor.getStatorCurrent()
+        }
+      );
+    }
   }
 
   private void setAngle(SwerveModuleState desiredState) {
@@ -100,8 +113,22 @@ public class Module {
       stop();
       return;
     }
-
     m_angleMotor.set(ControlMode.Position, Conversions.degreesToFalcon(desiredState.angle.getDegrees(), DriveConstants.kAngleGearRatio));
+    if(Constants.kLogging){
+      LogManager.addDoubleArray("Swerve/Modules/"+m_moduleAbbr+"/SteerValues",
+        new double[]{
+          desiredState.angle.getDegrees(), 
+          Conversions.falconToDegrees(m_angleMotor.getSelectedSensorPosition(), 
+            DriveConstants.kAngleGearRatio),
+          Conversions.falconToDegrees(m_angleMotor.getSelectedSensorPosition(), 
+            DriveConstants.kAngleGearRatio)-desiredState.angle.getDegrees(),
+          m_angleMotor.getMotorOutputVoltage(), 
+          m_angleMotor.getStatorCurrent(),
+          Conversions.falconToDegrees(m_angleMotor.getSelectedSensorVelocity(), 
+            DriveConstants.kAngleGearRatio)
+        }
+      );
+    }
   }
 
   public void enableStateDeadband(boolean enabled) {
@@ -161,12 +188,22 @@ public class Module {
   public void setDriveCharacterizationVoltage(double voltage) {
     m_angleMotor.set(ControlMode.Position, Conversions.degreesToFalcon(0, DriveConstants.kAngleGearRatio));
     m_driveMotor.set(ControlMode.PercentOutput, voltage / Constants.kRobotVoltage);
+    if(Constants.kLogging){
+      LogManager.addDouble("Swerve/Modules/"+m_moduleAbbr+"/DriveCharacterizationVoltage",
+        voltage
+      );
+    }
   }
 
   public void setAngleCharacterizationVoltage(double voltage) {
     m_angleMotor.set(ControlMode.PercentOutput, voltage / Constants.kRobotVoltage);
     // Set the drive motor to just enough to overcome static friction
     m_driveMotor.set(ControlMode.PercentOutput, 1.1 * DriveConstants.kDriveKS);
+    if(Constants.kLogging){
+      LogManager.addDouble("Swerve/Modules/"+m_moduleAbbr+"/AngleCharacterizationVoltage",
+        voltage
+      );
+    }
   }
 
   public double getSteerVelocity() {
