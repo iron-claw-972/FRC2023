@@ -1,17 +1,19 @@
 package frc.robot.constants;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.revrobotics.CANSparkMax.IdleMode;
+
+import frc.robot.subsystems.RollerIntake.IntakePiece;
 
 public final class IntakeConstants {
   // motor ports
   public static final int kIntakeMotorId = 9;
 
   // intake speeds
-  public static final double kIntakeCubePower = 0.2;
-  public static final double kOuttakeCubePower = -0.2;
-  public static final double kIntakeConePower = -0.2;
-  public static final double kOuttakeConePower = 0.2;
+  // TODO: tune these values
+  public static final double kIntakeCubePower = 0.05;
+  public static final double kOuttakeCubePower = -0.05;
+  public static final double kIntakeConePower = -0.05;
+  public static final double kOuttakeConePower = 0.05;
   public static final double kStopPower = 0;
 
   public static final NeutralMode kNeutralMode = NeutralMode.Brake;
