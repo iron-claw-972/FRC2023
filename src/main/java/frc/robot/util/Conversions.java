@@ -2,6 +2,7 @@ package frc.robot.util;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -122,7 +123,7 @@ public class Conversions {
 
     public static Pose2d absolutePoseToPathPlannerPose(Pose2d pose, Alliance alliance){
         if (alliance == Alliance.Red){
-            return pose.relativeTo(new Pose2d(FieldConstants.kFieldLength, -FieldConstants.kFieldWidth, new Rotation2d(Math.PI)));
+            return pose.relativeTo(new Pose2d(FieldConstants.kFieldLength, FieldConstants.kFieldWidth, new Rotation2d(Math.PI)));
         }
         return new Pose2d(pose.getX(), pose.getY(), new Rotation2d(pose.getRotation().getRadians()));
     }
