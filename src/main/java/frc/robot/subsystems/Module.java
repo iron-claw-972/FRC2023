@@ -90,7 +90,7 @@ public class Module extends SubsystemBase {
 
     if(Constants.kLogging){
       LogManager.addDoubleArray("Swerve/Modules/"+m_moduleAbbr+"/DesiredState", new double[]{
-        m_moduleIndex, desiredState.speedMetersPerSecond, desiredState.angle.getDegrees()
+        desiredState.speedMetersPerSecond, desiredState.angle.getDegrees()
       });
     }
   }
@@ -106,13 +106,17 @@ public class Module extends SubsystemBase {
           feedforward.calculate(desiredState.speedMetersPerSecond));
     }
     if(Constants.kLogging){
-      LogManager.addDoubleArray("Swerve/Modules/"+m_moduleAbbr+"/DriveValues",
+      double motorSpeed = Conversions.falconToMPS(m_driveMotor.getSelectedSensorVelocity(), DriveConstants.kWheelCircumference,
+      DriveConstants.kDriveGearRatio);
+      LogManager.addDoubleArray("Swerve/Modules/"+m_moduleAbbr+"/DriveSpeed",
         new double[]{
           desiredState.speedMetersPerSecond, 
-          Conversions.falconToMPS(m_driveMotor.getSelectedSensorVelocity(), DriveConstants.kWheelCircumference,
-            DriveConstants.kDriveGearRatio),
-          Conversions.falconToMPS(m_driveMotor.getSelectedSensorVelocity(), DriveConstants.kWheelCircumference,
-            DriveConstants.kDriveGearRatio)-desiredState.speedMetersPerSecond,
+          motorSpeed,
+          motorSpeed-desiredState.speedMetersPerSecond
+        }
+      );
+      LogManager.addDoubleArray("Swerve/Modules/"+m_moduleAbbr+"/DrivePower",
+        new double[]{
           m_driveMotor.getMotorOutputVoltage(), 
           m_driveMotor.getStatorCurrent()
         }
@@ -128,17 +132,21 @@ public class Module extends SubsystemBase {
     }
     m_angleMotor.set(ControlMode.Position, Conversions.degreesToFalcon(desiredState.angle.getDegrees(), DriveConstants.kAngleGearRatio));
     if(Constants.kLogging){
-      LogManager.addDoubleArray("Swerve/Modules/"+m_moduleAbbr+"/SteerValues",
+      double position = Conversions.falconToDegrees(m_angleMotor.getSelectedSensorPosition(), 
+        DriveConstants.kAngleGearRatio);
+      LogManager.addDoubleArray("Swerve/Modules/"+m_moduleAbbr+"/SteerPosition",
         new double[]{
           desiredState.angle.getDegrees(), 
-          Conversions.falconToDegrees(m_angleMotor.getSelectedSensorPosition(), 
-            DriveConstants.kAngleGearRatio),
-          Conversions.falconToDegrees(m_angleMotor.getSelectedSensorPosition(), 
-            DriveConstants.kAngleGearRatio)-desiredState.angle.getDegrees(),
-          m_angleMotor.getMotorOutputVoltage(), 
-          m_angleMotor.getStatorCurrent(),
+          position,
+          position-desiredState.angle.getDegrees(),
           Conversions.falconToDegrees(m_angleMotor.getSelectedSensorVelocity(), 
             DriveConstants.kAngleGearRatio)
+        }
+      );
+      LogManager.addDoubleArray("Swerve/Modules/"+m_moduleAbbr+"/SteerPower",
+        new double[]{
+          m_angleMotor.getMotorOutputVoltage(), 
+          m_angleMotor.getStatorCurrent(),
         }
       );
     }
@@ -146,10 +154,12 @@ public class Module extends SubsystemBase {
 
   public void enableStateDeadband(boolean enabled) {
     m_stateDeadband = enabled;
+    LogManager.addBoolean("Swerve/Modules/"+m_moduleAbbr+"/StateDeadband", enabled);
   }
 
   public void setOptimize(boolean enable) {
     m_optimizeStates = enable;
+    LogManager.addBoolean("Swerve/Modules/"+m_moduleAbbr+"/Optimized", enable);
   }
 
   public int getModuleIndex() {
