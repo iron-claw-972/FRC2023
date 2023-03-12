@@ -245,7 +245,7 @@ public class RobotContainer {
     }
 
     if (m_drive != null && m_elevator != null && m_arm != null && m_intake != null) {
-      m_autoCommand.addOption("Hybrid Score", new PositionIntake(m_elevator, m_arm, ()->true, Position.BOTTOM).andThen(new OuttakeGamePiece(m_intake).withTimeout(IntakeConstants.kOuttakeTime)).andThen(new Stow(m_intake, m_elevator, m_arm)));
+      m_autoCommand.addOption("Hybrid Score", new PositionIntake(m_elevator, m_arm, ()->true, Position.BOTTOM).andThen(new OuttakeGamePiece(m_intake)).andThen(new Stow(m_intake, m_elevator, m_arm)));
 
       // m_autoCommand.addOption("HYBRID MOBILITY", 
       //   new PositionIntake(m_elevator, m_arm, ()->true, Position.BOTTOM).andThen(

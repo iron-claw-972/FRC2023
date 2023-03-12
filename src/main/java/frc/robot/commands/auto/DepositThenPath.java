@@ -24,7 +24,7 @@ public class DepositThenPath extends SequentialCommandGroup {
       depositPosition == Position.MIDDLE ?
         new PositionIntake(elevator, arm, () -> false, depositPosition).withTimeout(1.5) : 
         new MoveElevator(elevator, ElevatorConstants.kMiddleConeHeight).withTimeout(1).andThen(new PositionIntake(elevator, arm, () -> false, Position.TOP).withTimeout(1.5)),
-      new OuttakeGamePiece(intake).withTimeout(1.5),
+      new OuttakeGamePiece(intake),
       new PathPlannerCommand(pathName, 0, drive, true),
       new Stow(intake, elevator, arm),
       new PathPlannerCommand(pathName, 1, drive, true)
