@@ -193,6 +193,7 @@ public class RobotContainer {
     m_autoCommand.addOption( "Drive Out of Community Grid 9", new PathPlannerCommand("Drive Out of Community Grid 9", 0, m_drive));
     m_autoCommand.addOption( "Engage From Grid 1", new EngageFromGrid1(m_drive)); 
     m_autoCommand.addOption( "Engage From Grid 9", new EngageFromGrid9(m_drive)); 
+    //no pathplanner auto routines:
     m_autoCommand.addOption( "No Pathplanner Engage From Center", new NoPathEngageFromGrid4(m_drive)); 
     m_autoCommand.addOption( "No Pathplanner Go Over Charge Station", new NoPathGoOverChargeStation(m_drive));
     m_autoCommand.addOption( "No Pathplanner To Center And Back", new NoPathToCenterAndBack(m_drive)); 
