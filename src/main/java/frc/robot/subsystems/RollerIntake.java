@@ -9,11 +9,6 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
-import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
@@ -64,11 +59,11 @@ public class RollerIntake extends SubsystemBase {
     m_intakeMotor.setNeutralMode(IntakeConstants.kNeutralMode);
   }
 
-  public void setIntakeMode(IntakeMode mode){
+  public void setIntakeMode(IntakeMode mode) {
     m_mode = mode; 
   }
 
-  private void setMotorPower(double power){
+  private void setMotorPower(double power) {
     m_intakeMotor.set(power); 
   }
 
