@@ -16,7 +16,7 @@ public class Stow extends SequentialCommandGroup {
   public Stow(RollerIntake intake, Elevator elevator, FourBarArm arm) {
     addRequirements(intake, elevator, arm);
     addCommands(
-      new InstantCommand(() -> intake.getIntakeMotor().setNeutralMode(NeutralMode.Brake)),
+      new InstantCommand(() -> intake.setNeutralMode(NeutralMode.Brake)),
       new ExtendArm(arm, ArmConstants.kStowPos),
       new MoveElevator(elevator, ElevatorConstants.kStowHeight)
     );

@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.math.MathUtil;
@@ -101,8 +102,12 @@ public class RollerIntake extends SubsystemBase {
     return m_heldPiece == IntakePiece.CUBE;
   }
 
-  public WPI_TalonFX getIntakeMotor() {
-    return m_intakeMotor;
+  public double getStatorCurrent() {
+    return Math.abs(m_intakeMotor.getStatorCurrent());
+  }
+
+  public void setNeutralMode(NeutralMode mode) {
+    m_intakeMotor.setNeutralMode(mode);
   }
 
   public IntakePiece getHeldGamePiece() {
