@@ -153,7 +153,7 @@ public class Drivetrain extends SubsystemBase {
     );
     m_poseEstimator.setVisionMeasurementStdDevs(VisionConstants.kBaseVisionPoseStdDevs);
 
-    setPigeonYaw(DriveConstants.kStartingHeadingDegrees);
+    setYaw(DriveConstants.kStartingHeadingDegrees);
 
     m_xController = new PIDController(DriveConstants.kTranslationalP, 0, DriveConstants.kTranslationalD);
     m_yController = new PIDController(DriveConstants.kTranslationalP, 0, DriveConstants.kTranslationalD);
@@ -355,8 +355,7 @@ public class Drivetrain extends SubsystemBase {
    * 
    * @param degrees the new yaw angle, in degrees.
    */
-  public void setPigeonYaw(double degrees) {
-    m_pigeon.setYaw(degrees);
+  public void setYaw(double degrees) {
     // the odometry stores an offset from the current pigeon angle
     // changing the angle makes that offset inaccurate, so must reset the pose as well.
     // keep the same translation, but set the odometry angle to what we want the angle to be.
@@ -371,7 +370,7 @@ public class Drivetrain extends SubsystemBase {
    */
   public void setPigeonYaw(PathPlannerTrajectory traj) {
     traj = PathPlannerTrajectory.transformTrajectoryForAlliance(traj, DriverStation.getAlliance());
-    setPigeonYaw(traj.getInitialHolonomicPose().getRotation().getDegrees());
+    setYaw(traj.getInitialHolonomicPose().getRotation().getDegrees());
   }
 
   public void resetModulesToAbsolute() {
