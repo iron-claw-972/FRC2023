@@ -43,7 +43,7 @@ public class OuttakeGamePiece extends CommandBase {
       cancel();
       return;
     }
-    m_timer.start();
+    m_timer.reset();
   }
 
   @Override
