@@ -101,7 +101,7 @@ public class Wrist extends SubsystemBase {
   }
 
   public void setupShuffleboardTab() {
-    m_wristTab.add("Wrist position", getAbsEncoderPos());
+    m_wristTab.add("Wrist Position", getAbsEncoderPos());
     m_wristTab.add("wrist PID", m_pid);
   }
 }
