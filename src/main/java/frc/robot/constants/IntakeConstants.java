@@ -17,9 +17,10 @@ public final class IntakeConstants {
   public static final double kOuttakeConePower = 0.05;
 
   /**
-   * The value to clamp the intake motor power at. This needs to be tested.
+   * The value to clamp the intake motor power at.
    * Uses MathUtil.clamp(power, -kClampValue, kClampValue)
    */
+  // TODO: tune this value
   public static final double kClampValue = 0.2;
 
   public static final NeutralMode kNeutralMode = NeutralMode.Brake;
