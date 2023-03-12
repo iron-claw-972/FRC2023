@@ -15,6 +15,7 @@ import frc.robot.subsystems.Bar;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.RollerIntake;
+import frc.robot.subsystems.RollerIntake.IntakeMode;
 import frc.robot.subsystems.RollerIntake.IntakePiece;
 import lib.controllers.GameController;
 import lib.controllers.GameController.Button;
@@ -50,6 +51,7 @@ public class TestController {
     test.get(Button.A).onTrue(new IntakeGamePiece(m_intake, IntakePiece.CONE));
     test.get(Button.B).onTrue(new IntakeGamePiece(m_intake, IntakePiece.CUBE));
     test.get(Button.X).onTrue(new OuttakeGamePiece(m_intake));
+    test.get(Button.Y).onTrue(new InstantCommand(() -> m_intake.setIntakeMode(IntakeMode.DISABLED), m_intake));
 
     // test.get(Button.Y).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kTopConeHeight));
     // test.get(Button.X).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kMiddleConeHeight));
