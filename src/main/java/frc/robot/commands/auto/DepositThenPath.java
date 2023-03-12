@@ -12,11 +12,11 @@ import frc.robot.constants.ElevatorConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.RollerIntake;
 import frc.robot.util.PathGroupLoader;
 
 public class DepositThenPath extends SequentialCommandGroup {
-  public DepositThenPath(String pathName, Position depositPosition, Drivetrain drive, Elevator elevator, FourBarArm arm, Intake intake) {
+  public DepositThenPath(String pathName, Position depositPosition, Drivetrain drive, Elevator elevator, FourBarArm arm, RollerIntake intake) {
     addRequirements(drive, elevator, arm, intake);
     addCommands(
       new InstantCommand(() -> drive.setPigeonYaw(PathGroupLoader.getPathGroup(pathName).get(0))),

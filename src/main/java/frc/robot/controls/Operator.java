@@ -20,9 +20,9 @@ import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.Bar;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Intake.IntakeMode;
-import frc.robot.subsystems.Intake.IntakePiece;
+import frc.robot.subsystems.RollerIntake;
+import frc.robot.subsystems.RollerIntake.IntakeMode;
+import frc.robot.subsystems.RollerIntake.IntakePiece;
 import frc.robot.util.Node;
 import frc.robot.util.Vision;
 import lib.controllers.GameController;
@@ -42,7 +42,7 @@ public class Operator {
   /**
    * Configures the operator controls for the deploying Bar.
    */
-  public void configureControls(FourBarArm arm, Intake intake, Elevator elevator, Bar bar, Vision vision) {
+  public void configureControls(FourBarArm arm, RollerIntake intake, Elevator elevator, Bar bar, Vision vision) {
 
     m_vision = vision; //should be in constructor
 

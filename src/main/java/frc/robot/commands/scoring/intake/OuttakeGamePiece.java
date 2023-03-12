@@ -3,20 +3,20 @@ package frc.robot.commands.scoring.intake;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.IntakeConstants;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Intake.IntakeMode;
-import frc.robot.subsystems.Intake.IntakePiece;
+import frc.robot.subsystems.RollerIntake;
+import frc.robot.subsystems.RollerIntake.IntakeMode;
+import frc.robot.subsystems.RollerIntake.IntakePiece;
 
 public class OuttakeGamePiece extends CommandBase {
 
-  private final Intake m_intake; 
+  private final RollerIntake m_intake; 
   private final Timer m_timer;
 
   /**
    * Spins the intake until the game piece is inside the intake.
    * @param intake the intake subsystem
    */
-  public OuttakeGamePiece(Intake intake) {
+  public OuttakeGamePiece(RollerIntake intake) {
     m_intake = intake; 
     m_timer = new Timer();
     addRequirements(m_intake);

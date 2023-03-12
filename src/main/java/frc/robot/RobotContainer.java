@@ -37,7 +37,7 @@ import frc.robot.subsystems.Bar;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.RollerIntake;
 import frc.robot.util.PathGroupLoader;
 import frc.robot.util.Vision;
 
@@ -70,7 +70,7 @@ public class RobotContainer {
   // The robot's subsystems are defined here...
   private final Drivetrain m_drive;
   private final FourBarArm m_arm;
-  private final Intake m_intake;
+  private final RollerIntake m_intake;
   private final Elevator m_elevator;
   private final Bar m_deployingBar;
 
@@ -99,7 +99,7 @@ public class RobotContainer {
         m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
     
         m_arm = new FourBarArm();
-        m_intake = new Intake(m_intakeTab);
+        m_intake = new RollerIntake(m_intakeTab);
         m_elevator = new Elevator(m_elevatorTab, () -> m_intake.containsGamePiece());
         m_deployingBar = new Bar(m_barTab); 
   

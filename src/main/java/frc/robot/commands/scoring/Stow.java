@@ -10,10 +10,10 @@ import frc.robot.constants.ArmConstants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.RollerIntake;
 
 public class Stow extends SequentialCommandGroup {
-  public Stow(Intake intake, Elevator elevator, FourBarArm arm) {
+  public Stow(RollerIntake intake, Elevator elevator, FourBarArm arm) {
     addRequirements(intake, elevator, arm);
     addCommands(
       new InstantCommand(() -> intake.getIntakeMotor().setNeutralMode(NeutralMode.Brake)),

@@ -14,8 +14,8 @@ import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.Bar;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Intake.IntakePiece;
+import frc.robot.subsystems.RollerIntake;
+import frc.robot.subsystems.RollerIntake.IntakePiece;
 import lib.controllers.GameController;
 import lib.controllers.GameController.Button;
 import lib.controllers.GameController.DPad;
@@ -24,11 +24,11 @@ public class TestController {
   
   private GameController test = new GameController(OIConstants.kTestJoy);
   private FourBarArm m_arm;
-  private Intake m_intake;
+  private RollerIntake m_intake;
   private Elevator m_elevator;
   private Bar m_bar;
   
-  public TestController(FourBarArm arm, Intake intake, Elevator elevator, Bar bar) {
+  public TestController(FourBarArm arm, RollerIntake intake, Elevator elevator, Bar bar) {
     m_arm = arm;
     m_intake = intake;
     m_elevator = elevator;

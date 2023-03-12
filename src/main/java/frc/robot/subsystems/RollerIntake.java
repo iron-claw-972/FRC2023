@@ -22,7 +22,7 @@ import frc.robot.util.LogManager;
 import frc.robot.util.MotorFactory;
 
 
-public class Intake extends SubsystemBase {
+public class RollerIntake extends SubsystemBase {
 
   public enum IntakeMode {
     INTAKE_CUBE, OUTTAKE_CUBE, INTAKE_CONE, OUTTAKE_CONE, DISABLED
@@ -40,7 +40,7 @@ public class Intake extends SubsystemBase {
 
   private double m_power;
 
-  public Intake(ShuffleboardTab intakeTab) {
+  public RollerIntake(ShuffleboardTab intakeTab) {
     m_intakeMotor = MotorFactory.createTalonFX(IntakeConstants.kIntakeMotorId, Constants.kCanivoreCAN);
     configMotors();
     
