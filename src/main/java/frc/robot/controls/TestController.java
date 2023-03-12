@@ -8,17 +8,12 @@ import frc.robot.commands.DepositTune;
 import frc.robot.commands.scoring.Stow;
 import frc.robot.commands.scoring.bar.CalibrateBar;
 import frc.robot.commands.scoring.elevator.CalibrateElevator;
-import frc.robot.commands.scoring.elevator.MoveElevator;
-import frc.robot.commands.scoring.intake.IntakeGamePiece;
-import frc.robot.commands.scoring.intake.OuttakeGamePiece;
-import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.Bar;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.Intake;
 import lib.controllers.GameController;
-import lib.controllers.GameController.Button;
 import lib.controllers.GameController.DPad;
 
 public class TestController {
