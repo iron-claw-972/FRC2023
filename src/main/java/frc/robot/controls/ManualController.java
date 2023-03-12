@@ -7,6 +7,7 @@ import frc.robot.commands.scoring.intake.OuttakeGamePiece;
 import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Elevator.ElevatorMode;
+import frc.robot.subsystems.Intake.IntakePiece;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.Intake;
 import frc.robot.util.Functions;
@@ -29,8 +30,8 @@ public class ManualController {
   
   public void configureControls() {
     if (m_intake != null) {
-      m_manual.get(DPad.DOWN).onTrue(new IntakeGamePiece(m_intake, IntakeGamePiece.CUBE));
-      m_manual.get(DPad.LEFT).onTrue(new IntakeGamePiece(m_intake, IntakeGamePiece.CONE));
+      m_manual.get(DPad.DOWN).onTrue(new IntakeGamePiece(m_intake, IntakePiece.CUBE));
+      m_manual.get(DPad.LEFT).onTrue(new IntakeGamePiece(m_intake, IntakePiece.CONE));
       m_manual.get(DPad.UP).onTrue(new OuttakeGamePiece(m_intake));
     }
 

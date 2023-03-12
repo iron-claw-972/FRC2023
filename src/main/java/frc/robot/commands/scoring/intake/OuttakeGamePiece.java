@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Intake.IntakeMode;
-import frc.robot.subsystems.Intake.IntakeGamePiece;
+import frc.robot.subsystems.Intake.IntakePiece;
 
 public class OuttakeGamePiece extends CommandBase {
 
@@ -24,9 +24,9 @@ public class OuttakeGamePiece extends CommandBase {
 
   @Override
   public void initialize() {
-    if (m_intake.getHeldGamePiece() == IntakeGamePiece.CUBE) {
+    if (m_intake.getHeldGamePiece() == IntakePiece.CUBE) {
       m_intake.setIntakeMode(IntakeMode.OUTTAKE_CUBE);
-    } else if (m_intake.getHeldGamePiece() == IntakeGamePiece.CONE) {
+    } else if (m_intake.getHeldGamePiece() == IntakePiece.CONE) {
       m_intake.setIntakeMode(IntakeMode.OUTTAKE_CONE);
     }
     m_timer.start();
@@ -34,7 +34,7 @@ public class OuttakeGamePiece extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
-    m_intake.setHeldGamePiece(IntakeGamePiece.NONE);
+    m_intake.setHeldGamePiece(IntakePiece.NONE);
     m_intake.setIntakeMode(IntakeMode.DISABLED);
   }
   

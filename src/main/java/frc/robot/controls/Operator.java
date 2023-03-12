@@ -22,6 +22,7 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Intake.IntakeMode;
+import frc.robot.subsystems.Intake.IntakePiece;
 import frc.robot.util.Node;
 import frc.robot.util.Vision;
 import lib.controllers.GameController;
@@ -75,10 +76,10 @@ public class Operator {
 
     //intake
     m_operator.get(Button.A).onTrue(
-      new PositionIntake(elevator, arm, intake::hasCone, Position.INTAKE).alongWith(new IntakeGamePiece(intake, IntakeGamePiece.CONE)))
+      new PositionIntake(elevator, arm, intake::hasCone, Position.INTAKE).alongWith(new IntakeGamePiece(intake, IntakePiece.CONE)))
       .onFalse(new Stow(intake, elevator, arm));
     m_operator.get(Button.B).onTrue(
-      new PositionIntake(elevator, arm, intake::hasCone, Position.INTAKE).alongWith(new IntakeGamePiece(intake, IntakeGamePiece.CUBE)))
+      new PositionIntake(elevator, arm, intake::hasCone, Position.INTAKE).alongWith(new IntakeGamePiece(intake, IntakePiece.CUBE)))
       .onFalse(new Stow(intake, elevator, arm));
 
     //outtake

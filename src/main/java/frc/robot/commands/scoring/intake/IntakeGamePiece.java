@@ -4,20 +4,18 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Intake.IntakeMode;
-import frc.robot.subsystems.Intake.IntakeGamePiece;
+import frc.robot.subsystems.Intake.IntakePiece;
 
 public class IntakeGamePiece extends CommandBase {
 
-  public static frc.robot.commands.scoring.intake.IntakeGamePiece CUBE;
-  public static frc.robot.commands.scoring.intake.IntakeGamePiece CONE;
   private final Intake m_intake; 
-  private final IntakeGamePiece m_type;
+  private final IntakePiece m_type;
 
   /**
    * Spins the intake until the game piece is inside the intake.
    * @param intake the intake subsystem
    */
-  public IntakeGamePiece(Intake intake, IntakeGamePiece type) {
+  public IntakeGamePiece(Intake intake, IntakePiece type) {
     m_intake = intake; 
     m_type = type;
     addRequirements(m_intake);
@@ -25,9 +23,9 @@ public class IntakeGamePiece extends CommandBase {
 
   @Override
   public void initialize() {
-    if (m_type == IntakeGamePiece.CUBE) {
+    if (m_type == IntakePiece.CUBE) {
       m_intake.setIntakeMode(IntakeMode.INTAKE_CUBE);
-    } else if (m_type == IntakeGamePiece.CONE) {
+    } else if (m_type == IntakePiece.CONE) {
       m_intake.setIntakeMode(IntakeMode.INTAKE_CONE);
     }
   }

@@ -28,7 +28,7 @@ public class Intake extends SubsystemBase {
     INTAKE_CUBE, OUTTAKE_CUBE, INTAKE_CONE, OUTTAKE_CONE, DISABLED
   }
 
-  public enum IntakeGamePiece {
+  public enum IntakePiece {
     CUBE, CONE, NONE
   }
 
@@ -36,7 +36,7 @@ public class Intake extends SubsystemBase {
   private final ShuffleboardTab m_intakeTab;
 
   private IntakeMode m_mode;
-  private IntakeGamePiece m_heldPiece;
+  private IntakePiece m_heldPiece;
 
   private double m_power;
 
@@ -47,7 +47,7 @@ public class Intake extends SubsystemBase {
     m_power = 0;
     m_mode = IntakeMode.DISABLED;
     // During auto, this doesn't really matter, so we can just set it to NONE
-    m_heldPiece = IntakeGamePiece.NONE;
+    m_heldPiece = IntakePiece.NONE;
     m_intakeTab = intakeTab;
 
     setupShuffleboard();
@@ -101,26 +101,26 @@ public class Intake extends SubsystemBase {
   }
   
   public boolean containsGamePiece() {
-    return m_heldPiece != IntakeGamePiece.NONE;
+    return m_heldPiece != IntakePiece.NONE;
   }
 
   public boolean hasCone() {
-    return m_heldPiece == IntakeGamePiece.CONE;
+    return m_heldPiece == IntakePiece.CONE;
   }
 
   public boolean hasCube() {
-    return m_heldPiece == IntakeGamePiece.CUBE;
+    return m_heldPiece == IntakePiece.CUBE;
   }
 
   public WPI_TalonFX getIntakeMotor() {
     return m_intakeMotor;
   }
 
-  public IntakeGamePiece getHeldGamePiece() {
+  public IntakePiece getHeldGamePiece() {
     return m_heldPiece;
   }
 
-  public void setHeldGamePiece(IntakeGamePiece object) {
-    m_heldPiece = object;
+  public void setHeldGamePiece(IntakePiece m_type) {
+    m_heldPiece = m_type;
   }
 } 

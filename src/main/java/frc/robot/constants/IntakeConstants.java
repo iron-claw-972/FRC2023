@@ -17,7 +17,7 @@ public final class IntakeConstants {
   public static final NeutralMode kNeutralMode = NeutralMode.Brake;
 
   /**
-   * The current that the intake motor will stop at in the {@link IntakeGamePiece} command. This needs to be tested.
+   * The current that the intake motor will stop at in the {@link IntakePiece} command. This needs to be tested.
    */
   public static final double kIntakeCurrentStopPoint = 5;
   
