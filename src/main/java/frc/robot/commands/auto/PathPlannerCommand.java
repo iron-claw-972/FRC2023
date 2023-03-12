@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.DoNothing;
 import frc.robot.constants.AutoConstants;
 import frc.robot.constants.swerve.DriveConstants;
@@ -50,6 +51,7 @@ public class PathPlannerCommand extends SequentialCommandGroup{
         if (pathIndex < 0 || pathIndex > pathGroup.size() - 1) {
             throw new IndexOutOfBoundsException("Path index out of range"); 
         }
+        System.out.println("Number of paths: " + pathGroup.size());
 
         addCommands(new InstantCommand( () -> {
             PathPlannerTrajectory path = PathPlannerTrajectory.transformTrajectoryForAlliance(
@@ -59,18 +61,17 @@ public class PathPlannerCommand extends SequentialCommandGroup{
                 drive.resetOdometry(Conversions.absolutePoseToPathPlannerPose(
                     path.getInitialHolonomicPose(), DriverStation.getAlliance()));
             }
-            System.out.println("Number of paths: " + pathGroup.size());
-            addCommands( new PPSwerveControllerCommand(
-                path, 
-                () -> Conversions.absolutePoseToPathPlannerPose(
-                    drive.getPose(), DriverStation.getAlliance()), // Pose supplier
-                drive.getPathplannerXController(), // X controller can't normal PID as pathplanner has Feed Forward 
-                drive.getPathplannerYController(), // Y controller can't normal PID as pathplanner has Feed Forward 
-                drive.getPathplannerRotationController(), // Rotation controller can't normal PID as pathplanner has Feed Forward 
-                (chassisSpeeds) -> { drive.setChassisSpeeds(chassisSpeeds, false); }, // chassis Speeds consumer
-                false,  // use Alliance color
-                drive // Requires this drive subsystem
-            ));
-        }));
+        }), 
+        new PPSwerveControllerCommand(
+            pathGroup.get(pathIndex), 
+            () -> Conversions.absolutePoseToPathPlannerPose(
+                drive.getPose(), DriverStation.getAlliance()), // Pose supplier
+            drive.getPathplannerXController(), // X controller can't normal PID as pathplanner has Feed Forward 
+            drive.getPathplannerYController(), // Y controller can't normal PID as pathplanner has Feed Forward 
+            drive.getPathplannerRotationController(), // Rotation controller can't normal PID as pathplanner has Feed Forward 
+            (chassisSpeeds) -> { drive.setChassisSpeeds(chassisSpeeds, false); }, // chassis Speeds consumer
+            true,  // use Alliance color
+            drive // Requires this drive subsystem
+        ));
     }
 }
