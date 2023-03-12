@@ -28,7 +28,7 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
   
   @Override
   public void configureControls() { 
-    kDriver.get(Button.START).onTrue(new InstantCommand(() -> super.getDrivetrain().setPigeonYaw(
+    kDriver.get(Button.START).onTrue(new InstantCommand(() -> super.getDrivetrain().setYaw(
       DriverStation.getAlliance() == Alliance.Blue ? 0 : 180
     )));
     kDriver.get(Button.X).whileTrue(new SetFormationX(super.getDrivetrain()));
