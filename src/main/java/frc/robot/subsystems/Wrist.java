@@ -20,7 +20,7 @@ public class Wrist extends SubsystemBase {
   private final PIDController m_pid;
   private final DutyCycleEncoder m_absEncoder;
   private final ShuffleboardTab m_wristTab;
-  private boolean m_enabled = true;
+  private boolean m_enabled = false;
 
   public Wrist(ShuffleboardTab wristTab) {
     // configure the motor.
@@ -101,6 +101,7 @@ public class Wrist extends SubsystemBase {
   }
 
   public void setupShuffleboardTab() {
+    m_wristTab.add("Wrist position", getAbsEncoderPos());
     m_wristTab.add("wrist PID", m_pid);
   }
 }
