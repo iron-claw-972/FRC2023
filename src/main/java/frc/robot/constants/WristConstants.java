@@ -29,7 +29,7 @@ public class WristConstants {
 
   public static final NeutralMode kNeutralMode = NeutralMode.Brake;
 
-  public static final int kAbsEncoderPort = 0;
+  public static final int kAbsEncoderPort = 0; //7, 8, 9
   public static final double kEncoderOffset = 0;
 
   public static final double kStowPos = 0.96;
