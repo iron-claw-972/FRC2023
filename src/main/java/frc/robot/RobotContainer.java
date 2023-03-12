@@ -24,7 +24,7 @@ import frc.robot.commands.auto.PathPlannerCommand;
 import frc.robot.commands.scoring.PositionIntake;
 import frc.robot.commands.scoring.Stow;
 import frc.robot.commands.scoring.PositionIntake.Position;
-import frc.robot.commands.scoring.intake.Outtake;
+import frc.robot.commands.scoring.intake.OuttakeGamePiece;
 import frc.robot.constants.VisionConstants;
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.controls.BaseDriverConfig;
@@ -99,7 +99,7 @@ public class RobotContainer {
     
         m_arm = new FourBarArm();
         m_intake = new Intake(m_intakeTab);
-        m_elevator = new Elevator(m_elevatorTab, ()->m_intake.containsGamePiece());
+        m_elevator = new Elevator(m_elevatorTab, () -> m_intake.hasObject());
         m_deployingBar = new Bar(m_barTab); 
   
         m_operator = new Operator();
@@ -244,7 +244,7 @@ public class RobotContainer {
     }
 
     if (m_drive != null && m_elevator != null && m_arm != null && m_intake != null) {
-      m_autoCommand.addOption("Hybrid Score", new PositionIntake(m_elevator, m_arm, ()->true, Position.BOTTOM).andThen(new Outtake(m_intake).withTimeout(5)).andThen(new Stow(m_intake, m_elevator, m_arm)));
+      m_autoCommand.addOption("Hybrid Score", new PositionIntake(m_elevator, m_arm, ()->true, Position.BOTTOM).andThen(new OuttakeGamePiece(m_intake).withTimeout(5)).andThen(new Stow(m_intake, m_elevator, m_arm)));
 
       // m_autoCommand.addOption("HYBRID MOBILITY", 
       //   new PositionIntake(m_elevator, m_arm, ()->true, Position.BOTTOM).andThen(
