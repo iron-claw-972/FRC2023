@@ -32,14 +32,16 @@ public class IntakeGamePiece extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
-    m_intake.setHeldGamePiece(m_type);
+    if (!interrupted) m_intake.setHeldGamePiece(m_type);
     m_intake.setIntakeMode(IntakeMode.DISABLED);
   }
   
   @Override
   public boolean isFinished() {
-    if (m_intake.getIntakeMotor().getStatorCurrent() >= IntakeConstants.kIntakeCurrentStopPoint) {
-      return true;
+    if (m_type == IntakePiece.CUBE) {
+      return m_intake.getIntakeMotor().getStatorCurrent() >= IntakeConstants.kCubeIntakeCurrentStopPoint;
+    } else if (m_type == IntakePiece.CONE) {
+      return m_intake.getIntakeMotor().getStatorCurrent() >= IntakeConstants.kConeIntakeCurrentStopPoint;
     }
     return false;
   }
