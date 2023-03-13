@@ -54,7 +54,7 @@ public class OuttakeGamePiece extends CommandBase {
   
   @Override
   public boolean isFinished() {
-    return m_timer.advanceIfElapsed(IntakeConstants.kOuttakeTime);
+    return m_timer.hasElapsed(IntakeConstants.kOuttakeTime);
   }
 
 }
