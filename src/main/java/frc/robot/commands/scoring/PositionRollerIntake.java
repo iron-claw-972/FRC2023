@@ -42,13 +42,16 @@ public class PositionRollerIntake extends SequentialCommandGroup {
           new MoveElevator(elevator, ElevatorConstants.kIntakeConeHeight).alongWith(new RotateWrist(wrist, WristConstants.kIntakeConePos)),
           new MoveElevator(elevator, ElevatorConstants.kIntakeCubeHeight).alongWith(new RotateWrist(wrist, WristConstants.kIntakeCubePos)),
           isConeSupplier
-        ))
+        )),
+        Map.entry(RollerPosition.STOW,
+          new MoveElevator(elevator, ElevatorConstants.kStowHeight).alongWith(new RotateWrist(wrist, WristConstants.kStowPos))
+        )
         
       ), () -> position)
     );
   }
 
   public enum RollerPosition {
-    TOP, MIDDLE, BOTTOM, SHELF, INTAKE
+    TOP, MIDDLE, BOTTOM, SHELF, INTAKE, STOW
   }
 }
