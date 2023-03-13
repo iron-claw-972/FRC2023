@@ -102,7 +102,7 @@ public class Wrist extends SubsystemBase {
     if (Constants.kUseTelemetry) SmartDashboard.putNumber("Arm Abs Encoder Value", getAbsEncoderPos());
     if(m_enabled) {
       // calculate the PID power level
-      double pidPower = m_pid.calculate( RobotBase.isSimulation() ? getSimRads(): getAbsEncoderPos(), MathUtil.clamp(m_pid.getSetpoint(), WristConstants.kMaxArmExtensionPos, WristConstants.kStowPos));
+      double pidPower = m_pid.calculate( RobotBase.isSimulation() ? getSimRads(): getAbsEncoderPos(), MathUtil.clamp(m_pid.getSetpoint(), WristConstants.kMinPos, WristConstants.kMaxPos));
       if (Constants.kLogging) LogManager.addDouble("Wrist/pidOutput", pidPower);
       if (Constants.kUseTelemetry) SmartDashboard.putNumber("wrist pid output", pidPower);
       // calculate the value of kGravityCompensation
