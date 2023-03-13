@@ -41,7 +41,7 @@ public class WristConstants {
   public static final double kIntakeCubePos = 0.49;
   
   //SIM
-  public static final double kArmReduction = 100/1;
+  public static final double kArmReduction = 20/1*62/34*48/18;
   public static final double kArmLength= 16.1;
   public static final double kArmMass=0;
   public static final double kMinAngleRads = Units.degreesToRadians(0);
