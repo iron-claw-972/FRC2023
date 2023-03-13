@@ -50,13 +50,13 @@ public class Operator {
     m_operator.get(DPad.UP).onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
 
     //top
-    m_operator.get(Button.Y).onTrue(new PositionIntake(elevator, arm, intake::hasCone, Position.TOP));
+    m_operator.get(Button.Y).onTrue(new PositionIntake(elevator, arm, () -> true, Position.TOP));
     //middle
-    m_operator.get(Button.X).onTrue(new PositionIntake(elevator, arm, intake::hasCone, Position.MIDDLE));
+    m_operator.get(Button.X).onTrue(new PositionIntake(elevator, arm, () -> true, Position.MIDDLE));
     //bottom
-    m_operator.get(Button.A).onTrue(new PositionIntake(elevator, arm, intake::hasCone, Position.BOTTOM));
+    m_operator.get(Button.A).onTrue(new PositionIntake(elevator, arm, () -> true, Position.BOTTOM));
     //shelf
-    m_operator.get(Button.B).onTrue(new PositionIntake(elevator, arm, intake::hasCone, Position.SHELF).alongWith(new IntakeGamePiece(intake)))
+    m_operator.get(Button.B).onTrue(new PositionIntake(elevator, arm, () -> true, Position.SHELF).alongWith(new IntakeGamePiece(intake)))
       .onFalse(new SequentialCommandGroup( 
         new InstantCommand(() -> intake.stopIntake()),
         new ExtendArm(arm, 0.8),
@@ -69,7 +69,7 @@ public class Operator {
 
     //intake
     m_operator.get(Button.LB).onTrue(
-      new PositionIntake(elevator, arm, intake::hasCone, Position.INTAKE).alongWith(new IntakeGamePiece(intake)))
+      new PositionIntake(elevator, arm, () -> true, Position.INTAKE).alongWith(new IntakeGamePiece(intake)))
       .onFalse(new Stow(intake, elevator, arm));
 
     //dunk
@@ -106,7 +106,7 @@ public class Operator {
     if(Constants.kLogging){
       LogManager.addDoubleArray("OperatorSelection", new double[]{index.id, value});
     }
-    m_selectedNode = new Node(m_vision, DriverStation.getAlliance(), selectValues[NodePositionIndex.ROW.id]+1, (selectValues[NodePositionIndex.GRID.id]*3)+selectValues[NodePositionIndex.COLUMN.id]+1);
+    m_selectedNode = new Node(DriverStation.getAlliance(), selectValues[NodePositionIndex.ROW.id]+1, (selectValues[NodePositionIndex.GRID.id]*3)+selectValues[NodePositionIndex.COLUMN.id]+1);
   }
 
   public Node getSelectedNode() {

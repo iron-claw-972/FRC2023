@@ -5,10 +5,10 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
-import lib.COTSFalconSwerveConstants;
 import frc.robot.Robot.RobotId;
 import frc.robot.constants.Constants;
 import frc.robot.constants.FalconConstants;
+import lib.COTSFalconSwerveConstants;
 
 /**
  * Constants, are by default, for the competition robot. Constants get changed if the RobotId detected is not the competition robot.
