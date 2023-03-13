@@ -1,17 +1,11 @@
 package frc.robot.commands.auto;
 
-import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
-
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.scoring.Stow;
 import frc.robot.commands.scoring.Dunk;
 import frc.robot.commands.scoring.PositionIntake;
 import frc.robot.commands.scoring.PositionIntake.Position;
+import frc.robot.commands.scoring.Stow;
 import frc.robot.commands.scoring.elevator.CalibrateElevator;
 import frc.robot.commands.scoring.elevator.MoveElevator;
 import frc.robot.commands.scoring.intake.Outtake;
