@@ -1,17 +1,13 @@
 package frc.robot.controls;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.DepositTune;
 import frc.robot.commands.scoring.Stow;
-import frc.robot.commands.scoring.bar.CalibrateBar;
 import frc.robot.commands.scoring.elevator.CalibrateElevator;
 import frc.robot.commands.scoring.intake.IntakeGamePiece;
 import frc.robot.commands.scoring.intake.OuttakeGamePiece;
 import frc.robot.constants.OIConstants;
-import frc.robot.subsystems.Bar;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.RollerIntake;
@@ -27,16 +23,16 @@ public class TestController {
   private FourBarArm m_arm;
   private RollerIntake m_intake;
   private Elevator m_elevator;
-  private Bar m_bar;
   
-  public TestController(FourBarArm arm, RollerIntake intake, Elevator elevator, Bar bar) {
+  public TestController(FourBarArm arm, RollerIntake intake, Elevator elevator) {
     m_arm = arm;
     m_intake = intake;
     m_elevator = elevator;
-    m_bar = bar;
   }
   
   public void configureControls() {
+
+    test.get(DPad.DOWN).onTrue(new CalibrateElevator(m_elevator));
 
     test.get(DPad.UP).onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
 

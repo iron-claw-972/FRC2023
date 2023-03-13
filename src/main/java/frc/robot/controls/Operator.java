@@ -9,15 +9,12 @@ import frc.robot.commands.scoring.PositionIntake;
 import frc.robot.commands.scoring.PositionIntake.Position;
 import frc.robot.commands.scoring.Stow;
 import frc.robot.commands.scoring.arm.ExtendArm;
-import frc.robot.commands.scoring.bar.CalibrateBar;
-import frc.robot.commands.scoring.bar.ToggleBar;
 import frc.robot.commands.scoring.elevator.CalibrateElevator;
 import frc.robot.commands.scoring.elevator.MoveElevator;
 import frc.robot.commands.scoring.intake.IntakeGamePiece;
 import frc.robot.commands.scoring.intake.OuttakeGamePiece;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.OIConstants;
-import frc.robot.subsystems.Bar;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.RollerIntake;
@@ -42,16 +39,11 @@ public class Operator {
   /**
    * Configures the operator controls for the deploying Bar.
    */
-  public void configureControls(FourBarArm arm, RollerIntake intake, Elevator elevator, Bar bar, Vision vision) {
+  public void configureControls(FourBarArm arm, RollerIntake intake, Elevator elevator, Vision vision) {
 
     m_vision = vision; //should be in constructor
 
     m_operator.get(Button.BACK).onTrue(new CalibrateElevator(elevator));
-
-    if (bar != null) {
-      m_operator.get(Button.START).onTrue(new CalibrateBar(bar));
-      m_operator.get(Button.RIGHT_JOY).onTrue(new ToggleBar(bar));
-    }
 
 
     m_operator.get(DPad.UP).onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));

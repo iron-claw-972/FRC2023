@@ -1,14 +1,12 @@
 package frc.robot.subsystems;
 
 import java.util.ArrayList;
-import java.util.function.DoubleSupplier;
 
 import org.photonvision.EstimatedRobotPose;
 
-import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import com.ctre.phoenix.sensors.Pigeon2.AxisDirection;
+import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -24,12 +22,15 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.commands.test.CircleDrive;
 import frc.robot.commands.test.DriveFeedForwardCharacterization;
 import frc.robot.commands.test.SteerFeedForwardCharacterizationSingle;
@@ -102,6 +103,8 @@ public class Drivetrain extends SubsystemBase {
 
   boolean m_visionEnabled = true;
 
+  int m_loggerStep = 0;
+
   /**
    * Creates a new Swerve Style Drivetrain.
    * @param drivetrainTab the shuffleboard tab to display drivetrain data on
@@ -119,19 +122,21 @@ public class Drivetrain extends SubsystemBase {
     // Our pigeon is mounted with y forward, and z upward
     m_pigeon.configMountPose(AxisDirection.PositiveY, AxisDirection.PositiveZ);
 
-    // m_modules = new ModuleOld[] {
-    //   ModuleOld.create(ModuleConstants.FRONT_LEFT, m_swerveModulesTab),
-    //   ModuleOld.create(ModuleConstants.FRONT_RIGHT, m_swerveModulesTab),
-    //   ModuleOld.create(ModuleConstants.BACK_LEFT, m_swerveModulesTab),
-    //   ModuleOld.create(ModuleConstants.BACK_RIGHT, m_swerveModulesTab)
-    // };
-
-    m_modules = new Module[] {
-      new Module(ModuleConstants.FRONT_LEFT, swerveModulesTab),
-      new Module(ModuleConstants.FRONT_RIGHT, swerveModulesTab),
-      new Module(ModuleConstants.BACK_LEFT, swerveModulesTab),
-      new Module(ModuleConstants.BACK_RIGHT, swerveModulesTab),
-    };
+    if (RobotBase.isReal()) {
+      m_modules = new Module[] {
+        new Module(ModuleConstants.FRONT_LEFT, swerveModulesTab),
+        new Module(ModuleConstants.FRONT_RIGHT, swerveModulesTab),
+        new Module(ModuleConstants.BACK_LEFT, swerveModulesTab),
+        new Module(ModuleConstants.BACK_RIGHT, swerveModulesTab),
+      };
+    } else {
+      m_modules = new ModuleSim[] {
+        new ModuleSim(ModuleConstants.FRONT_LEFT, swerveModulesTab),
+        new ModuleSim(ModuleConstants.FRONT_RIGHT, swerveModulesTab),
+        new ModuleSim(ModuleConstants.BACK_LEFT, swerveModulesTab),
+        new ModuleSim(ModuleConstants.BACK_RIGHT, swerveModulesTab),
+      };
+    }
 
     m_prevModule = m_modules[0];
 
@@ -151,7 +156,7 @@ public class Drivetrain extends SubsystemBase {
     );
     m_poseEstimator.setVisionMeasurementStdDevs(VisionConstants.kBaseVisionPoseStdDevs);
 
-    setPigeonYaw(DriveConstants.kStartingHeadingDegrees);
+    setYaw(DriveConstants.kStartingHeadingDegrees);
 
     m_xController = new PIDController(DriveConstants.kTranslationalP, 0, DriveConstants.kTranslationalD);
     m_yController = new PIDController(DriveConstants.kTranslationalP, 0, DriveConstants.kTranslationalD);
@@ -339,6 +344,10 @@ public class Drivetrain extends SubsystemBase {
    * @param isOpenLoop if open loop control should be used for the drive velocity
    */
   public void setChassisSpeeds(ChassisSpeeds chassisSpeeds, boolean isOpenLoop) {
+    if (Robot.isSimulation()) {
+      m_pigeon.getSimCollection().addHeading(
+      + Units.radiansToDegrees(chassisSpeeds.omegaRadiansPerSecond * Constants.kLoopTime));
+    }
     SwerveModuleState[] swerveModuleStates = DriveConstants.kKinematics.toSwerveModuleStates(chassisSpeeds);
     setModuleStates(swerveModuleStates, isOpenLoop);
   }
@@ -349,8 +358,7 @@ public class Drivetrain extends SubsystemBase {
    * 
    * @param degrees the new yaw angle, in degrees.
    */
-  public void setPigeonYaw(double degrees) {
-    m_pigeon.setYaw(degrees);
+  public void setYaw(double degrees) {
     // the odometry stores an offset from the current pigeon angle
     // changing the angle makes that offset inaccurate, so must reset the pose as well.
     // keep the same translation, but set the odometry angle to what we want the angle to be.
@@ -365,7 +373,7 @@ public class Drivetrain extends SubsystemBase {
    */
   public void setPigeonYaw(PathPlannerTrajectory traj) {
     traj = PathPlannerTrajectory.transformTrajectoryForAlliance(traj, DriverStation.getAlliance());
-    setPigeonYaw(traj.getInitialHolonomicPose().getRotation().getDegrees());
+    setYaw(traj.getInitialHolonomicPose().getRotation().getDegrees());
   }
 
   public void resetModulesToAbsolute() {
@@ -555,6 +563,7 @@ public class Drivetrain extends SubsystemBase {
     if (!Constants.kUseTelemetry) return;
 
     m_drivetrainTab.add("Field", m_fieldDisplay);
+    SmartDashboard.putData("Field Display", m_fieldDisplay);
 
     m_drivetrainTab.add("Balance PID", m_balancePID);
 
@@ -769,13 +778,20 @@ public class Drivetrain extends SubsystemBase {
       ));
     }
   }
-  public void updateLogs(){
+
+  public void updateLogs() {
+
+    m_loggerStep++;
+    if (m_loggerStep < 4) return;
+    m_loggerStep = 0;
+
     double[] pose = {
       getPose().getX(),
       getPose().getY(),
       getPose().getRotation().getRadians()
     };
     LogManager.addDoubleArray("Swerve/Pose2d", pose);
+
     double[] actualStates = {
       m_modules[0].getAngle().getRadians(),
       m_modules[0].getState().speedMetersPerSecond,
@@ -787,6 +803,7 @@ public class Drivetrain extends SubsystemBase {
       m_modules[3].getState().speedMetersPerSecond
     };
     LogManager.addDoubleArray("Swerve/actual swerve states", actualStates);
+
     double[] desiredStates = {
       m_modules[0].getDesiredAngle().getRadians(),
       m_modules[0].getDesiredVelocity(),
