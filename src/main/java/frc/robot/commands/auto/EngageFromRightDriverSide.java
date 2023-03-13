@@ -29,7 +29,7 @@ public class EngageFromRightDriverSide extends SequentialCommandGroup{
 
 
         addCommands(
-            new InstantCommand(() -> m_drive.setYaw(startRot.getDegrees()), m_drive),
+            new InstantCommand(() -> m_drive.setYaw(startRot), m_drive),
             new GoToPose(m_drive, centerPose),
             new GoToPose(m_drive, leftUnrotatedPose),//alternatively could make it poseRightRotated, but this is untested
             new GoToPose(m_drive, chargePose),

@@ -22,7 +22,7 @@ public class EngageFromCenterGrid extends SequentialCommandGroup{
         poseCharge = new Pose2d(4, 0, startRot);
 
         addCommands(
-            new InstantCommand(() -> m_drive.setYaw(startRot.getDegrees()), m_drive),
+            new InstantCommand(() -> m_drive.setYaw(startRot), m_drive),
             new GoToPose(m_drive, poseCharge),
             new BalanceCommand(m_drive)
 

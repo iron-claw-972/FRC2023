@@ -2,6 +2,7 @@ package frc.robot.constants.swerve;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
@@ -42,7 +43,7 @@ public class DriveConstants {
 
   public static int kPigeon = 0;
 
-  public static double kStartingHeadingDegrees = 0;
+  public static Rotation2d kStartingHeading = new Rotation2d();
 
   public static final SwerveDriveKinematics kKinematics = new SwerveDriveKinematics(
     new Translation2d(DriveConstants.kTrackWidth / 2, DriveConstants.kTrackWidth / 2),

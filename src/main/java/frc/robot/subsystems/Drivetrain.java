@@ -149,7 +149,7 @@ public class Drivetrain extends SubsystemBase {
     Timer.delay(1.0);
     resetModulesToAbsolute();
 
-    m_pigeon.setYaw(DriveConstants.kStartingHeadingDegrees);
+    m_pigeon.setYaw(DriveConstants.kStartingHeading.getDegrees());
     m_poseEstimator = new SwerveDrivePoseEstimator(
       DriveConstants.kKinematics,
       getRawPigeonYaw(),
@@ -361,11 +361,10 @@ public class Drivetrain extends SubsystemBase {
    * 
    * Resets the pigeon IMU's yaw.
    * 
-   * @param degrees the new yaw angle, in degrees.
+   * @param rotation the new yaw angle as Rotation2d
    */
-  public void setYaw(double degrees) {
-    // setting the odometry as well as the pigeon yaw caused a very weird bug in the odometry where the robot's drive would be skewed
-    m_pigeon.setYaw(degrees);
+  public void setYaw(Rotation2d rotation) {
+    m_pigeon.setYaw(rotation.getDegrees());
   }
 
   /**
@@ -376,7 +375,7 @@ public class Drivetrain extends SubsystemBase {
    */
   public void setPigeonYaw(PathPlannerTrajectory traj) {
     traj = PathPlannerTrajectory.transformTrajectoryForAlliance(traj, DriverStation.getAlliance());
-    setYaw(traj.getInitialHolonomicPose().getRotation().getDegrees());
+    setYaw(traj.getInitialHolonomicPose().getRotation());
   }
 
   public void resetModulesToAbsolute() {

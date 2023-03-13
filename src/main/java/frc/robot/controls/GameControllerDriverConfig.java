@@ -1,5 +1,6 @@
 package frc.robot.controls;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -27,7 +28,7 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
   @Override
   public void configureControls() { 
     kDriver.get(Button.START).onTrue(new InstantCommand(() -> super.getDrivetrain().setYaw(
-      DriverStation.getAlliance() == Alliance.Blue ? 0 : 180
+      new Rotation2d(DriverStation.getAlliance() == Alliance.Blue ? 0 : Math.PI)
     )));
     kDriver.get(Button.X).whileTrue(new SetFormationX(super.getDrivetrain()));
 
