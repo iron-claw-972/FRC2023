@@ -36,7 +36,7 @@ public class RollerIntake extends SubsystemBase {
   private double m_power;
 
   public RollerIntake(ShuffleboardTab intakeTab) {
-    m_intakeMotor = MotorFactory.createTalonFX(IntakeConstants.kIntakeMotorId, Constants.kCanivoreCAN);
+    m_intakeMotor = MotorFactory.createTalonFX(IntakeConstants.kIntakeMotorId, Constants.kRioCAN);
     configMotors();
     
     m_power = 0;

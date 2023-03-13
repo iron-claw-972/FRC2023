@@ -19,8 +19,7 @@ public class RotateWrist extends CommandBase {
     @Override
     public void initialize() {
         m_wrist.setEnabled(true);
-        m_wrist.setArmSetpoint(m_wristSetpoint);
-        System.out.println("running");
+        m_wrist.setSetpoint(m_wristSetpoint);
     }
 
     @Override

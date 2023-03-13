@@ -15,17 +15,15 @@ import frc.robot.subsystems.RollerIntake;
 import frc.robot.subsystems.Wrist;
 
 public class WristStow extends SequentialCommandGroup {
-    /**
-     * stows the elevator, wrist, and intake
-     */
-    public WristStow(RollerIntake intake, Elevator elevator, Wrist wrist) {
-        // addRequirements(intake, wrist, elevator);
-        addCommands(
-            // change intake type if needed
-           // new InstantCommand(() -> intake.getIntakeMotor().setNeutralMode(NeutralMode.Brake))
-           new PrintCommand("working"),
-           new RotateWrist(wrist, WristConstants.kStowPos)
-            //new MoveElevator(elevator, ElevatorConstants.kStowHeight)
-        );
-    }
+  /**
+   * stows the elevator, wrist, and intake
+   */
+  public WristStow(RollerIntake intake, Elevator elevator, Wrist wrist) {
+    // addRequirements(intake, wrist, elevator);
+    addCommands(
+      // change intake type if needed
+      new RotateWrist(wrist, WristConstants.kStowPos),
+      new MoveElevator(elevator, ElevatorConstants.kStowHeight)
+    );
+  }
 }

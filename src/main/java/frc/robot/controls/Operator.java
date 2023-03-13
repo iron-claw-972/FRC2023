@@ -127,7 +127,7 @@ public class Operator {
     //bottom
     m_operator.get(Button.RB).onTrue(new PositionRollerIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, RollerPosition.BOTTOM));
     //shelf
-    m_operator.get(Button.B).onTrue(new PositionRollerIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, RollerPosition.SHELF).alongWith(new IntakeGamePiece(intake, m_operator.RIGHT_TRIGGER_BUTTON.getAsBoolean()? IntakePiece.CONE: IntakePiece.CUBE)))
+    m_operator.get(Button.B).onTrue(new PositionRollerIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, RollerPosition.SHELF).alongWith(new IntakeGamePiece(intake, m_operator.RIGHT_TRIGGER_BUTTON.getAsBoolean() ? IntakePiece.CONE : IntakePiece.CUBE)))
       .onFalse(new SequentialCommandGroup( 
         new InstantCommand(() -> intake.setIntakeMode(IntakeMode.DISABLED)),
         new RotateWrist(wrist, 0.8),
@@ -136,13 +136,11 @@ public class Operator {
       ));
     
     //stow
-    m_operator.get(Button.A).onTrue(
-      (new PrintCommand("works")).andThen(new WristStow(intake, elevator, wrist)
-      ));
+    m_operator.get(Button.RB).whileTrue(new WristStow(intake, elevator, wrist));
 
     //intake
     m_operator.get(Button.LB).onTrue(
-      new PositionRollerIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, RollerPosition.INTAKE).alongWith(new IntakeGamePiece(intake, m_operator.RIGHT_TRIGGER_BUTTON.getAsBoolean()? IntakePiece.CONE: IntakePiece.CUBE)))
+      new PositionRollerIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, RollerPosition.INTAKE).alongWith(new IntakeGamePiece(intake, m_operator.RIGHT_TRIGGER_BUTTON.getAsBoolean() ? IntakePiece.CONE : IntakePiece.CUBE)))
       .onFalse(new WristStow(intake, elevator, wrist));
 
     //outtake

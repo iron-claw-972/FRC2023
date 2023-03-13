@@ -38,7 +38,6 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.RollerIntake;
-import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Wrist;
 import frc.robot.util.PathGroupLoader;
 import frc.robot.util.Vision;

@@ -5,7 +5,6 @@ import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
-import frc.robot.constants.swerve.DriveConstants;
 
 public class WristConstants {
   public static final int kMotorID = 16;
@@ -21,24 +20,27 @@ public class WristConstants {
 
   public static final double kGravityCompensation = 0.03;
   
-  public static final double kTolerance = 0.01;
-  public static final double kMinMotorPower = -0.3;
-  public static final double kMaxMotorPower = 0.3;
+  public static final double kTolerance = 0.5;
+  public static final double kMotorPowerClamp = 0.3;
 
-  public static final TalonFXInvertType kMotorInvert = TalonFXInvertType.Clockwise;
+  public static final TalonFXInvertType kMotorInvert = TalonFXInvertType.CounterClockwise;
 
   public static final NeutralMode kNeutralMode = NeutralMode.Brake;
 
-  public static final int kAbsEncoderPort = 0;
-  public static final double kEncoderOffset = 0;
+  public static final int kAbsEncoderPort = 7;
+  public static final double kEncoderOffset = 0.704;
 
-  public static final double kStowPos = 0.96;
-  public static final double kBottomNodePos = 0.49;
-  public static final double kMiddleNodePos = 0.8;
-  public static final double kTopNodePos = 0.712;
-  public static final double kIntakeConePos = 0.49;
-  public static final double kShelfPos = 0.49;
-  public static final double kIntakeCubePos = 0.49;
+  public static final double kStowPos = 0.304;
+  public static final double kBottomNodePos = 0.170;
+  public static final double kMiddleNodePos = 0.081;
+  public static final double kTopNodePos = 0.150;
+  // TODO: change shelf intake position to just be cone or cube intake
+  public static final double kShelfPos = 0.012;
+  public static final double kIntakeConePos = 0.025;
+  public static final double kIntakeCubePos = 0.012;
+
+  public static final double kMinPos = kIntakeCubePos;
+  public static final double kMaxPos = kStowPos;
   
   //SIM
   public static final double kArmReduction = 100/1;
