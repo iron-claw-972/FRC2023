@@ -283,7 +283,7 @@ public class RobotContainer {
 
 
       m_autoCommand.addOption("Grid 1 Engage", new DepositThenPath("Grid 1 Engage", autoDepositPos, m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceCommand(m_drive)));
-    
+
       m_autoCommand.addOption("Engage Left", new EngageFromLeftDriverSide(m_drive));
       m_autoCommand.addOption("Engage Right", new EngageFromRightDriverSide(m_drive));
     }

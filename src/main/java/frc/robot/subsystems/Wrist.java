@@ -9,6 +9,7 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
@@ -39,20 +40,18 @@ public class Wrist extends SubsystemBase {
     new SingleJointedArmSim(
       WristConstants.kGearBox, 
       WristConstants.kArmReduction,
-      24.109,
+      WristConstants.kMOI,
       WristConstants.kArmLength,
       WristConstants.kMinAngleRads,
       WristConstants.kMaxAngleRads,
       true,
       VecBuilder.fill(2*Math.PI/FalconConstants.kResolution)
       );
-      private final DutyCycleEncoderSim m_EncoderSim;
 
 // Create a Mechanism2d display of an Arm with a fixed ArmTower and moving Arm.
   private final Mechanism2d m_mech2d = new Mechanism2d(60, 60);
   private final MechanismRoot2d m_armPivot = m_mech2d.getRoot("ArmPivot", 30, 30);
-  private final MechanismLigament2d m_armTower =
-    m_armPivot.append(new MechanismLigament2d("ArmTower", 30, -90));
+  private final MechanismLigament2d m_armTower = m_armPivot.append(new MechanismLigament2d("ArmTower", -90, 0));
   private final MechanismLigament2d m_arm =
     m_armPivot.append(
         new MechanismLigament2d(
@@ -72,7 +71,6 @@ public class Wrist extends SubsystemBase {
     SmartDashboard.putData("Arm Sim", m_mech2d);
     // configure the encoder
     m_absEncoder = new DutyCycleEncoder(WristConstants.kAbsEncoderPort); 
-    m_EncoderSim = new DutyCycleEncoderSim(m_absEncoder);
     m_absEncoder.setPositionOffset(WristConstants.kEncoderOffset);
 
     // make the PID controller
@@ -103,9 +101,9 @@ public class Wrist extends SubsystemBase {
   @Override
   public void periodic() {
     if (Constants.kUseTelemetry) SmartDashboard.putNumber("Arm Abs Encoder Value", getAbsEncoderPos());
-    if(m_enabled) {
+    if(true) {
       // calculate the PID power level
-      double pidPower = m_pid.calculate(getAbsEncoderPos(), MathUtil.clamp(m_pid.getSetpoint(), WristConstants.kMaxArmExtensionPos, WristConstants.kStowPos));
+      double pidPower = m_pid.calculate( RobotBase.isSimulation() ? getSimRads(): getAbsEncoderPos(), MathUtil.clamp(m_pid.getSetpoint(), WristConstants.kMaxArmExtensionPos, WristConstants.kStowPos));
       if (Constants.kLogging) LogManager.addDouble("Wrist/pidOutput", pidPower);
       // calculate the value of kGravityCompensation
       double feedforwardPower = WristConstants.kGravityCompensation*Math.cos(getAbsEncoderPos()*Math.PI*2);
@@ -147,22 +145,24 @@ public class Wrist extends SubsystemBase {
     m_wristTab.add("wrist PID", m_pid);
   }
   public void simulationPeriodic() {
-    // In this method, we update our simulation of what our arm is doing
+
     // First, we set our "inputs" (voltages)    
-    System.out.println(m_motor.getMotorOutputVoltage() * RobotController.getBatteryVoltage());
     m_armSim.setInput(m_motor.getMotorOutputVoltage() * RobotController.getBatteryVoltage());
 
     // Next, we update it. The standard loop time is 20ms.
     m_armSim.update(0.02);
-
-    m_EncoderSim.set(m_armSim.getAngleRads()/(Math.PI*2));
-
+    System.out.println(getSimRads());
     RoboRioSim.setVInVoltage(
         BatterySim.calculateDefaultBatteryLoadedVoltage(m_armSim.getCurrentDrawAmps()));
-    m_arm.setAngle(Units.radiansToDegrees(m_armSim.getAngleRads()));
+ 
+    m_arm.setAngle(Units.radiansToDegrees(getSimRads()));
   }
   public double getMotorvoltage(){
     return m_motor.getMotorOutputVoltage();
+  }
+  public double getSimRads(){
+    return m_armSim.getAngleRads();
+
   }
 }
 
