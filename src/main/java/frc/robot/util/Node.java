@@ -57,7 +57,7 @@ public class Node {
     // Starting locations
     double x = 0;
     if (alliance == Alliance.Blue) {
-      x = VisionConstants.kAprilTags.get(7).pose.getX() + FieldConstants.kAprilTagOffset + FieldConstants.kRobotDistanceFromNodeTape;
+      x = VisionConstants.kAprilTags.get(5).pose.getX() + FieldConstants.kAprilTagOffset + FieldConstants.kRobotDistanceFromNodeTape;
     } else {
       x = VisionConstants.kAprilTags.get(2).pose.getX() - FieldConstants.kAprilTagOffset - FieldConstants.kRobotDistanceFromNodeTape;
     }
@@ -74,11 +74,11 @@ public class Node {
     }
 
     if (column <= 3) {
-      y = VisionConstants.kAprilTags.get(8).pose.getY();
-    } else if (column <= 6) {
       y = VisionConstants.kAprilTags.get(7).pose.getY();
-    } else {
+    } else if (column <= 6) {
       y = VisionConstants.kAprilTags.get(6).pose.getY();
+    } else {
+      y = VisionConstants.kAprilTags.get(5).pose.getY();
     }
     y += yOffset;
 
