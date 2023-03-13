@@ -51,7 +51,7 @@ public class IntakeGamePiece extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
-    if (!interrupted) m_intake.setHeldGamePiece(m_type);
+    m_intake.setHeldGamePiece(m_type);
     m_intake.setMode(IntakeMode.DISABLED);
   }
   
