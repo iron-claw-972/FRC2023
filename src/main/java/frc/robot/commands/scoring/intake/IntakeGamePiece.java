@@ -7,12 +7,12 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.subsystems.RollerIntake;
 import frc.robot.subsystems.RollerIntake.IntakeMode;
-import frc.robot.subsystems.RollerIntake.IntakePiece;
+import frc.robot.util.GamePieceType;
 
 public class IntakeGamePiece extends CommandBase {
 
   private final RollerIntake m_intake; 
-  private IntakePiece m_type;
+  private GamePieceType m_type;
   private final BooleanSupplier m_isCone;
   private final Timer m_timer;
 
@@ -33,10 +33,10 @@ public class IntakeGamePiece extends CommandBase {
    * @param intake the intake subsystem
    * @param type the type of game piece to intake
    */
-  public IntakeGamePiece(RollerIntake intake, IntakePiece type) {
+  public IntakeGamePiece(RollerIntake intake, GamePieceType type) {
     m_intake = intake; 
     m_type = type;
-    m_isCone = m_type == IntakePiece.CONE ? () -> true : () -> false;
+    m_isCone = m_type == GamePieceType.CONE ? () -> true : () -> false;
     m_timer = new Timer();
     addRequirements(m_intake);
   }
@@ -45,11 +45,11 @@ public class IntakeGamePiece extends CommandBase {
   public void initialize() {
     m_timer.reset();
     if (m_type == null) {
-      m_type = m_isCone.getAsBoolean() ? IntakePiece.CONE : IntakePiece.CUBE;
+      m_type = m_isCone.getAsBoolean() ? GamePieceType.CONE : GamePieceType.CUBE;
     }
-    if (m_type == IntakePiece.CUBE) {
+    if (m_type == GamePieceType.CUBE) {
       m_intake.setMode(IntakeMode.INTAKE_CUBE);
-    } else if (m_type == IntakePiece.CONE) {
+    } else if (m_type == GamePieceType.CONE) {
       m_intake.setMode(IntakeMode.INTAKE_CONE);
     }
   }
@@ -63,9 +63,9 @@ public class IntakeGamePiece extends CommandBase {
   @Override
   public boolean isFinished() {
     if (!m_timer.hasElapsed(IntakeConstants.kIntakeTime)) return false;
-    if (m_type == IntakePiece.CUBE) {
+    if (m_type == GamePieceType.CUBE) {
       return Math.abs(m_intake.getCurrent()) >= IntakeConstants.kCubeIntakeCurrentStopPoint;
-    } else if (m_type == IntakePiece.CONE) {
+    } else if (m_type == GamePieceType.CONE) {
       return Math.abs(m_intake.getCurrent()) >= IntakeConstants.kConeIntakeCurrentStopPoint;
     }
     return false;

@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 import frc.robot.constants.IntakeConstants;
+import frc.robot.util.GamePieceType;
 import frc.robot.util.LogManager;
 import frc.robot.util.MotorFactory;
 
@@ -25,15 +26,11 @@ public class RollerIntake extends SubsystemBase {
     INTAKE_CUBE, OUTTAKE_CUBE, INTAKE_CONE, OUTTAKE_CONE, DISABLED
   }
 
-  public enum IntakePiece {
-    CUBE, CONE, NONE
-  }
-
   private final WPI_TalonFX m_intakeMotor;
   private final ShuffleboardTab m_intakeTab;
 
   private IntakeMode m_mode;
-  private IntakePiece m_heldPiece;
+  private GamePieceType m_heldPiece;
 
   private double m_power;
 
@@ -44,7 +41,7 @@ public class RollerIntake extends SubsystemBase {
     m_mode = IntakeMode.DISABLED;
     // During auto, this doesn't really matter, so we can just set it to NONE
     // TODO: Auto commands run that pick up a game piece should set this to the correct value
-    m_heldPiece = IntakePiece.NONE;
+    m_heldPiece = GamePieceType.NONE;
     m_intakeTab = intakeTab;
 
     if (Constants.kUseTelemetry) setupShuffleboard();
@@ -95,15 +92,15 @@ public class RollerIntake extends SubsystemBase {
   }
   
   public boolean containsGamePiece() {
-    return m_heldPiece != IntakePiece.NONE;
+    return m_heldPiece != GamePieceType.NONE;
   }
 
   public boolean containsCone() {
-    return m_heldPiece == IntakePiece.CONE;
+    return m_heldPiece == GamePieceType.CONE;
   }
 
   public boolean containsCube() {
-    return m_heldPiece == IntakePiece.CUBE;
+    return m_heldPiece == GamePieceType.CUBE;
   }
 
   /**
@@ -114,11 +111,11 @@ public class RollerIntake extends SubsystemBase {
     return Math.abs(m_intakeMotor.getSupplyCurrent());
   }
 
-  public IntakePiece getHeldGamePiece() {
+  public GamePieceType getHeldGamePiece() {
     return m_heldPiece;
   }
 
-  public void setHeldGamePiece(IntakePiece m_type) {
+  public void setHeldGamePiece(GamePieceType m_type) {
     m_heldPiece = m_type;
   }
 } 
