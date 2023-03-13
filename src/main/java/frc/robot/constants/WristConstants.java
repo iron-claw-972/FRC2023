@@ -7,21 +7,21 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 
 public class WristConstants {
-  public static final int kMotorID = 16;
+  public static final int kMotorID = 2;
   public static final boolean kEnableCurrentLimit = true;
   public static final int kContinuousCurrentLimit = 30;
   public static final int kPeakCurrentLimit = 45;
   public static final double kPeakCurrentDuration = 0.5;
 
-  public static final double kP = 0.1;
+  public static final double kP = 9;
   public static final double kI = 0;
   public static final double kD = 0;
   public static final double kF = 0;
 
-  public static final double kGravityCompensation = 0.0;
-  
-  public static final double kTolerance = 0.5;
-  public static final double kMotorPowerClamp = 0.3;
+  public static final double kGravityCompensation = 0.08;
+
+  public static final double kTolerance = 0.005;
+  public static final double kMotorPowerClamp = 0.8;
 
   public static final TalonFXInvertType kMotorInvert = TalonFXInvertType.CounterClockwise;
 
@@ -32,10 +32,10 @@ public class WristConstants {
 
   public static final double kStowPos = 0.304;
   public static final double kBottomNodePos = 0.170;
-  public static final double kMiddleNodePos = 0.081;
-  public static final double kTopNodePos = 0.150;
+  public static final double kMiddleNodePos = 0.170;
+  public static final double kTopNodePos = 0.250;
   public static final double kIntakeConePos = 0.025;
-  public static final double kIntakeCubePos = 0.012;
+  public static final double kIntakeCubePos = 0.020;
 
   public static final double kMinPos = kIntakeCubePos;
   public static final double kMaxPos = kStowPos;

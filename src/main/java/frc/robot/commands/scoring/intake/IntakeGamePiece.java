@@ -17,27 +17,32 @@ public class IntakeGamePiece extends CommandBase {
   private final RollerIntake m_intake; 
   private GamePieceType m_type;
   private final BooleanSupplier m_isCone;
+  private final boolean m_runsForever;
   private Debouncer m_stallDebouncer = new Debouncer(IntakeConstants.kIntakeStallTime, DebounceType.kBoth);
 
   /**
    * Spins the intake until the game piece is inside the intake.
    * @param intake the intake subsystem
+   * @param runsForever if the command should end, or run forever. If false, will end based on motor currents
    * @param isCone a supplier that when the command starts, checks if will intake a cone or cube
    */
-  public IntakeGamePiece(RollerIntake intake, BooleanSupplier isCone) {
+  public IntakeGamePiece(RollerIntake intake, boolean runsForever, BooleanSupplier isCone) {
     m_intake = intake;
     m_isCone = isCone;
+    m_runsForever = runsForever;
     addRequirements(m_intake);
   }
 
   /**
    * Spins the intake until the game piece is inside the intake.
    * @param intake the intake subsystem
+   * @param runsForever if the command should end, or run forever. If false, will end based on motor currents
    * @param type the type of game piece to intake
    */
-  public IntakeGamePiece(RollerIntake intake, GamePieceType type) {
+  public IntakeGamePiece(RollerIntake intake, boolean runsForever, GamePieceType type) {
     m_intake = intake; 
     m_type = type;
+    m_runsForever = runsForever;
     m_isCone = m_type == GamePieceType.CONE ? () -> true : () -> false;
     addRequirements(m_intake);
   }
@@ -62,13 +67,15 @@ public class IntakeGamePiece extends CommandBase {
   
   @Override
   public boolean isFinished() {
+    if (m_runsForever) return false;
+
     if (m_type == GamePieceType.CUBE) {
       return m_stallDebouncer.calculate(
-        Math.abs(m_intake.getCurrent()) >= IntakeConstants.kCubeIntakeCurrentStopPoint
+        m_intake.getCurrent() >= IntakeConstants.kCubeIntakeCurrentStopPoint
       );
     } else if (m_type == GamePieceType.CONE) {
       return m_stallDebouncer.calculate(
-        Math.abs(m_intake.getCurrent()) >= IntakeConstants.kConeIntakeCurrentStopPoint
+        m_intake.getCurrent() >= IntakeConstants.kConeIntakeCurrentStopPoint
       );
     }
     DriverStation.reportWarning("IntakeGamePiece Command missing GamePieceType", false);

@@ -46,6 +46,7 @@ public class OuttakeGamePiece extends CommandBase {
       return;
     }
     m_timer.reset();
+    m_timer.start();
   }
 
   @Override
@@ -56,7 +57,7 @@ public class OuttakeGamePiece extends CommandBase {
   
   @Override
   public boolean isFinished() {
-    return m_timer.hasElapsed(IntakeConstants.kOuttakeTime);
+    return m_timer.get() > IntakeConstants.kOuttakeTime;
   }
 
 }
