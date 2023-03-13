@@ -21,8 +21,10 @@ public class DriveConstants {
   public static double kWheelRadius = Units.inchesToMeters(2);
 
   public static double kTrackWidth = Units.inchesToMeters(20.75);//22.75 swerve bot, 20.75 comp bot
-  public static double kDriveGearRatio = 6.75;
-  public static double kSteerGearRatio = 21.43;
+
+  // use the gear ratios
+  public static double kDriveGearRatio = (50.0 / 14.0) * (17.0 / 27.0) * (45.0 / 15.0);
+  public static double kSteerGearRatio = 150.0 / 7.0;
 
   /* Drive Motor Characterization Values 
   * Divide SYSID values by 12 to convert from volts to percent output for CTRE */
@@ -87,7 +89,7 @@ public class DriveConstants {
   // it will stop the motors for kBalanceStopDuration seconds to help give
   // the charge station some time to balance.
   // "A non-linear system requires non-linear control" - jerry
-  // "If it's stupid but it works..."
+  // "If it's stupid but it works..." - Richie
   public static double kBalanceNoStopPeriod = 2;
   public static double kBalanceStopInterval = 0.5;
   public static double kBalanceStopDuration = 0.2;
