@@ -18,7 +18,7 @@ public class TestVisionDistance extends CommandBase{
   private final Vision m_vision;
   private Translation2d m_visionStartTranslation, m_driveStartTranslation;
   private Pose2d m_currentPose = null;
-  private String m_outputString;
+  private double[] m_outputData;
 
   private double m_speed;
 
@@ -37,8 +37,8 @@ public class TestVisionDistance extends CommandBase{
     m_drive = drive;
     m_speed = speed;
     m_vision = vision;
-    m_outputString = "Run the vision distance test";
-    visionTab.addString("Distance Test Results", ()->getOutputString());
+    m_outputData = new double[4];
+    visionTab.addDoubleArray("Distance Test Results", ()->getOutputData());
   }
 
   @Override
@@ -52,7 +52,7 @@ public class TestVisionDistance extends CommandBase{
     m_currentPose = m_vision.getPose2d(m_drive.getPose());
     m_visionStartTranslation = m_currentPose.getTranslation();
     m_driveStartTranslation = m_drive.getPose().getTranslation();
-    m_outputString = "Starting test";
+    m_outputData = new double[4];
   }
 
   @Override
@@ -69,13 +69,12 @@ public class TestVisionDistance extends CommandBase{
       // If kPrintDelay seconds have passed, print the data
       double driveDistance = m_drive.getPose().getTranslation().getDistance(m_driveStartTranslation);
       double visionDistance = m_currentPose.getTranslation().getDistance(m_visionStartTranslation);
-      m_outputString=String.format("\nEncoder distance: %.4f\nVision distance: %.4f\n"+
-        "Difference: %.4f\nPercent difference: %.4f%%",
+      m_outputData = new double[]{
         driveDistance, visionDistance,
         visionDistance - driveDistance, (visionDistance - driveDistance) / driveDistance * 100
-      );
+      };
       if (m_printTimer.advanceIfElapsed(kPrintDelay)) {
-        System.out.println(m_outputString);
+        System.out.println(m_outputData);
       }
       if(Constants.kLogging){
         LogManager.addDoubleArray("Vision/DistanceTest", new double[]{
@@ -92,7 +91,6 @@ public class TestVisionDistance extends CommandBase{
   public void end(boolean interrupted){
     m_drive.enableVision(true);
     m_drive.stop();
-    m_outputString += "\nTest finished";
   }
 
   @Override
@@ -100,7 +98,7 @@ public class TestVisionDistance extends CommandBase{
     return m_endTimer.hasElapsed(kEndDelay);
   }
 
-  public String getOutputString(){
-    return m_outputString;
+  public double[] getOutputData(){
+    return m_outputData;
   }
 }
