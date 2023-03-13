@@ -32,14 +32,11 @@ public class Operator {
   // Grid, row, and column in the grid
   private int[] selectValues = {1, 1, 1};
   private Node m_selectedNode;
-  private Vision m_vision;
   
   /**
    * Configures the operator controls for the deploying Bar.
    */
-  public void configureControls(FourBarArm arm, RollerIntake intake, Elevator elevator, Vision vision) {
-
-    m_vision = vision; //should be in constructor
+  public void configureControls(FourBarArm arm, RollerIntake intake, Elevator elevator) {
 
     // calibrate elevator
     m_operator.get(Button.BACK).onTrue(new CalibrateElevator(elevator));
@@ -98,8 +95,7 @@ public class Operator {
    * @param value What value to set it to, between 0 and 2 (0 is lower row (hybrid node), or for column/grid the closest one to field boundry)
    */
   public void selectValue(NodePositionIndex index, int value) {
-    if (value == 0 && DriverStation.getAlliance() == Alliance.Red) value = 2;
-    if (value == 2 && DriverStation.getAlliance() == Alliance.Red) value = 0;
+    if (index!=NodePositionIndex.ROW && DriverStation.getAlliance() == Alliance.Red) {value = 2-value;}
     selectValues[index.id] = value;
     m_selectedNode = new Node(DriverStation.getAlliance(), selectValues[NodePositionIndex.ROW.id]+1, (selectValues[NodePositionIndex.GRID.id]*3)+selectValues[NodePositionIndex.COLUMN.id]+1);
   }
