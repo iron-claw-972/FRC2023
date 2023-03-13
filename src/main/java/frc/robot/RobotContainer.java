@@ -95,7 +95,7 @@ public class RobotContainer {
     
         m_arm = new FourBarArm();
         m_intake = new Intake(m_intakeTab);
-        m_elevator = new Elevator(m_elevatorTab, ()->m_intake.containsGamePiece());
+        m_elevator = new Elevator(m_elevatorTab, () -> true);
   
         m_operator = new Operator();
         m_testController = new TestController(m_arm, m_intake, m_elevator);
