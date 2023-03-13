@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotBase;
 
 public class WristConstants {
   public static final int kMotorID = 16;
@@ -13,14 +14,14 @@ public class WristConstants {
   public static final int kPeakCurrentLimit = 45;
   public static final double kPeakCurrentDuration = 0.5;
 
-  public static final double kP = 0.1;
+  public static final double kP = 0.6;
   public static final double kI = 0;
   public static final double kD = 0.1;
   public static final double kF = 0;
 
-  public static final double kGravityCompensation = 0.03;
+  public static final double kGravityCompensation = 0.;
   
-  public static final double kTolerance = 0.5;
+  public static final double kTolerance = 1;
   public static final double kMotorPowerClamp = 0.3;
 
   public static final TalonFXInvertType kMotorInvert = TalonFXInvertType.CounterClockwise;
@@ -29,23 +30,31 @@ public class WristConstants {
 
   public static final int kAbsEncoderPort = 7;
   public static final double kEncoderOffset = 0.704;
-
-  public static final double kStowPos = 0.304;
-  public static final double kBottomNodePos = 0.170;
-  public static final double kMiddleNodePos = 0.081;
-  public static final double kTopNodePos = 0.150;
-  public static final double kIntakeConePos = 0.025;
-  public static final double kIntakeCubePos = 0.012;
+  public static  double kStowPos = 0.304;
+  public static  double kBottomNodePos = 0.170;
+  public static  double kMiddleNodePos = 0.081;
+  public static  double kTopNodePos = 0.150;
+  public static  double kIntakeConePos = 0.025;
+  public static  double kIntakeCubePos = 0.012;
 
   public static final double kMinPos = kIntakeCubePos;
   public static final double kMaxPos = kStowPos;
+  
+  static {if (RobotBase.isSimulation()){
+  kStowPos = kStowPos*Math.PI*2;
+  kBottomNodePos = kBottomNodePos*Math.PI*2;
+  kMiddleNodePos = kMiddleNodePos*Math.PI*2;
+  kTopNodePos = kTopNodePos*Math.PI*2;
+  kIntakeConePos = kIntakeConePos*Math.PI*2;
+  kIntakeCubePos = kIntakeCubePos*Math.PI*2;
+}}
   
   //SIM
   public static final double kArmReduction = 20/1*62/34*48/18;
   public static final double kArmLength= 16.1;
   public static final double kArmMass=0;
-  public static final double kMinAngleRads = Units.degreesToRadians(0);
-  public static final double kMaxAngleRads = Units.degreesToRadians(360);//0.96
+  public static final double kMinAngleRads = 0;
+  public static final double kMaxAngleRads = kStowPos;//0.96
   public static final double kMOI = 24.109;
 
   public static final int kMotorPort = 0;

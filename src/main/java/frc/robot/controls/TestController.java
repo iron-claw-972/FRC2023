@@ -74,7 +74,7 @@ public class TestController {
     test.get(Button.Y).onTrue(new RotateWrist(m_wrist, WristConstants.kTopNodePos));
     test.get(Button.X).onTrue(new RotateWrist(m_wrist, WristConstants.kMiddleNodePos));
     test.get(Button.A).onTrue(new RotateWrist(m_wrist, WristConstants.kBottomNodePos));
-    test.get(Button.B).onTrue(new RotateWrist(m_wrist, WristConstants.kShelfPos));
+    //test.get(Button.B).onTrue(new RotateWrist(m_wrist, WristConstants.kShelfPos));
     test.get(DPad.RIGHT).onTrue(new RotateWrist(m_wrist, WristConstants.kIntakeConePos));
     test.get(DPad.LEFT).onTrue(new RotateWrist(m_wrist, WristConstants.kIntakeCubePos));
     test.get(Button.RIGHT_JOY).onTrue(new RotateWrist(m_wrist, WristConstants.kStowPos));

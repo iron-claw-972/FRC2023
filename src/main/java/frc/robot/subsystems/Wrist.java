@@ -102,13 +102,13 @@ public class Wrist extends SubsystemBase {
   public void periodic() {
     if(m_enabled) {
       // calculate the PID power level
-      double pidPower = m_pid.calculate(RobotBase.isSimulation() ? getSimRads()/(2*Math.PI): getAbsEncoderPos(), MathUtil.clamp(m_pid.getSetpoint(), WristConstants.kMinPos, WristConstants.kMaxPos));
+      double pidPower = m_pid.calculate(RobotBase.isSimulation() ? getSimRads(): getAbsEncoderPos(), MathUtil.clamp(m_pid.getSetpoint(), WristConstants.kMinAngleRads, WristConstants.kMaxAngleRads));
       if (Constants.kLogging) LogManager.addDouble("Wrist/pidOutput", pidPower);
       if (Constants.kUseTelemetry) SmartDashboard.putNumber("wrist pid output", pidPower);
       // calculate the value of kGravityCompensation
       double feedforwardPower = WristConstants.kGravityCompensation*Math.cos(getAbsEncoderPos()*Math.PI*2);
       // set the motor power
-      setMotorPower(pidPower + feedforwardPower);
+      setMotorPower(pidPower+feedforwardPower);
     }
 
     if (Constants.kLogging) updateLogs();
@@ -125,12 +125,12 @@ public class Wrist extends SubsystemBase {
   public void setMotorPower(double power) {
     power = MathUtil.clamp(power, -WristConstants.kMotorPowerClamp, WristConstants.kMotorPowerClamp);
     
-    if (getAbsEncoderPos() <= WristConstants.kMinPos && power < 0) {
-      power = 0;
-    }
-    if (getAbsEncoderPos() >= WristConstants.kMaxPos && power > 0) {
-      power = 0;
-    }
+    // if (getAbsEncoderPos() <= WristConstants.kMinPos && power < 0) {
+    //   power = 0;
+    // }
+    // if (getAbsEncoderPos() >= WristConstants.kMaxPos && power > 0) {
+    //   power = 0;
+    // }
     
     m_motor.set(power);
     if (Constants.kLogging) LogManager.addDouble("Wrist/motor power", power);
