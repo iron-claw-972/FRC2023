@@ -38,7 +38,8 @@ public class TestVisionDistance extends CommandBase{
     m_speed = speed;
     m_vision = vision;
     m_outputData = new double[4];
-    visionTab.addDoubleArray("Distance Test Results", ()->getOutputData());
+    visionTab.addDoubleArray("Distance Test Results\n(drive, vision, difference, % difference)", 
+      ()->getOutputData());
   }
 
   @Override

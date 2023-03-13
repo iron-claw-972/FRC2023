@@ -87,12 +87,6 @@ public class Module extends SubsystemBase {
     m_desiredState = desiredState;
     setAngle(desiredState);
     setSpeed(desiredState, isOpenLoop);
-
-    if(Constants.kLogging){
-      LogManager.addDoubleArray("Swerve/Modules/"+m_moduleAbbr+"/DesiredState", new double[]{
-        desiredState.speedMetersPerSecond, desiredState.angle.getDegrees()
-      });
-    }
   }
 
   private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
@@ -107,19 +101,18 @@ public class Module extends SubsystemBase {
     }
     if(Constants.kLogging){
       double motorSpeed = Conversions.falconToMPS(m_driveMotor.getSelectedSensorVelocity(), DriveConstants.kWheelCircumference,
-      DriveConstants.kDriveGearRatio);
-      LogManager.addDoubleArray("Swerve/Modules/"+m_moduleAbbr+"/DriveSpeed",
-        new double[]{
-          desiredState.speedMetersPerSecond, 
-          motorSpeed,
-          motorSpeed-desiredState.speedMetersPerSecond
-        }
+        DriveConstants.kDriveGearRatio);
+      LogManager.addDouble("Swerve/Modules/DriveSpeed/"+m_moduleAbbr,
+          motorSpeed
       );
-      LogManager.addDoubleArray("Swerve/Modules/"+m_moduleAbbr+"/DrivePower",
-        new double[]{
-          m_driveMotor.getMotorOutputVoltage(), 
+      LogManager.addDouble("Swerve/Modules/DriveSpeedError/"+m_moduleAbbr,
+          motorSpeed-desiredState.speedMetersPerSecond
+      );
+      LogManager.addDouble("Swerve/Modules/DriveVoltage/"+m_moduleAbbr,
+          m_driveMotor.getMotorOutputVoltage()
+      );
+      LogManager.addDouble("Swerve/Modules/DriveCurrent/"+m_moduleAbbr,
           m_driveMotor.getStatorCurrent()
-        }
       );
     }
   }
@@ -134,32 +127,33 @@ public class Module extends SubsystemBase {
     if(Constants.kLogging){
       double position = Conversions.falconToDegrees(m_angleMotor.getSelectedSensorPosition(), 
         DriveConstants.kAngleGearRatio);
-      LogManager.addDoubleArray("Swerve/Modules/"+m_moduleAbbr+"/SteerPosition",
-        new double[]{
-          desiredState.angle.getDegrees(), 
-          position,
-          position-desiredState.angle.getDegrees(),
+      LogManager.addDouble("Swerve/Modules/SteerPosition/"+m_moduleAbbr,
+          position
+      );
+      LogManager.addDouble("Swerve/Modules/SteerPositionError/"+m_moduleAbbr,
+          position-desiredState.angle.getDegrees()
+      );
+      LogManager.addDouble("Swerve/Modules/SteerVelocity/"+m_moduleAbbr,
           Conversions.falconToDegrees(m_angleMotor.getSelectedSensorVelocity(), 
             DriveConstants.kAngleGearRatio)
-        }
       );
-      LogManager.addDoubleArray("Swerve/Modules/"+m_moduleAbbr+"/SteerPower",
-        new double[]{
-          m_angleMotor.getMotorOutputVoltage(), 
-          m_angleMotor.getStatorCurrent(),
-        }
+      LogManager.addDouble("Swerve/Modules/SteerVoltage/"+m_moduleAbbr,
+          m_angleMotor.getMotorOutputVoltage()
+      );
+      LogManager.addDouble("Swerve/Modules/SteerCurrent/"+m_moduleAbbr,
+          m_angleMotor.getStatorCurrent()
       );
     }
   }
 
   public void enableStateDeadband(boolean enabled) {
     m_stateDeadband = enabled;
-    LogManager.addBoolean("Swerve/Modules/"+m_moduleAbbr+"/StateDeadband", enabled);
+    LogManager.addBoolean("Swerve/Modules/StateDeadband/"+m_moduleAbbr, enabled);
   }
 
   public void setOptimize(boolean enable) {
     m_optimizeStates = enable;
-    LogManager.addBoolean("Swerve/Modules/"+m_moduleAbbr+"/Optimized", enable);
+    LogManager.addBoolean("Swerve/Modules/Optimized/"+m_moduleAbbr, enable);
   }
 
   public int getModuleIndex() {
@@ -212,7 +206,7 @@ public class Module extends SubsystemBase {
     m_angleMotor.set(ControlMode.Position, Conversions.degreesToFalcon(0, DriveConstants.kAngleGearRatio));
     m_driveMotor.set(ControlMode.PercentOutput, voltage / Constants.kRobotVoltage);
     if(Constants.kLogging){
-      LogManager.addDouble("Swerve/Modules/"+m_moduleAbbr+"/DriveCharacterizationVoltage",
+      LogManager.addDouble("Swerve/Modules/DriveCharacterizationVoltage/"+m_moduleAbbr,
         voltage
       );
     }
@@ -223,7 +217,7 @@ public class Module extends SubsystemBase {
     // Set the drive motor to just enough to overcome static friction
     m_driveMotor.set(ControlMode.PercentOutput, 1.1 * DriveConstants.kDriveKS);
     if(Constants.kLogging){
-      LogManager.addDouble("Swerve/Modules/"+m_moduleAbbr+"/AngleCharacterizationVoltage",
+      LogManager.addDouble("Swerve/Modules/AngleCharacterizationVoltage/"+m_moduleAbbr,
         voltage
       );
     }
