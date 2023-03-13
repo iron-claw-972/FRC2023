@@ -12,6 +12,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.RollerIntake;
+import frc.robot.util.GamePieceType;
 import frc.robot.util.PathGroupLoader;
 
 public class DepositThenPath extends SequentialCommandGroup {
@@ -23,7 +24,7 @@ public class DepositThenPath extends SequentialCommandGroup {
       depositPosition == Position.MIDDLE ?
         new PositionIntake(elevator, arm, () -> false, depositPosition).withTimeout(1.5) : 
         new MoveElevator(elevator, ElevatorConstants.kMiddleConeHeight).withTimeout(1).andThen(new PositionIntake(elevator, arm, () -> false, Position.TOP).withTimeout(1.5)),
-      new OuttakeGamePiece(intake),
+      new OuttakeGamePiece(intake, GamePieceType.CONE),
       new PathPlannerCommand(pathName, 0, drive, true),
       new PositionIntake(elevator, arm, () -> true, Position.STOW),
       new PathPlannerCommand(pathName, 1, drive, true)
