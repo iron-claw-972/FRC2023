@@ -1,14 +1,12 @@
 package frc.robot.subsystems;
 
 import java.util.ArrayList;
-import java.util.function.DoubleSupplier;
 
 import org.photonvision.EstimatedRobotPose;
 
-import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import com.ctre.phoenix.sensors.Pigeon2.AxisDirection;
+import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -22,15 +20,14 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
@@ -105,6 +102,8 @@ public class Drivetrain extends SubsystemBase {
   private Module m_prevModule;
 
   boolean m_visionEnabled = true;
+
+  int m_loggerStep = 0;
 
   /**
    * Creates a new Swerve Style Drivetrain.
@@ -779,13 +778,20 @@ public class Drivetrain extends SubsystemBase {
       ));
     }
   }
-  public void updateLogs(){
+
+  public void updateLogs() {
+
+    m_loggerStep++;
+    if (m_loggerStep < 4) return;
+    m_loggerStep = 0;
+
     double[] pose = {
       getPose().getX(),
       getPose().getY(),
       getPose().getRotation().getRadians()
     };
     LogManager.addDoubleArray("Swerve/Pose2d", pose);
+
     double[] actualStates = {
       m_modules[0].getAngle().getRadians(),
       m_modules[0].getState().speedMetersPerSecond,
@@ -797,6 +803,7 @@ public class Drivetrain extends SubsystemBase {
       m_modules[3].getState().speedMetersPerSecond
     };
     LogManager.addDoubleArray("Swerve/actual swerve states", actualStates);
+
     double[] desiredStates = {
       m_modules[0].getDesiredAngle().getRadians(),
       m_modules[0].getDesiredVelocity(),

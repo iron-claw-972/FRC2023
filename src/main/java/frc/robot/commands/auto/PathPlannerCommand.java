@@ -11,7 +11,6 @@ import com.pathplanner.lib.PathPoint;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
@@ -19,7 +18,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.DoNothing;
 import frc.robot.constants.AutoConstants;
-import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.util.Conversions;
 import frc.robot.util.PathGroupLoader;
