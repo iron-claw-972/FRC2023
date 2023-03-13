@@ -41,14 +41,8 @@ public class StagedGamePiece {
       x += FieldConstants.kCenterToStagedPieceX;
     }
 
-    // TODO: The starting y position will change if the guardrail is included within the field. This value needs to be the location at which the first staged game piece is 3.25 inches away from.
     // Values here obtained from game manual.
-    double y = 0;
-    if (y == 1) {
-      y += Units.inchesToMeters(3.25);
-    } else {
-      y += Units.inchesToMeters(3.25 + (y - 1) * 4);
-    }
+    double y = Units.feetToMeters(3.25 + ((m_id - 1) * 4));
 
     Rotation2d rotation = new Rotation2d();
     if (m_alliance == Alliance.Blue) {
