@@ -15,19 +15,10 @@ public class FieldConstants {
   // TODO: After testing, this value might need to be tuned. Change the 0+ to however much the robot needs to be away from the node tape
   public static final double kRobotDistanceFromNodeTape = 0 + DriveConstants.kRobotWidthWithBumpers / 2; // meters
 
-  // The locations of the node tape in the x axis, relative to the very bottom left corner of the entire field
-  public static final double kBlueNodeTapePosX = 4.379; // meters
-  public static final double kRedNodeTapePosX = 18.183; // meters
+  // The distance from the apriltag to the edge of the tape in front of the grids
+  public static final double kAprilTagOffset = Units.inchesToMeters(14.06 - 0.26); // meters
 
-  // The location that the robot should be at in the X axis
-  public static final double kBlueAllianceNodeStartX = kBlueNodeTapePosX + kRobotDistanceFromNodeTape; // meters
-  // Subtract because the red alliance is on the opposite side of the field
-  public static final double kRedAllianceNodeStartX = kRedNodeTapePosX - kRobotDistanceFromNodeTape; // meters
-
-  // The location of the field boundary in the y axis, relative to the very bottom left corner of the entire field
-  public static final double kNodeStartY = 0.569; // meters
-
-  // TODO: This value needs to be tested to ensure functionality, for node scoring
-  public static final double kRobotOffsetX = DriveConstants.kRobotWidthWithBumpers / 2; // meters
+  // The distance from center of apriltag to the cone node
+  public static final double kConeNodeOffset = Units.inchesToMeters(22); // meters
 
 }
