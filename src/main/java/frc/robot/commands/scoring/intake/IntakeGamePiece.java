@@ -28,6 +28,7 @@ public class IntakeGamePiece extends CommandBase {
   /**
    * Spins the intake until the game piece is inside the intake.
    * @param intake the intake subsystem
+   * @param type the type of game piece to intake
    */
   public IntakeGamePiece(RollerIntake intake, IntakePiece type) {
     m_intake = intake; 
