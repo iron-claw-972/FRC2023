@@ -7,6 +7,10 @@ public class FieldConstants {
   public static final double kFieldLength = Units.inchesToMeters(54*12 + 3.25); // meters
   public static final double kFieldWidth = Units.inchesToMeters(26*12 + 3.5); // meters
 
+  // The distance from the center of the field to any one of the staged game pieces in the x direction.
+  // This value was obtained using the CAD of the field.
+  public static final double kCenterToStagedPieceX = Units.inchesToMeters(47.361); // meters
+
   // The distance from the node tape to the edge of the robot's bumpers, for node scoring
   // TODO: After testing, this value might need to be tuned. Change the 0+ to however much the robot needs to be away from the node tape
   public static final double kRobotDistanceFromNodeTape = 0 + DriveConstants.kRobotWidthWithBumpers / 2; // meters
