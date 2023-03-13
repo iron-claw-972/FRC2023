@@ -21,6 +21,7 @@ import frc.robot.commands.auto.EngageFromRightDriverSide;
 import frc.robot.commands.auto.PathPlannerCommand;
 import frc.robot.commands.scoring.PositionIntake;
 import frc.robot.commands.scoring.PositionIntake.Position;
+import frc.robot.commands.scoring.intake.IntakeGamePiece;
 import frc.robot.commands.scoring.intake.OuttakeGamePiece;
 import frc.robot.constants.VisionConstants;
 import frc.robot.constants.swerve.DriveConstants;
@@ -227,7 +228,6 @@ public class RobotContainer {
     if (m_drive != null) {
       m_autoCommand.addOption("Figure 8", new PathPlannerCommand("Figure 8", 0, m_drive, true));
       m_autoCommand.addOption("One Meter", new PathPlannerCommand("One Meter", 0, m_drive, true));
-      // m_autoCommand.addOption("Grid 9 Mobility (no deposit)", new PathPlannerCommand("Grid 9 Mobility", 0, m_drive));
 
       m_autoCommand.addOption("Engage Left", new EngageFromLeftDriverSide(m_drive));
       m_autoCommand.addOption("Engage Right", new EngageFromRightDriverSide(m_drive));
@@ -237,7 +237,7 @@ public class RobotContainer {
 
       //TODO: set auto game piece on start
 
-      m_autoCommand.addOption("Hybrid Score", new PositionIntake(m_elevator, m_arm, () -> true, Position.BOTTOM).andThen(new OuttakeGamePiece(m_intake, GamePieceType.CONE)).andThen(new PositionIntake(m_elevator, m_arm, () -> true, Position.STOW)));
+      // m_autoCommand.addOption("Hybrid Score", new PositionIntake(m_elevator, m_arm, () -> true, Position.BOTTOM).andThen(new OuttakeGamePiece(m_intake, GamePieceType.CONE)).andThen(new PositionIntake(m_elevator, m_arm, () -> true, Position.STOW)));
 
       // m_autoCommand.addOption("HYBRID MOBILITY", 
       //   new PositionIntake(m_elevator, m_arm, ()->true, Position.BOTTOM).andThen(
@@ -248,31 +248,30 @@ public class RobotContainer {
       //   )))
       // ));
 
-      m_autoCommand.addOption("Grid 1 Mobility", new DepositThenPath("Grid 1 Mobility", autoDepositPos, m_drive, m_elevator, m_arm, m_intake));
-      m_autoCommand.addOption("Grid 9 Mobility", new DepositThenPath("Grid 9 Mobility", autoDepositPos, m_drive, m_elevator, m_arm, m_intake));
-      m_autoCommand.addOption("Deposit No Mobility", new DepositThenPath("Grid 9 No Mobility", autoDepositPos, m_drive, m_elevator, m_arm, m_intake));
+      // TODO: Change the boolean supplier
+      m_autoCommand.addOption("Grid 1 Mobility", new DepositThenPath("Grid 1 Mobility", autoDepositPos, m_drive, m_elevator, m_arm, m_intake).andThen(new IntakeGamePiece(m_intake, () -> false)));
+      m_autoCommand.addOption("Grid 9 Mobility", new DepositThenPath("Grid 9 Mobility", autoDepositPos, m_drive, m_elevator, m_arm, m_intake).andThen(new IntakeGamePiece(m_intake, () -> false)));
+      // m_autoCommand.addOption("Deposit No Mobility", new DepositThenPath("Grid 9 No Mobility", autoDepositPos, m_drive, m_elevator, m_arm, m_intake));
     
+      m_autoCommand.addOption("Grid 1 Engage", new DepositThenPath("Grid 1 Engage", autoDepositPos, m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceCommand(m_drive)));
       m_autoCommand.addOption("Grid 9 Engage", new DepositThenPath("Grid 9 Engage", autoDepositPos, m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceCommand(m_drive)));
       
-      m_autoCommand.addOption("Grid 6 Engage (no mobility)", new DepositThenPath("Grid 6 Engage No Mobility", autoDepositPos, m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceCommand(m_drive)));
+      m_autoCommand.addOption("Grid 4/6 Engage", new DepositThenPath("Grid 6 Engage No Mobility", autoDepositPos, m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceCommand(m_drive)));
       
-      m_autoCommand.addOption("NO DEPOSIT Grid 6 Engage (no mobility)",
-        new PathPlannerCommand("Grid 6 Engage No Mobility", 0, m_drive, true).andThen(
-        new PathPlannerCommand("Grid 6 Engage No Mobility", 1, m_drive, true)).andThen(
-        new BalanceCommand(m_drive))
-      );
+      // m_autoCommand.addOption("NO DEPOSIT Grid 6 Engage (no mobility)",
+      //   new PathPlannerCommand("Grid 6 Engage No Mobility", 0, m_drive, true).andThen(
+      //   new PathPlannerCommand("Grid 6 Engage No Mobility", 1, m_drive, true)).andThen(
+      //   new BalanceCommand(m_drive))
+      // );
 
-      m_autoCommand.addOption("NO DEPOSIT Grid 1 Engage",
-        new PathPlannerCommand("Grid 1 Engage", 0, m_drive, true).andThen(
-        new PathPlannerCommand("Grid 1 Engage", 1, m_drive, true)).andThen(
-        new BalanceCommand(m_drive))
-      );
-
-
-      m_autoCommand.addOption("Grid 1 Engage", new DepositThenPath("Grid 1 Engage", autoDepositPos, m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceCommand(m_drive)));
+      // m_autoCommand.addOption("NO DEPOSIT Grid 1 Engage",
+      //   new PathPlannerCommand("Grid 1 Engage", 0, m_drive, true).andThen(
+      //   new PathPlannerCommand("Grid 1 Engage", 1, m_drive, true)).andThen(
+      //   new BalanceCommand(m_drive))
+      // );
     
-      m_autoCommand.addOption("Engage Left", new EngageFromLeftDriverSide(m_drive));
-      m_autoCommand.addOption("Engage Right", new EngageFromRightDriverSide(m_drive));
+      // m_autoCommand.addOption("Engage Left", new EngageFromLeftDriverSide(m_drive));
+      // m_autoCommand.addOption("Engage Right", new EngageFromRightDriverSide(m_drive));
     }
   }
 
