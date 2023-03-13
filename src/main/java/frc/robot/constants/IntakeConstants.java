@@ -34,5 +34,5 @@ public final class IntakeConstants {
    * This needs to be tested.
    */
   //TODO: set this to a tested value
-  public static final double kIntakeTime = 0.5;
+  public static final double kIntakeStallTime = 0.5;
 }

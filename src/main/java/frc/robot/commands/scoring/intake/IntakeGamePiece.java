@@ -2,6 +2,8 @@ package frc.robot.commands.scoring.intake;
 
 import java.util.function.BooleanSupplier;
 
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.IntakeConstants;
@@ -15,6 +17,7 @@ public class IntakeGamePiece extends CommandBase {
   private IntakePiece m_type;
   private final BooleanSupplier m_isCone;
   private final Timer m_timer;
+  private Debouncer m_stallDebouncer = new Debouncer(IntakeConstants.kIntakeStallTime, DebounceType.kBoth);
 
   /**
    * Spins the intake until the game piece is inside the intake.
@@ -62,13 +65,16 @@ public class IntakeGamePiece extends CommandBase {
   
   @Override
   public boolean isFinished() {
-    if (!m_timer.hasElapsed(IntakeConstants.kIntakeTime)) return false;
     if (m_type == IntakePiece.CUBE) {
-      return Math.abs(m_intake.getCurrent()) >= IntakeConstants.kCubeIntakeCurrentStopPoint;
+      return m_stallDebouncer.calculate(
+        Math.abs(m_intake.getCurrent()) >= IntakeConstants.kCubeIntakeCurrentStopPoint
+      );
     } else if (m_type == IntakePiece.CONE) {
-      return Math.abs(m_intake.getCurrent()) >= IntakeConstants.kConeIntakeCurrentStopPoint;
+      return m_stallDebouncer.calculate(
+        Math.abs(m_intake.getCurrent()) >= IntakeConstants.kConeIntakeCurrentStopPoint
+      );
     }
-    return false;
+    return true;
   }
 
 }
