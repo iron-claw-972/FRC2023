@@ -129,7 +129,7 @@ public class Wrist extends SubsystemBase {
     if (getAbsEncoderPos() <= WristConstants.kMinPos && power < 0) {
       power = 0;
     }
-    if (getAbsEncoderPos() >= WristConstants.kMinPos && power > 0) {
+    if (getAbsEncoderPos() >= WristConstants.kMaxPos && power > 0) {
       power = 0;
     }
     
