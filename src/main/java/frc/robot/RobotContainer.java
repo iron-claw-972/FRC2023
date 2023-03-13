@@ -16,13 +16,9 @@ import frc.robot.Robot.RobotId;
 import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.auto.DepositThenPath;
-import frc.robot.commands.auto.EngageFromLeftDriverSide;
-import frc.robot.commands.auto.EngageFromRightDriverSide;
 import frc.robot.commands.auto.PathPlannerCommand;
-import frc.robot.commands.scoring.PositionIntake;
 import frc.robot.commands.scoring.PositionIntake.Position;
 import frc.robot.commands.scoring.intake.IntakeGamePiece;
-import frc.robot.commands.scoring.intake.OuttakeGamePiece;
 import frc.robot.constants.VisionConstants;
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.controls.BaseDriverConfig;
@@ -34,7 +30,6 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.RollerIntake;
-import frc.robot.util.GamePieceType;
 import frc.robot.util.PathGroupLoader;
 import frc.robot.util.Vision;
 
@@ -228,9 +223,6 @@ public class RobotContainer {
     if (m_drive != null) {
       m_autoCommand.addOption("Figure 8", new PathPlannerCommand("Figure 8", 0, m_drive, true));
       m_autoCommand.addOption("One Meter", new PathPlannerCommand("One Meter", 0, m_drive, true));
-
-      m_autoCommand.addOption("Engage Left", new EngageFromLeftDriverSide(m_drive));
-      m_autoCommand.addOption("Engage Right", new EngageFromRightDriverSide(m_drive));
     }
 
     if (m_drive != null && m_elevator != null && m_arm != null && m_intake != null) {
