@@ -16,7 +16,6 @@ public class IntakeGamePiece extends CommandBase {
   private final RollerIntake m_intake; 
   private GamePieceType m_type;
   private final BooleanSupplier m_isCone;
-  private final Timer m_timer;
   private Debouncer m_stallDebouncer = new Debouncer(IntakeConstants.kIntakeStallTime, DebounceType.kBoth);
 
   /**
@@ -27,7 +26,6 @@ public class IntakeGamePiece extends CommandBase {
   public IntakeGamePiece(RollerIntake intake, BooleanSupplier isCone) {
     m_intake = intake;
     m_isCone = isCone;
-    m_timer = new Timer();
     addRequirements(m_intake);
   }
 
@@ -40,13 +38,11 @@ public class IntakeGamePiece extends CommandBase {
     m_intake = intake; 
     m_type = type;
     m_isCone = m_type == GamePieceType.CONE ? () -> true : () -> false;
-    m_timer = new Timer();
     addRequirements(m_intake);
   }
 
   @Override
   public void initialize() {
-    m_timer.reset();
     if (m_type == null) {
       m_type = m_isCone.getAsBoolean() ? GamePieceType.CONE : GamePieceType.CUBE;
     }
