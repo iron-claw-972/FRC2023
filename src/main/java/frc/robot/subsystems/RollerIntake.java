@@ -49,6 +49,7 @@ public class RollerIntake extends SubsystemBase {
 
   private void configMotors() {
     m_intakeMotor.setNeutralMode(IntakeConstants.kNeutralMode);
+    m_intakeMotor.enableVoltageCompensation(true);
   }
 
   public void setMode(IntakeMode mode) {
