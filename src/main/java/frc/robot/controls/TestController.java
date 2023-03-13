@@ -44,10 +44,9 @@ public class TestController {
   public void configureControls() {
 
     test.get(DPad.DOWN).onTrue(new CalibrateElevator(m_elevator));
-    test.get(DPad.LEFT).onTrue(new CalibrateBar(m_bar));
 
-    SmartDashboard.putNumber("Deposit Elevator Extension", 0);
-    SmartDashboard.putNumber("Deposit Arm Extension", 0);
+    // SmartDashboard.putNumber("Deposit Elevator Extension", 0);
+    // SmartDashboard.putNumber("Deposit Arm Extension", 0);
 
     test.get(DPad.UP).onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
 
@@ -82,24 +81,24 @@ public class TestController {
     // test.get(Button.RB).onTrue(new OuttakeGamePiece(m_intake, false));
 
     //TODO: cleaner
-    new Trigger(test.LEFT_TRIGGER_BUTTON).onTrue(new Stow(m_intake, m_elevator, m_arm));
+    // new Trigger(test.LEFT_TRIGGER_BUTTON).onTrue(new Stow(m_intake, m_elevator, m_arm));
 
-      // test.get(DPad.LEFT).onTrue(new DepositMiddleNode(m_elevator, m_arm, m_intake));
-      // test.get(DPad.RIGHT).onTrue(new DepositTopNode(m_elevator,m_arm,m_intake));
-      // test.get(DPad.UP).onTrue(new ExtendArm(m_arm, ArmConstants.kStowedAbsEncoderPos));
-      //test.get(Button.B).onTrue(new ExtendToPosition(m_arm, ArmConstants.kShelfPositionAbsEncoderPos));
-    
-   
-      //test.get(DPad.DOWN).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kIntakeSpeed), m_intake));
-      //test.get(DPad.UP).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kOuttakeSpeed),m_intake));
-      //test.get(DPad.LEFT).onTrue(new InstantCommand(() -> m_intake.stopIntake(), m_intake));
+    // test.get(DPad.LEFT).onTrue(new DepositMiddleNode(m_elevator, m_arm, m_intake));
+    // test.get(DPad.RIGHT).onTrue(new DepositTopNode(m_elevator,m_arm,m_intake));
+    // test.get(DPad.UP).onTrue(new ExtendArm(m_arm, ArmConstants.kStowedAbsEncoderPos));
+    //test.get(Button.B).onTrue(new ExtendToPosition(m_arm, ArmConstants.kShelfPositionAbsEncoderPos));
   
+  
+    //test.get(DPad.DOWN).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kIntakeSpeed), m_intake));
+    //test.get(DPad.UP).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kOuttakeSpeed),m_intake));
+    //test.get(DPad.LEFT).onTrue(new InstantCommand(() -> m_intake.stopIntake(), m_intake));
 
-      //test.get(DPad.LEFT).onTrue(new InstantCommand(() -> m_elevator.setMotorPower(0), m_elevator));
-      // test.get(DPad.DOWN).onTrue(new CalibrateElevator(m_elevator));
-      // test.get(Button.B).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kMiddleConeHeight));
-      // test.get(Button.X).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kTopConeHeight));
-      // test.get(Button.Y).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kBottomConeHeight));
+
+    //test.get(DPad.LEFT).onTrue(new InstantCommand(() -> m_elevator.setMotorPower(0), m_elevator));
+    // test.get(DPad.DOWN).onTrue(new CalibrateElevator(m_elevator));
+    // test.get(Button.B).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kMiddleConeHeight));
+    // test.get(Button.X).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kTopConeHeight));
+    // test.get(Button.Y).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kBottomConeHeight));
     
   }
 }
