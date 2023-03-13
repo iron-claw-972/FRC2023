@@ -41,12 +41,25 @@ public class LogManager {
   private static HashMap<String, IntegerLogEntry> individualIntegerLogs = new HashMap<>();
 
   /**
-   * Starts logging a double from a function. This should only be called once in an initialization, the double supplier will be periodically
-   * called for values. If your value is not always there, consider using the other addDouble that takes a single value at a time.
-   * 
-   * @param name The name of the log. Use / to create subdirectories, and keep names unique.
-   * @param logged A double supplier of the value to be logged. Can be created by using a lambda on a function that returns a double.
+   * Records the metadata supplied by gversion (https://github.com/lessthanoptimal/gversion-plugin) in BuildData.java.
    */
+  public static void recordMetadata() {
+    new StringLogEntry(log, "BuildData/Maven Group").append(BuildData.MAVEN_GROUP);
+    new StringLogEntry(log, "BuildData/Maven Name").append(BuildData.MAVEN_NAME); // The name of the repository
+    new StringLogEntry(log, "BuildData/Version").append(BuildData.VERSION);
+    new IntegerLogEntry(log, "BuildData/Git Revision").append(BuildData.GIT_REVISION);
+    new StringLogEntry(log, "BuildData/Git SHA").append(BuildData.GIT_SHA); // The SHA code for the latest commit
+    new StringLogEntry(log, "BuildData/Git date").append(BuildData.GIT_DATE);
+    new StringLogEntry(log, "BuildData/Git Branch").append(BuildData.GIT_BRANCH); // The branch name
+    new StringLogEntry(log, "BuildData/Build Date").append(BuildData.BUILD_DATE);
+    new IntegerLogEntry(log, "BuildData/Build Unix Time").append(BuildData.BUILD_UNIX_TIME);
+    new IntegerLogEntry(log, "BuildData/Dirty").append(BuildData.DIRTY);
+  }
+
+  /**
+   * @deprecated Use {@link #addDouble(String, double)} with a single value instead.
+   */
+  @Deprecated
   public static void addDouble(String name, DoubleSupplier logged) {
     DoubleLogEntry myDoubleLog = new DoubleLogEntry(log, name);
     doubleLogs.add(myDoubleLog);
@@ -71,13 +84,9 @@ public class LogManager {
   }
 
   /**
-   * Starts logging an array of doubles from a function. This should only be called once in an initialization, the supplier will be periodically
-   * called for values. If your value is not always there, consider using the other addDoubleArray that takes a single value at a time.
-   * 
-   * @param name The name of the log. Use / to create subdirectories, and keep names unique.
-   * @param logged An array of double suppliers of the values to be logged. 
-   *               Can be created by creating an array of lambdas on functions that return doubles.
+   * @deprecated Use {@link #addDoubleArray(String, double[])} with a single value instead.
    */
+  @Deprecated
   public static void addDoubleArray(String name, DoubleSupplier[] logged) {
     DoubleArrayLogEntry myDoubleLog = new DoubleArrayLogEntry(log, name);
     doubleArrayLogs.add(myDoubleLog);
@@ -102,12 +111,9 @@ public class LogManager {
   }
 
   /**
-   * Starts logging an int from a function. This should only be called once in an initialization, the supplier will be periodically
-   * called for values. If your value is not always there, consider using the other addInt() that takes a single value at a time.
-   * 
-   * @param name The name of the log. Use / to create subdirectories, and keep names unique.
-   * @param logged An int supplier of the value to be logged. Can be created by using a lambda on a function that returns a int.
+   * @deprecated Use {@link #addInt(String, int)} with a single value instead.
    */
+  @Deprecated
   public static void addInt(String name, IntSupplier logged) {
     IntegerLogEntry IntegerLog = new IntegerLogEntry(log, name);
     intLogs.add(IntegerLog);
@@ -132,12 +138,9 @@ public class LogManager {
   }
 
   /**
-   * Starts logging a boolean from a function. This should only be called once in an initialization, the supplier will be periodically
-   * called for values. If your value is not always there, consider using the other addBoolean() that takes a single value at a time.
-   * 
-   * @param name The name of the log. Use / to create subdirectories, and keep names unique.
-   * @param logged A boolean supplier of the value to be logged. Can be created by using a lambda on a function that returns a boolean.
+   * @deprecated Use {@link #addBoolean(String, boolean)} with a single value instead.
    */
+  @Deprecated
   public static void addBoolean(String name, BooleanSupplier logged) {
     BooleanLogEntry BooleanLog = new BooleanLogEntry(log, name);
     booleanLogs.add(BooleanLog);

@@ -1,27 +1,21 @@
 package frc.robot.controls;
 
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Elevator.ElevatorMode;
-import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.RollerIntake;
 import frc.robot.util.Functions;
 import lib.controllers.GameController;
 import lib.controllers.GameController.Axis;
 import lib.controllers.GameController.Button;
-import lib.controllers.GameController.DPad;
 
 public class ManualController {
   GameController m_manual = new GameController(OIConstants.kManualJoy);
-  private FourBarArm m_arm;
   private RollerIntake m_intake;
   private Elevator m_elevator;
   
-  public ManualController(FourBarArm arm, RollerIntake intake, Elevator elevator) {
-    m_arm = arm;
+  public ManualController(RollerIntake intake, Elevator elevator) {
     m_intake = intake;
     m_elevator = elevator;
   }
@@ -33,12 +27,6 @@ public class ManualController {
       // m_manual.get(DPad.DOWN).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kIntakePower), m_intake));
       // m_manual.get(DPad.UP).onTrue(new InstantCommand(() -> m_intake.intake(IntakeConstants.kOuttakePower),m_intake));
       // m_manual.get(DPad.LEFT).onTrue(new InstantCommand(() -> m_intake.stopIntake(), m_intake));  
-    }
-
-    if (m_arm != null) {
-      m_manual.get(Button.Y).onTrue(new InstantCommand(() -> m_arm.setMotorPower(0.05)));
-      m_manual.get(Button.X).onTrue(new InstantCommand(() -> m_arm.setMotorPower(-0.05)));
-      m_manual.get(Button.B).onTrue(new InstantCommand(() -> m_arm.setMotorPower(0)));  
     }
     
     if (m_elevator != null) {
