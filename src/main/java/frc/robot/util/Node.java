@@ -83,7 +83,7 @@ public class Node {
 
     Rotation2d rotation = new Rotation2d();
     if (alliance == Alliance.Blue) {
-      rotation = new Rotation2d(Math.toRadians(180));
+      rotation = Rotation2d.fromDegrees(180);
     }
     scorePose = new Pose2d(x, y, rotation);
   }
