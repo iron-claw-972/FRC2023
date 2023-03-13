@@ -13,6 +13,7 @@ public class IntakeGamePiece extends CommandBase {
   private final RollerIntake m_intake; 
   private IntakePiece m_type;
   private final BooleanSupplier m_isCone;
+  private final Timer m_timer;
 
   /**
    * Spins the intake until the game piece is inside the intake.
@@ -22,6 +23,7 @@ public class IntakeGamePiece extends CommandBase {
   public IntakeGamePiece(RollerIntake intake, BooleanSupplier isCone) {
     m_intake = intake;
     m_isCone = isCone;
+    m_timer = new Timer();
     addRequirements(m_intake);
   }
 
@@ -34,11 +36,13 @@ public class IntakeGamePiece extends CommandBase {
     m_intake = intake; 
     m_type = type;
     m_isCone = m_type == IntakePiece.CONE ? () -> true : () -> false;
+    m_timer = new Timer();
     addRequirements(m_intake);
   }
 
   @Override
   public void initialize() {
+    m_timer.reset();
     if (m_type == null) {
       m_type = m_isCone.getAsBoolean() ? IntakePiece.CONE : IntakePiece.CUBE;
     }
@@ -57,6 +61,7 @@ public class IntakeGamePiece extends CommandBase {
   
   @Override
   public boolean isFinished() {
+    if (!m_timer.advanceIfElapsed(IntakeConstants.kIntakeDuration)) return false;
     if (m_type == IntakePiece.CUBE) {
       return Math.abs(m_intake.getStatorCurrent()) >= IntakeConstants.kCubeIntakeCurrentStopPoint;
     } else if (m_type == IntakePiece.CONE) {

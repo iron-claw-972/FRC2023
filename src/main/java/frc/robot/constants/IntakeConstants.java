@@ -29,4 +29,10 @@ public final class IntakeConstants {
    */
   // TODO: set this to a tested value
   public static final double kOuttakeTime = 0.5;
+  /**
+   * How many seconds the intake will run for before starting to detect currents for {@link IntakeGamePiece}.
+   * This needs to be tested.
+   */
+  //TODO: set this to a tested value
+  public static final double kIntakeTime = 0.5;
 }
