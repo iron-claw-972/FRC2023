@@ -34,8 +34,8 @@ public class PositionRollerIntake extends SequentialCommandGroup {
           isConeSupplier
         )),
         Map.entry(RollerPosition.SHELF, new ConditionalCommand(
-          new MoveElevator(elevator, ElevatorConstants.kShelfConeHeight).alongWith(new RotateWrist(wrist, WristConstants.kShelfPos)),
-          new MoveElevator(elevator, ElevatorConstants.kShelfCubeHeight).alongWith(new RotateWrist(wrist, WristConstants.kShelfPos)),
+          new MoveElevator(elevator, ElevatorConstants.kShelfConeHeight).alongWith(new RotateWrist(wrist, WristConstants.kIntakeConePos)),
+          new MoveElevator(elevator, ElevatorConstants.kShelfCubeHeight).alongWith(new RotateWrist(wrist, WristConstants.kIntakeCubePos)),
           isConeSupplier
         )),
         Map.entry(RollerPosition.INTAKE, new ConditionalCommand(

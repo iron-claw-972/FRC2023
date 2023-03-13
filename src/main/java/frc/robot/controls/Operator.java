@@ -115,7 +115,7 @@ public class Operator {
     //bottom
     m_operator.get(Button.RB).onTrue(new PositionRollerIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, RollerPosition.BOTTOM));
     //shelf
-    m_operator.get(Button.B).onTrue(new PositionRollerIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, RollerPosition.SHELF).alongWith(new IntakeGamePiece(intake, m_operator.RIGHT_TRIGGER_BUTTON.getAsBoolean() ? GamePieceType.CONE : GamePieceType.CUBE)))
+    m_operator.get(Button.B).onTrue(new PositionRollerIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, RollerPosition.SHELF).alongWith(new IntakeGamePiece(intake, m_operator.RIGHT_TRIGGER_BUTTON)))
       .onFalse(new SequentialCommandGroup( 
         new InstantCommand(() -> intake.setMode(IntakeMode.DISABLED)),
         new RotateWrist(wrist, 0.8),
