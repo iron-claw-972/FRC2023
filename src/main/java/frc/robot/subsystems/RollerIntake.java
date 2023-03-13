@@ -79,7 +79,6 @@ public class RollerIntake extends SubsystemBase {
         m_power = 0;
         break;
     }
-    // System.out.println(m_mode);
     setMotorPower(m_power);
 
     if (Constants.kLogging) {
