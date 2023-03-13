@@ -101,7 +101,7 @@ public class Operator {
     if (value == 0 && DriverStation.getAlliance() == Alliance.Red) value = 2;
     if (value == 2 && DriverStation.getAlliance() == Alliance.Red) value = 0;
     selectValues[index.id] = value;
-    m_selectedNode = new Node(m_vision, DriverStation.getAlliance(), selectValues[NodePositionIndex.ROW.id]+1, (selectValues[NodePositionIndex.GRID.id]*3)+selectValues[NodePositionIndex.COLUMN.id]+1);
+    m_selectedNode = new Node(DriverStation.getAlliance(), selectValues[NodePositionIndex.ROW.id]+1, (selectValues[NodePositionIndex.GRID.id]*3)+selectValues[NodePositionIndex.COLUMN.id]+1);
   }
 
   public Node getSelectedNode() {
