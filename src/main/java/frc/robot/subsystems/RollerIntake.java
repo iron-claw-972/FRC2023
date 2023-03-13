@@ -51,7 +51,7 @@ public class RollerIntake extends SubsystemBase {
 
   }
 
-  public void setIntakeMode(IntakeMode mode){
+  public void setMode(IntakeMode mode){
     m_mode = mode; 
   }
 

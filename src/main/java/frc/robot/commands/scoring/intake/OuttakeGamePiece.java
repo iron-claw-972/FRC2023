@@ -36,9 +36,9 @@ public class OuttakeGamePiece extends CommandBase {
   @Override
   public void initialize() {
     if (m_heldPiece == IntakePiece.CUBE) {
-      m_intake.setIntakeMode(IntakeMode.OUTTAKE_CUBE);
+      m_intake.setMode(IntakeMode.OUTTAKE_CUBE);
     } else if (m_heldPiece == IntakePiece.CONE) {
-      m_intake.setIntakeMode(IntakeMode.OUTTAKE_CONE);
+      m_intake.setMode(IntakeMode.OUTTAKE_CONE);
     } else {
       cancel();
       return;
@@ -49,7 +49,7 @@ public class OuttakeGamePiece extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_intake.setHeldGamePiece(IntakePiece.NONE);
-    m_intake.setIntakeMode(IntakeMode.DISABLED);
+    m_intake.setMode(IntakeMode.DISABLED);
   }
   
   @Override

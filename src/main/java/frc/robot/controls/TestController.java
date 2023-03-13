@@ -42,14 +42,14 @@ public class TestController {
     // test.get(Button.Y).whileTrue(new InstantCommand(() -> m_intake.setIntakeMode(IntakeMode.DISABLED), m_intake));
 
     //intake cube
-    test.get(Button.RB).onTrue(new InstantCommand(() -> m_intake.setIntakeMode(IntakeMode.INTAKE_CUBE), m_intake)).onFalse(new InstantCommand(() -> m_intake.setIntakeMode(IntakeMode.DISABLED), m_intake));
+    test.get(Button.RB).onTrue(new InstantCommand(() -> m_intake.setMode(IntakeMode.INTAKE_CUBE), m_intake)).onFalse(new InstantCommand(() -> m_intake.setMode(IntakeMode.DISABLED), m_intake));
     //intake cone
-    test.get(Button.LB).onTrue(new InstantCommand(() -> m_intake.setIntakeMode(IntakeMode.INTAKE_CONE), m_intake)).onFalse(new InstantCommand(() -> m_intake.setIntakeMode(IntakeMode.DISABLED), m_intake));
+    test.get(Button.LB).onTrue(new InstantCommand(() -> m_intake.setMode(IntakeMode.INTAKE_CONE), m_intake)).onFalse(new InstantCommand(() -> m_intake.setMode(IntakeMode.DISABLED), m_intake));
 
     //outtake cube
-    test.get(test.RIGHT_TRIGGER_BUTTON).onTrue(new InstantCommand(() -> m_intake.setIntakeMode(IntakeMode.OUTTAKE_CUBE), m_intake)).onFalse(new InstantCommand(() -> m_intake.setIntakeMode(IntakeMode.DISABLED), m_intake));
+    test.get(test.RIGHT_TRIGGER_BUTTON).onTrue(new InstantCommand(() -> m_intake.setMode(IntakeMode.OUTTAKE_CUBE), m_intake)).onFalse(new InstantCommand(() -> m_intake.setMode(IntakeMode.DISABLED), m_intake));
     //outtake cone
-    test.get(test.LEFT_TRIGGER_BUTTON).onTrue(new InstantCommand(() -> m_intake.setIntakeMode(IntakeMode.OUTTAKE_CONE), m_intake)).onFalse(new InstantCommand(() -> m_intake.setIntakeMode(IntakeMode.DISABLED), m_intake));
+    test.get(test.LEFT_TRIGGER_BUTTON).onTrue(new InstantCommand(() -> m_intake.setMode(IntakeMode.OUTTAKE_CONE), m_intake)).onFalse(new InstantCommand(() -> m_intake.setMode(IntakeMode.DISABLED), m_intake));
 
     // test.get(Button.Y).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kTopConeHeight));
     // test.get(Button.X).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kMiddleConeHeight));
