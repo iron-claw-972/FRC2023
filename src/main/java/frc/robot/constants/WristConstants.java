@@ -34,7 +34,7 @@ public class WristConstants {
   public static final double kBottomNodePos = 0.170;
   public static final double kMiddleNodePos = 0.081;
   public static final double kTopNodePos = 0.150;
-  // TODO: cone cube shelf intake
+  // TODO: change shelf intake position to just be cone or cube intake
   public static final double kShelfPos = 0.012;
   public static final double kIntakeConePos = 0.025;
   public static final double kIntakeCubePos = 0.012;
