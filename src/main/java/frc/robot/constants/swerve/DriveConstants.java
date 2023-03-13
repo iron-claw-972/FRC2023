@@ -16,7 +16,7 @@ import lib.COTSFalconSwerveConstants;
  */
 public class DriveConstants {
 
-  public static double kRobotWidthWithBumpers = Units.inchesToMeters(26 + 3.25 * 2);
+  public static double kRobotWidthWithBumpers = Units.inchesToMeters(26 + 3.75 * 2);
 
   public static double kWheelRadius = Units.inchesToMeters(2);
 
