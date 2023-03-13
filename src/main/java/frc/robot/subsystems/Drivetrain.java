@@ -361,10 +361,8 @@ public class Drivetrain extends SubsystemBase {
    * @param degrees the new yaw angle, in degrees.
    */
   public void setYaw(double degrees) {
-    // the odometry stores an offset from the current pigeon angle
-    // changing the angle makes that offset inaccurate, so must reset the pose as well.
-    // keep the same translation, but set the odometry angle to what we want the angle to be.
-    resetOdometry(new Pose2d(getPose().getTranslation(), Rotation2d.fromDegrees(degrees)));
+    // setting the odometry as well as the pigeon yaw caused a very weird bug in the odometry where the robot's drive would be skewed
+    m_pigeon.setYaw(degrees);
   }
 
   /**
