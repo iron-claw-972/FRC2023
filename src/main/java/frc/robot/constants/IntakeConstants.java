@@ -2,7 +2,8 @@ package frc.robot.constants;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
-import frc.robot.subsystems.RollerIntake.IntakePiece;
+import frc.robot.commands.scoring.intake.IntakeGamePiece;
+import frc.robot.util.GamePieceType;
 
 public final class IntakeConstants {
 
@@ -18,7 +19,7 @@ public final class IntakeConstants {
   public static final NeutralMode kNeutralMode = NeutralMode.Brake;
 
   /**
-   * The current that the intake motor will stop at in the {@link IntakePiece} command. This needs to be tested.
+   * The current that the intake motor will stop at in the {@link GamePieceType} command. This needs to be tested.
    */
   // TODO: Set these values to tested values
   public static final double kCubeIntakeCurrentStopPoint = 5;

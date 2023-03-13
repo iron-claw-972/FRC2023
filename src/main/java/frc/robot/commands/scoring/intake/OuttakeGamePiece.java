@@ -5,12 +5,12 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.subsystems.RollerIntake;
 import frc.robot.subsystems.RollerIntake.IntakeMode;
-import frc.robot.subsystems.RollerIntake.IntakePiece;
+import frc.robot.util.GamePieceType;
 
 public class OuttakeGamePiece extends CommandBase {
 
   private final RollerIntake m_intake; 
-  private final IntakePiece m_heldPiece;
+  private final GamePieceType m_heldPiece;
   private final Timer m_timer;
 
   /**
@@ -26,7 +26,7 @@ public class OuttakeGamePiece extends CommandBase {
    * @param intake the intake subsystem
    * @param piece the piece to outtake
    */
-  public OuttakeGamePiece(RollerIntake intake, IntakePiece piece) {
+  public OuttakeGamePiece(RollerIntake intake, GamePieceType piece) {
     m_intake = intake; 
     m_heldPiece = piece;
     m_timer = new Timer();
@@ -35,9 +35,9 @@ public class OuttakeGamePiece extends CommandBase {
 
   @Override
   public void initialize() {
-    if (m_heldPiece == IntakePiece.CUBE) {
+    if (m_heldPiece == GamePieceType.CUBE) {
       m_intake.setMode(IntakeMode.OUTTAKE_CUBE);
-    } else if (m_heldPiece == IntakePiece.CONE) {
+    } else if (m_heldPiece == GamePieceType.CONE) {
       m_intake.setMode(IntakeMode.OUTTAKE_CONE);
     } else {
       cancel();
@@ -48,7 +48,7 @@ public class OuttakeGamePiece extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
-    m_intake.setHeldGamePiece(IntakePiece.NONE);
+    m_intake.setHeldGamePiece(GamePieceType.NONE);
     m_intake.setMode(IntakeMode.DISABLED);
   }
   
