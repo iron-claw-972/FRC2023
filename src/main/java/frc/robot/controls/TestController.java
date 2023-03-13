@@ -53,16 +53,16 @@ public class TestController {
     //outtake cone
     test.get(test.LEFT_TRIGGER_BUTTON).onTrue(new InstantCommand(() -> m_intake.setMode(IntakeMode.OUTTAKE_CONE), m_intake)).onFalse(new InstantCommand(() -> m_intake.setMode(IntakeMode.DISABLED), m_intake));
     
-    test.get(DPad.LEFT).onTrue(new IntakeGamePiece(m_intake, GamePieceType.CONE));
-    test.get(Button.LEFT_JOY).onTrue(new IntakeGamePiece(m_intake, GamePieceType.CUBE));
-    test.get(DPad.RIGHT).onTrue(new OuttakeGamePiece(m_intake));
+    // test.get(DPad.LEFT).onTrue(new IntakeGamePiece(m_intake, GamePieceType.CONE));
+    // test.get(Button.LEFT_JOY).onTrue(new IntakeGamePiece(m_intake, GamePieceType.CUBE));
+    // test.get(DPad.RIGHT).onTrue(new OuttakeGamePiece(m_intake));
 
     // ELEVATOR CONTROLS
-    test.get(Button.Y).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kTopConeHeight));
-    test.get(Button.X).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kMiddleConeHeight));
-    test.get(Button.A).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kBottomConeHeight));
-    test.get(Button.B).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kShelfConeHeight));
-    test.get(Button.RIGHT_JOY).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kIntakeConeHeight));
+    // test.get(Button.Y).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kTopConeHeight));
+    // test.get(Button.X).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kMiddleConeHeight));
+    // test.get(Button.A).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kBottomConeHeight));
+    // test.get(Button.B).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kShelfConeHeight));
+    // test.get(Button.RIGHT_JOY).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kIntakeConeHeight));
 
     // ARM CONTROLS
     // test.get(Button.Y).onTrue(new ExtendArm(m_arm, ArmConstants.kTopNodePos));
@@ -75,8 +75,8 @@ public class TestController {
     test.get(Button.X).onTrue(new RotateWrist(m_wrist, WristConstants.kMiddleNodePos));
     test.get(Button.A).onTrue(new RotateWrist(m_wrist, WristConstants.kBottomNodePos));
     test.get(Button.B).onTrue(new RotateWrist(m_wrist, WristConstants.kShelfPos));
-    test.get(Button.RB).onTrue(new RotateWrist(m_wrist, WristConstants.kIntakeConePos));
-    test.get(Button.LB).onTrue(new RotateWrist(m_wrist, WristConstants.kIntakeCubePos));
+    test.get(DPad.RIGHT).onTrue(new RotateWrist(m_wrist, WristConstants.kIntakeConePos));
+    test.get(DPad.LEFT).onTrue(new RotateWrist(m_wrist, WristConstants.kIntakeCubePos));
     test.get(Button.RIGHT_JOY).onTrue(new RotateWrist(m_wrist, WristConstants.kStowPos));
 
     // stow
