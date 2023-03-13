@@ -4,6 +4,7 @@ import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.IntakeConstants;
@@ -70,6 +71,7 @@ public class IntakeGamePiece extends CommandBase {
         Math.abs(m_intake.getCurrent()) >= IntakeConstants.kConeIntakeCurrentStopPoint
       );
     }
+    DriverStation.reportWarning("IntakeGamePiece Command missing GamePieceType", false);
     return true;
   }
 

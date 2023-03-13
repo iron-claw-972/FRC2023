@@ -1,5 +1,6 @@
 package frc.robot.commands.scoring.intake;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.IntakeConstants;
@@ -40,6 +41,7 @@ public class OuttakeGamePiece extends CommandBase {
     } else if (m_heldPiece == GamePieceType.CONE) {
       m_intake.setMode(IntakeMode.OUTTAKE_CONE);
     } else {
+      DriverStation.reportWarning("OuttakeGamePiece Command missing GamePieceType", false);
       cancel();
       return;
     }
