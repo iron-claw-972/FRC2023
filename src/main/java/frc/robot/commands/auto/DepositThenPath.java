@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.scoring.PositionIntake;
 import frc.robot.commands.scoring.PositionIntake.Position;
-import frc.robot.commands.scoring.Stow;
 import frc.robot.commands.scoring.elevator.CalibrateElevator;
 import frc.robot.commands.scoring.elevator.MoveElevator;
 import frc.robot.commands.scoring.intake.OuttakeGamePiece;
@@ -26,7 +25,7 @@ public class DepositThenPath extends SequentialCommandGroup {
         new MoveElevator(elevator, ElevatorConstants.kMiddleConeHeight).withTimeout(1).andThen(new PositionIntake(elevator, arm, () -> false, Position.TOP).withTimeout(1.5)),
       new OuttakeGamePiece(intake),
       new PathPlannerCommand(pathName, 0, drive, true),
-      new Stow(intake, elevator, arm),
+      new PositionIntake(elevator, arm, () -> true, Position.STOW),
       new PathPlannerCommand(pathName, 1, drive, true)
     );
   }

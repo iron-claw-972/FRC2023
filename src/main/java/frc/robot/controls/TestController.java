@@ -2,7 +2,8 @@ package frc.robot.controls;
 
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.commands.scoring.Stow;
+import frc.robot.commands.scoring.PositionIntake;
+import frc.robot.commands.scoring.PositionIntake.Position;
 import frc.robot.commands.scoring.elevator.CalibrateElevator;
 import frc.robot.commands.scoring.elevator.MoveElevator;
 import frc.robot.commands.scoring.intake.IntakeGamePiece;
@@ -65,6 +66,7 @@ public class TestController {
     // test.get(Button.B).onTrue(new ExtendArm(m_arm, ArmConstants.kShelfPos));
     // test.get(Button.RIGHT_JOY).onTrue(new ExtendArm(m_arm, ArmConstants.kIntakePos));
 
-    test.get(Button.BACK).onTrue(new Stow(m_intake, m_elevator, m_arm));
+    // stow
+    test.get(Button.BACK).onTrue(new PositionIntake(m_elevator, m_arm, test.RIGHT_TRIGGER_BUTTON, Position.STOW));
   }
 }

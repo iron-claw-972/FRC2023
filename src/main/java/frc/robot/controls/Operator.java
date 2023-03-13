@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.scoring.PositionIntake;
 import frc.robot.commands.scoring.PositionIntake.Position;
-import frc.robot.commands.scoring.Stow;
 import frc.robot.commands.scoring.arm.ExtendArm;
 import frc.robot.commands.scoring.elevator.CalibrateElevator;
 import frc.robot.commands.scoring.elevator.MoveElevator;
@@ -19,7 +18,6 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.RollerIntake;
 import frc.robot.subsystems.RollerIntake.IntakeMode;
-import frc.robot.subsystems.RollerIntake.IntakePiece;
 import frc.robot.util.Node;
 import frc.robot.util.Vision;
 import lib.controllers.GameController;
@@ -61,22 +59,22 @@ public class Operator {
         new InstantCommand(() -> intake.setMode(IntakeMode.DISABLED)),
         new ExtendArm(arm, 0.8),
         new MoveElevator(elevator, ElevatorConstants.kStowHeight),
-        new Stow(intake, elevator, arm)
+        new PositionIntake(elevator, arm, m_operator.RIGHT_TRIGGER_BUTTON, Position.STOW)
       ));
     
     // stow
-    m_operator.get(Button.RB).onTrue(new Stow(intake, elevator, arm));
+    m_operator.get(Button.RB).onTrue(new PositionIntake(elevator, arm, m_operator.RIGHT_TRIGGER_BUTTON, Position.STOW));
 
     //intake
     m_operator.get(Button.LB).onTrue(
       new PositionIntake(elevator, arm, m_operator.RIGHT_TRIGGER_BUTTON, Position.INTAKE).alongWith(new IntakeGamePiece(intake, m_operator.RIGHT_TRIGGER_BUTTON)))
-      .onFalse(new Stow(intake, elevator, arm));
+      .onFalse(new PositionIntake(elevator, arm, m_operator.RIGHT_TRIGGER_BUTTON, Position.STOW));
 
     // dunk
     // m_operator.get(m_operator.RIGHT_TRIGGER_BUTTON).onTrue(new Dunk(arm, intake)).onFalse(new Stow(intake, elevator, arm));
 
     // outtake
-    m_operator.get(m_operator.LEFT_TRIGGER_BUTTON).onTrue(new OuttakeGamePiece(intake)).onFalse(new Stow(intake, elevator, arm));
+    m_operator.get(m_operator.LEFT_TRIGGER_BUTTON).onTrue(new OuttakeGamePiece(intake)).onFalse(new PositionIntake(elevator, arm, m_operator.RIGHT_TRIGGER_BUTTON, Position.STOW));
     
   
     // Selects which grid to score in
