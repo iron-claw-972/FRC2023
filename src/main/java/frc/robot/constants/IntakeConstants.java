@@ -1,27 +1,39 @@
 package frc.robot.constants;
 
-import com.revrobotics.CANSparkMax.IdleMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+
+import frc.robot.commands.scoring.intake.IntakeGamePiece;
+import frc.robot.util.GamePieceType;
 
 public final class IntakeConstants {
-  // motor ports
-  public static final int kLeftMotorPort = 6;
-  public static final int kRightMotorPort = 11;
+
+  // motor port
+  public static final int kIntakeMotorId = 9;
 
   // intake speeds
-  public static final double kIntakePower = -0.4;
-  public static final double kOuttakePower = 0.1;
-  public static final double kEjectPower = 0.4;
-  public static final double kSpinningPower = 0.2;
+  public static final double kIntakeCubePower = 0.4;
+  public static final double kOuttakeCubePower = -0.4;
+  public static final double kIntakeConePower = -0.2;
+  public static final double kOuttakeConePower = 0.2;
 
-  // distance sensor thresholds
-  //TODO: test accurate numbers
-  public static final double kConeDistanceThreshold = 0;
-  public static final double kCubeDistanceThreshold = 0;
-  public static final double kCubeTimeThreshold = 0.2; // seconds
+  public static final NeutralMode kNeutralMode = NeutralMode.Brake;
 
-  public static final boolean kLeftMotorInvert = false;
-  public static final boolean kRightMotorInvert = true;
-  public static final IdleMode kLeftMotorIdleMode = IdleMode.kBrake;
-  public static final IdleMode kRightMotorIdleMode = IdleMode.kBrake;
-  public static final int kMotorCurrentLimit = 100;
+  /**
+   * The current that the intake motor will stop at in the {@link GamePieceType} command. This needs to be tested.
+   */
+  // TODO: Set these values to tested values
+  public static final double kCubeIntakeCurrentStopPoint = 5;
+  public static final double kConeIntakeCurrentStopPoint = 5;
+  
+  /**
+   * How many seconds the outtake will run for. This needs to be tested.
+   */
+  // TODO: set this to a tested value
+  public static final double kOuttakeTime = 0.5;
+  /**
+   * How many seconds the intake will run for before starting to detect currents for {@link IntakeGamePiece}.
+   * This needs to be tested.
+   */
+  //TODO: set this to a tested value
+  public static final double kIntakeStallTime = 0.1;
 }

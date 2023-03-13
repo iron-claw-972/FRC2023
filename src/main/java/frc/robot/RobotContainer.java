@@ -21,8 +21,7 @@ import frc.robot.commands.auto.EngageFromRightDriverSide;
 import frc.robot.commands.auto.PathPlannerCommand;
 import frc.robot.commands.scoring.PositionIntake;
 import frc.robot.commands.scoring.PositionIntake.Position;
-import frc.robot.commands.scoring.Stow;
-import frc.robot.commands.scoring.intake.Outtake;
+import frc.robot.commands.scoring.intake.OuttakeGamePiece;
 import frc.robot.constants.VisionConstants;
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.controls.BaseDriverConfig;
@@ -33,7 +32,8 @@ import frc.robot.controls.TestController;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.RollerIntake;
+import frc.robot.util.GamePieceType;
 import frc.robot.util.PathGroupLoader;
 import frc.robot.util.Vision;
 
@@ -58,15 +58,13 @@ public class RobotContainer {
   private final ShuffleboardTab m_testTab = Shuffleboard.getTab("Test");
   private final ShuffleboardTab m_elevatorTab = Shuffleboard.getTab("Elevator");
   private final ShuffleboardTab m_intakeTab = Shuffleboard.getTab("Intake");
-  private final ShuffleboardTab m_barTab = Shuffleboard.getTab("Bar");
-  
 
   private final Vision m_vision;
 
   // The robot's subsystems are defined here...
   private final Drivetrain m_drive;
   private final FourBarArm m_arm;
-  private final Intake m_intake;
+  private final RollerIntake m_intake;
   private final Elevator m_elevator;
 
   // Controllers are defined here
@@ -95,8 +93,8 @@ public class RobotContainer {
         m_driver = new GameControllerDriverConfig(m_drive, m_operator, m_controllerTab, false);
     
         m_arm = new FourBarArm();
-        m_intake = new Intake(m_intakeTab);
-        m_elevator = new Elevator(m_elevatorTab, ()->m_intake.containsGamePiece());
+        m_intake = new RollerIntake(m_intakeTab);
+        m_elevator = new Elevator(m_elevatorTab, () -> m_intake.containsGamePiece());
   
         m_testController = new TestController(m_arm, m_intake, m_elevator);
         m_manualController = new ManualController(m_arm, m_intake, m_elevator);
@@ -203,7 +201,7 @@ public class RobotContainer {
    */
   public void addTestCommands() {
     GenericEntry testEntry = m_testTab.add("Test Results", false).getEntry();
-    m_testTab.add("Cancel Command", new InstantCommand( () -> CommandScheduler.getInstance().cancelAll()));
+    m_testTab.add("Cancel Command", new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
 
     if (m_drive != null) {
       m_drive.addTestCommands(m_testTab, testEntry);
@@ -236,7 +234,10 @@ public class RobotContainer {
     }
 
     if (m_drive != null && m_elevator != null && m_arm != null && m_intake != null) {
-      m_autoCommand.addOption("Hybrid Score", new PositionIntake(m_elevator, m_arm, () -> true, Position.BOTTOM).andThen(new Outtake(m_intake).withTimeout(5)).andThen(new Stow(m_intake, m_elevator, m_arm)));
+
+      //TODO: set auto game piece on start
+
+      m_autoCommand.addOption("Hybrid Score", new PositionIntake(m_elevator, m_arm, () -> true, Position.BOTTOM).andThen(new OuttakeGamePiece(m_intake, GamePieceType.CONE)).andThen(new PositionIntake(m_elevator, m_arm, () -> true, Position.STOW)));
 
       // m_autoCommand.addOption("HYBRID MOBILITY", 
       //   new PositionIntake(m_elevator, m_arm, ()->true, Position.BOTTOM).andThen(
