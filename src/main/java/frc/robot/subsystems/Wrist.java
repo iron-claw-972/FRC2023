@@ -64,8 +64,8 @@ public class Wrist extends SubsystemBase {
   public Wrist(ShuffleboardTab wristTab) {
     // configure the motor.
     m_motor = MotorFactory.createTalonFXSupplyLimit(WristConstants.kMotorID, Constants.kRioCAN, WristConstants.kContinuousCurrentLimit, WristConstants.kPeakCurrentLimit, WristConstants.kPeakCurrentDuration);
-    m_motor.setNeutralMode(NeutralMode.Brake);
-    m_motor.setInverted(false); 
+    m_motor.setNeutralMode(WristConstants.kNeutralMode);
+    m_motor.setInverted(WristConstants.kMotorInvert); 
     
     //SIM
     SmartDashboard.putData("Arm Sim", m_mech2d);
@@ -79,7 +79,7 @@ public class Wrist extends SubsystemBase {
     m_pid.setTolerance(WristConstants.kTolerance);
     // go to the initial position (use the class method)
 
-    setArmSetpoint(WristConstants.kStowPos);
+    setSetpoint(WristConstants.kStowPos);
 
     if (Constants.kUseTelemetry) {
       m_wristTab = wristTab;
@@ -89,9 +89,9 @@ public class Wrist extends SubsystemBase {
 
   /**
    * Set the Wrist's desired position.
-   * @param setpoint the desired arm position (in radians)
+   * @param setpoint the desired arm position (in rotations)
    */
-  public void setArmSetpoint(double setpoint) {
+  public void setSetpoint(double setpoint) {
     // set the PID integration error to zero.
     m_pid.reset();
     // set the PID desired position
@@ -100,11 +100,11 @@ public class Wrist extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (Constants.kUseTelemetry) SmartDashboard.putNumber("Arm Abs Encoder Value", getAbsEncoderPos());
-    if(true) {
+    if(m_enabled) {
       // calculate the PID power level
-      double pidPower = m_pid.calculate( RobotBase.isSimulation() ? getSimRads(): getAbsEncoderPos(), MathUtil.clamp(m_pid.getSetpoint(), WristConstants.kMaxArmExtensionPos, WristConstants.kStowPos));
+      double pidPower = m_pid.calculate(RobotBase.isSimulation() ? getSimRads()/(2*Math.PI): getAbsEncoderPos(), MathUtil.clamp(m_pid.getSetpoint(), WristConstants.kMinPos, WristConstants.kMaxPos));
       if (Constants.kLogging) LogManager.addDouble("Wrist/pidOutput", pidPower);
+      if (Constants.kUseTelemetry) SmartDashboard.putNumber("wrist pid output", pidPower);
       // calculate the value of kGravityCompensation
       double feedforwardPower = WristConstants.kGravityCompensation*Math.cos(getAbsEncoderPos()*Math.PI*2);
       // set the motor power
@@ -123,9 +123,18 @@ public class Wrist extends SubsystemBase {
   }
 
   public void setMotorPower(double power) {
-    power = MathUtil.clamp(power, WristConstants.kMinMotorPower, WristConstants.kMaxMotorPower);
+    power = MathUtil.clamp(power, -WristConstants.kMotorPowerClamp, WristConstants.kMotorPowerClamp);
+    
+    if (getAbsEncoderPos() <= WristConstants.kMinPos && power < 0) {
+      power = 0;
+    }
+    if (getAbsEncoderPos() >= WristConstants.kMaxPos && power > 0) {
+      power = 0;
+    }
+    
     m_motor.set(power);
     if (Constants.kLogging) LogManager.addDouble("Wrist/motor power", power);
+    if (Constants.kUseTelemetry) SmartDashboard.putNumber("wrist power final", power);
   }
 
   public void setEnabled(boolean enable) {
@@ -133,7 +142,9 @@ public class Wrist extends SubsystemBase {
   }
 
   public double getAbsEncoderPos() {
-    return m_absEncoder.getAbsolutePosition(); 
+    // inverted to make rotating towards stow positive
+    // offset makes flat, facing out, zero
+    return -m_absEncoder.getAbsolutePosition() + WristConstants.kEncoderOffset; 
   }
 
   public void updateLogs() {
@@ -141,9 +152,10 @@ public class Wrist extends SubsystemBase {
   }
 
   public void setupShuffleboardTab() {
-    m_wristTab.add("Wrist Position", getAbsEncoderPos());
+    m_wristTab.addNumber("Wrist Position", () -> getAbsEncoderPos());
     m_wristTab.add("wrist PID", m_pid);
   }
+
   public void simulationPeriodic() {
 
     // First, we set our "inputs" (voltages)    
@@ -157,6 +169,7 @@ public class Wrist extends SubsystemBase {
  
     m_arm.setAngle(Units.radiansToDegrees(getSimRads()));
   }
+
   public double getMotorvoltage(){
     return m_motor.getMotorOutputVoltage();
   }

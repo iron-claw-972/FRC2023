@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 import frc.robot.constants.IntakeConstants;
+import frc.robot.util.GamePieceType;
 import frc.robot.util.LogManager;
 import frc.robot.util.MotorFactory;
 
@@ -23,43 +24,35 @@ public class RollerIntake extends SubsystemBase {
     INTAKE_CUBE, OUTTAKE_CUBE, INTAKE_CONE, OUTTAKE_CONE, DISABLED
   }
 
-  public enum IntakePiece {
-    CUBE, CONE, NONE
-  }
-
   private final WPI_TalonFX m_intakeMotor;
   private final ShuffleboardTab m_intakeTab;
 
   private IntakeMode m_mode;
-  private IntakePiece m_heldPiece;
+  private GamePieceType m_heldPiece;
 
   private double m_power;
 
   public RollerIntake(ShuffleboardTab intakeTab) {
-    m_intakeMotor = MotorFactory.createTalonFX(IntakeConstants.kIntakeMotorId, Constants.kCanivoreCAN);
+    m_intakeMotor = MotorFactory.createTalonFX(IntakeConstants.kIntakeMotorId, Constants.kRioCAN);
     configMotors();
     
     m_power = 0;
     m_mode = IntakeMode.DISABLED;
     // During auto, this doesn't really matter, so we can just set it to NONE
     // TODO: Auto commands run that pick up a game piece should set this to the correct value
-    m_heldPiece = IntakePiece.NONE;
+    m_heldPiece = GamePieceType.NONE;
     m_intakeTab = intakeTab;
 
-    setupShuffleboard();
-  
-    if (Constants.kLogging) {
-      LogManager.addDouble("Intake Motor Current", () -> m_intakeMotor.getStatorCurrent());
-      LogManager.addDouble("Intake Power", () -> m_power);
-    }
+    if (Constants.kUseTelemetry) setupShuffleboard();
 
   }
 
   private void configMotors() {
     m_intakeMotor.setNeutralMode(IntakeConstants.kNeutralMode);
+    m_intakeMotor.enableVoltageCompensation(true);
   }
 
-  public void setIntakeMode(IntakeMode mode) {
+  public void setMode(IntakeMode mode) {
     m_mode = mode; 
   }
 
@@ -71,52 +64,62 @@ public class RollerIntake extends SubsystemBase {
   public void periodic() {
 
     switch (m_mode) {
-      case INTAKE_CUBE: 
+      case INTAKE_CUBE:
         m_power = IntakeConstants.kIntakeCubePower;
+        break;
       case OUTTAKE_CUBE: 
-        m_power = IntakeConstants.kOuttakeCubePower;   
+        m_power = IntakeConstants.kOuttakeCubePower;
+        break;  
       case INTAKE_CONE: 
-        m_power = IntakeConstants.kIntakeConePower;        
+        m_power = IntakeConstants.kIntakeConePower;
+        break;       
       case OUTTAKE_CONE: 
-        m_power = IntakeConstants.kOuttakeConePower;        
+        m_power = IntakeConstants.kOuttakeConePower; 
+        break;       
       case DISABLED: 
-        m_power = IntakeConstants.kStopPower;       
+        m_power = 0;
+        break;
     }
     setMotorPower(m_power);
+
+    if (Constants.kLogging) {
+      LogManager.addDouble("Intake Motor Current", getCurrent());
+      LogManager.addDouble("Intake Power", m_power);
+    }
   }
 
   private void setupShuffleboard() {
     m_intakeTab.addString("Intake Mode", () -> m_mode.name());
-    m_intakeTab.addDouble("Intake Motor Current", () -> m_intakeMotor.getStatorCurrent());
+    m_intakeTab.addDouble("Intake Motor Current", () -> getCurrent());
     m_intakeTab.addDouble("Intake Power", () -> m_power);
     m_intakeTab.addString("Held Game Piece", () -> m_heldPiece.name());
   }
   
-  public void updateLogs() {
-    
-  }
-  
   public boolean containsGamePiece() {
-    return m_heldPiece != IntakePiece.NONE;
+    return m_heldPiece != GamePieceType.NONE;
   }
 
   public boolean containsCone() {
-    return m_heldPiece == IntakePiece.CONE;
+    return m_heldPiece == GamePieceType.CONE;
   }
 
   public boolean containsCube() {
-    return m_heldPiece == IntakePiece.CUBE;
+    return m_heldPiece == GamePieceType.CUBE;
   }
 
-  public WPI_TalonFX getIntakeMotor() {
-    return m_intakeMotor;
+  /**
+   * Returns the current supply current of the motor.
+   * @return the supply current
+   */
+  public double getCurrent() {
+    return Math.abs(m_intakeMotor.getSupplyCurrent());
   }
 
-  public IntakePiece getHeldGamePiece() {
+  public GamePieceType getHeldGamePiece() {
     return m_heldPiece;
   }
 
-  public void setHeldGamePiece(IntakePiece m_type) {
+  public void setHeldGamePiece(GamePieceType m_type) {
     m_heldPiece = m_type;
   }
 } 
