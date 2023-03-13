@@ -2,6 +2,7 @@ package frc.robot.commands.scoring.intake;
 
 import java.util.function.BooleanSupplier;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.subsystems.RollerIntake;
@@ -61,7 +62,7 @@ public class IntakeGamePiece extends CommandBase {
   
   @Override
   public boolean isFinished() {
-    if (!m_timer.advanceIfElapsed(IntakeConstants.kIntakeDuration)) return false;
+    if (!m_timer.hasElapsed(IntakeConstants.kIntakeTime)) return false;
     if (m_type == IntakePiece.CUBE) {
       return Math.abs(m_intake.getStatorCurrent()) >= IntakeConstants.kCubeIntakeCurrentStopPoint;
     } else if (m_type == IntakePiece.CONE) {
