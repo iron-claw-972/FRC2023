@@ -10,8 +10,8 @@ public final class IntakeConstants {
   public static final int kIntakeMotorId = 9;
 
   // intake speeds
-  public static final double kIntakeCubePower = 0.2;
-  public static final double kOuttakeCubePower = -0.2;
+  public static final double kIntakeCubePower = 0.4;
+  public static final double kOuttakeCubePower = -0.4;
   public static final double kIntakeConePower = -0.2;
   public static final double kOuttakeConePower = 0.2;
 
