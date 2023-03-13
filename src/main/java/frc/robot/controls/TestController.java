@@ -6,14 +6,12 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DepositTune;
 import frc.robot.commands.scoring.Stow;
-import frc.robot.commands.scoring.bar.CalibrateBar;
 import frc.robot.commands.scoring.elevator.CalibrateElevator;
 import frc.robot.commands.scoring.elevator.MoveElevator;
 import frc.robot.commands.scoring.intake.IntakeGamePiece;
 import frc.robot.commands.scoring.intake.Outtake;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.OIConstants;
-import frc.robot.subsystems.Bar;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.Intake;
@@ -27,19 +25,16 @@ public class TestController {
   private FourBarArm m_arm;
   private Intake m_intake;
   private Elevator m_elevator;
-  private Bar m_bar;
   
-  public TestController(FourBarArm arm, Intake intake, Elevator elevator, Bar bar) {
+  public TestController(FourBarArm arm, Intake intake, Elevator elevator) {
     m_arm = arm;
     m_intake = intake;
     m_elevator = elevator;
-    m_bar = bar;
   }
   
   public void configureControls() {
 
     test.get(DPad.DOWN).onTrue(new CalibrateElevator(m_elevator));
-    test.get(DPad.LEFT).onTrue(new CalibrateBar(m_bar));
 
     SmartDashboard.putNumber("Deposit Elevator Extension", 0);
     SmartDashboard.putNumber("Deposit Arm Extension", 0);
