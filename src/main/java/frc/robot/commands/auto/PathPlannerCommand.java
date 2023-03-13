@@ -23,14 +23,19 @@ import frc.robot.util.PathGroupLoader;
 public class PathPlannerCommand extends SequentialCommandGroup{
 
     Alliance alliance;
-    
+
     public PathPlannerCommand(ArrayList<PathPoint> waypoints, Drivetrain drive) {
+        this(waypoints, drive, true);
+    }
+
+    
+    public PathPlannerCommand(ArrayList<PathPoint> waypoints, Drivetrain drive, boolean useAllianceColor) {
         this(new ArrayList<PathPlannerTrajectory>(Arrays.asList(PathPlanner.generatePath(
           new PathConstraints(AutoConstants.kMaxAutoSpeed, AutoConstants.kMaxAutoAccel),
           waypoints.get(0),
           waypoints.get(1),
           (PathPoint[]) Arrays.copyOfRange(waypoints.toArray(), 2, waypoints.size())
-        ))), 0, drive, true);
+        ))), 0, drive, false, useAllianceColor);
     }
 
     public PathPlannerCommand(String pathGroupName, int pathIndex, Drivetrain drive){
@@ -40,8 +45,12 @@ public class PathPlannerCommand extends SequentialCommandGroup{
     public PathPlannerCommand(String pathGroupName, int pathIndex, Drivetrain drive, boolean resetPose){
         this(PathGroupLoader.getPathGroup(pathGroupName), pathIndex, drive, resetPose); 
     }
-    
+
     public PathPlannerCommand(List<PathPlannerTrajectory> pathGroup, int pathIndex, Drivetrain drive, boolean resetPose){
+        this(pathGroup, pathIndex, drive, resetPose, true);
+    }
+
+    public PathPlannerCommand(List<PathPlannerTrajectory> pathGroup, int pathIndex, Drivetrain drive, boolean resetPose, boolean useAllianceColor){
         addRequirements(drive);
         if (pathIndex < 0 || pathIndex > pathGroup.size() - 1){
             throw new IndexOutOfBoundsException("Path index out of range"); 
@@ -59,7 +68,7 @@ public class PathPlannerCommand extends SequentialCommandGroup{
                 drive.getPathplannerYController(), // Y controller can't normal PID as pathplanner has Feed Forward 
                 drive.getPathplannerRotationController(), // Rotation controller can't normal PID as pathplanner has Feed Forward 
                 (chassisSpeeds) -> { drive.setChassisSpeeds(chassisSpeeds, false); }, // chassis Speeds consumer
-                true,  // use Alliance color
+                useAllianceColor,
                 drive // Requires this drive subsystem
             )
         );

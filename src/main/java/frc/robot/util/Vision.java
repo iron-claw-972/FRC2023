@@ -69,7 +69,8 @@ public class Vision {
     ArrayList<EstimatedRobotPose> estimatedPoses = new ArrayList<>();
     for (int i = 0; i < m_cameras.size(); i++) {
       Optional<EstimatedRobotPose> estimatedPose = m_cameras.get(i).getEstimatedPose(referencePose);
-      // If the camera can see an april tag, add it to the array list
+      // If the camera can see an april tag that exists, add it to the array list
+      // April tags that don't exist might return a result that is present but doesn't have a pose
       if (estimatedPose.isPresent() && estimatedPose.get().estimatedPose!=null) {
         estimatedPoses.add(estimatedPose.get());
         LogManager.addDoubleArray("Vison/estimated pose2d", new double[]{
@@ -98,23 +99,32 @@ public class Vision {
     ArrayList<EstimatedRobotPose> estimatedPoses = getEstimatedPoses(referencePose);
     Translation2d translation = new Translation2d();
     double rotation = 0;
-    //TODO: VERY LOW PRIORITY FOR FUTURE ROBOTS, make this scalable to more than 2 camera
-
+    
     if (estimatedPoses.size() == 1) return estimatedPoses.get(0).estimatedPose.toPose2d();
     
     if (estimatedPoses.size() == 2) {
       return new Pose2d(
-        estimatedPoses.get(0).estimatedPose.toPose2d().getTranslation().plus(
-        estimatedPoses.get(1).estimatedPose.toPose2d().getTranslation()
-        ).div(2),
-
-        new Rotation2d(Functions.modulusMidpoint(
-          estimatedPoses.get(0).estimatedPose.toPose2d().getRotation().getRadians(),
-          estimatedPoses.get(1).estimatedPose.toPose2d().getRotation().getRadians(),
-          -Math.PI, Math.PI
-        ))
+        estimatedPoses.get(0).estimatedPose.toPose2d().getTranslation()
+          .plus(estimatedPoses.get(1).estimatedPose.toPose2d().getTranslation())
+          .div(2),
+          
+          new Rotation2d(Functions.modulusMidpoint(
+            estimatedPoses.get(0).estimatedPose.toPose2d().getRotation().getRadians(),
+            estimatedPoses.get(1).estimatedPose.toPose2d().getRotation().getRadians(),
+            -Math.PI, Math.PI
+          )
+        )
       );
     }
+          
+    //TODO: VERY LOW PRIORITY FOR FUTURE ROBOTS, make the rotation average work with more than 2 cameras
+    // for(int i = 0; i < estimatedPoses.size(); i ++){
+    //   translation=translation.plus(estimatedPoses.get(i).estimatedPose.toPose2d().getTranslation());
+    // }
+
+    // if(posesUsed>0){
+    //   return new Pose2d(translation.div(estimatedPoses.size()), new Rotation2d());
+    // }
     return null;
   }
 

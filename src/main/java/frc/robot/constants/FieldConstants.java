@@ -21,4 +21,8 @@ public class FieldConstants {
   // The distance from center of apriltag to the cone node
   public static final double kConeNodeOffset = Units.inchesToMeters(22); // meters
 
+  // Where the robot needs to go to intake from the shelf
+  public static double kBlueShelfX = VisionConstants.kAprilTags.get(3).pose.getX()-Units.inchesToMeters(VisionConstants.kShelfDistance);
+  public static double kRedShelfX = VisionConstants.kAprilTags.get(4).pose.getX()+Units.inchesToMeters(VisionConstants.kShelfDistance);
+  public static double kShelfY = VisionConstants.kAprilTags.get(3).pose.getY()-1.25;
 }

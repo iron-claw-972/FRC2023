@@ -5,24 +5,25 @@ import java.util.List;
 
 import com.pathplanner.lib.PathPoint;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.commands.auto.PathPlannerCommand;
-import frc.robot.controls.Operator;
+import frc.robot.constants.FieldConstants;
 import frc.robot.subsystems.Drivetrain;
 
-public class GoToNode extends CommandBase {
+public class GoToShelf extends CommandBase {
 
-  private Operator m_operator;
   private Drivetrain m_drive;
   private PathPlannerCommand m_command;
 
   /**
-   * Uses PathPlanner to go to the selected node
-   * @param operator The operator
+   * Uses PathPlanner to go to the shelf
    * @param drive The drivetrain
    */
-  public GoToNode(Operator operator, Drivetrain drive) {
-    m_operator = operator;
+  public GoToShelf(Drivetrain drive) {
     m_drive = drive;
   }
 
@@ -36,11 +37,13 @@ public class GoToNode extends CommandBase {
       m_drive.getPose(),
       m_drive.getChassisSpeeds()
     );
-    // Uses the operator's selected node to find the end point for the path
+    // The shelf position
+    double x = DriverStation.getAlliance()==Alliance.Blue?FieldConstants.kBlueShelfX:FieldConstants.kRedShelfX;
+    double angle = DriverStation.getAlliance()==Alliance.Blue?0:Math.PI;
     PathPoint point2 = new PathPoint(
-      m_operator.getSelectedNode().scorePose.getTranslation(),
-      m_operator.getSelectedNode().scorePose.getRotation(),
-      m_operator.getSelectedNode().scorePose.getRotation()
+      new Translation2d(x, FieldConstants.kShelfY),
+      new Rotation2d(angle),
+      new Rotation2d(angle)
     );
     // Creates the command using the two points
     m_command = new PathPlannerCommand(

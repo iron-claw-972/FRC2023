@@ -9,6 +9,7 @@ import frc.robot.constants.VisionConstants;
 
 /**
  * Class to store data about scoring locations
+ * positions are stored from field border to barrier instead of left to right
  */
 public class Node {
 
@@ -39,7 +40,7 @@ public class Node {
    * @param row
    *  row it's in (1 = bottom, 2 = middle, 3 = top)
    * @param column
-   *  column from field boundary to other boundary (1 to 9)
+   *  column from field boundary to loading zone (1 to 9)
    */
   public Node(Alliance alliance, int row, int column) {
 
@@ -87,5 +88,4 @@ public class Node {
     }
     scorePose = new Pose2d(x, y, rotation);
   }
-
 }

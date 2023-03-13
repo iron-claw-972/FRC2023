@@ -89,17 +89,17 @@ public class RobotContainer {
 
         // Create Drivetrain
         m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab, m_vision);
-        m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
+        m_operator = new Operator();
+        m_driver = new GameControllerDriverConfig(m_drive, m_operator, m_controllerTab, false);
     
         m_arm = new FourBarArm();
         m_intake = new RollerIntake(m_intakeTab);
         m_elevator = new Elevator(m_elevatorTab, () -> m_intake.containsGamePiece());
   
-        m_operator = new Operator();
         m_testController = new TestController(m_arm, m_intake, m_elevator);
         m_manualController = new ManualController(m_arm, m_intake, m_elevator);
   
-        m_operator.configureControls(m_arm, m_intake, m_elevator, m_vision);
+        m_operator.configureControls(m_arm, m_intake, m_elevator);
         m_testController.configureControls();
         m_manualController.configureControls();
   
@@ -127,7 +127,8 @@ public class RobotContainer {
 
         // Create Drivetrain, because every robot will have a drivetrain
         m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab, m_vision);
-        m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
+        m_operator = new Operator();
+        m_driver = new GameControllerDriverConfig(m_drive, m_operator, m_controllerTab, false);
 
         DriverStation.reportWarning("Not registering subsystems and controls due to incorrect robot", false);
 
@@ -136,7 +137,6 @@ public class RobotContainer {
         m_intake = null;
         m_elevator = null;
   
-        m_operator = null;
         m_testController = null;
         m_manualController = null;
 
