@@ -82,14 +82,14 @@ public class RollerIntake extends SubsystemBase {
     setMotorPower(m_power);
 
     if (Constants.kLogging) {
-      LogManager.addDouble("Intake Motor Current", m_intakeMotor.getStatorCurrent());
+      LogManager.addDouble("Intake Motor Current", getCurrent());
       LogManager.addDouble("Intake Power", m_power);
     }
   }
 
   private void setupShuffleboard() {
     m_intakeTab.addString("Intake Mode", () -> m_mode.name());
-    m_intakeTab.addDouble("Intake Motor Current", () -> m_intakeMotor.getStatorCurrent());
+    m_intakeTab.addDouble("Intake Motor Current", () -> getCurrent());
     m_intakeTab.addDouble("Intake Power", () -> m_power);
     m_intakeTab.addString("Held Game Piece", () -> m_heldPiece.name());
   }
@@ -106,8 +106,12 @@ public class RollerIntake extends SubsystemBase {
     return m_heldPiece == IntakePiece.CUBE;
   }
 
-  public double getStatorCurrent() {
-    return Math.abs(m_intakeMotor.getStatorCurrent());
+  /**
+   * Returns the current supply current of the motor.
+   * @return the supply current
+   */
+  public double getCurrent() {
+    return Math.abs(m_intakeMotor.getSupplyCurrent());
   }
 
   public void setNeutralMode(NeutralMode mode) {

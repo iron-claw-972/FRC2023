@@ -64,9 +64,9 @@ public class IntakeGamePiece extends CommandBase {
   public boolean isFinished() {
     if (!m_timer.hasElapsed(IntakeConstants.kIntakeTime)) return false;
     if (m_type == IntakePiece.CUBE) {
-      return Math.abs(m_intake.getStatorCurrent()) >= IntakeConstants.kCubeIntakeCurrentStopPoint;
+      return Math.abs(m_intake.getCurrent()) >= IntakeConstants.kCubeIntakeCurrentStopPoint;
     } else if (m_type == IntakePiece.CONE) {
-      return Math.abs(m_intake.getStatorCurrent()) >= IntakeConstants.kConeIntakeCurrentStopPoint;
+      return Math.abs(m_intake.getCurrent()) >= IntakeConstants.kConeIntakeCurrentStopPoint;
     }
     return false;
   }
