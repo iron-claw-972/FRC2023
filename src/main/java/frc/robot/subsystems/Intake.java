@@ -14,7 +14,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
-import frc.robot.constants.IntakeConstants;
 import frc.robot.util.LogManager;
 
 
@@ -25,8 +24,8 @@ public class Intake extends SubsystemBase {
   private final ShuffleboardTab m_intakeTab;
 
   public Intake(ShuffleboardTab intakeTab) {
-    m_leftMotor = new CANSparkMax(IntakeConstants.kLeftMotorPort, MotorType.kBrushless);
-    m_rightMotor = new CANSparkMax(IntakeConstants.kRightMotorPort, MotorType.kBrushless);
+    m_leftMotor = new CANSparkMax(6, MotorType.kBrushless);
+    m_rightMotor = new CANSparkMax(11, MotorType.kBrushless);
 
     configMotors();
 
@@ -39,11 +38,11 @@ public class Intake extends SubsystemBase {
     m_leftMotor.restoreFactoryDefaults();
     m_rightMotor.restoreFactoryDefaults();    
 
-    m_leftMotor.setInverted(IntakeConstants.kLeftMotorInvert);
-    m_rightMotor.setInverted(IntakeConstants.kRightMotorInvert);
+    m_leftMotor.setInverted(false);
+    m_rightMotor.setInverted(true);
 
-    m_leftMotor.setIdleMode(IntakeConstants.kLeftMotorIdleMode);
-    m_rightMotor.setIdleMode(IntakeConstants.kRightMotorIdleMode);
+    m_leftMotor.setIdleMode(IdleMode.kBrake);
+    m_rightMotor.setIdleMode(IdleMode.kBrake);
 
     m_leftMotor.enableVoltageCompensation(Constants.kRobotVoltage);
     m_rightMotor.enableVoltageCompensation(Constants.kRobotVoltage);
