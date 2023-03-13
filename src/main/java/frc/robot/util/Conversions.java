@@ -121,6 +121,15 @@ public class Conversions {
       return (extension * Math.sin(ElevatorConstants.kElevatorAngle)) + ElevatorConstants.kElevatorBaseHeight;
     }
 
+    /**
+     * Converts between Absolute coordinate system pose of origin right of blue driver station
+     * to coordinate system where origin the current alliance driver station
+     * The transformation is reversible so there is no second function to convert back
+     * 
+     * @param pose pose to convert
+     * @param alliance alliance PathPlanner is using for their origin
+     * @return converted pose
+     */
     public static Pose2d absolutePoseToPathPlannerPose(Pose2d pose, Alliance alliance){
         if (alliance == Alliance.Red){
             return pose.relativeTo(new Pose2d(FieldConstants.kFieldLength, FieldConstants.kFieldWidth, new Rotation2d(Math.PI)));
