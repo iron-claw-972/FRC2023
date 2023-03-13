@@ -114,10 +114,6 @@ public class RollerIntake extends SubsystemBase {
     return Math.abs(m_intakeMotor.getSupplyCurrent());
   }
 
-  public void setNeutralMode(NeutralMode mode) {
-    m_intakeMotor.setNeutralMode(mode);
-  }
-
   public IntakePiece getHeldGamePiece() {
     return m_heldPiece;
   }
