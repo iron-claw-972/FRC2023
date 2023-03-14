@@ -16,7 +16,7 @@ import lib.controllers.Ex3DProController.Ex3DProButton;
 public class Ex3DProDriverConfig extends BaseDriverConfig {
   
   private final Ex3DProController kDriver = new Ex3DProController(OIConstants.kDriverJoy);
-
+  
   public Ex3DProDriverConfig(Drivetrain drive, ShuffleboardTab controllerTab, boolean shuffleboardUpdates) {
     super(drive, controllerTab, shuffleboardUpdates);
   }

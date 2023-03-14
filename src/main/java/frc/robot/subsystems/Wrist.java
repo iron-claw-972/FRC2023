@@ -38,9 +38,9 @@ public class Wrist extends SubsystemBase {
   private final SingleJointedArmSim m_armSim =
     new SingleJointedArmSim(
       WristConstants.kGearBox, 
-      WristConstants.kArmReduction,
+      WristConstants.kGearRatio,
       24.109,
-      WristConstants.kArmLength,
+      WristConstants.kLength,
       WristConstants.kMinAngleRads,
       WristConstants.kMaxAngleRads,
       true,

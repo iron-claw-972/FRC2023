@@ -7,6 +7,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.Supplier;
+
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -34,7 +36,7 @@ public class RollerIntake extends SubsystemBase {
 
   public RollerIntake(ShuffleboardTab intakeTab) {
     m_intakeMotor = MotorFactory.createTalonFX(IntakeConstants.kIntakeMotorId, Constants.kRioCAN);
-    
+
     m_power = 0;
     m_mode = IntakeMode.DISABLED;
     m_heldPiece = GamePieceType.NONE;
