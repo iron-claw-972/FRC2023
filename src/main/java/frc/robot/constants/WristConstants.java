@@ -31,11 +31,16 @@ public class WristConstants {
   public static final double kEncoderOffset = 0.704;
 
   public static final double kStowPos = 0.304;
-  public static final double kBottomNodePos = 0.170;
-  public static final double kMiddleNodePos = 0.170;
-  public static final double kTopNodePos = 0.250;
-  public static final double kIntakeConePos = 0.025;
-  public static final double kIntakeCubePos = 0.020;
+  public static final double kBottomNodeCubePos = 0.170;
+  public static final double kMiddleNodeCubePos = 0.170;
+  public static final double kTopNodeCubePos = 0.250;
+
+  public static final double kBottomNodeConePos = 0.070;
+  public static final double kMiddleNodeConePos = 0.070;
+  public static final double kTopNodeConePos = 0.070;
+  
+  public static final double kIntakeConePos = 0.035;
+  public static final double kIntakeCubePos = 0.015;
 
   public static final double kMinPos = kIntakeCubePos;
   public static final double kMaxPos = kStowPos;

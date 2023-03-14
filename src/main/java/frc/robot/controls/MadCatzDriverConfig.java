@@ -16,7 +16,9 @@ import lib.controllers.MadCatzController.MadCatzButton;
 public class MadCatzDriverConfig extends BaseDriverConfig {
   
   private final MadCatzController kDriver = new MadCatzController(OIConstants.kDriverJoy);
-  
+  public boolean getIsAlign() {
+    return false;
+  }
   public MadCatzDriverConfig(Drivetrain drive, ShuffleboardTab controllerTab, boolean shuffleboardUpdates) {
     super(drive, controllerTab, shuffleboardUpdates);
   }

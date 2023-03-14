@@ -30,6 +30,7 @@ import frc.robot.util.Vision;
 import lib.controllers.GameController;
 import lib.controllers.GameController.Button;
 import lib.controllers.GameController.DPad;
+import lib.controllers.GameController.RumbleStatus;
 
 public class Operator {
 
@@ -119,7 +120,7 @@ public class Operator {
       .onFalse(new SequentialCommandGroup( 
         new InstantCommand(() -> intake.setMode(IntakeMode.DISABLED)),
         // for shelf, to not hit the shelf, move arm slightly first
-        new RotateWrist(wrist, WristConstants.kBottomNodePos),
+        new RotateWrist(wrist, WristConstants.kBottomNodeCubePos),
         new PositionRollerIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, RollerPosition.STOW)
       ));
     

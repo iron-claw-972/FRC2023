@@ -24,15 +24,21 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
   
   @Override
   public void configureControls() { 
-    kDriver.get(Button.START).onTrue(new InstantCommand(() -> getDrivetrain().setYaw(0)));
+    kDriver.get(Button.START).onTrue(new InstantCommand(() -> getDrivetrain().setYaw(180)));
     kDriver.get(Button.X).whileTrue(new SetFormationX(super.getDrivetrain()));
 
     kDriver.get(Button.B).whileTrue(new BalanceCommand(super.getDrivetrain()));
+
+    kDriver.get(Button.A).onTrue(new InstantCommand(() -> super.getDrivetrain().resetModulesToAbsolute()));
   }
   
   @Override
   public double getRawSideTranslation() { 
     return kDriver.get(Axis.LEFT_X);
+  }
+
+  public boolean getIsAlign() {
+    return kDriver.LEFT_TRIGGER_BUTTON.getAsBoolean();
   }
   
   @Override
@@ -62,6 +68,6 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
 
   @Override
   public boolean getIsFieldRelative() {
-    return !kDriver.LEFT_TRIGGER_BUTTON.getAsBoolean();
+    return true;
   }
 }

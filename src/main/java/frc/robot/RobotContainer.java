@@ -238,7 +238,7 @@ public class RobotContainer {
 
       //TODO: set auto game piece on start
 
-      m_autoCommand.addOption("Hybrid Score", new PositionRollerIntake(m_elevator, m_wrist, () -> true, RollerPosition.BOTTOM).andThen(new OuttakeGamePiece(m_intake, GamePieceType.CONE)).andThen(new PositionRollerIntake(m_elevator, m_wrist, () -> true, RollerPosition.STOW)));
+      m_autoCommand.addOption("Hybrid Score", new PositionRollerIntake(m_elevator, m_wrist, () -> true, RollerPosition.BOTTOM).andThen(new OuttakeGamePiece(m_intake, () -> GamePieceType.CONE)).andThen(new PositionRollerIntake(m_elevator, m_wrist, () -> true, RollerPosition.STOW)));
 
       // m_autoCommand.addOption("HYBRID MOBILITY", 
       //   new PositionIntake(m_elevator, m_arm, ()->true, Position.BOTTOM).andThen(
