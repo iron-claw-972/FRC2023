@@ -58,8 +58,8 @@ public class MadCatzDriverConfig extends BaseDriverConfig {
   }
 
   @Override
-  public boolean getIsFieldRelative() {
-    return !kDriver.get(MadCatzButton.B7).getAsBoolean();
+  public boolean getIsAlign() {
+    return kDriver.get(MadCatzButton.B7).getAsBoolean();
   }
   
 }

@@ -129,5 +129,5 @@ public abstract class BaseDriverConfig {
   public abstract double getRawHeadingAngle();
   public abstract double getRawHeadingMagnitude();
   public abstract boolean getIsSlowMode();
-  public abstract boolean getIsFieldRelative();
+  public abstract boolean getIsAlign();
 }
