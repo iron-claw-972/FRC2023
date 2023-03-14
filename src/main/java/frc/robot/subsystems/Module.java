@@ -1,5 +1,17 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import lib.CTREModuleState;
+import frc.robot.constants.Constants;
+import frc.robot.constants.swerve.DriveConstants;
+import frc.robot.constants.swerve.ModuleConstants;
+import frc.robot.util.Conversions;
+import frc.robot.util.LogManager;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
@@ -87,6 +99,22 @@ public class Module extends SubsystemBase {
       m_driveMotor.set(ControlMode.Velocity, velocity, DemandType.ArbitraryFeedForward,
           feedforward.calculate(desiredState.speedMetersPerSecond));
     }
+    if(Constants.kLogging){
+      double motorSpeed = Conversions.falconToMPS(m_driveMotor.getSelectedSensorVelocity(), DriveConstants.kWheelCircumference,
+        DriveConstants.kDriveGearRatio);
+      LogManager.addDouble("Swerve/Modules/DriveSpeed/"+m_moduleAbbr,
+          motorSpeed
+      );
+      LogManager.addDouble("Swerve/Modules/DriveSpeedError/"+m_moduleAbbr,
+          motorSpeed-desiredState.speedMetersPerSecond
+      );
+      LogManager.addDouble("Swerve/Modules/DriveVoltage/"+m_moduleAbbr,
+          m_driveMotor.getMotorOutputVoltage()
+      );
+      LogManager.addDouble("Swerve/Modules/DriveCurrent/"+m_moduleAbbr,
+          m_driveMotor.getStatorCurrent()
+      );
+    }
   }
 
   private void setAngle(SwerveModuleState desiredState) {
@@ -95,16 +123,37 @@ public class Module extends SubsystemBase {
       stop();
       return;
     }
-
     m_angleMotor.set(ControlMode.Position, Conversions.degreesToFalcon(desiredState.angle.getDegrees(), DriveConstants.kAngleGearRatio));
+    if(Constants.kLogging){
+      double position = Conversions.falconToDegrees(m_angleMotor.getSelectedSensorPosition(), 
+        DriveConstants.kAngleGearRatio);
+      LogManager.addDouble("Swerve/Modules/SteerPosition/"+m_moduleAbbr,
+          position
+      );
+      LogManager.addDouble("Swerve/Modules/SteerPositionError/"+m_moduleAbbr,
+          position-desiredState.angle.getDegrees()
+      );
+      LogManager.addDouble("Swerve/Modules/SteerVelocity/"+m_moduleAbbr,
+          Conversions.falconToDegrees(m_angleMotor.getSelectedSensorVelocity(), 
+            DriveConstants.kAngleGearRatio)
+      );
+      LogManager.addDouble("Swerve/Modules/SteerVoltage/"+m_moduleAbbr,
+          m_angleMotor.getMotorOutputVoltage()
+      );
+      LogManager.addDouble("Swerve/Modules/SteerCurrent/"+m_moduleAbbr,
+          m_angleMotor.getStatorCurrent()
+      );
+    }
   }
 
   public void enableStateDeadband(boolean enabled) {
     m_stateDeadband = enabled;
+    LogManager.addBoolean("Swerve/Modules/StateDeadband/"+m_moduleAbbr, enabled);
   }
 
   public void setOptimize(boolean enable) {
     m_optimizeStates = enable;
+    LogManager.addBoolean("Swerve/Modules/Optimized/"+m_moduleAbbr, enable);
   }
 
   public int getModuleIndex() {
@@ -156,12 +205,22 @@ public class Module extends SubsystemBase {
   public void setDriveCharacterizationVoltage(double voltage) {
     m_angleMotor.set(ControlMode.Position, Conversions.degreesToFalcon(0, DriveConstants.kAngleGearRatio));
     m_driveMotor.set(ControlMode.PercentOutput, voltage / Constants.kRobotVoltage);
+    if(Constants.kLogging){
+      LogManager.addDouble("Swerve/Modules/DriveCharacterizationVoltage/"+m_moduleAbbr,
+        voltage
+      );
+    }
   }
 
   public void setAngleCharacterizationVoltage(double voltage) {
     m_angleMotor.set(ControlMode.PercentOutput, voltage / Constants.kRobotVoltage);
     // Set the drive motor to just enough to overcome static friction
     m_driveMotor.set(ControlMode.PercentOutput, 1.1 * DriveConstants.kDriveKS);
+    if(Constants.kLogging){
+      LogManager.addDouble("Swerve/Modules/AngleCharacterizationVoltage/"+m_moduleAbbr,
+        voltage
+      );
+    }
   }
 
   public double getSteerVelocity() {

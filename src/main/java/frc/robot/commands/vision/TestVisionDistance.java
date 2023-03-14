@@ -3,8 +3,11 @@ package frc.robot.commands.vision;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.constants.Constants;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.util.LogManager;
 import frc.robot.util.Vision;
 
 /**
@@ -15,6 +18,7 @@ public class TestVisionDistance extends CommandBase{
   private final Vision m_vision;
   private Translation2d m_visionStartTranslation, m_driveStartTranslation;
   private Pose2d m_currentPose = null;
+  private double[] m_outputData;
 
   private double m_speed;
 
@@ -28,11 +32,14 @@ public class TestVisionDistance extends CommandBase{
   // How many seconds between each data print
   private static final double kPrintDelay = 0.25;
 
-  public TestVisionDistance(double speed, Drivetrain drive, Vision vision){
+  public TestVisionDistance(double speed, Drivetrain drive, Vision vision, ShuffleboardTab visionTab){
     addRequirements(drive);
     m_drive = drive;
     m_speed = speed;
     m_vision = vision;
+    m_outputData = new double[4];
+    visionTab.addDoubleArray("Distance Test Results\n(drive, vision, difference, % difference)", 
+      ()->getOutputData());
   }
 
   @Override
@@ -46,6 +53,7 @@ public class TestVisionDistance extends CommandBase{
     m_currentPose = m_vision.getPose2d(m_drive.getPose());
     m_visionStartTranslation = m_currentPose.getTranslation();
     m_driveStartTranslation = m_drive.getPose().getTranslation();
+    m_outputData = new double[4];
   }
 
   @Override
@@ -60,15 +68,21 @@ public class TestVisionDistance extends CommandBase{
       // reset the timer
       m_endTimer.reset();
       // If kPrintDelay seconds have passed, print the data
-      // TODO: Consider using shuffleboard instead of printing
+      double driveDistance = m_drive.getPose().getTranslation().getDistance(m_driveStartTranslation);
+      double visionDistance = m_currentPose.getTranslation().getDistance(m_visionStartTranslation);
+      m_outputData = new double[]{
+        driveDistance, visionDistance,
+        visionDistance - driveDistance, (visionDistance - driveDistance) / driveDistance * 100
+      };
       if (m_printTimer.advanceIfElapsed(kPrintDelay)) {
-        double driveDistance = m_drive.getPose().getTranslation().getDistance(m_driveStartTranslation);
-        double visionDistance = m_currentPose.getTranslation().getDistance(m_visionStartTranslation);
-        System.out.printf("\nEncoder distance: %.4f\nVision distance: %.4f\n",
-          driveDistance, visionDistance);
-        System.out.printf("Difference: %.4f\nPercent difference: %.4f%%\n",
-          visionDistance - driveDistance, (visionDistance - driveDistance) / driveDistance * 100);
-      } 
+        System.out.println(m_outputData);
+      }
+      if(Constants.kLogging){
+        LogManager.addDoubleArray("Vision/DistanceTest", new double[]{
+          driveDistance, visionDistance, 
+          visionDistance - driveDistance, (visionDistance - driveDistance) / driveDistance * 100
+        });
+      }
     } else {
       m_endTimer.start();
     }
@@ -85,4 +99,7 @@ public class TestVisionDistance extends CommandBase{
     return m_endTimer.hasElapsed(kEndDelay);
   }
 
+  public double[] getOutputData(){
+    return m_outputData;
+  }
 }

@@ -11,11 +11,13 @@ import frc.robot.commands.scoring.arm.ExtendArm;
 import frc.robot.commands.scoring.elevator.CalibrateElevator;
 import frc.robot.commands.scoring.elevator.MoveElevator;
 import frc.robot.commands.scoring.intake.IntakeGamePiece;
+import frc.robot.constants.Constants;
 import frc.robot.commands.scoring.intake.OuttakeGamePiece;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.OIConstants;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
+import frc.robot.util.LogManager;
 import frc.robot.subsystems.RollerIntake;
 import frc.robot.subsystems.RollerIntake.IntakeMode;
 import frc.robot.util.Node;
@@ -101,6 +103,9 @@ public class Operator {
     if (value == 0 && DriverStation.getAlliance() == Alliance.Red) value = 2;
     if (value == 2 && DriverStation.getAlliance() == Alliance.Red) value = 0;
     selectValues[index.id] = value;
+    if(Constants.kLogging){
+      LogManager.addDoubleArray("OperatorSelection", new double[]{index.id, value});
+    }
     m_selectedNode = new Node(DriverStation.getAlliance(), selectValues[NodePositionIndex.ROW.id]+1, (selectValues[NodePositionIndex.GRID.id]*3)+selectValues[NodePositionIndex.COLUMN.id]+1);
   }
 

@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.commands.vision.TestVisionAlignment;
 import frc.robot.commands.vision.TestVisionDistance;
+import frc.robot.constants.Constants;
 import frc.robot.constants.VisionConstants;
 import frc.robot.subsystems.Drivetrain;
 
@@ -72,11 +73,13 @@ public class Vision {
       // If the camera can see an april tag, add it to the array list
       if (estimatedPose.isPresent() && estimatedPose.get().estimatedPose!=null) {
         estimatedPoses.add(estimatedPose.get());
-        LogManager.addDoubleArray("Vison/estimated pose2d", new double[]{
-          estimatedPose.get().estimatedPose.getX(),
-          estimatedPose.get().estimatedPose.getY(),
-          estimatedPose.get().estimatedPose.getRotation().getZ()
-        });
+        if(Constants.kLogging){
+          LogManager.addDoubleArray("Vison/EstimatedPose2d", new double[]{
+            estimatedPose.get().estimatedPose.getX(),
+            estimatedPose.get().estimatedPose.getY(),
+            estimatedPose.get().estimatedPose.getRotation().getZ()
+          });
+        }
       }
     }
     return estimatedPoses;
@@ -171,8 +174,8 @@ public class Vision {
   }
 
   public void addTestCommands(ShuffleboardTab testTab, GenericEntry testEntry, Drivetrain drive){
-    testTab.add("Test vision (forward)", new TestVisionDistance(0.2, drive, this));
-    testTab.add("Test vision (backward)", new TestVisionDistance(-0.2, drive, this));
+    testTab.add("Test vision (forward)", new TestVisionDistance(0.2, drive, this, m_shuffleboardTab));
+    testTab.add("Test vision (backward)", new TestVisionDistance(-0.2, drive, this, m_shuffleboardTab));
     testTab.add("Align to 0 degrees", new TestVisionAlignment(0, drive, this));
     testTab.add("Align to 90 degrees", new TestVisionAlignment(Math.PI/2, drive, this));
     testTab.add("Align to -90 degrees", new TestVisionAlignment(-Math.PI/2, drive, this));
