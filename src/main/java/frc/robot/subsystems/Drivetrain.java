@@ -248,15 +248,6 @@ public class Drivetrain extends SubsystemBase {
   }
 
   /**
-   * Resets the yaw to the trajectory's initial state, flipped for alliance.
-   * @param trajectory the trajectory to reset to.
-   */
-  public void setYaw(PathPlannerTrajectory trajectory) {
-    trajectory = PathPlannerTrajectory.transformTrajectoryForAlliance(trajectory, DriverStation.getAlliance());
-    setYaw(trajectory.getInitialHolonomicPose().getRotation());
-  }
-
-  /**
   * Resets the odometry to the given pose.
   * @param pose the pose to reset to.
   */
