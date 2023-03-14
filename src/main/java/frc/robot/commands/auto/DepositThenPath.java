@@ -21,9 +21,9 @@ public class DepositThenPath extends SequentialCommandGroup {
     addCommands(
       new InstantCommand(() -> drive.setPigeonYaw(PathGroupLoader.getPathGroup(pathName).get(0))),
       new CalibrateElevator(elevator),
-      depositPosition == RollerPosition.MIDDLE ?
-        new PositionRollerIntake(elevator, wrist, () -> false, depositPosition).withTimeout(1.5) : 
-        new MoveElevator(elevator, ElevatorConstants.kMiddleConeHeight).withTimeout(1).andThen(new PositionRollerIntake(elevator, wrist, () -> false, RollerPosition.TOP).withTimeout(1.5)),
+      depositPosition == RollerPosition.TOP ?
+        new MoveElevator(elevator, ElevatorConstants.kMiddleConeHeight).withTimeout(1).andThen(new PositionRollerIntake(elevator, wrist, () -> false, RollerPosition.TOP).withTimeout(1.5)) :
+        new PositionRollerIntake(elevator, wrist, () -> false, depositPosition).withTimeout(1.5),
       new OuttakeGamePiece(intake, () -> GamePieceType.CONE),
       new PathPlannerCommand(pathName, 0, drive, true),
       new PositionRollerIntake(elevator, wrist, () -> true, RollerPosition.STOW),
