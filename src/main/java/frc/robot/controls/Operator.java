@@ -62,7 +62,7 @@ public class Operator {
     //bottom
     m_operator.get(Button.A).onTrue(new PositionIntake(elevator, arm, m_operator.RIGHT_TRIGGER_BUTTON, Position.BOTTOM));
     //shelf
-    m_operator.get(Button.B).onTrue(new PositionIntake(elevator, arm, m_operator.RIGHT_TRIGGER_BUTTON, Position.SHELF).alongWith(new IntakeGamePiece(intake, true, m_operator.RIGHT_TRIGGER_BUTTON)))
+    m_operator.get(Button.B).onTrue(new PositionIntake(elevator, arm, m_operator.RIGHT_TRIGGER_BUTTON, Position.SHELF).alongWith(new IntakeGamePiece(intake, m_operator.RIGHT_TRIGGER_BUTTON)))
       .onFalse(new SequentialCommandGroup( 
         new InstantCommand(() -> intake.setMode(IntakeMode.DISABLED)),
         new ExtendArm(arm, 0.8),
@@ -75,7 +75,7 @@ public class Operator {
 
     //intake
     m_operator.get(Button.LB).onTrue(
-      new PositionIntake(elevator, arm, m_operator.RIGHT_TRIGGER_BUTTON, Position.INTAKE).alongWith(new IntakeGamePiece(intake, true, m_operator.RIGHT_TRIGGER_BUTTON)))
+      new PositionIntake(elevator, arm, m_operator.RIGHT_TRIGGER_BUTTON, Position.INTAKE).alongWith(new IntakeGamePiece(intake, m_operator.RIGHT_TRIGGER_BUTTON)))
       .onFalse(new PositionIntake(elevator, arm, m_operator.RIGHT_TRIGGER_BUTTON, Position.STOW));
 
     // dunk
@@ -116,7 +116,7 @@ public class Operator {
     //bottom
     m_operator.get(Button.A).onTrue(new PositionRollerIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, RollerPosition.BOTTOM));
     //shelf
-    m_operator.get(Button.B).onTrue(new PositionRollerIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, RollerPosition.SHELF).alongWith(new IntakeGamePiece(intake, true, m_operator.RIGHT_TRIGGER_BUTTON)))
+    m_operator.get(Button.B).onTrue(new PositionRollerIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, RollerPosition.SHELF).alongWith(new IntakeGamePiece(intake, m_operator.RIGHT_TRIGGER_BUTTON)))
       .onFalse(new SequentialCommandGroup( 
         new InstantCommand(() -> intake.setMode(IntakeMode.DISABLED)),
         // for shelf, to not hit the shelf, move arm slightly first
@@ -129,7 +129,7 @@ public class Operator {
 
     //intake
     m_operator.get(Button.LB).onTrue(
-      new PositionRollerIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, RollerPosition.INTAKE).alongWith(new IntakeGamePiece(intake, true, m_operator.RIGHT_TRIGGER_BUTTON)))
+      new PositionRollerIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, RollerPosition.INTAKE).alongWith(new IntakeGamePiece(intake, m_operator.RIGHT_TRIGGER_BUTTON)))
       .onFalse(new InstantCommand(() -> intake.setMode(IntakeMode.DISABLED)).andThen(new PositionRollerIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, RollerPosition.STOW)));
 
     //outtake

@@ -34,7 +34,6 @@ public class RollerIntake extends SubsystemBase {
 
   public RollerIntake(ShuffleboardTab intakeTab) {
     m_intakeMotor = MotorFactory.createTalonFX(IntakeConstants.kIntakeMotorId, Constants.kRioCAN);
-    configMotors();
     
     m_power = 0;
     m_mode = IntakeMode.DISABLED;
@@ -46,16 +45,11 @@ public class RollerIntake extends SubsystemBase {
 
   }
 
-  private void configMotors() {
-    m_intakeMotor.setNeutralMode(IntakeConstants.kNeutralMode);
-    m_intakeMotor.enableVoltageCompensation(true);
-  }
-
-  public void setMode(IntakeMode mode) {
+  public void setMode(IntakeMode mode){
     m_mode = mode; 
   }
 
-  private void setMotorPower(double power) {
+  private void setMotorPower(double power){
     m_intakeMotor.set(power); 
   }
 
