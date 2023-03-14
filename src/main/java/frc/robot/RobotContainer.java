@@ -17,8 +17,10 @@ import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.auto.DepositThenPath;
 import frc.robot.commands.auto.PathPlannerCommand;
+import frc.robot.commands.scoring.PositionIntake;
 import frc.robot.commands.scoring.PositionIntake.Position;
 import frc.robot.commands.scoring.intake.IntakeGamePiece;
+import frc.robot.commands.scoring.intake.OuttakeGamePiece;
 import frc.robot.constants.VisionConstants;
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.controls.BaseDriverConfig;
@@ -30,6 +32,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.RollerIntake;
+import frc.robot.util.GamePieceType;
 import frc.robot.util.PathGroupLoader;
 import frc.robot.util.Vision;
 
@@ -229,7 +232,7 @@ public class RobotContainer {
 
       //TODO: set auto game piece on start
 
-      // m_autoCommand.addOption("Hybrid Score", new PositionIntake(m_elevator, m_arm, () -> true, Position.BOTTOM).andThen(new OuttakeGamePiece(m_intake, GamePieceType.CONE)).andThen(new PositionIntake(m_elevator, m_arm, () -> true, Position.STOW)));
+      m_autoCommand.addOption("Hybrid Score", new PositionIntake(m_elevator, m_arm, () -> true, Position.BOTTOM).andThen(new OuttakeGamePiece(m_intake, GamePieceType.CONE)).andThen(new PositionIntake(m_elevator, m_arm, () -> true, Position.STOW)));
 
       // m_autoCommand.addOption("HYBRID MOBILITY", 
       //   new PositionIntake(m_elevator, m_arm, ()->true, Position.BOTTOM).andThen(
@@ -248,16 +251,12 @@ public class RobotContainer {
       m_autoCommand.addOption("Grid 9 Mobility Mid", new DepositThenPath("Grid 9 Mobility", Position.MIDDLE, m_drive, m_elevator, m_arm, m_intake).andThen(new IntakeGamePiece(m_intake, () -> false)));
       m_autoCommand.addOption("Grid 9 Mobility Hybrid", new DepositThenPath("Grid 9 Mobility", Position.BOTTOM, m_drive, m_elevator, m_arm, m_intake).andThen(new IntakeGamePiece(m_intake, () -> false)));
     
-    
-    
       m_autoCommand.addOption("Grid 1 Engage Top", new DepositThenPath("Grid 1 Engage", Position.TOP, m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceCommand(m_drive)));
       m_autoCommand.addOption("Grid 1 Engage Mid", new DepositThenPath("Grid 1 Engage", Position.MIDDLE, m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceCommand(m_drive)));
       m_autoCommand.addOption("Grid 1 Engage Hybrid", new DepositThenPath("Grid 1 Engage", Position.BOTTOM, m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceCommand(m_drive)));
       m_autoCommand.addOption("Grid 9 Engage Top", new DepositThenPath("Grid 9 Engage", Position.TOP, m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceCommand(m_drive)));
       m_autoCommand.addOption("Grid 9 Engage Mid", new DepositThenPath("Grid 9 Engage", Position.MIDDLE, m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceCommand(m_drive)));
       m_autoCommand.addOption("Grid 9 Engage Hybrid", new DepositThenPath("Grid 9 Engage", Position.BOTTOM, m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceCommand(m_drive)));
-      
-      
       
       m_autoCommand.addOption("Grid 4/6 Engage Top", new DepositThenPath("Grid 6 Engage No Mobility", Position.TOP, m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceCommand(m_drive)));
       m_autoCommand.addOption("Grid 4/6 Engage Mid", new DepositThenPath("Grid 6 Engage No Mobility", Position.MIDDLE, m_drive, m_elevator, m_arm, m_intake).andThen(new BalanceCommand(m_drive)));
@@ -274,13 +273,8 @@ public class RobotContainer {
       //   new PathPlannerCommand("Grid 1 Engage", 1, m_drive, true)).andThen(
       //   new BalanceCommand(m_drive))
       // );
-    
-      // m_autoCommand.addOption("Engage Left", new EngageFromLeftDriverSide(m_drive));
-      // m_autoCommand.addOption("Engage Right", new EngageFromRightDriverSide(m_drive));
     }
   }
-
-  
 
   /**
    * Loads the command scheduler shuffleboard which will add event markers whenever a command finishes, ends, or is interrupted.
