@@ -24,7 +24,7 @@ public class Module {
   private final ShuffleboardTab m_swerveTab;
 
   private final int m_moduleIndex;
-  private Rotation2d m_angleOffset;
+  private final Rotation2d m_angleOffset;
 
   private final String m_moduleAbbr;
 
@@ -33,19 +33,17 @@ public class Module {
   private final WPI_CANCoder m_CANcoder;
   private SwerveModuleState m_desiredState;
 
-  private boolean m_stateDeadband;
+  private boolean m_stateDeadband = true;
+  private boolean m_optimizeStates = true;
 
   SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(DriveConstants.kDriveKS, DriveConstants.kDriveKV, DriveConstants.kDriveKA);
 
-  private boolean m_optimizeStates = true;
 
   public Module(ModuleConstants moduleConstants, ShuffleboardTab swerveTab) {
     m_swerveTab = swerveTab;
     m_moduleIndex = moduleConstants.getType().id;
     m_moduleAbbr = moduleConstants.getType().abbrev;
     m_angleOffset = new Rotation2d(moduleConstants.getSteerOffset());
-
-    m_stateDeadband = true;
 
     /* Angle Encoder Config */
     m_CANcoder = new WPI_CANCoder(moduleConstants.getEncoderPort(), DriveConstants.kSteerEncoderCAN);
