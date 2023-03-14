@@ -47,6 +47,7 @@ public class RobotContainer {
 
   // Shuffleboard auto chooser
   private final SendableChooser<Command> m_autoCommand = new SendableChooser<>();
+  private final SendableChooser<GamePieceType> m_preloadedGamePiece = new SendableChooser<>();
 
   //shuffleboard tabs
   private final ShuffleboardTab m_mainTab = Shuffleboard.getTab("Main");
@@ -181,6 +182,7 @@ public class RobotContainer {
     
     autoChooserUpdate();
     m_autoTab.add("Auto Chooser", m_autoCommand);
+    m_autoTab.add("Preloaded Chooser", m_preloadedGamePiece);
 
     loadCommandSchedulerShuffleboard();
     
@@ -220,6 +222,9 @@ public class RobotContainer {
   public void autoChooserUpdate() {
 
     Position autoDepositPos = Position.TOP;
+
+    m_preloadedGamePiece.addOption("Cone", GamePieceType.CONE);
+    m_preloadedGamePiece.addOption("Cube", GamePieceType.CUBE);
 
     // add commands below with: m_autoCommand.addOption("Example", new ExampleCommand());
     m_autoCommand.setDefaultOption("Do Nothing", new PrintCommand("This will do nothing!"));
@@ -287,4 +292,13 @@ public class RobotContainer {
     CommandScheduler.getInstance().onCommandInterrupt(command -> Shuffleboard.addEventMarker("Command interrupted", command.getName(), EventImportance.kNormal));
     CommandScheduler.getInstance().onCommandFinish(command -> Shuffleboard.addEventMarker("Command finished", command.getName(), EventImportance.kNormal));
   }
+
+  /**
+   * Sets the held game piece type for the intake.
+   * @param gamePiece the type of game piece
+   */
+  public void updateHeldGamePiece() {
+    m_intake.setHeldGamePiece(m_preloadedGamePiece.getSelected());
+  }
+
 }
