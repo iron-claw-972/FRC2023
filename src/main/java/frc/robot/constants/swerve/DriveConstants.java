@@ -2,6 +2,7 @@ package frc.robot.constants.swerve;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
@@ -43,7 +44,7 @@ public class DriveConstants {
 
   public static int kPigeon = 0;
 
-  public static double kStartingHeadingDegrees = 180;
+  public static Rotation2d kStartingHeading = new Rotation2d();
 
   public static final SwerveDriveKinematics kKinematics = new SwerveDriveKinematics(
     new Translation2d(DriveConstants.kTrackWidth / 2, DriveConstants.kTrackWidth / 2),
@@ -169,22 +170,22 @@ public class DriveConstants {
       kDriveFrontLeft = 1;
       kSteerFrontLeft = 2;
       kEncoderFrontLeft = 3;
-      kSteerOffsetFrontLeft = -1.58+Math.PI;
+      kSteerOffsetFrontLeft = -1.58;
       
       kDriveFrontRight = 4; 
       kSteerFrontRight = 5;
       kEncoderFrontRight = 6; 
-      kSteerOffsetFrontRight = 1.935+Math.PI;
+      kSteerOffsetFrontRight = 1.935;
       
       kDriveBackLeft = 7;
       kSteerBackLeft = 8;
       kEncoderBackLeft = 9; 
-      kSteerOffsetBackLeft = -3.1415+Math.PI;
+      kSteerOffsetBackLeft = -3.1415;
       
       kDriveBackRight = 10;
       kSteerBackRight = 11;
       kEncoderBackRight = 12; 
-      kSteerOffsetBackRight = -0.383494421839714+Math.PI;
+      kSteerOffsetBackRight = -0.383494421839714;
   
       // CAN
       kDriveMotorCAN = Constants.kRioCAN;

@@ -1,6 +1,10 @@
 package frc.robot.util;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.constants.ElevatorConstants;
+import frc.robot.constants.FieldConstants;
 
 public class Conversions {
 
@@ -112,5 +116,21 @@ public class Conversions {
 
     public static double ElevatorExtensionToHeight(double extension) {
       return (extension * Math.sin(ElevatorConstants.kElevatorAngle)) + ElevatorConstants.kElevatorBaseHeight;
+    }
+
+    /**
+     * Converts between an absolute coordinate system with the origin right of the blue driver station
+     * to a coordinate system where the origin is right of the current alliance driver station.
+     * <p> The transformation is reversible so there is no second function to convert back.
+     * 
+     * @param pose pose to convert
+     * @param alliance alliance PathPlanner is using for their origin
+     * @return converted pose
+     */
+    public static Pose2d absolutePoseToPathPlannerPose(Pose2d pose, Alliance alliance){
+        if (alliance == Alliance.Red){
+            return pose.relativeTo(new Pose2d(FieldConstants.kFieldLength, FieldConstants.kFieldWidth, new Rotation2d(Math.PI)));
+        }
+        return new Pose2d(pose.getX(), pose.getY(), new Rotation2d(pose.getRotation().getRadians()));
     }
 }
