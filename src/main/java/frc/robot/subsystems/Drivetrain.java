@@ -119,13 +119,6 @@ public class Drivetrain extends SubsystemBase {
     // Our pigeon is mounted with y forward, and z upward
     m_pigeon.configMountPose(AxisDirection.PositiveY, AxisDirection.PositiveZ);
 
-    // m_modules = new ModuleOld[] {
-    //   ModuleOld.create(ModuleConstants.FRONT_LEFT, m_swerveModulesTab),
-    //   ModuleOld.create(ModuleConstants.FRONT_RIGHT, m_swerveModulesTab),
-    //   ModuleOld.create(ModuleConstants.BACK_LEFT, m_swerveModulesTab),
-    //   ModuleOld.create(ModuleConstants.BACK_RIGHT, m_swerveModulesTab)
-    // };
-
     m_modules = new Module[] {
       new Module(ModuleConstants.FRONT_LEFT, swerveModulesTab),
       new Module(ModuleConstants.FRONT_RIGHT, swerveModulesTab),
