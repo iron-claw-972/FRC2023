@@ -63,7 +63,7 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
   }
 
   @Override
-  public boolean getIsFieldRelative() {
-    return !kDriver.LEFT_TRIGGER_BUTTON.getAsBoolean();
+  public boolean getIsAlign() {
+    return kDriver.LEFT_TRIGGER_BUTTON.getAsBoolean();
   }
 }

@@ -162,6 +162,7 @@ public class Drivetrain extends SubsystemBase {
     m_yController = new PIDController(DriveConstants.kTranslationalP, 0, DriveConstants.kTranslationalD);
     m_rotationController = new PIDController(DriveConstants.kHeadingP, 0, DriveConstants.kHeadingD);
     m_rotationController.enableContinuousInput(-Math.PI, Math.PI);
+    m_rotationController.setTolerance(Units.degreesToRadians(0.25), Units.degreesToRadians(0.25));
     
     m_pathplannerXController = new PIDController(DriveConstants.kPathplannerTranslationalP, 0, DriveConstants.kPathplannerTranslationalD);
     m_pathplannerYController = new PIDController(DriveConstants.kPathplannerTranslationalP, 0, DriveConstants.kPathplannerTranslationalD);
@@ -234,7 +235,7 @@ public class Drivetrain extends SubsystemBase {
   }  
   
   /**
-  * @return the pigeon's heading in a Rotation2d
+  * @return the pigeon's heading in a Rotation2d, clamped to -180 to 180
   */
   public Rotation2d getYaw() {
     return (DriveConstants.kInvertGyro) ? Rotation2d.fromDegrees(MathUtil.inputModulus(180 - m_pigeon.getYaw(), -180, 180))

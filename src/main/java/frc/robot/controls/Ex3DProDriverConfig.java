@@ -58,7 +58,7 @@ public class Ex3DProDriverConfig extends BaseDriverConfig {
   }
 
   @Override
-  public boolean getIsFieldRelative() {
-    return !kDriver.get(Ex3DProButton.B12).getAsBoolean();
+  public boolean getIsAlign() {
+    return kDriver.get(Ex3DProButton.B12).getAsBoolean();
   }
 }
