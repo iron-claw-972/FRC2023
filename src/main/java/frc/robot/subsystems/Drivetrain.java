@@ -362,6 +362,7 @@ public class Drivetrain extends SubsystemBase {
     // the odometry stores an offset from the current pigeon angle
     // changing the angle makes that offset inaccurate, so must reset the pose as well.
     // keep the same translation, but set the odometry angle to what we want the angle to be.
+    m_pigeon.setYaw(degrees);
     resetOdometry(new Pose2d(getPose().getTranslation(), Rotation2d.fromDegrees(degrees)));
   }
 
