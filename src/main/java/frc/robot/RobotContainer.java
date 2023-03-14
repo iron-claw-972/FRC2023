@@ -253,10 +253,10 @@ public class RobotContainer {
       // TODO: add hybrid score
       m_autoCommand.addOption("Grid 1 Mobility Top", new DepositThenPath("Grid 1 Mobility", RollerPosition.TOP, m_drive, m_elevator, m_wrist, m_intake).andThen(new IntakeGamePiece(m_intake, false, GamePieceType.CUBE)));
       m_autoCommand.addOption("Grid 1 Mobility Mid", new DepositThenPath("Grid 1 Mobility", RollerPosition.MIDDLE, m_drive, m_elevator, m_wrist, m_intake).andThen(new IntakeGamePiece(m_intake, false, GamePieceType.CUBE)));
-      // m_autoCommand.addOption("Grid 1 Mobility Hybrid", new DepositThenPath("Grid 1 Mobility", RollerPosition.BOTTOM, m_drive, m_elevator, m_wrist, m_intake).andThen(new IntakeGamePiece(m_intake, () -> false)));
+      // m_autoCommand.addOption("Grid 1 Mobility Hybrid", new DepositThenPath("Grid 1 Mobility", RollerPosition.BOTTOM, m_drive, m_elevator, m_wrist, m_intake).andThen(new IntakeGamePiece(m_intake, false, GamePieceType.CUBE)));
       m_autoCommand.addOption("Grid 9 Mobility Top", new DepositThenPath("Grid 9 Mobility", RollerPosition.TOP, m_drive, m_elevator, m_wrist, m_intake).andThen(new IntakeGamePiece(m_intake, false, GamePieceType.CUBE)));
       m_autoCommand.addOption("Grid 9 Mobility Mid", new DepositThenPath("Grid 9 Mobility", RollerPosition.MIDDLE, m_drive, m_elevator, m_wrist, m_intake).andThen(new IntakeGamePiece(m_intake, false, GamePieceType.CUBE)));
-      // m_autoCommand.addOption("Grid 9 Mobility Hybrid", new DepositThenPath("Grid 9 Mobility", RollerPosition.BOTTOM, m_drive, m_elevator, m_wrist, m_intake).andThen(new IntakeGamePiece(m_intake, () -> false)));
+      // m_autoCommand.addOption("Grid 9 Mobility Hybrid", new DepositThenPath("Grid 9 Mobility", RollerPosition.BOTTOM, m_drive, m_elevator, m_wrist, m_intake).andThen(new IntakeGamePiece(m_intake, false, GamePieceType.CUBE)));
     
       m_autoCommand.addOption("Grid 1 Engage Top", new DepositThenPath("Grid 1 Engage", RollerPosition.TOP, m_drive, m_elevator, m_wrist, m_intake).andThen(new BalanceCommand(m_drive)));
       m_autoCommand.addOption("Grid 1 Engage Mid", new DepositThenPath("Grid 1 Engage", RollerPosition.MIDDLE, m_drive, m_elevator, m_wrist, m_intake).andThen(new BalanceCommand(m_drive)));
