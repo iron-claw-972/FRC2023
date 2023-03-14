@@ -7,10 +7,10 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
+import java.util.function.Supplier;
+
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
@@ -39,9 +39,8 @@ public class RollerIntake extends SubsystemBase {
 
     m_power = 0;
     m_mode = IntakeMode.DISABLED;
-    // During auto, this doesn't really matter, so we can just set it to NONE
-    // TODO: Auto commands run that pick up a game piece should set this to the correct value
     m_heldPiece = GamePieceType.NONE;
+
     m_intakeTab = intakeTab;
 
     if (Constants.kUseTelemetry) setupShuffleboard();
