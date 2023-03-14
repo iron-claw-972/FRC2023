@@ -11,10 +11,10 @@ public final class IntakeConstants {
   public static final int kIntakeMotorId = 9;
 
   // intake speeds
-  public static final double kIntakeCubePower = 0.6;
-  public static final double kOuttakeCubePower = -0.6;
-  public static final double kIntakeConePower = -0.3;
-  public static final double kOuttakeConePower = 0.3;
+  public static final double kIntakeCubePower = 0.4;
+  public static final double kOuttakeCubePower = -0.4;
+  public static final double kIntakeConePower = -0.2;
+  public static final double kOuttakeConePower = 0.2;
 
   public static final NeutralMode kNeutralMode = NeutralMode.Brake;
 
@@ -35,5 +35,5 @@ public final class IntakeConstants {
    * This needs to be tested.
    */
   //TODO: set this to a tested value
-  public static final double kIntakeStallTime = 0.2;
+  public static final double kIntakeStallTime = 0.1;
 }
