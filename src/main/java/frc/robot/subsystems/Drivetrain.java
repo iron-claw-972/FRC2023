@@ -151,7 +151,7 @@ public class Drivetrain extends SubsystemBase {
     m_pigeon.setYaw(DriveConstants.kStartingHeading.getDegrees());
     m_poseEstimator = new SwerveDrivePoseEstimator(
       DriveConstants.kKinematics,
-      getRawPigeonYaw(),
+      Rotation2d.fromDegrees(m_pigeon.getYaw()),
       getModulePositions(),
       new Pose2d() // initial Odometry Location
     );
@@ -233,15 +233,36 @@ public class Drivetrain extends SubsystemBase {
   }  
   
   /**
-  * @return the pigeon's heading in a Rotation2d
+  * @return the yaw of the robot, aka heading, the direction it is facing
   */
   public Rotation2d getYaw() {
     return m_poseEstimator.getEstimatedPosition().getRotation();
+  }  
+  
+  /**
+  * Resets the yaw of the robot.
+  * @param rotation the new yaw angle as Rotation2d
+  */
+  public void setYaw(Rotation2d rotation) {
+    resetOdometry(new Pose2d(getPose().getTranslation(), rotation));
   }
 
-  public Rotation2d getRawPigeonYaw(){
-    return (DriveConstants.kInvertGyro) ? Rotation2d.fromDegrees(MathUtil.inputModulus(180 - m_pigeon.getYaw(), -180, 180))
-        : Rotation2d.fromDegrees(MathUtil.inputModulus(m_pigeon.getYaw(), -180, 180));
+  /**
+   * Resets the yaw to the trajectory's initial state, flipped for alliance.
+   * @param trajectory the trajectory to reset to.
+   */
+  public void setYaw(PathPlannerTrajectory trajectory) {
+    trajectory = PathPlannerTrajectory.transformTrajectoryForAlliance(trajectory, DriverStation.getAlliance());
+    setYaw(trajectory.getInitialHolonomicPose().getRotation());
+  }
+
+  /**
+  * Resets the odometry to the given pose.
+  * @param pose the pose to reset to.
+  */
+  public void resetOdometry(Pose2d pose) {
+    // NOTE: must use pigeon yaw for odometer!
+    m_poseEstimator.resetPosition(Rotation2d.fromDegrees(m_pigeon.getYaw()), getModulePositions(), pose);
   }
 
   /**
@@ -289,15 +310,6 @@ public class Drivetrain extends SubsystemBase {
   */
   public Pose2d getPose() {
     return m_poseEstimator.getEstimatedPosition();
-  }
-
-  /**
-  * Resets the odometry to the given pose.
-  * @param pose the pose to reset to.
-  */
-  public void resetOdometry(Pose2d pose) {
-    // m_pigeon.setYaw(pose.getRotation().getDegrees());
-    m_poseEstimator.resetPosition(getYaw(), getModulePositions(), pose);
   }
   
   /**
@@ -356,27 +368,6 @@ public class Drivetrain extends SubsystemBase {
     setModuleStates(swerveModuleStates, isOpenLoop);
   }
 
-  /**
-   * 
-   * Resets the pigeon IMU's yaw.
-   * 
-   * @param rotation the new yaw angle as Rotation2d
-   */
-  public void setYaw(Rotation2d rotation) {
-    m_pigeon.setYaw(rotation.getDegrees());
-  }
-
-  /**
-   * 
-   * Resets the pigeon IMU's yaw to the trajectory's intial state, flipped for alliance.
-   * 
-   * @param traj the trajectory to reset to.
-   */
-  public void setPigeonYaw(PathPlannerTrajectory traj) {
-    traj = PathPlannerTrajectory.transformTrajectoryForAlliance(traj, DriverStation.getAlliance());
-    setYaw(traj.getInitialHolonomicPose().getRotation());
-  }
-
   public void resetModulesToAbsolute() {
     for (Module mod : m_modules) {
       mod.resetToAbsolute();
@@ -385,8 +376,8 @@ public class Drivetrain extends SubsystemBase {
 
   /** Updates the field relative position of the robot. */
   public void updateOdometry() {
-    // Updates pose based on encoders and gyro
-    m_poseEstimator.update(getRawPigeonYaw(), getModulePositions());
+    // Updates pose based on encoders and gyro. NOTE: must use yaw directly from gyro!
+    m_poseEstimator.update(Rotation2d.fromDegrees(m_pigeon.getYaw()), getModulePositions());
 
     // Updates pose based on vision
     if (m_visionEnabled) {
@@ -446,7 +437,7 @@ public class Drivetrain extends SubsystemBase {
    * @param fieldRelative whether the provided x and y speeds are relative to the field
    */
   public void driveHeading(double xSpeed, double ySpeed, double heading, boolean fieldRelative) {
-    double rot = m_rotationController.calculate(getRawPigeonYaw().getRadians(), heading);
+    double rot = m_rotationController.calculate(getYaw().getRadians(), heading);
     //SmartDashboard.putNumber("Heading PID Output", rot);
     setChassisSpeeds((
       fieldRelative
@@ -587,7 +578,7 @@ public class Drivetrain extends SubsystemBase {
     m_drivetrainTab.addNumber("estimated Y", () -> m_poseEstimator.getEstimatedPosition().getY());
     m_drivetrainTab.addNumber("getPitch", () -> m_pigeon.getPitch());
     m_drivetrainTab.addNumber("getRoll", () -> m_pigeon.getRoll());
-    m_drivetrainTab.addNumber("getYaw", () -> m_pigeon.getYaw());
+    m_drivetrainTab.addNumber("pigeon yaw", () -> m_pigeon.getYaw());
     
     m_drivetrainTab.addNumber("Gyro X", () -> getAngularRate(0));
     m_drivetrainTab.addNumber("Gyro Y", () -> getAngularRate(1));

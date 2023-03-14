@@ -52,9 +52,7 @@ public class PathPlannerCommand extends SequentialCommandGroup {
       PathPlannerTrajectory path = PathPlannerTrajectory.transformTrajectoryForAlliance(
         pathGroup.get(pathIndex), DriverStation.getAlliance());
       if (resetPose) {
-        drive.setPigeonYaw(path); 
-        drive.resetOdometry(Conversions.absolutePoseToPathPlannerPose(
-        path.getInitialHolonomicPose(), DriverStation.getAlliance()));
+        drive.resetOdometry(Conversions.absolutePoseToPathPlannerPose(path.getInitialHolonomicPose(), DriverStation.getAlliance()));
       }
     }), 
     new PPSwerveControllerCommand(

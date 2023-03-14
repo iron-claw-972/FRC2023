@@ -19,7 +19,7 @@ public class DepositThenPath extends SequentialCommandGroup {
   public DepositThenPath(String pathName, Position depositPosition, Drivetrain drive, Elevator elevator, FourBarArm arm, RollerIntake intake) {
     addRequirements(drive, elevator, arm, intake);
     addCommands(
-      new InstantCommand(() -> drive.setPigeonYaw(PathGroupLoader.getPathGroup(pathName).get(0))),
+      new InstantCommand(() -> drive.setYaw(PathGroupLoader.getPathGroup(pathName).get(0))),
       new CalibrateElevator(elevator),
       depositPosition == Position.MIDDLE ?
         new PositionIntake(elevator, arm, () -> false, depositPosition).withTimeout(1.5) : 
