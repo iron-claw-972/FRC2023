@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.math.MathUtil;
@@ -9,11 +7,10 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.DutyCycleEncoderSim;
-import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
@@ -39,16 +36,16 @@ public class Wrist extends SubsystemBase {
     new SingleJointedArmSim(
       WristConstants.kGearBox, 
       WristConstants.kGearRatio,
-      24.109,
+      WristConstants.kMomentOfInertia,
       WristConstants.kLength,
       WristConstants.kMinAngleRads,
       WristConstants.kMaxAngleRads,
       true,
       VecBuilder.fill(2*Math.PI/FalconConstants.kResolution)
       );
-      private final DutyCycleEncoderSim m_EncoderSim;
+  private final DutyCycleEncoderSim m_encoderSim;
 
-// Create a Mechanism2d display of an Arm with a fixed ArmTower and moving Arm.
+  // Create a Mechanism2d display of an Arm with a fixed ArmTower and moving Arm.
   private final Mechanism2d m_mech2d = new Mechanism2d(60, 60);
   private final MechanismRoot2d m_armPivot = m_mech2d.getRoot("ArmPivot", 30, 30);
   private final MechanismLigament2d m_armTower =
@@ -72,14 +69,13 @@ public class Wrist extends SubsystemBase {
     SmartDashboard.putData("Arm Sim", m_mech2d);
     // configure the encoder
     m_absEncoder = new DutyCycleEncoder(WristConstants.kAbsEncoderPort); 
-    m_EncoderSim = new DutyCycleEncoderSim(m_absEncoder);
+    m_encoderSim = new DutyCycleEncoderSim(m_absEncoder);
 
     // make the PID controller
     m_pid = new PIDController(WristConstants.kP, WristConstants.kI, WristConstants.kD);
     // set the PID controller's tolerance
     m_pid.setTolerance(WristConstants.kTolerance);
-    // go to the initial position (use the class method)
-
+    // go to the initial position
     setSetpoint(WristConstants.kStowPos);
 
     if (Constants.kUseTelemetry) {
@@ -126,6 +122,7 @@ public class Wrist extends SubsystemBase {
   public void setMotorPower(double power) {
     power = MathUtil.clamp(power, -WristConstants.kMotorPowerClamp, WristConstants.kMotorPowerClamp);
     
+    // don't power motor past min and max positions
     if (getAbsEncoderPos() <= WristConstants.kMinPos && power < 0) {
       power = 0;
     }
@@ -163,18 +160,13 @@ public class Wrist extends SubsystemBase {
     System.out.println(m_motor.getMotorOutputVoltage() * RobotController.getBatteryVoltage());
     m_armSim.setInput(m_motor.getMotorOutputVoltage() * RobotController.getBatteryVoltage());
 
-    // Next, we update it. The standard loop time is 20ms.
-    m_armSim.update(0.02);
+    // update arm sim
+    m_armSim.update(Constants.kLoopTime);
 
-    m_EncoderSim.set(m_armSim.getAngleRads()/(Math.PI*2));
+    m_encoderSim.set(m_armSim.getAngleRads()/(Math.PI*2));
 
     RoboRioSim.setVInVoltage(
         BatterySim.calculateDefaultBatteryLoadedVoltage(m_armSim.getCurrentDrawAmps()));
     m_arm.setAngle(Units.radiansToDegrees(m_armSim.getAngleRads()));
   }
-
-  public double getMotorvoltage(){
-    return m_motor.getMotorOutputVoltage();
-  }
 }
-
