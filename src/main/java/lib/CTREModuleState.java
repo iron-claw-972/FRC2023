@@ -13,6 +13,7 @@ public class CTREModuleState {
    * @param desiredState The desired state.
    * @param currentAngle The current module angle.
    */
+  // TOODO: double check this
   public static SwerveModuleState optimize(SwerveModuleState desiredState, Rotation2d currentAngle) {
     double targetAngle = placeInAppropriate0To360Scope(currentAngle.getDegrees(), desiredState.angle.getDegrees());
     double targetSpeed = desiredState.speedMetersPerSecond;

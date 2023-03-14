@@ -72,6 +72,7 @@ public class Module {
      * This is a custom optimize function, since default WPILib optimize assumes
      * continuous controller which CTRE and Rev onboard is not
      */
+    //TODO: maybe use WPI optimization and add second layer for non contuniuos angle set in the set angle
     desiredState = m_optimizeStates ? CTREModuleState.optimize(desiredState, getState().angle) : desiredState;
     m_desiredState = desiredState;
     setAngle(desiredState);
@@ -84,7 +85,9 @@ public class Module {
    * @param isOpenLoop don't use integrated velocity PID and instead set percentage power
    */
   private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
+    // TODO: why is non open loop even a option
     if (isOpenLoop) {
+      // FIXME: Speed is no proportional to volatage form 0 at least use satic FF
       double percentOutput = desiredState.speedMetersPerSecond / DriveConstants.kMaxSpeed;
       m_driveMotor.set(ControlMode.PercentOutput, percentOutput);
     } else {
@@ -92,11 +95,14 @@ public class Module {
         desiredState.speedMetersPerSecond, 
         DriveConstants.kWheelCircumference,
         DriveConstants.kDriveGearRatio);
+      // currently assuming sets velocity using onboard PID
+      // TODO: double check how this works
       m_driveMotor.set(ControlMode.Velocity, velocity, DemandType.ArbitraryFeedForward,
           feedforward.calculate(desiredState.speedMetersPerSecond));
     }
   }
 
+  // TODO: add optimization in here
   private void setAngle(SwerveModuleState desiredState) {
     // Prevent rotating module if desired speed < 1% of max speed. Prevents Jittering.
     if (m_stateDeadband && (Math.abs(desiredState.speedMetersPerSecond) <= (DriveConstants.kMaxSpeed * 0.01))) {
@@ -197,11 +203,13 @@ public class Module {
     resetToAbsolute();
   }
 
+  //FIXME
   public void setDriveCharacterizationVoltage(double voltage) {
     m_angleMotor.set(ControlMode.Position, Conversions.degreesToFalcon(0, DriveConstants.kAngleGearRatio));
     m_driveMotor.set(ControlMode.PercentOutput, voltage / Constants.kRobotVoltage);
   }
 
+  //FIXME
   public void setAngleCharacterizationVoltage(double voltage) {
     m_angleMotor.set(ControlMode.PercentOutput, voltage / Constants.kRobotVoltage);
     // Set the drive motor to just enough to overcome static friction
@@ -290,10 +298,12 @@ public class Module {
     return m_desiredState.speedMetersPerSecond - getDriveVelocity();
   }
 
+  //FIXME
   public double getDriveFeedForwardKV() {
     return DriveConstants.kDriveKV;
   }
 
+  //FIXME
   public double getDriveFeedForwardKS() {
     return DriveConstants.kDriveKS;
   }
@@ -306,25 +316,32 @@ public class Module {
     m_angleMotor.set(0);
   }
 
+  //FIXME
   public void setDriveVoltage(double volts) {
     //with voltage compensation enabled do not use setVoltage
   }
 
+  //FIXME
   public void setSteerVoltage(double voltage) {
    //with voltage compensation enabled do not use setVoltage
   }
 
+  //FIXME
   public void setDriveFeedForwardValues(double kS, double kV) {    
   }
 
+  //FIXME
   public double getSteerFeedForwardKV() {
     return 0;
   }
 
+  //FIXME
   public double getSteerFeedForwardKS() {
     return 0;
   }
 
+  //FIXME
   public void setAngle(Rotation2d rotation2d) {
+
   }
 }
