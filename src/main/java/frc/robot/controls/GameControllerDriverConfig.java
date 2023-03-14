@@ -36,10 +36,6 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
   public double getRawSideTranslation() { 
     return kDriver.get(Axis.LEFT_X);
   }
-
-  public boolean getIsAlign() {
-    return kDriver.LEFT_TRIGGER_BUTTON.getAsBoolean();
-  }
   
   @Override
   public double getRawForwardTranslation() {
