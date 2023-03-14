@@ -78,8 +78,10 @@ public class Module {
       double percentOutput = desiredState.speedMetersPerSecond / DriveConstants.kMaxSpeed;
       m_driveMotor.set(ControlMode.PercentOutput, percentOutput);
     } else {
-      double velocity = Conversions.MPSToFalcon(desiredState.speedMetersPerSecond, DriveConstants.kWheelCircumference,
-          DriveConstants.kDriveGearRatio);
+      double velocity = Conversions.MPSToFalcon(
+        desiredState.speedMetersPerSecond, 
+        DriveConstants.kWheelCircumference,
+        DriveConstants.kDriveGearRatio);
       m_driveMotor.set(ControlMode.Velocity, velocity, DemandType.ArbitraryFeedForward,
           feedforward.calculate(desiredState.speedMetersPerSecond));
     }
@@ -92,7 +94,9 @@ public class Module {
       return;
     }
 
-    m_angleMotor.set(ControlMode.Position, Conversions.degreesToFalcon(desiredState.angle.getDegrees(), DriveConstants.kAngleGearRatio));
+    m_angleMotor.set(ControlMode.Position, Conversions.degreesToFalcon(
+      desiredState.angle.getDegrees(), DriveConstants.kAngleGearRatio
+    ));
   }
 
   public void enableStateDeadband(boolean enabled) {
@@ -107,19 +111,29 @@ public class Module {
     return m_moduleIndex;
   }
 
+  public double getDrivePosition(){
+    return Conversions.falconToMeters(
+          m_driveMotor.getSelectedSensorPosition(),
+          DriveConstants.kWheelCircumference,
+          DriveConstants.kDriveGearRatio);
+  }
   public Rotation2d getAngle() {
-    return Rotation2d.fromDegrees(
-        Conversions.falconToDegrees(m_angleMotor.getSelectedSensorPosition(), DriveConstants.kAngleGearRatio));
+    return Rotation2d.fromDegrees( Conversions.falconToDegrees(
+      m_angleMotor.getSelectedSensorPosition(), 
+      DriveConstants.kAngleGearRatio
+    ));
   }
 
   public Rotation2d getCANcoder() {
-    return Rotation2d.fromDegrees(m_CANcoder.getAbsolutePosition());
+    return Rotation2d.fromDegrees(m_CANcoder.getAbsolutePosition() - m_angleOffset.getDegrees());
   }
 
   public void resetToAbsolute() {
-    double absolutePosition = Conversions.degreesToFalcon(getCANcoder().getDegrees() - m_angleOffset.getDegrees(),
-        DriveConstants.kAngleGearRatio);
-    m_angleMotor.setSelectedSensorPosition(absolutePosition);
+    m_angleMotor.setSelectedSensorPosition(Conversions.degreesToFalcon(
+      getCANcoder().getDegrees(),
+      DriveConstants.kAngleGearRatio
+    ));
+    
   }
 
   private void configCANcoder() {
@@ -127,7 +141,7 @@ public class Module {
     m_CANcoder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360);
     m_CANcoder.configSensorDirection(DriveConstants.kModuleConstants.canCoderInvert);
     m_CANcoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
-    m_CANcoder.configFeedbackCoefficient(0.087890625, "deg", SensorTimeBase.PerSecond);
+    m_CANcoder.configFeedbackCoefficient(360 / 4096, "deg", SensorTimeBase.PerSecond);
   }
 
   private void configAngleMotor() {
@@ -187,15 +201,13 @@ public class Module {
 
   public SwerveModuleState getState() {
     return new SwerveModuleState(
-        Conversions.falconToMPS(m_driveMotor.getSelectedSensorVelocity(), DriveConstants.kWheelCircumference,
-            DriveConstants.kDriveGearRatio),
+        getDriveVelocity(),
         getAngle());
   }
 
   public SwerveModulePosition getPosition() {
     return new SwerveModulePosition(
-        Conversions.falconToMeters(m_driveMotor.getSelectedSensorPosition(), DriveConstants.kWheelCircumference,
-            DriveConstants.kDriveGearRatio),
+        getDrivePosition(),
         getAngle());
   }
 
@@ -220,8 +232,15 @@ public class Module {
     return m_desiredState.angle;
   }
 
+  public double getDriveVelocity() {
+    return Conversions.falconToMPS(
+      m_driveMotor.getSelectedSensorVelocity(), 
+      DriveConstants.kWheelCircumference,
+      DriveConstants.kDriveGearRatio
+    );
+  }
   public double getDriveVelocityError() {
-    return m_desiredState.speedMetersPerSecond - getState().speedMetersPerSecond;
+    return m_desiredState.speedMetersPerSecond - getDriveVelocity();
   }
 
   public double getDriveFeedForwardKV() {
