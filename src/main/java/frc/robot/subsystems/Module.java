@@ -62,6 +62,11 @@ public class Module {
     setupShuffleboard();
   }
 
+  /**
+   * set module desired state
+   * @param desiredState state to set module to
+   * @param isOpenLoop don't use integrated velocity PID and instead set percentage power for state velocity
+   */
   public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {
     /*
      * This is a custom optimize function, since default WPILib optimize assumes
@@ -72,7 +77,12 @@ public class Module {
     setAngle(desiredState);
     setSpeed(desiredState, isOpenLoop);
   }
-
+  
+  /**
+   * sets desired state velocity
+   * @param desiredState desired state with desired velocity
+   * @param isOpenLoop don't use integrated velocity PID and instead set percentage power
+   */
   private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
     if (isOpenLoop) {
       double percentOutput = desiredState.speedMetersPerSecond / DriveConstants.kMaxSpeed;
@@ -88,7 +98,7 @@ public class Module {
   }
 
   private void setAngle(SwerveModuleState desiredState) {
-    // Prevent rotating module if desired speed < 1%. Prevents Jittering.
+    // Prevent rotating module if desired speed < 1% of max speed. Prevents Jittering.
     if (m_stateDeadband && (Math.abs(desiredState.speedMetersPerSecond) <= (DriveConstants.kMaxSpeed * 0.01))) {
       stop();
       return;
@@ -99,24 +109,42 @@ public class Module {
     ));
   }
 
+  /**
+   * sets state deadband enable status used for not running the module if desired speed is too low
+   * @param enable should state deadband be enabled
+   */
   public void enableStateDeadband(boolean enabled) {
     m_stateDeadband = enabled;
   }
 
+  /**
+   * sets swerve module state optimization enable status used to find least steer angle rotation needed
+   * @param enable should state optimization be enabled
+   */
   public void setOptimize(boolean enable) {
     m_optimizeStates = enable;
   }
 
+  /**
+   * @return index in drivetrain module array
+   */
   public int getModuleIndex() {
     return m_moduleIndex;
   }
 
+  /**
+   * @return get encoder position in meters
+   */
   public double getDrivePosition(){
     return Conversions.falconToMeters(
           m_driveMotor.getSelectedSensorPosition(),
           DriveConstants.kWheelCircumference,
           DriveConstants.kDriveGearRatio);
   }
+
+  /**
+   * @return module steer angle from steer motor's integrated encoder as Rotation2d with 0 being straight forward
+   */
   public Rotation2d getAngle() {
     return Rotation2d.fromDegrees( Conversions.falconToDegrees(
       m_angleMotor.getSelectedSensorPosition(), 
@@ -124,10 +152,16 @@ public class Module {
     ));
   }
 
+  /**
+   * @return module steer angle from Cancoder as Rotation2d with 0 being straight forward
+   */
   public Rotation2d getCANcoder() {
     return Rotation2d.fromDegrees(m_CANcoder.getAbsolutePosition() - m_angleOffset.getDegrees());
   }
 
+  /**
+   * reset steer motor's integrated encoder using CANcoder's reading
+   */
   public void resetToAbsolute() {
     m_angleMotor.setSelectedSensorPosition(Conversions.degreesToFalcon(
       getCANcoder().getDegrees(),
@@ -174,6 +208,9 @@ public class Module {
     m_driveMotor.set(ControlMode.PercentOutput, 1.1 * DriveConstants.kDriveKS);
   }
 
+  /**
+   * @return module steer rotational velocity in radians per second
+   */
   public double getSteerVelocity() {
     return Conversions.falconToRPM(m_angleMotor.getSelectedSensorVelocity(), DriveConstants.kAngleGearRatio) * 2 * Math.PI / 60;
   }
@@ -224,14 +261,21 @@ public class Module {
     }
   }
 
+  /**
+   * @return desired drive velocity
+   */
   public double getDesiredVelocity() {
     return m_desiredState.speedMetersPerSecond;
   }
-
+  /**
+   * @return desired module steer angle
+   */
   public Rotation2d getDesiredAngle() {
     return m_desiredState.angle;
   }
-
+  /**
+   * @return drive velocity in meters per second
+   */
   public double getDriveVelocity() {
     return Conversions.falconToMPS(
       m_driveMotor.getSelectedSensorVelocity(), 
@@ -239,6 +283,9 @@ public class Module {
       DriveConstants.kDriveGearRatio
     );
   }
+    /**
+   * @return difference between desired and actual drive velocity in meters per second
+   */
   public double getDriveVelocityError() {
     return m_desiredState.speedMetersPerSecond - getDriveVelocity();
   }
@@ -251,6 +298,9 @@ public class Module {
     return DriveConstants.kDriveKS;
   }
 
+  /**
+   * set module motor powers to 0
+   */
   public void stop() {
     m_driveMotor.set(0);
     m_angleMotor.set(0);
