@@ -34,14 +34,6 @@ public class Robot extends TimedRobot {
     SwerveCompetition, SwerveTest,
     ClassBot1, ClassBot2, ClassBot3, ClassBot4
   };
-  /**
-   * The Robot Identity.
-   * <p><b>Note: kRobotId is not a constant.</b></p>
-   * @deprecated pass the robot identity as an argument
-   */
-  @Deprecated
-  // assume the default identity
-  public static RobotId kRobotId = RobotId.Default;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -55,14 +47,8 @@ public class Robot extends TimedRobot {
     //   Uncomment the next line, set the desired RobotId, deploy, and then comment the line out
     // setRobotId(RobotId.SwerveTest);
 
-    // Determine the Robot Identity from the RoboRIO's onboard Preferences
-    RobotId robotId = getRobotId();
-
-    // save the identity in a global
-    kRobotId = robotId;
-
-    // build the RobotContainer
-    m_robotContainer = new RobotContainer(robotId);
+    // build the RobotContainer with the robot id from preferences
+    m_robotContainer = new RobotContainer(getRobotId());
   }
  
   /**
