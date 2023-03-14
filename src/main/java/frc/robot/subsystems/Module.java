@@ -250,9 +250,9 @@ public class Module {
 
   private void setupShuffleboard() {
     if (Constants.kUseTelemetry) {
-      m_swerveTab.addDouble(m_moduleAbbr + " CANcoder Angle (deg)", getCANcoder()::getDegrees);
-      m_swerveTab.addDouble(m_moduleAbbr + " FX Angle (deg)", getPosition().angle::getDegrees);
-      m_swerveTab.addDouble(m_moduleAbbr + " Velocity (m/s)", () -> getState().speedMetersPerSecond);
+      m_swerveTab.addDouble(m_moduleAbbr + " CANcoder Angle (deg)", () -> getCANcoder().getDegrees());
+      m_swerveTab.addDouble(m_moduleAbbr + " FX Angle (deg)", () -> getAngle().getDegrees());
+      m_swerveTab.addDouble(m_moduleAbbr + " Velocity (m/s)", () -> getDriveVelocity());
       m_swerveTab.addDouble(m_moduleAbbr + " Desired Velocity (m/s)", () -> m_desiredState.speedMetersPerSecond);
       m_swerveTab.addDouble(m_moduleAbbr + " Desired Angle (deg)", () -> m_desiredState.angle.getDegrees());
       m_swerveTab.addBoolean(m_moduleAbbr + " Jitter prevention enabled", () -> m_stateDeadband);
