@@ -119,9 +119,9 @@ public class Conversions {
     }
 
     /**
-     * Converts between Absolute coordinate system pose of origin right of blue driver station
-     * to coordinate system where origin the current alliance driver station
-     * The transformation is reversible so there is no second function to convert back
+     * Converts between an absolute coordinate system with the origin right of the blue driver station
+     * to a coordinate system where the origin is right of the current alliance driver station.
+     * <p> The transformation is reversible so there is no second function to convert back.
      * 
      * @param pose pose to convert
      * @param alliance alliance PathPlanner is using for their origin
