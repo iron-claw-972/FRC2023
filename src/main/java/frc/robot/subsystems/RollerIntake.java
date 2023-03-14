@@ -38,9 +38,8 @@ public class RollerIntake extends SubsystemBase {
     
     m_power = 0;
     m_mode = IntakeMode.DISABLED;
-    // During auto, this doesn't really matter, so we can just set it to NONE
-    // TODO: Auto commands run that pick up a game piece should set this to the correct value
     m_heldPiece = GamePieceType.NONE;
+
     m_intakeTab = intakeTab;
 
     if (Constants.kUseTelemetry) setupShuffleboard();

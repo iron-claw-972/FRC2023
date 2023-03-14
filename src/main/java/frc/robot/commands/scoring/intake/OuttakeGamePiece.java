@@ -45,7 +45,7 @@ public class OuttakeGamePiece extends CommandBase {
       System.out.println("CONE OUTTAKE!!!!!!!1");
       m_intake.setMode(IntakeMode.OUTTAKE_CONE);
     } else {
-      DriverStation.reportWarning("OuttakeGamePiece Command missing GamePieceType", false);
+      DriverStation.reportWarning("OuttakeGamePiece Command detected GamePieceType.NONE as held game piece.", false);
       cancel();
       return;
     }
