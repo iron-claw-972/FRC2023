@@ -28,6 +28,8 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
     kDriver.get(Button.X).whileTrue(new SetFormationX(super.getDrivetrain()));
 
     kDriver.get(Button.B).whileTrue(new BalanceCommand(super.getDrivetrain()));
+
+    kDriver.get(Button.A).onTrue(new InstantCommand(() -> getDrivetrain().resetModulesToAbsolute()));
   }
   
   @Override
