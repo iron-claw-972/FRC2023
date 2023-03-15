@@ -161,6 +161,7 @@ public class Drivetrain extends SubsystemBase {
     m_yController = new PIDController(DriveConstants.kTranslationalP, 0, DriveConstants.kTranslationalD);
     m_rotationController = new PIDController(DriveConstants.kHeadingP, 0, DriveConstants.kHeadingD);
     m_rotationController.enableContinuousInput(-Math.PI, Math.PI);
+    m_rotationController.setTolerance(Units.degreesToRadians(0.25), Units.degreesToRadians(0.25));
     
     m_pathplannerXController = new PIDController(DriveConstants.kPathplannerTranslationalP, 0, DriveConstants.kPathplannerTranslationalD);
     m_pathplannerYController = new PIDController(DriveConstants.kPathplannerTranslationalP, 0, DriveConstants.kPathplannerTranslationalD);
