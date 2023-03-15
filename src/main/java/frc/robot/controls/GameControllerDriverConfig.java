@@ -42,7 +42,7 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
   
   @Override
   public double getRawForwardTranslation() {
-    return -kDriver.get(Axis.LEFT_Y);
+    return kDriver.get(Axis.LEFT_Y);
   }
   
   @Override

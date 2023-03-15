@@ -34,7 +34,7 @@ public class DefaultDriveCommand extends CommandBase {
     /* Drive */
     m_swerve.drive(
       m_driver.getForwardTranslation() * slowFactor * reversedForRed,
-      m_driver.getSideTranslation() * slowFactor * -reversedForRed,
+      m_driver.getSideTranslation() * slowFactor * reversedForRed,
       m_driver.getRotation() * slowRotFactor,
       m_driver.getIsFieldRelative(),
       true
