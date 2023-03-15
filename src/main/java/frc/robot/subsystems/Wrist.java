@@ -65,8 +65,11 @@ public class Wrist extends SubsystemBase {
   public Wrist(ShuffleboardTab wristTab) {
     // configure the motor.
     m_motor = MotorFactory.createTalonFXSupplyLimit(
-      WristConstants.kMotorID, Constants.kRioCAN, 
-      WristConstants.kContinuousCurrentLimit, WristConstants.kPeakCurrentLimit, WristConstants.kPeakCurrentDuration);
+      WristConstants.kMotorID, 
+      Constants.kRioCAN, 
+      WristConstants.kContinuousCurrentLimit, 
+      WristConstants.kPeakCurrentLimit, 
+      WristConstants.kPeakCurrentDuration);
     m_motor.setNeutralMode(WristConstants.kNeutralMode);
     m_motor.setInverted(WristConstants.kMotorInvert); 
     
@@ -122,6 +125,9 @@ public class Wrist extends SubsystemBase {
     return m_pid.atSetpoint();
   }
 
+  /**
+   * Sets the motor power, clamping it and ensuring it will not activate below/above the min/max positions
+   */
   public void setMotorPower(double power) {
     power = MathUtil.clamp(power, -WristConstants.kMotorPowerClamp, WristConstants.kMotorPowerClamp);
     
@@ -140,6 +146,9 @@ public class Wrist extends SubsystemBase {
     m_enabled = enable;
   }
 
+  /**
+   * @return the absolute encoder position in rotations, zero being facing forward
+   */
   public double getAbsEncoderPos() {
     // inverted to make rotating towards stow positive
     // offset makes flat, facing out, zero
