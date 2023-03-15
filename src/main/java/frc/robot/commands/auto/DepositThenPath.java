@@ -44,9 +44,8 @@ public class DepositThenPath extends SequentialCommandGroup {
         new PositionIntake(elevator, arm, () -> true, depositPosition).withTimeout(1.5) : 
         new MoveElevator(elevator, ElevatorConstants.kMiddleConeHeight).withTimeout(1).andThen(new PositionIntake(elevator, arm, () -> true, Position.TOP).withTimeout(1.5)),
       new OuttakeGamePiece(intake, GamePieceType.CONE),
-      new PathPlannerCommand(paths, 0, drive, true),
       new PositionIntake(elevator, arm, () -> true, Position.STOW),
-      new PathPlannerCommand(paths, 1, drive, true)
+      new PathPlannerCommand(paths, 0, drive, true)
     );
   }
 }
