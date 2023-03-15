@@ -52,7 +52,7 @@ public class Operator {
     //bottom
     m_operator.get(Button.A).onTrue(new PositionIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, Position.BOTTOM));
     //shelf
-    m_operator.get(Button.B).onTrue(new PositionIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, Position.SHELF).alongWith(new IntakeGamePiece(intake, m_operator.RIGHT_TRIGGER_BUTTON)))
+    m_operator.get(Button.B).onTrue(new PositionIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, Position.SHELF).alongWith(new IntakeGamePiece(intake, m_operator.RIGHT_TRIGGER_BUTTON, true)))
       .onFalse(new SequentialCommandGroup( 
         new InstantCommand(() -> intake.setMode(IntakeMode.DISABLED)),
         // for shelf, to not hit the shelf, move wrist slightly first
@@ -65,7 +65,7 @@ public class Operator {
 
     // intake
     m_operator.get(Button.LB).onTrue(
-      new PositionIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, Position.INTAKE).alongWith(new IntakeGamePiece(intake, m_operator.RIGHT_TRIGGER_BUTTON)))
+      new PositionIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, Position.INTAKE).alongWith(new IntakeGamePiece(intake, m_operator.RIGHT_TRIGGER_BUTTON, true)))
       .onFalse(new InstantCommand(() -> intake.setMode(IntakeMode.DISABLED)).andThen(new PositionIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, Position.STOW)));
 
     // outtake
