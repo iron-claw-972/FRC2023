@@ -48,6 +48,8 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
     kDriver.get(Button.RB).whileTrue(new GoToShelfPID(getDrivetrain()));
     
     kDriver.get(Button.B).whileTrue(new BalanceCommand(super.getDrivetrain()));
+
+    kDriver.get(Button.A).onTrue(new InstantCommand(() -> getDrivetrain().resetModulesToAbsolute()));
   }
   
   @Override
@@ -81,7 +83,7 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
   }
 
   @Override
-  public boolean getIsFieldRelative() {
-    return !kDriver.LEFT_TRIGGER_BUTTON.getAsBoolean();
+  public boolean getIsAlign() {
+    return kDriver.LEFT_TRIGGER_BUTTON.getAsBoolean();
   }
 }
