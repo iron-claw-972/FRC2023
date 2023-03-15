@@ -29,7 +29,7 @@ public class DefaultDriveCommand extends CommandBase {
     double slowFactor = m_driver.getIsSlowMode() ? DriveConstants.kSlowDriveFactor : 1;
     double slowRotFactor = m_driver.getIsSlowMode() ? DriveConstants.kSlowRotFactor : 1;
 
-    int reversedForRed = DriverStation.getAlliance() == Alliance.Blue ? -1 : 1;
+    int reversedForRed = DriverStation.getAlliance() == Alliance.Blue ? 1 : -1;
 
     /* Drive */
     m_swerve.drive(
