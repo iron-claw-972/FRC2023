@@ -55,7 +55,7 @@ public class Operator {
     m_operator.get(Button.B).onTrue(new PositionIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, Position.SHELF).alongWith(new IntakeGamePiece(intake, m_operator.RIGHT_TRIGGER_BUTTON)))
       .onFalse(new SequentialCommandGroup( 
         new InstantCommand(() -> intake.setMode(IntakeMode.DISABLED)),
-        // for shelf, to not hit the shelf, move arm slightly first
+        // for shelf, to not hit the shelf, move wrist slightly first
         new RotateWrist(wrist, WristConstants.kBottomNodeCubePos),
         new PositionIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, Position.STOW)
       ));

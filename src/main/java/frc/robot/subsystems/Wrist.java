@@ -45,7 +45,7 @@ public class Wrist extends SubsystemBase {
       );
   private final DutyCycleEncoderSim m_encoderSim;
 
-  // Create a Mechanism2d display of an Arm with a fixed ArmTower and moving Arm.
+  // Create a Mechanism2d display of the wrist
   private final Mechanism2d m_mech2d = new Mechanism2d(60, 60);
   private final MechanismRoot2d m_armPivot = m_mech2d.getRoot("ArmPivot", 30, 30);
   private final MechanismLigament2d m_armTower =
