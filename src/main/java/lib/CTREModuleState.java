@@ -1,64 +1,36 @@
 package lib;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 public class CTREModuleState {
-
+  
   /**
-   * Minimize the change in heading the desired swerve module state would require by potentially
-   * reversing the direction the wheel spins. Customized from WPILib's version to include placing
-   * in appropriate scope for CTRE onboard control.
-   *
-   * @param desiredState The desired state.
-   * @param currentAngle The current module angle.
-   */
-  // TOODO: double check this
+  * Minimize the change in heading the desired swerve module state would require by potentially
+  * reversing the direction the wheel spins. Customized from WPILib's version to include placing
+  * in appropriate scope for CTRE onboard control.
+  *
+  * @param desiredState The desired state.
+  * @param currentAngle The current module angle.
+  */
   public static SwerveModuleState optimize(SwerveModuleState desiredState, Rotation2d currentAngle) {
-    double targetAngle = placeInAppropriate0To360Scope(currentAngle.getDegrees(), desiredState.angle.getDegrees());
+    double targetAngle = MathUtil.inputModulus(
+      desiredState.angle.getRadians(), 
+      currentAngle.getRadians() - Math.PI,
+      currentAngle.getRadians() + Math.PI
+    );
     double targetSpeed = desiredState.speedMetersPerSecond;
-    // if state is more than 90 degrees from current angle flip velocity and rotation angle by 180 toward hte current angle
-    double delta = targetAngle - currentAngle.getDegrees();
-    if (Math.abs(delta) > 90){
-        targetSpeed = -targetSpeed;
-        targetAngle = delta > 90 ? (targetAngle -= 180) : (targetAngle += 180);
-    }        
-    return new SwerveModuleState(targetSpeed, Rotation2d.fromDegrees(targetAngle));
-  }
+    
+    if (Math.abs(targetAngle - currentAngle.getRadians()) > Math.PI/2) {
+      targetAngle = MathUtil.inputModulus(
+        desiredState.angle.getRadians(), 
+        currentAngle.getRadians() - Math.PI/2,
+        currentAngle.getRadians() + Math.PI/2
+      );
+      targetSpeed = -targetSpeed;
+    }
 
-  /**
-     * @param scopeReference Current Angle
-     * @param newAngle Target Angle
-     * @return Closest angle within scope
-     */
-    private static double placeInAppropriate0To360Scope(double scopeReference, double newAngle) {
-      // lower bound and upper bound are multiples of 360 for the bounds
-      double lowerBound;
-      double upperBound;
-      
-      double lowerOffset = scopeReference % 360;
-      if (lowerOffset >= 0) {
-          lowerBound = scopeReference - lowerOffset;
-          upperBound = scopeReference + (360 - lowerOffset);
-      } else {
-          lowerBound = scopeReference - (360 + lowerOffset);
-          upperBound = scopeReference - lowerOffset;
-      }
-
-      // put new angle above lower angle
-      while (newAngle < lowerBound) {
-          newAngle += 360;
-      }
-      // put new angle under upper bound
-      while (newAngle > upperBound) {
-          newAngle -= 360;
-      }
-
-      if (newAngle - scopeReference > 180) {
-          newAngle -= 360;
-      } else if (newAngle - scopeReference < -180) {
-          newAngle += 360;
-      }
-      return newAngle;
+    return new SwerveModuleState(targetSpeed, new Rotation2d(targetAngle));
   }
 }
