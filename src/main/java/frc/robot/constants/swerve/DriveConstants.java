@@ -2,14 +2,14 @@ package frc.robot.constants.swerve;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
-import lib.COTSFalconSwerveConstants;
-import frc.robot.Robot;
 import frc.robot.Robot.RobotId;
 import frc.robot.constants.Constants;
 import frc.robot.constants.FalconConstants;
+import lib.COTSFalconSwerveConstants;
 
 /**
  * Constants, are by default, for the competition robot. Constants get changed if the RobotId detected is not the competition robot.
@@ -22,8 +22,10 @@ public class DriveConstants {
   public static double kWheelRadius = Units.inchesToMeters(2);
 
   public static double kTrackWidth = Units.inchesToMeters(20.75);//22.75 swerve bot, 20.75 comp bot
-  public static double kDriveGearRatio = 6.75;
-  public static double kSteerGearRatio = 21.43;
+
+  // use the gear ratios
+  public static double kDriveGearRatio = (50.0 / 14.0) * (17.0 / 27.0) * (45.0 / 15.0);
+  public static double kSteerGearRatio = 150.0 / 7.0;
 
   /* Drive Motor Characterization Values 
   * Divide SYSID values by 12 to convert from volts to percent output for CTRE */
@@ -42,7 +44,7 @@ public class DriveConstants {
 
   public static int kPigeon = 0;
 
-  public static double kStartingHeadingDegrees = 180;
+  public static Rotation2d kStartingHeading = new Rotation2d();
 
   public static final SwerveDriveKinematics kKinematics = new SwerveDriveKinematics(
     new Translation2d(DriveConstants.kTrackWidth / 2, DriveConstants.kTrackWidth / 2),
@@ -88,7 +90,7 @@ public class DriveConstants {
   // it will stop the motors for kBalanceStopDuration seconds to help give
   // the charge station some time to balance.
   // "A non-linear system requires non-linear control" - jerry
-  // "If it's stupid but it works..."
+  // "If it's stupid but it works..." - Richie
   public static double kBalanceNoStopPeriod = 2;
   public static double kBalanceStopInterval = 0.5;
   public static double kBalanceStopDuration = 0.2;
@@ -168,22 +170,22 @@ public class DriveConstants {
       kDriveFrontLeft = 1;
       kSteerFrontLeft = 2;
       kEncoderFrontLeft = 3;
-      kSteerOffsetFrontLeft = -1.58+Math.PI;
+      kSteerOffsetFrontLeft = -1.58;
       
       kDriveFrontRight = 4; 
       kSteerFrontRight = 5;
       kEncoderFrontRight = 6; 
-      kSteerOffsetFrontRight = 1.935+Math.PI;
+      kSteerOffsetFrontRight = 1.935;
       
       kDriveBackLeft = 7;
       kSteerBackLeft = 8;
       kEncoderBackLeft = 9; 
-      kSteerOffsetBackLeft = -3.1415+Math.PI;
+      kSteerOffsetBackLeft = -3.1415;
       
       kDriveBackRight = 10;
       kSteerBackRight = 11;
       kEncoderBackRight = 12; 
-      kSteerOffsetBackRight = -0.383494421839714+Math.PI;
+      kSteerOffsetBackRight = -0.383494421839714;
   
       // CAN
       kDriveMotorCAN = Constants.kRioCAN;

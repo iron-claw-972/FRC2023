@@ -1,11 +1,13 @@
 package frc.robot.controls;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.SetFormationX;
 import frc.robot.constants.OIConstants;
-import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.util.Functions;
 import lib.controllers.GameController;
@@ -25,7 +27,9 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
   
   @Override
   public void configureControls() { 
-    kDriver.get(Button.START).onTrue(new InstantCommand(() -> super.getDrivetrain().setPigeonYaw(DriveConstants.kStartingHeadingDegrees)));
+    kDriver.get(Button.START).onTrue(new InstantCommand(() -> super.getDrivetrain().setYaw(
+      new Rotation2d(DriverStation.getAlliance() == Alliance.Blue ? 0 : Math.PI)
+    )));
     kDriver.get(Button.X).whileTrue(new SetFormationX(super.getDrivetrain()));
 
     kDriver.get(Button.B).whileTrue(new BalanceCommand(super.getDrivetrain()));

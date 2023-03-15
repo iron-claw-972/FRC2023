@@ -1,16 +1,5 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import lib.CTREModuleState;
-import frc.robot.constants.Constants;
-import frc.robot.constants.swerve.DriveConstants;
-import frc.robot.constants.swerve.ModuleConstants;
-import frc.robot.util.Conversions;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
@@ -20,7 +9,20 @@ import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.ctre.phoenix.sensors.SensorTimeBase;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
 
-public class Module {
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constants.Constants;
+import frc.robot.constants.swerve.DriveConstants;
+import frc.robot.constants.swerve.ModuleConstants;
+import frc.robot.util.Conversions;
+import lib.CTREModuleState;
+
+public class Module extends SubsystemBase {
   private final ShuffleboardTab m_swerveTab;
 
   private final int m_moduleIndex;
@@ -60,6 +62,12 @@ public class Module {
     setDesiredState(new SwerveModuleState(0, getAngle()), false);
 
     setupShuffleboard();
+  }
+
+  
+  @Override
+  public void periodic() {
+    
   }
 
   /**
@@ -257,7 +265,7 @@ public class Module {
   }
 
   private void setupShuffleboard() {
-    if (Constants.kUseTelemetry) {
+    if (Constants.kUseTelemetry && RobotBase.isReal()) {
       m_swerveTab.addDouble(m_moduleAbbr + " CANcoder Angle (deg)", () -> getCANcoder().getDegrees());
       m_swerveTab.addDouble(m_moduleAbbr + " FX Angle (deg)", () -> getAngle().getDegrees());
       m_swerveTab.addDouble(m_moduleAbbr + " Velocity (m/s)", () -> getDriveVelocity());
@@ -269,17 +277,21 @@ public class Module {
     }
   }
 
+  public SwerveModuleState getDesiredState() {
+    return m_desiredState;
+  }
+  
   /**
    * @return desired drive velocity
    */
   public double getDesiredVelocity() {
-    return m_desiredState.speedMetersPerSecond;
+    return getDesiredState().speedMetersPerSecond;
   }
   /**
    * @return desired module steer angle
    */
   public Rotation2d getDesiredAngle() {
-    return m_desiredState.angle;
+    return getDesiredState().angle;
   }
   /**
    * @return drive velocity in meters per second

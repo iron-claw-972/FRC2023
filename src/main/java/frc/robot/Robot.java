@@ -34,14 +34,6 @@ public class Robot extends TimedRobot {
     SwerveCompetition, SwerveTest,
     ClassBot1, ClassBot2, ClassBot3, ClassBot4
   };
-  /**
-   * The Robot Identity.
-   * <p><b>Note: kRobotId is not a constant.</b></p>
-   * @deprecated pass the robot identity as an argument
-   */
-  @Deprecated
-  // assume the default identity
-  public static RobotId kRobotId = RobotId.Default;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -55,14 +47,8 @@ public class Robot extends TimedRobot {
     //   Uncomment the next line, set the desired RobotId, deploy, and then comment the line out
     // setRobotId(RobotId.SwerveTest);
 
-    // Determine the Robot Identity from the RoboRIO's onboard Preferences
-    RobotId robotId = getRobotId();
-
-    // save the identity in a global
-    kRobotId = robotId;
-
-    // build the RobotContainer
-    m_robotContainer = new RobotContainer(robotId);
+    // build the RobotContainer with the robot id from preferences
+    m_robotContainer = new RobotContainer(getRobotId());
   }
  
   /**
@@ -101,6 +87,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+
+    m_robotContainer.updateHeldGamePiece();
+
     // Get the autonomous command.
     // This access is fast (about 14 microseconds) because the value is already resident in the Network Tables.
     // There was a problem last year because the operation also installed about over a dozen items (taking more than 20 ms).
