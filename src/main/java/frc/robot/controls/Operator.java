@@ -39,8 +39,10 @@ public class Operator {
   public void configureControls(Wrist wrist, RollerIntake intake, Elevator elevator, Vision vision) {
     m_vision = vision; //should be in constructor
 
+    // calibrate elevator
     m_operator.get(Button.BACK).onTrue(new CalibrateElevator(elevator));
 
+    // cancel all
     m_operator.get(DPad.UP).onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
 
     //top
