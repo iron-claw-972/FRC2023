@@ -1,5 +1,6 @@
 package frc.robot.controls;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.SetFormationX;
@@ -24,7 +25,7 @@ public class MadCatzDriverConfig extends BaseDriverConfig {
   @Override
   public void configureControls() { 
     kDriver.get(MadCatzButton.B1).whileTrue(new SetFormationX(super.getDrivetrain()));
-    kDriver.get(MadCatzButton.B2).onTrue(new InstantCommand(() -> super.getDrivetrain().setYaw(DriveConstants.kStartingHeadingDegrees)));
+    kDriver.get(MadCatzButton.B2).onTrue(new InstantCommand(() -> super.getDrivetrain().setYaw(DriveConstants.kStartingHeading)));
   }
   
   @Override
