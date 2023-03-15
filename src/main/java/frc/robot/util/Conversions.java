@@ -119,18 +119,22 @@ public class Conversions {
     }
 
     /**
-     * Converts between an absolute coordinate system with the origin right of the blue driver station
-     * to a coordinate system where the origin is right of the current alliance driver station.
-     * <p> The transformation is reversible so there is no second function to convert back.
+     * Converts between an absolute coordinate system and the pathplanner coordinate system.
+     * 
+     * Absolute coordinate system always has the origin right of the blue driver station from blue driver perspective, 
+     * bottom left if looking down at the field. Positive X goes toward red alliance (forward from blue driver perspective) 
+     * and positive Y toward red loading zone (left from blue driver perspective). The Pathplanner coordinate system has the coordinate
+     * system rotated such that the origin starts right of the current driver station.
+     * <p> The transformation is self-inverse so there is no second function to convert back.
      * 
      * @param pose pose to convert
      * @param alliance alliance PathPlanner is using for their origin
      * @return converted pose
      */
     public static Pose2d absolutePoseToPathPlannerPose(Pose2d pose, Alliance alliance){
-        if (alliance == Alliance.Red){
-            return pose.relativeTo(new Pose2d(FieldConstants.kFieldLength, FieldConstants.kFieldWidth, new Rotation2d(Math.PI)));
-        }
-        return new Pose2d(pose.getX(), pose.getY(), new Rotation2d(pose.getRotation().getRadians()));
+      if (alliance == Alliance.Red) {
+        return pose.relativeTo(new Pose2d(FieldConstants.kFieldLength, FieldConstants.kFieldWidth, new Rotation2d(Math.PI)));
+      }
+      return new Pose2d(pose.getX(), pose.getY(), pose.getRotation());
     }
 }
