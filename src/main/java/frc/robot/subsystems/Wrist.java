@@ -7,6 +7,7 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
@@ -32,6 +33,8 @@ public class Wrist extends SubsystemBase {
   private final DutyCycleEncoder m_absEncoder;
   private final ShuffleboardTab m_wristTab;
   private boolean m_enabled = true; 
+  private double m_pidPower = 0;
+
   private final SingleJointedArmSim m_armSim =
     new SingleJointedArmSim(
       WristConstants.kGearBox, 
@@ -61,12 +64,14 @@ public class Wrist extends SubsystemBase {
   
   public Wrist(ShuffleboardTab wristTab) {
     // configure the motor.
-    m_motor = MotorFactory.createTalonFXSupplyLimit(WristConstants.kMotorID, Constants.kRioCAN, WristConstants.kContinuousCurrentLimit, WristConstants.kPeakCurrentLimit, WristConstants.kPeakCurrentDuration);
+    m_motor = MotorFactory.createTalonFXSupplyLimit(
+      WristConstants.kMotorID, Constants.kRioCAN, 
+      WristConstants.kContinuousCurrentLimit, WristConstants.kPeakCurrentLimit, WristConstants.kPeakCurrentDuration);
     m_motor.setNeutralMode(WristConstants.kNeutralMode);
     m_motor.setInverted(WristConstants.kMotorInvert); 
     
     //SIM
-    SmartDashboard.putData("Arm Sim", m_mech2d);
+    if (RobotBase.isSimulation()) SmartDashboard.putData("Arm Sim", m_mech2d);
     // configure the encoder
     m_absEncoder = new DutyCycleEncoder(WristConstants.kAbsEncoderPort); 
     m_encoderSim = new DutyCycleEncoderSim(m_absEncoder);
@@ -99,13 +104,11 @@ public class Wrist extends SubsystemBase {
   public void periodic() {
     if (m_enabled) {
       // calculate the PID power level
-      double pidPower = m_pid.calculate(getAbsEncoderPos(), MathUtil.clamp(m_pid.getSetpoint(), WristConstants.kMinPos, WristConstants.kMaxPos));
-      if (Constants.kLogging) LogManager.addDouble("Wrist/pidOutput", pidPower);
-      if (Constants.kUseTelemetry) SmartDashboard.putNumber("wrist pid output", pidPower);
+      m_pidPower = m_pid.calculate(getAbsEncoderPos(), MathUtil.clamp(m_pid.getSetpoint(), WristConstants.kMinPos, WristConstants.kMaxPos));
       // calculate the value of kGravityCompensation
       double feedforwardPower = WristConstants.kGravityCompensation*Math.cos(getAbsEncoderPos()*Math.PI*2);
       // set the motor power
-      setMotorPower(pidPower + feedforwardPower);
+      setMotorPower(m_pidPower + feedforwardPower);
     }
 
     if (Constants.kLogging) updateLogs();
@@ -131,8 +134,6 @@ public class Wrist extends SubsystemBase {
     }
     
     m_motor.set(power);
-    if (Constants.kLogging) LogManager.addDouble("Wrist/motor power", power);
-    if (Constants.kUseTelemetry) SmartDashboard.putNumber("wrist power final", power);
   }
 
   public void setEnabled(boolean enable) {
@@ -147,11 +148,15 @@ public class Wrist extends SubsystemBase {
 
   public void updateLogs() {
     LogManager.addDouble("Wrist/position", getAbsEncoderPos());
+    LogManager.addDouble("Wrist/motor power", m_motor.get());
+    LogManager.addDouble("Wrist/pidOutput", m_pidPower);
   }
 
   public void setupShuffleboardTab() {
     m_wristTab.addNumber("Wrist Position", () -> getAbsEncoderPos());
     m_wristTab.add("wrist PID", m_pid);
+    m_wristTab.addNumber("wrist power final", () -> m_motor.get());
+    m_wristTab.addNumber("Wrist PID output", () -> m_pidPower);
   }
 
   public void simulationPeriodic() {
