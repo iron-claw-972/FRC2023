@@ -46,7 +46,6 @@ public class PathPlannerCommand extends SequentialCommandGroup {
     if (pathIndex < 0 || pathIndex > pathGroup.size() - 1) {
       throw new IndexOutOfBoundsException("Path index out of range"); 
     }
-    System.out.println("Number of paths: " + pathGroup.size());
     
     addCommands(new InstantCommand( () -> {
       PathPlannerTrajectory path = PathPlannerTrajectory.transformTrajectoryForAlliance(
