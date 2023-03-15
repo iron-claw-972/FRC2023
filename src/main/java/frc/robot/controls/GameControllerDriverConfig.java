@@ -1,5 +1,8 @@
 package frc.robot.controls;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.BalanceCommand;
@@ -29,7 +32,9 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
   
   @Override
   public void configureControls() { 
-    kDriver.get(Button.START).onTrue(new InstantCommand(() -> getDrivetrain().setYaw(0)));
+    kDriver.get(Button.START).onTrue(new InstantCommand(() -> super.getDrivetrain().setYaw(
+      new Rotation2d(DriverStation.getAlliance() == Alliance.Blue ? 0 : Math.PI)
+    )));
     kDriver.get(Button.X).whileTrue(new SetFormationX(super.getDrivetrain()));
 
     // Moves to the selected scoring position using Path Planner
