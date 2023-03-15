@@ -44,7 +44,7 @@ public class DefaultDriveCommand extends CommandBase {
       m_swerve.driveHeading(
         forwardTranslation,
         sideTranslation,
-        (Math.abs(m_swerve.getYaw().getRadians()) > Math.PI / 2) ? 180 : 0,
+        (Math.abs(m_swerve.getYaw().getRadians()) > Math.PI / 2) ? Math.PI : 0,
         true
       );
     } else {
