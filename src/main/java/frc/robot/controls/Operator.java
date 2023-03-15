@@ -60,15 +60,15 @@ public class Operator {
         new PositionIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, Position.STOW)
       ));
     
-    //stow
-    m_operator.get(Button.RB).whileTrue(new PositionIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, Position.STOW));
+    // stow
+    m_operator.get(Button.RB).onTrue(new PositionIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, Position.STOW));
 
-    //intake
+    // intake
     m_operator.get(Button.LB).onTrue(
       new PositionIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, Position.INTAKE).alongWith(new IntakeGamePiece(intake, m_operator.RIGHT_TRIGGER_BUTTON)))
       .onFalse(new InstantCommand(() -> intake.setMode(IntakeMode.DISABLED)).andThen(new PositionIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, Position.STOW)));
 
-    //outtake
+    // outtake
     m_operator.get(m_operator.LEFT_TRIGGER_BUTTON).onTrue(new OuttakeGamePiece(intake)).onFalse(new PositionIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, Position.STOW).andThen(new InstantCommand(() -> intake.setMode(IntakeMode.DISABLED), intake)));
 
   

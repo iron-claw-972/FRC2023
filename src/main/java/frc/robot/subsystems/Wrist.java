@@ -97,7 +97,7 @@ public class Wrist extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if(m_enabled) {
+    if (m_enabled) {
       // calculate the PID power level
       double pidPower = m_pid.calculate(getAbsEncoderPos(), MathUtil.clamp(m_pid.getSetpoint(), WristConstants.kMinPos, WristConstants.kMaxPos));
       if (Constants.kLogging) LogManager.addDouble("Wrist/pidOutput", pidPower);
@@ -156,8 +156,7 @@ public class Wrist extends SubsystemBase {
 
   public void simulationPeriodic() {
     // In this method, we update our simulation of what our arm is doing
-    // First, we set our "inputs" (voltages)    
-    System.out.println(m_motor.getMotorOutputVoltage() * RobotController.getBatteryVoltage());
+    // First, we set our "inputs" (voltages)
     m_armSim.setInput(m_motor.getMotorOutputVoltage() * RobotController.getBatteryVoltage());
 
     // update arm sim
