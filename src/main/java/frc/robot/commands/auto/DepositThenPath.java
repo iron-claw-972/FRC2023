@@ -26,6 +26,7 @@ public class DepositThenPath extends SequentialCommandGroup {
     this(pathName, depositPosition, new Pose2d(), drive, elevator, arm, intake);
   }
 
+  // TODO: refactor this to use seperate deposit Auto commands, and allow depositing Cubes
   public DepositThenPath(String pathName, Position depositPosition, Pose2d offset, Drivetrain drive, Elevator elevator, FourBarArm arm, RollerIntake intake) {
     addRequirements(drive, elevator, arm, intake);
 
@@ -40,8 +41,8 @@ public class DepositThenPath extends SequentialCommandGroup {
     addCommands(
       new CalibrateElevator(elevator),
       depositPosition == Position.MIDDLE ?
-        new PositionIntake(elevator, arm, () -> false, depositPosition).withTimeout(1.5) : 
-        new MoveElevator(elevator, ElevatorConstants.kMiddleConeHeight).withTimeout(1).andThen(new PositionIntake(elevator, arm, () -> false, Position.TOP).withTimeout(1.5)),
+        new PositionIntake(elevator, arm, () -> true, depositPosition).withTimeout(1.5) : 
+        new MoveElevator(elevator, ElevatorConstants.kMiddleConeHeight).withTimeout(1).andThen(new PositionIntake(elevator, arm, () -> true, Position.TOP).withTimeout(1.5)),
       new OuttakeGamePiece(intake, GamePieceType.CONE),
       new PathPlannerCommand(paths, 0, drive, true),
       new PositionIntake(elevator, arm, () -> true, Position.STOW),
