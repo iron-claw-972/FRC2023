@@ -17,8 +17,8 @@ import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.auto.DepositThenPath;
 import frc.robot.commands.auto.PathPlannerCommand;
-import frc.robot.commands.scoring.PositionRollerIntake;
-import frc.robot.commands.scoring.PositionRollerIntake.RollerPosition;
+import frc.robot.commands.scoring.PositionIntake;
+import frc.robot.commands.scoring.PositionIntake.Position;
 import frc.robot.commands.scoring.intake.IntakeGamePiece;
 import frc.robot.commands.scoring.intake.OuttakeGamePiece;
 import frc.robot.constants.VisionConstants;
@@ -100,7 +100,7 @@ public class RobotContainer {
         m_testController = new TestController(m_wrist, m_intake, m_elevator);
         m_manualController = new ManualController(m_intake, m_elevator);
   
-        m_operator.configureRollerIntakeControls(m_wrist, m_intake, m_elevator, m_vision);
+        m_operator.configureControls(m_wrist, m_intake, m_elevator, m_vision);
         m_testController.configureControls();
         m_manualController.configureControls();
   
@@ -221,7 +221,7 @@ public class RobotContainer {
    */
   public void autoChooserUpdate() {
 
-    RollerPosition autoDepositPos = RollerPosition.TOP;
+    Position autoDepositPos = Position.TOP;
 
     m_preloadedGamePiece.addOption("Cone", GamePieceType.CONE);
     m_preloadedGamePiece.addOption("Cube", GamePieceType.CUBE);
@@ -238,7 +238,7 @@ public class RobotContainer {
 
       //TODO: set auto game piece on start
 
-      m_autoCommand.addOption("Hybrid Score", new PositionRollerIntake(m_elevator, m_wrist, () -> true, RollerPosition.BOTTOM).andThen(new OuttakeGamePiece(m_intake, GamePieceType.CONE)).andThen(new PositionRollerIntake(m_elevator, m_wrist, () -> true, RollerPosition.STOW)));
+      m_autoCommand.addOption("Hybrid Score", new PositionIntake(m_elevator, m_wrist, () -> true, Position.BOTTOM).andThen(new OuttakeGamePiece(m_intake, GamePieceType.CONE)).andThen(new PositionIntake(m_elevator, m_wrist, () -> true, Position.STOW)));
 
       // m_autoCommand.addOption("HYBRID MOBILITY", 
       //   new PositionIntake(m_elevator, m_wrist, ()->true, RollerPosition.BOTTOM).andThen(
@@ -251,22 +251,22 @@ public class RobotContainer {
 
       // TODO: Change the boolean supplier
       // TODO: add hybrid score
-      m_autoCommand.addOption("Grid 1 Mobility Top", new DepositThenPath("Grid 1 Mobility", RollerPosition.TOP, m_drive, m_elevator, m_wrist, m_intake).andThen(new IntakeGamePiece(m_intake, GamePieceType.CUBE)));
-      m_autoCommand.addOption("Grid 1 Mobility Mid", new DepositThenPath("Grid 1 Mobility", RollerPosition.MIDDLE, m_drive, m_elevator, m_wrist, m_intake).andThen(new IntakeGamePiece(m_intake, GamePieceType.CUBE)));
+      m_autoCommand.addOption("Grid 1 Mobility Top", new DepositThenPath("Grid 1 Mobility", Position.TOP, m_drive, m_elevator, m_wrist, m_intake).andThen(new IntakeGamePiece(m_intake, GamePieceType.CUBE)));
+      m_autoCommand.addOption("Grid 1 Mobility Mid", new DepositThenPath("Grid 1 Mobility", Position.MIDDLE, m_drive, m_elevator, m_wrist, m_intake).andThen(new IntakeGamePiece(m_intake, GamePieceType.CUBE)));
       // m_autoCommand.addOption("Grid 1 Mobility Hybrid", new DepositThenPath("Grid 1 Mobility", RollerPosition.BOTTOM, m_drive, m_elevator, m_wrist, m_intake).andThen(new IntakeGamePiece(m_intake, GamePieceType.CUBE)));
-      m_autoCommand.addOption("Grid 9 Mobility Top", new DepositThenPath("Grid 9 Mobility", RollerPosition.TOP, m_drive, m_elevator, m_wrist, m_intake).andThen(new IntakeGamePiece(m_intake, GamePieceType.CUBE)));
-      m_autoCommand.addOption("Grid 9 Mobility Mid", new DepositThenPath("Grid 9 Mobility", RollerPosition.MIDDLE, m_drive, m_elevator, m_wrist, m_intake).andThen(new IntakeGamePiece(m_intake, GamePieceType.CUBE)));
+      m_autoCommand.addOption("Grid 9 Mobility Top", new DepositThenPath("Grid 9 Mobility", Position.TOP, m_drive, m_elevator, m_wrist, m_intake).andThen(new IntakeGamePiece(m_intake, GamePieceType.CUBE)));
+      m_autoCommand.addOption("Grid 9 Mobility Mid", new DepositThenPath("Grid 9 Mobility", Position.MIDDLE, m_drive, m_elevator, m_wrist, m_intake).andThen(new IntakeGamePiece(m_intake, GamePieceType.CUBE)));
       // m_autoCommand.addOption("Grid 9 Mobility Hybrid", new DepositThenPath("Grid 9 Mobility", RollerPosition.BOTTOM, m_drive, m_elevator, m_wrist, m_intake).andThen(new IntakeGamePiece(m_intake, GamePieceType.CUBE)));
     
-      m_autoCommand.addOption("Grid 1 Engage Top", new DepositThenPath("Grid 1 Engage", RollerPosition.TOP, m_drive, m_elevator, m_wrist, m_intake).andThen(new BalanceCommand(m_drive)));
-      m_autoCommand.addOption("Grid 1 Engage Mid", new DepositThenPath("Grid 1 Engage", RollerPosition.MIDDLE, m_drive, m_elevator, m_wrist, m_intake).andThen(new BalanceCommand(m_drive)));
+      m_autoCommand.addOption("Grid 1 Engage Top", new DepositThenPath("Grid 1 Engage", Position.TOP, m_drive, m_elevator, m_wrist, m_intake).andThen(new BalanceCommand(m_drive)));
+      m_autoCommand.addOption("Grid 1 Engage Mid", new DepositThenPath("Grid 1 Engage", Position.MIDDLE, m_drive, m_elevator, m_wrist, m_intake).andThen(new BalanceCommand(m_drive)));
       // m_autoCommand.addOption("Grid 1 Engage Hybrid", new DepositThenPath("Grid 1 Engage", RollerPosition.BOTTOM, m_drive, m_elevator, m_wrist, m_intake).andThen(new BalanceCommand(m_drive)));
-      m_autoCommand.addOption("UNTESTED Grid 9 Engage Top", new DepositThenPath("Grid 9 Engage", RollerPosition.TOP, m_drive, m_elevator, m_wrist, m_intake).andThen(new BalanceCommand(m_drive)));
-      m_autoCommand.addOption("UNTESTED Grid 9 Engage Mid", new DepositThenPath("Grid 9 Engage", RollerPosition.MIDDLE, m_drive, m_elevator, m_wrist, m_intake).andThen(new BalanceCommand(m_drive)));
+      m_autoCommand.addOption("UNTESTED Grid 9 Engage Top", new DepositThenPath("Grid 9 Engage", Position.TOP, m_drive, m_elevator, m_wrist, m_intake).andThen(new BalanceCommand(m_drive)));
+      m_autoCommand.addOption("UNTESTED Grid 9 Engage Mid", new DepositThenPath("Grid 9 Engage", Position.MIDDLE, m_drive, m_elevator, m_wrist, m_intake).andThen(new BalanceCommand(m_drive)));
       // m_autoCommand.addOption("UNTESTED Grid 9 Engage Hybrid", new DepositThenPath("Grid 9 Engage", RollerPosition.BOTTOM, m_drive, m_elevator, m_wrist, m_intake).andThen(new BalanceCommand(m_drive)));
       
-      m_autoCommand.addOption("Grid 4/6 Engage Top", new DepositThenPath("Grid 6 Engage No Mobility", RollerPosition.TOP, m_drive, m_elevator, m_wrist, m_intake).andThen(new BalanceCommand(m_drive)));
-      m_autoCommand.addOption("Grid 4/6 Engage Mid", new DepositThenPath("Grid 6 Engage No Mobility", RollerPosition.MIDDLE, m_drive, m_elevator, m_wrist, m_intake).andThen(new BalanceCommand(m_drive)));
+      m_autoCommand.addOption("Grid 4/6 Engage Top", new DepositThenPath("Grid 6 Engage No Mobility", Position.TOP, m_drive, m_elevator, m_wrist, m_intake).andThen(new BalanceCommand(m_drive)));
+      m_autoCommand.addOption("Grid 4/6 Engage Mid", new DepositThenPath("Grid 6 Engage No Mobility", Position.MIDDLE, m_drive, m_elevator, m_wrist, m_intake).andThen(new BalanceCommand(m_drive)));
       // m_autoCommand.addOption("Grid 4/6 Engage Hybrid", new DepositThenPath("Grid 6 Engage No Mobility", RollerPosition.BOTTOM, m_drive, m_elevator, m_wrist, m_intake).andThen(new BalanceCommand(m_drive)));
       
       // m_autoCommand.addOption("NO DEPOSIT Grid 6 Engage (no mobility)",

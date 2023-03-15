@@ -3,23 +3,15 @@ package frc.robot.controls;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.scoring.PositionIntake;
-import frc.robot.commands.scoring.PositionRollerIntake;
 import frc.robot.commands.scoring.PositionIntake.Position;
-import frc.robot.commands.scoring.PositionRollerIntake.RollerPosition;
 import frc.robot.commands.scoring.elevator.CalibrateElevator;
-import frc.robot.commands.scoring.elevator.MoveElevator;
-import frc.robot.commands.scoring.intake.IntakeGamePiece;
-import frc.robot.commands.scoring.intake.OuttakeGamePiece;
 import frc.robot.commands.scoring.wrist.RotateWrist;
 import frc.robot.constants.OIConstants;
 import frc.robot.constants.WristConstants;
-import frc.robot.constants.ElevatorConstants;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.RollerIntake;
-import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.RollerIntake.IntakeMode;
-import frc.robot.util.GamePieceType;
+import frc.robot.subsystems.Wrist;
 import lib.controllers.GameController;
 import lib.controllers.GameController.Button;
 import lib.controllers.GameController.DPad;
@@ -64,13 +56,7 @@ public class TestController {
     // test.get(Button.B).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kShelfConeHeight));
     // test.get(Button.RIGHT_JOY).onTrue(new MoveElevator(m_elevator, ElevatorConstants.kIntakeConeHeight));
 
-    // ARM CONTROLS
-    // test.get(Button.Y).onTrue(new ExtendArm(m_arm, ArmConstants.kTopNodePos));
-    // test.get(Button.X).onTrue(new ExtendArm(m_arm, ArmConstants.kMiddleNodePos));
-    // test.get(Button.A).onTrue(new ExtendArm(m_arm, ArmConstants.kBottomNodePos));
-    // test.get(Button.B).onTrue(new ExtendArm(m_arm, ArmConstants.kShelfPos));
-    // test.get(Button.RIGHT_JOY).onTrue(new ExtendArm(m_arm, ArmConstants.kIntakePos));
-
+    // WRIST CONTROLS
     test.get(Button.Y).onTrue(new RotateWrist(m_wrist, WristConstants.kTopNodeCubePos));
     test.get(Button.X).onTrue(new RotateWrist(m_wrist, WristConstants.kMiddleNodeCubePos));
     test.get(Button.A).onTrue(new RotateWrist(m_wrist, WristConstants.kBottomNodeCubePos));
@@ -79,6 +65,6 @@ public class TestController {
     test.get(Button.RIGHT_JOY).onTrue(new RotateWrist(m_wrist, WristConstants.kStowPos));
 
     // stow
-    test.get(Button.BACK).onTrue(new PositionRollerIntake(m_elevator, m_wrist, test.RIGHT_TRIGGER_BUTTON, RollerPosition.STOW));
+    test.get(Button.BACK).onTrue(new PositionIntake(m_elevator, m_wrist, test.RIGHT_TRIGGER_BUTTON, Position.STOW));
   }
 }
