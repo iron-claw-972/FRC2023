@@ -56,7 +56,7 @@ public class Operator {
     //bottom
     m_operator.get(Button.A).onTrue(new PositionIntake(elevator, arm, m_operator.RIGHT_TRIGGER_BUTTON, Position.BOTTOM));
     //shelf
-    m_operator.get(Button.B).onTrue(new PositionIntake(elevator, arm, m_operator.RIGHT_TRIGGER_BUTTON, Position.SHELF).alongWith(new IntakeGamePiece(intake, m_operator.RIGHT_TRIGGER_BUTTON)))
+    m_operator.get(Button.B).onTrue(new PositionIntake(elevator, arm, m_operator.RIGHT_TRIGGER_BUTTON, Position.SHELF).alongWith(new IntakeGamePiece(intake, m_operator.RIGHT_TRIGGER_BUTTON, true)))
       .onFalse(new SequentialCommandGroup( 
         new InstantCommand(() -> intake.setMode(IntakeMode.DISABLED)),
         new ExtendArm(arm, 0.8),
@@ -69,8 +69,8 @@ public class Operator {
 
     //intake
     m_operator.get(Button.LB).onTrue(
-      new PositionIntake(elevator, arm, m_operator.RIGHT_TRIGGER_BUTTON, Position.INTAKE).alongWith(new IntakeGamePiece(intake, m_operator.RIGHT_TRIGGER_BUTTON)))
-      .onFalse(new PositionIntake(elevator, arm, m_operator.RIGHT_TRIGGER_BUTTON, Position.STOW));
+      new PositionIntake(elevator, arm, m_operator.RIGHT_TRIGGER_BUTTON, Position.INTAKE).alongWith(new IntakeGamePiece(intake, m_operator.RIGHT_TRIGGER_BUTTON, true)))
+      .onFalse(new InstantCommand(() -> intake.setMode(IntakeMode.DISABLED)).andThen(new PositionIntake(elevator, arm, m_operator.RIGHT_TRIGGER_BUTTON, Position.STOW)));
 
     // dunk
     // m_operator.get(m_operator.RIGHT_TRIGGER_BUTTON).onTrue(new Dunk(arm, intake)).onFalse(new Stow(intake, elevator, arm));

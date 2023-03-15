@@ -1,5 +1,7 @@
 package frc.robot.commands.scoring.intake;
 
+import java.util.function.Supplier;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -11,7 +13,7 @@ import frc.robot.util.GamePieceType;
 public class OuttakeGamePiece extends CommandBase {
 
   private final RollerIntake m_intake; 
-  private final GamePieceType m_heldPiece;
+  private final Supplier<GamePieceType> m_heldPiece;
   private final Timer m_timer;
 
   /**
@@ -19,7 +21,7 @@ public class OuttakeGamePiece extends CommandBase {
    * @param intake the intake subsystem
    */
   public OuttakeGamePiece(RollerIntake intake) {
-    this(intake, intake.getHeldGamePiece());
+    this(intake, () -> intake.getHeldGamePiece());
   }
 
   /**
@@ -27,7 +29,7 @@ public class OuttakeGamePiece extends CommandBase {
    * @param intake the intake subsystem
    * @param piece the piece to outtake
    */
-  public OuttakeGamePiece(RollerIntake intake, GamePieceType piece) {
+  public OuttakeGamePiece(RollerIntake intake, Supplier<GamePieceType> piece) {
     m_intake = intake; 
     m_heldPiece = piece;
     m_timer = new Timer();
@@ -36,9 +38,9 @@ public class OuttakeGamePiece extends CommandBase {
 
   @Override
   public void initialize() {
-    if (m_heldPiece == GamePieceType.CUBE) {
+    if (m_heldPiece.get().equals(GamePieceType.CUBE)) {
       m_intake.setMode(IntakeMode.OUTTAKE_CUBE);
-    } else if (m_heldPiece == GamePieceType.CONE) {
+    } else if (m_heldPiece.get().equals(GamePieceType.CONE)) {
       m_intake.setMode(IntakeMode.OUTTAKE_CONE);
     } else {
       DriverStation.reportWarning("OuttakeGamePiece Command detected GamePieceType.NONE as held game piece.", false);
@@ -46,17 +48,17 @@ public class OuttakeGamePiece extends CommandBase {
       return;
     }
     m_timer.reset();
+    m_timer.start();
   }
 
   @Override
   public void end(boolean interrupted) {
-    m_intake.setHeldGamePiece(GamePieceType.NONE);
     m_intake.setMode(IntakeMode.DISABLED);
   }
   
   @Override
   public boolean isFinished() {
-    return m_timer.hasElapsed(IntakeConstants.kOuttakeTime);
+    return m_timer.get() > IntakeConstants.kOuttakeTime;
   }
 
 }
