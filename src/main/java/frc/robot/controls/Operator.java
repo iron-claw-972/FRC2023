@@ -2,6 +2,7 @@ package frc.robot.controls;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -86,6 +87,24 @@ public class Operator {
     m_operator.get(Button.Y).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.ROW, 2)));
     m_operator.get(Button.X).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.ROW, 1)));
     m_operator.get(Button.A).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.ROW, 0)));
+  }
+
+  /**
+   * Sets up shuffleboard
+   * @param tab The tab on shuffleboard
+   */
+  public void setUpShuffleboard(ShuffleboardTab tab){
+    tab.addStringArray("Selected node", ()->new String[]{
+      "Alliance: "+getSelectedNode().alliance,
+      "Type: "+getSelectedNode().type,
+      "Row: "+getSelectedNode().row,
+      "Column: "+getSelectedNode().column,
+      String.format("Score pose: (%.2f, %.2f) at %d degrees", 
+        getSelectedNode().scorePose.getX(), 
+        getSelectedNode().scorePose.getY(), 
+        getSelectedNode().scorePose.getRotation().getDegrees()
+      )
+    });
   }
 
   /**

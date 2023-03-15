@@ -113,6 +113,7 @@ public class RobotContainer {
 
         m_vision.setupVisionShuffleboard();
         m_driver.setupShuffleboard();
+        m_operator.setUpShuffleboard(m_controllerTab);
 
         m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive, m_driver));
 
@@ -150,6 +151,7 @@ public class RobotContainer {
 
         m_vision.setupVisionShuffleboard();
         m_driver.setupShuffleboard();
+        m_operator.setUpShuffleboard(m_controllerTab);
 
         m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive, m_driver));
         
