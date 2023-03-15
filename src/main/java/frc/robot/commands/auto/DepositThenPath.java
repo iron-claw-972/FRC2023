@@ -6,7 +6,6 @@ import java.util.List;
 import com.pathplanner.lib.PathPlannerTrajectory;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.scoring.PositionIntake;
 import frc.robot.commands.scoring.PositionIntake.Position;
@@ -39,7 +38,6 @@ public class DepositThenPath extends SequentialCommandGroup {
     }
 
     addCommands(
-      new InstantCommand(() -> drive.setPigeonYaw(PathGroupLoader.getPathGroup(pathName).get(0))),
       new CalibrateElevator(elevator),
       depositPosition == Position.MIDDLE ?
         new PositionIntake(elevator, arm, () -> false, depositPosition).withTimeout(1.5) : 
