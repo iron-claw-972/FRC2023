@@ -48,8 +48,8 @@ public class TestController {
     //outtake cone
     test.get(test.LEFT_TRIGGER_BUTTON).onTrue(new InstantCommand(() -> m_intake.setMode(IntakeMode.OUTTAKE_CONE), m_intake)).onFalse(new InstantCommand(() -> m_intake.setMode(IntakeMode.DISABLED), m_intake));
     
-    test.get(DPad.LEFT).onTrue(new IntakeGamePiece(m_intake, GamePieceType.CONE));
-    test.get(Button.LEFT_JOY).onTrue(new IntakeGamePiece(m_intake, GamePieceType.CUBE));
+    test.get(DPad.LEFT).onTrue(new IntakeGamePiece(m_intake, GamePieceType.CONE, false));
+    test.get(Button.LEFT_JOY).onTrue(new IntakeGamePiece(m_intake, GamePieceType.CUBE, false));
     test.get(DPad.RIGHT).onTrue(new OuttakeGamePiece(m_intake));
 
     // ELEVATOR CONTROLS
