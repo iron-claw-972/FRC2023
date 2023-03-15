@@ -26,18 +26,35 @@ public class DefaultDriveCommand extends CommandBase {
   @Override
   public void execute() {
     
+    double forwardTranslation = m_driver.getForwardTranslation();
+    double sideTranslation = m_driver.getSideTranslation();
+    double rotation = m_driver.getRotation();
+
     double slowFactor = m_driver.getIsSlowMode() ? DriveConstants.kSlowDriveFactor : 1;
-    double slowRotFactor = m_driver.getIsSlowMode() ? DriveConstants.kSlowRotFactor : 1;
 
-    int reversedForRed = DriverStation.getAlliance() == Alliance.Blue ? 1 : -1;
+    forwardTranslation *= slowFactor;
+    sideTranslation *= slowFactor;
+    rotation *= m_driver.getIsSlowMode() ? DriveConstants.kSlowRotFactor : 1;
 
-    /* Drive */
-    m_swerve.drive(
-      m_driver.getForwardTranslation() * slowFactor * reversedForRed,
-      m_driver.getSideTranslation() * slowFactor * reversedForRed,
-      m_driver.getRotation() * slowRotFactor,
-      m_driver.getIsFieldRelative(),
-      true
-    );
+    int allianceReversal = DriverStation.getAlliance() == Alliance.Blue ? 1 : -1;
+    forwardTranslation *= allianceReversal;
+    sideTranslation *= allianceReversal;
+
+    if (m_driver.getIsAlign()) {
+      m_swerve.driveHeading(
+        forwardTranslation,
+        sideTranslation,
+        (Math.abs(m_swerve.getYaw().getRadians()) > Math.PI / 2) ? Math.PI : 0,
+        true
+      );
+    } else {
+      m_swerve.drive(
+        forwardTranslation,
+        sideTranslation,
+        rotation,
+        true,
+        true
+      );
+    }
   }
 }
