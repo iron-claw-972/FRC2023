@@ -83,9 +83,9 @@ public class Operator {
     m_operator.get(m_operator.RIGHT_STICK_DOWN).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.COLUMN, 1)));
     m_operator.get(m_operator.RIGHT_STICK_RIGHT).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.COLUMN, 0)));
     // Selects the row
-    m_operator.get(DPad.LEFT).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.ROW, 2)));
-    m_operator.get(DPad.DOWN).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.ROW, 1)));
-    m_operator.get(DPad.RIGHT).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.ROW, 0)));
+    m_operator.get(Button.Y).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.ROW, 2)));
+    m_operator.get(Button.X).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.ROW, 1)));
+    m_operator.get(Button.A).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.ROW, 0)));
   }
 
   /**
