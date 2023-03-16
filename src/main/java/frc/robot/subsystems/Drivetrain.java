@@ -376,6 +376,17 @@ public class Drivetrain extends SubsystemBase {
   }
 
   /**
+   * Runs the PID controllers with the provided x, y, and rot values. Then, calls
+   * {@link #drive()} using the PID outputs.
+   * This is based on the odometry of the chassis.
+   * 
+   * @param pose desired pose
+   */
+  public void runChassisPID(Pose2d pose) {
+    runChassisPID(pose.getX(), pose.getY(), pose.getRotation().getRadians());
+  }
+
+  /**
    * Sets the desired states for all swerve modules.
    * 
    * @param swerveModuleStates an array of module states to set swerve modules to.
