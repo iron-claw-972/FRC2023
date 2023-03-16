@@ -34,8 +34,8 @@ public class PositionIntake extends SequentialCommandGroup {
           isConeSupplier
         )),
         Map.entry(Position.SHELF, new ConditionalCommand(
-          new MoveElevator(elevator, ElevatorConstants.kShelfConeHeight).alongWith(new RotateWrist(wrist, WristConstants.kIntakeConePos)),
-          new MoveElevator(elevator, ElevatorConstants.kShelfCubeHeight).alongWith(new RotateWrist(wrist, WristConstants.kIntakeCubePos)),
+          new MoveElevator(elevator, ElevatorConstants.kShelfHeight).alongWith(new RotateWrist(wrist, WristConstants.kIntakeConePos)),
+          new MoveElevator(elevator, ElevatorConstants.kShelfHeight).alongWith(new RotateWrist(wrist, WristConstants.kIntakeShelfPos)),
           isConeSupplier
         )),
         Map.entry(Position.INTAKE, new ConditionalCommand(

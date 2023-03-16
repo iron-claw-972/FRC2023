@@ -433,7 +433,7 @@ public class Drivetrain extends SubsystemBase {
     //SmartDashboard.putNumber("Heading PID Output", rot);
     setChassisSpeeds((
       fieldRelative
-          ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_pigeon.getRotation2d())
+          ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getYaw())
           : new ChassisSpeeds(xSpeed, ySpeed, rot)
       ),
       false

@@ -13,22 +13,26 @@ public class WristConstants {
   public static final int kPeakCurrentLimit = 45;
   public static final double kPeakCurrentDuration = 0.5;
 
-  public static final double kP = 9;
+  public static final double kP = 12;
   public static final double kI = 0;
   public static final double kD = 0;
   public static final double kF = 0;
 
   public static final double kGravityCompensation = 0.08;
 
-  public static final double kTolerance = 0.005;
+  public static final double kTolerance = 0.01;
   public static final double kMotorPowerClamp = 0.8;
 
   public static final TalonFXInvertType kMotorInvert = TalonFXInvertType.CounterClockwise;
 
-  public static final NeutralMode kNeutralMode = NeutralMode.Brake;
+  public static final NeutralMode kNeutralMode = NeutralMode.Coast;
 
   public static final int kAbsEncoderPort = 7;
   public static final double kEncoderOffset = 0.704;
+
+  public static final double kAutoMiddle = 0.132;
+
+  public static final double kAutoTop = 0.070;
 
   public static final double kStowPos = 0.304;
   public static final double kBottomNodeCubePos = 0.170;
@@ -41,8 +45,9 @@ public class WristConstants {
   
   public static final double kIntakeConePos = 0.035;
   public static final double kIntakeCubePos = 0.015;
+  public static final double kIntakeShelfPos = 0.035;
 
-  public static final double kMinPos = kIntakeCubePos;
+  public static final double kMinPos = -0.05;
   public static final double kMaxPos = kStowPos;
   
   //SIM

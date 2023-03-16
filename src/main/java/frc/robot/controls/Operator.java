@@ -17,6 +17,7 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.RollerIntake;
 import frc.robot.subsystems.RollerIntake.IntakeMode;
 import frc.robot.subsystems.Wrist;
+import frc.robot.util.GamePieceType;
 import frc.robot.util.Node;
 import frc.robot.util.Vision;
 import lib.controllers.GameController;
@@ -52,9 +53,10 @@ public class Operator {
     //bottom
     m_operator.get(Button.A).onTrue(new PositionIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, Position.BOTTOM));
     //shelf
-    m_operator.get(Button.B).onTrue(new PositionIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, Position.SHELF).alongWith(new IntakeGamePiece(intake, m_operator.RIGHT_TRIGGER_BUTTON, true)))
+    m_operator.get(Button.B).onTrue(new PositionIntake(elevator, wrist, () -> true, Position.SHELF).alongWith(new IntakeGamePiece(intake, () -> true, true)))
       .onFalse(new SequentialCommandGroup( 
         new InstantCommand(() -> intake.setMode(IntakeMode.DISABLED)),
+        new InstantCommand(() -> intake.setHeldGamePiece(GamePieceType.CONE)),
         // for shelf, to not hit the shelf, move wrist slightly first
         new RotateWrist(wrist, WristConstants.kBottomNodeCubePos),
         new PositionIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, Position.STOW)
@@ -66,7 +68,10 @@ public class Operator {
     // intake
     m_operator.get(Button.LB).onTrue(
       new PositionIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, Position.INTAKE).alongWith(new IntakeGamePiece(intake, m_operator.RIGHT_TRIGGER_BUTTON, true)))
-      .onFalse(new InstantCommand(() -> intake.setMode(IntakeMode.DISABLED)).andThen(new PositionIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, Position.STOW)));
+      .onFalse(new SequentialCommandGroup(
+        new InstantCommand(() -> intake.setMode(IntakeMode.DISABLED)),
+        new PositionIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, Position.STOW)
+      ));
 
     // outtake
     m_operator.get(m_operator.LEFT_TRIGGER_BUTTON).onTrue(new OuttakeGamePiece(intake)).onFalse(new PositionIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, Position.STOW).andThen(new InstantCommand(() -> intake.setMode(IntakeMode.DISABLED), intake)));
@@ -81,9 +86,9 @@ public class Operator {
     m_operator.get(m_operator.RIGHT_STICK_DOWN).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.COLUMN, 1)));
     m_operator.get(m_operator.RIGHT_STICK_RIGHT).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.COLUMN, 0)));
     // Selects the row
-    m_operator.get(DPad.LEFT).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.ROW, 2)));
-    m_operator.get(DPad.DOWN).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.ROW, 1)));
-    m_operator.get(DPad.RIGHT).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.ROW, 0)));
+    // m_operator.get(DPad.LEFT).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.ROW, 2)));
+    // m_operator.get(DPad.DOWN).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.ROW, 1)));
+    // m_operator.get(DPad.RIGHT).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.ROW, 0)));
   }
 
   /**

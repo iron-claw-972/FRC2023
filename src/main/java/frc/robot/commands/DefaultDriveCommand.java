@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.controls.BaseDriverConfig;
@@ -29,6 +30,10 @@ public class DefaultDriveCommand extends CommandBase {
     double forwardTranslation = m_driver.getForwardTranslation();
     double sideTranslation = m_driver.getSideTranslation();
     double rotation = m_driver.getRotation();
+
+    SmartDashboard.putNumber("Driver forward ", forwardTranslation);
+    SmartDashboard.putNumber("Driver side ", sideTranslation);
+    SmartDashboard.putNumber("Driver rot ", rotation);
 
     double slowFactor = m_driver.getIsSlowMode() ? DriveConstants.kSlowDriveFactor : 1;
 
