@@ -25,7 +25,7 @@ public class WristConstants {
 
   public static final TalonFXInvertType kMotorInvert = TalonFXInvertType.CounterClockwise;
 
-  public static final NeutralMode kNeutralMode = NeutralMode.Coast;
+  public static final NeutralMode kNeutralMode = NeutralMode.Brake;
 
   public static final int kAbsEncoderPort = 7;
   public static final double kEncoderOffset = 0.704;

@@ -10,7 +10,7 @@ public class ElevatorConstants {
   public static final int kMotorID = 13;
     //public static final String kElevatorCAN = kCANivoreCAN;
     public static final TalonFXInvertType kMotorInvert = TalonFXInvertType.Clockwise; // CW goes up
-    public static final NeutralMode kNeutralMode = NeutralMode.Coast;
+    public static final NeutralMode kNeutralMode = NeutralMode.Brake;
 
     public static final double kGearRatio = (50.0 / 12.0) * (50.0 / 30.0) * (36.0 / 24.0); // 10.416:1
     public static final double kSpoolDiameter = Units.inchesToMeters(1.375);

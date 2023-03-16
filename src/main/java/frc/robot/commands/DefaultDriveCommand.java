@@ -31,10 +31,6 @@ public class DefaultDriveCommand extends CommandBase {
     double sideTranslation = m_driver.getSideTranslation();
     double rotation = m_driver.getRotation();
 
-    SmartDashboard.putNumber("Driver forward ", forwardTranslation);
-    SmartDashboard.putNumber("Driver side ", sideTranslation);
-    SmartDashboard.putNumber("Driver rot ", rotation);
-
     double slowFactor = m_driver.getIsSlowMode() ? DriveConstants.kSlowDriveFactor : 1;
 
     forwardTranslation *= slowFactor;
