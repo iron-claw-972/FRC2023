@@ -209,19 +209,6 @@ public class Module extends SubsystemBase {
     resetToAbsolute();
   }
 
-  //FIXME
-  public void setDriveCharacterizationVoltage(double voltage) {
-    m_angleMotor.set(ControlMode.Position, Conversions.degreesToFalcon(0, DriveConstants.kAngleGearRatio));
-    m_driveMotor.set(ControlMode.PercentOutput, voltage / Constants.kRobotVoltage);
-  }
-
-  //FIXME
-  public void setAngleCharacterizationVoltage(double voltage) {
-    m_angleMotor.set(ControlMode.PercentOutput, voltage / Constants.kRobotVoltage);
-    // Set the drive motor to just enough to overcome static friction
-    m_driveMotor.set(ControlMode.PercentOutput, 1.1 * DriveConstants.kDriveKS);
-  }
-
   /**
    * @return module steer rotational velocity in radians per second
    */
@@ -326,14 +313,12 @@ public class Module extends SubsystemBase {
     m_angleMotor.set(0);
   }
 
-  //FIXME
   public void setDriveVoltage(double volts) {
-    //with voltage compensation enabled do not use setVoltage
+    m_driveMotor.set(ControlMode.PercentOutput, voltage / Constants.kRobotVoltage);
   }
 
-  //FIXME
   public void setSteerVoltage(double voltage) {
-   //with voltage compensation enabled do not use setVoltage
+    m_angleMotor.set(ControlMode.PercentOutput, voltage / Constants.kRobotVoltage);
   }
 
   //FIXME
