@@ -150,10 +150,10 @@ public class Drivetrain extends SubsystemBase {
 
     m_pigeon.setYaw(DriveConstants.kStartingHeading.getDegrees());
     m_poseEstimator = new SwerveDrivePoseEstimator(
-        DriveConstants.kKinematics,
-        Rotation2d.fromDegrees(m_pigeon.getYaw()),
-        getModulePositions(),
-        new Pose2d() // initial Odometry Location
+      DriveConstants.kKinematics,
+      Rotation2d.fromDegrees(m_pigeon.getYaw()),
+      getModulePositions(),
+      new Pose2d() // initial Odometry Location
     );
     m_poseEstimator.setVisionMeasurementStdDevs(VisionConstants.kBaseVisionPoseStdDevs);
 
@@ -582,8 +582,7 @@ public class Drivetrain extends SubsystemBase {
    * Sets up the shuffleboard tab for the drivetrain.
    */
   private void setupDrivetrainShuffleboard() {
-    if (!Constants.kUseTelemetry)
-      return;
+    if (!Constants.kUseTelemetry) return;
 
     m_drivetrainTab.add("Field", m_fieldDisplay);
 
@@ -655,38 +654,31 @@ public class Drivetrain extends SubsystemBase {
   }
   
   public Module getModuleChooser() {
-    if (!Constants.kUseTelemetry)
-      return m_modules[0];
+    if (!Constants.kUseTelemetry) return m_modules[0];
     return m_moduleChooser.getSelected();
   }
   public double getRequestedHeading(double defaultValue) {
-    if (!Constants.kUseTelemetry)
-      return defaultValue;
+    if (!Constants.kUseTelemetry) return defaultValue;
     return m_headingEntry.getDouble(defaultValue);
   }
   public double getRequestedDriveVelocity(double defaultValue) {
-    if (!Constants.kUseTelemetry)
-      return defaultValue;
+    if (!Constants.kUseTelemetry) return defaultValue;
     return m_driveVelocityEntry.getDouble(defaultValue);
   }
   public double getRequestedSteerVelocity(double defaultValue) {
-    if (!Constants.kUseTelemetry)
-      return defaultValue;
+    if (!Constants.kUseTelemetry) return defaultValue;
     return m_steerVelocityEntry.getDouble(defaultValue);
   }
   public double getRequestedSteerAngle(double defaultValue) {
-    if (!Constants.kUseTelemetry)
-      return defaultValue;
+    if (!Constants.kUseTelemetry) return defaultValue;
     return m_steerAngleEntry.getDouble(defaultValue);
   }
   public double getRequestedXPos(double defaultValue) {
-    if (!Constants.kUseTelemetry)
-      return defaultValue;
+    if (!Constants.kUseTelemetry) return defaultValue;
     return m_xPosEntry.getDouble(defaultValue);
   }
   public double getRequestedYPos(double defaultValue) {
-    if (!Constants.kUseTelemetry)
-      return defaultValue;
+    if (!Constants.kUseTelemetry) return defaultValue;
     return m_yPosEntry.getDouble(defaultValue);
   }
 
@@ -839,10 +831,10 @@ public class Drivetrain extends SubsystemBase {
       testTab.add("Steer angle", new TestSteerAngle(this, testEntry));
       testTab.add("Reset Pose", new InstantCommand(() -> {
         this.resetOdometry(
-            new Pose2d(
-                this.getRequestedXPos(0),
-                this.getRequestedYPos(0),
-                new Rotation2d(this.getRequestedHeading(0))));
+          new Pose2d(
+            this.getRequestedXPos(0),
+            this.getRequestedYPos(0),
+            new Rotation2d(this.getRequestedHeading(0))));
       }));
     }
   }
@@ -855,33 +847,33 @@ public class Drivetrain extends SubsystemBase {
     m_loggerStep = 0;
 
     double[] pose = {
-        getPose().getX(),
-        getPose().getY(),
-        getPose().getRotation().getRadians()
+      getPose().getX(),
+      getPose().getY(),
+      getPose().getRotation().getRadians()
     };
     LogManager.addDoubleArray("Swerve/Pose2d", pose);
 
     double[] actualStates = {
-        m_modules[0].getAngle().getRadians(),
-        m_modules[0].getState().speedMetersPerSecond,
-        m_modules[1].getAngle().getRadians(),
-        m_modules[1].getState().speedMetersPerSecond,
-        m_modules[2].getAngle().getRadians(),
-        m_modules[2].getState().speedMetersPerSecond,
-        m_modules[3].getAngle().getRadians(),
-        m_modules[3].getState().speedMetersPerSecond
+      m_modules[0].getAngle().getRadians(),
+      m_modules[0].getState().speedMetersPerSecond,
+      m_modules[1].getAngle().getRadians(),
+      m_modules[1].getState().speedMetersPerSecond,
+      m_modules[2].getAngle().getRadians(),
+      m_modules[2].getState().speedMetersPerSecond,
+      m_modules[3].getAngle().getRadians(),
+      m_modules[3].getState().speedMetersPerSecond
     };
     LogManager.addDoubleArray("Swerve/actual swerve states", actualStates);
 
     double[] desiredStates = {
-        m_modules[0].getDesiredAngle().getRadians(),
-        m_modules[0].getDesiredVelocity(),
-        m_modules[1].getDesiredAngle().getRadians(),
-        m_modules[1].getDesiredVelocity(),
-        m_modules[2].getDesiredAngle().getRadians(),
-        m_modules[2].getDesiredVelocity(),
-        m_modules[3].getDesiredAngle().getRadians(),
-        m_modules[3].getDesiredVelocity()
+      m_modules[0].getDesiredAngle().getRadians(),
+      m_modules[0].getDesiredVelocity(),
+      m_modules[1].getDesiredAngle().getRadians(),
+      m_modules[1].getDesiredVelocity(),
+      m_modules[2].getDesiredAngle().getRadians(),
+      m_modules[2].getDesiredVelocity(),
+      m_modules[3].getDesiredAngle().getRadians(),
+      m_modules[3].getDesiredVelocity()
     };
     LogManager.addDoubleArray("Swerve/desired swerve states", desiredStates);
   }
