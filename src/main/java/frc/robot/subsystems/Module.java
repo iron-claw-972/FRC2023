@@ -130,13 +130,13 @@ public class Module extends SubsystemBase {
   }
 
   /**
-  * Minimize the change in heading the desired swerve module state would require by potentially
-  * reversing the direction the wheel spins. Customized from WPILib's version to include placing
-  * in appropriate scope for CTRE onboard control.
-  *
-  * @param desiredState The desired state.
-  * @param currentAngle The current module angle.
-  */
+   * Minimize the change in heading the desired swerve module state would require by potentially
+   * reversing the direction the wheel spins. Customized from WPILib's version to include placing
+   * in appropriate scope for CTRE onboard control.
+   *
+   * @param desiredState The desired state.
+   * @param currentAngle The current module angle.
+   */
   public static SwerveModuleState optimizeCTRE(SwerveModuleState desiredState, Rotation2d currentAngle) {
     double targetAngle = MathUtil.inputModulus(
       desiredState.angle.getRadians(), 
@@ -172,7 +172,7 @@ public class Module extends SubsystemBase {
     setAngle(desiredState);
     setSpeed(desiredState, isOpenLoop);
   }
-    /**
+  /**
    * sets desired state velocity
    * @param desiredState desired state with desired velocity
    * @param isOpenLoop don't use integrated velocity PID and instead set percentage power
@@ -244,7 +244,7 @@ public class Module extends SubsystemBase {
   public void setDriveVoltage(double voltage) {
     m_driveMotor.set(ControlMode.PercentOutput, voltage / Constants.kRobotVoltage);
   }
-    /**
+  /**
    * sets voltage of steer motor
    * @param voltage voltage to set steer motor to in volts
    */
