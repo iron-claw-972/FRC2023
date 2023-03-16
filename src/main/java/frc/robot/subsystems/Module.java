@@ -324,6 +324,12 @@ public class Module extends SubsystemBase {
     return getDesiredState().angle;
   }
   /**
+   * @return error between desired angle and actual angle
+   */
+  public Rotation2d getAngleError() {
+    return new Rotation2d( getAngle().getRadians() - getDesiredAngle().getRadians() );
+  }
+  /**
    * @return module steer rotational velocity in radians per second
    */
   public double getSteerVelocity() {
