@@ -97,6 +97,7 @@ public class DriveConstants {
 
   //translational PID
   public static double kTranslationalP = 0.25;
+  public static double kTranslationalI = 0;
   public static double kTranslationalD = 0;//0.001
 
   //The PIDs for PathPlanner Command

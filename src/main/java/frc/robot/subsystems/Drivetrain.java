@@ -55,42 +55,45 @@ import frc.robot.util.Vision;
  */
 public class Drivetrain extends SubsystemBase {
 
-  private ShuffleboardTab m_swerveModulesTab, m_drivetrainTab;
-
-  // Odometry
-  private final SwerveDrivePoseEstimator m_poseEstimator;
-
   // This is left intentionally public
   public final Module[] m_modules;
 
   private final WPI_Pigeon2 m_pigeon;
-  private Vision m_vision;
+  private final Vision m_vision;
+  // Odometry
+  private final SwerveDrivePoseEstimator m_poseEstimator;
+  // Displays the field with the robots estimated pose on it
+  private final Field2d m_fieldDisplay;
+
+  private boolean m_visionEnabled = true;
+  private boolean m_chargeStationVision = false;
 
   // PID Controllers for chassis movement
   private final PIDController m_xController;
   private final PIDController m_yController;
   private final PIDController m_rotationController;
 
-  private boolean m_chargeStationVision = false;
-
-  // Displays the field with the robots estimated pose on it
-  private final Field2d m_fieldDisplay;
-
+  // PIDs used in PathPlanner command
   private final PIDController m_pathplannerXController;
   private final PIDController m_pathplannerYController;
   private final PIDController m_pathplannerRotationController;
 
+  private final PIDController m_balancePID;
+
   // Shuffleboard
-  private GenericEntry m_driveVelocityEntry,
-      m_steerVelocityEntry,
-      m_steerAngleEntry,
-      m_driveStaticFeedforwardEntry,
-      m_driveVelocityFeedforwardEntry,
-      m_steerStaticFeedforwardEntry,
-      m_steerVelocityFeedforwardEntry,
-      m_xPosEntry,
-      m_yPosEntry,
-      m_headingEntry;
+  private final ShuffleboardTab m_swerveModulesTab, m_drivetrainTab;
+  
+  private GenericEntry 
+    m_driveVelocityEntry,
+    m_steerVelocityEntry,
+    m_steerAngleEntry,
+    m_driveStaticFeedforwardEntry,
+    m_driveVelocityFeedforwardEntry,
+    m_steerStaticFeedforwardEntry,
+    m_steerVelocityFeedforwardEntry,
+    m_xPosEntry,
+    m_yPosEntry,
+    m_headingEntry;
 
   private Double[] m_driveVelFeedForwardSaver = new Double[4];
   private Double[] m_driveStaticFeedForwardSaver = new Double[4];
@@ -100,8 +103,6 @@ public class Drivetrain extends SubsystemBase {
   private SendableChooser<Module> m_moduleChooser = new SendableChooser<>();
   // modules needed to distinguish in chooser
   private Module m_prevModule;
-
-  boolean m_visionEnabled = true;
 
   int m_loggerStep = 0;
 
@@ -139,8 +140,6 @@ public class Drivetrain extends SubsystemBase {
       };
     }
 
-    m_prevModule = m_modules[0];
-
     /*
      * By pausing init for a second before setting module offsets, we avoid a bug
      * with inverting motors.
@@ -158,22 +157,53 @@ public class Drivetrain extends SubsystemBase {
     );
     m_poseEstimator.setVisionMeasurementStdDevs(VisionConstants.kBaseVisionPoseStdDevs);
 
-    m_xController = new PIDController(DriveConstants.kTranslationalP, 0, DriveConstants.kTranslationalD);
-    m_yController = new PIDController(DriveConstants.kTranslationalP, 0, DriveConstants.kTranslationalD);
-    m_rotationController = new PIDController(DriveConstants.kHeadingP, 0, DriveConstants.kHeadingD);
+    // initialize chassis PIDs
+    m_xController = new PIDController(
+      DriveConstants.kTranslationalP,
+      DriveConstants.kTranslationalI, 
+      DriveConstants.kTranslationalD
+    );
+    m_yController = new PIDController(
+      DriveConstants.kTranslationalP, 
+      DriveConstants.kTranslationalI, 
+      DriveConstants.kTranslationalD
+    );
+    m_rotationController = new PIDController(
+      DriveConstants.kHeadingP, 
+      DriveConstants.kTranslationalI, 
+      DriveConstants.kHeadingD
+    );
     m_rotationController.enableContinuousInput(-Math.PI, Math.PI);
 
-    m_pathplannerXController = new PIDController(DriveConstants.kPathplannerTranslationalP, 0,
-        DriveConstants.kPathplannerTranslationalD);
-    m_pathplannerYController = new PIDController(DriveConstants.kPathplannerTranslationalP, 0,
-        DriveConstants.kPathplannerTranslationalD);
-    m_pathplannerRotationController = new PIDController(DriveConstants.kPathplannerHeadingP, 0,
-        DriveConstants.kPathplannerHeadingD);
+    // initialize pathplanner PIDs
+    m_pathplannerXController = new PIDController(
+      DriveConstants.kPathplannerTranslationalP, 
+      DriveConstants.kTranslationalI,
+      DriveConstants.kPathplannerTranslationalD
+    );
+    m_pathplannerYController = new PIDController(
+      DriveConstants.kPathplannerTranslationalP, 
+      DriveConstants.kTranslationalI,
+      DriveConstants.kPathplannerTranslationalD
+    );
+    m_pathplannerRotationController = new PIDController(
+      DriveConstants.kPathplannerHeadingP, 
+      DriveConstants.kTranslationalI,
+      DriveConstants.kPathplannerHeadingD
+    );
     m_pathplannerRotationController.enableContinuousInput(-Math.PI, Math.PI);
+
+    // initialize balance PID
+    m_balancePID = new PIDController(
+      DriveConstants.kBalanceP, 
+      DriveConstants.kBalanceI,
+      DriveConstants.kBalanceD
+    );
 
     m_fieldDisplay = new Field2d();
     m_fieldDisplay.setRobotPose(getPose());
 
+    m_prevModule = m_modules[0];
     setupDrivetrainShuffleboard();
     setupModulesShuffleboard();
   }
@@ -417,11 +447,9 @@ public class Drivetrain extends SubsystemBase {
   public PIDController getXController() {
     return m_xController;
   }
-
   public PIDController getYController() {
     return m_yController;
   }
-
   public PIDController getRotationController() {
     return m_rotationController;
   }
@@ -430,17 +458,12 @@ public class Drivetrain extends SubsystemBase {
   public PIDController getPathplannerXController() {
     return m_pathplannerXController;
   }
-
   public PIDController getPathplannerYController() {
     return m_pathplannerYController;
   }
-
   public PIDController getPathplannerRotationController() {
     return m_pathplannerRotationController;
   }
-
-  PIDController m_balancePID = new PIDController(DriveConstants.kBalanceP, DriveConstants.kBalanceI,
-      DriveConstants.kBalanceD);
 
   public PIDController getBalanceController() {
     return m_balancePID;
