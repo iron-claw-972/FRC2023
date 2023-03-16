@@ -9,6 +9,7 @@ import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.ctre.phoenix.sensors.SensorTimeBase;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -109,6 +110,10 @@ public class Module extends SubsystemBase {
     }
   }
 
+  /**
+   * sets desired angle base off desired state. Will not move motor is desired speed is too low.
+   * @param desiredState desired state of swerve module
+   */
   private void setAngle(SwerveModuleState desiredState) {
     // Prevent rotating module if desired speed < 1% of max speed. Prevents Jittering.
     if (m_stateDeadband && (Math.abs(desiredState.speedMetersPerSecond) <= (DriveConstants.kMaxSpeed * 0.01))) {
@@ -172,7 +177,7 @@ public class Module extends SubsystemBase {
   }
 
   /**
-   * reset steer motor's integrated encoder using CANcoder's reading
+   * resets steer motor's integrated encoder using CANcoder's reading
    */
   public void resetToAbsolute() {
     m_angleMotor.setSelectedSensorPosition(Conversions.degreesToFalcon(
@@ -237,12 +242,18 @@ public class Module extends SubsystemBase {
     m_driveMotor.setSelectedSensorPosition(0);
   }
 
+  /**
+   * @return current state of module
+   */
   public SwerveModuleState getState() {
     return new SwerveModuleState(
         getDriveVelocity(),
         getAngle());
   }
 
+  /**
+   * @return current swerve module position 
+   */
   public SwerveModulePosition getPosition() {
     return new SwerveModulePosition(
         getDrivePosition(),
@@ -262,6 +273,9 @@ public class Module extends SubsystemBase {
     }
   }
 
+  /**
+   * @return desired/ target state of module
+   */
   public SwerveModuleState getDesiredState() {
     return m_desiredState;
   }
@@ -288,21 +302,11 @@ public class Module extends SubsystemBase {
       DriveConstants.kDriveGearRatio
     );
   }
-    /**
+  /**
    * @return difference between desired and actual drive velocity in meters per second
    */
   public double getDriveVelocityError() {
     return m_desiredState.speedMetersPerSecond - getDriveVelocity();
-  }
-
-  //FIXME
-  public double getDriveFeedForwardKV() {
-    return DriveConstants.kDriveKV;
-  }
-
-  //FIXME
-  public double getDriveFeedForwardKS() {
-    return DriveConstants.kDriveKS;
   }
 
   /**
@@ -313,30 +317,36 @@ public class Module extends SubsystemBase {
     m_angleMotor.set(0);
   }
 
+  /**
+   * sets voltage of drive motor
+   * @param voltage voltage to set drive motor to in volts
+   */
   public void setDriveVoltage(double voltage) {
     m_driveMotor.set(ControlMode.PercentOutput, voltage / Constants.kRobotVoltage);
   }
-
+  
+  /**
+   * sets voltage of steer motor
+   * @param voltage voltage to set steer motor to in volts
+   */
   public void setSteerVoltage(double voltage) {
     m_angleMotor.set(ControlMode.PercentOutput, voltage / Constants.kRobotVoltage);
   }
 
-  //FIXME
+  //TODO: Possibly reimplement custom feedforward characterization
   public void setDriveFeedForwardValues(double kS, double kV) {    
   }
-
-  //FIXME
   public double getSteerFeedForwardKV() {
     return 0;
   }
-
-  //FIXME
   public double getSteerFeedForwardKS() {
     return 0;
   }
-
-  //FIXME
-  public void setAngle(Rotation2d rotation2d) {
-
+  public double getDriveFeedForwardKV() {
+    return DriveConstants.kDriveKV;
   }
+  public double getDriveFeedForwardKS() {
+    return DriveConstants.kDriveKS;
+  }
+  
 }
