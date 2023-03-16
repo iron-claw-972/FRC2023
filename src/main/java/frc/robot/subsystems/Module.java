@@ -313,7 +313,7 @@ public class Module extends SubsystemBase {
     m_angleMotor.set(0);
   }
 
-  public void setDriveVoltage(double volts) {
+  public void setDriveVoltage(double voltage) {
     m_driveMotor.set(ControlMode.PercentOutput, voltage / Constants.kRobotVoltage);
   }
 
