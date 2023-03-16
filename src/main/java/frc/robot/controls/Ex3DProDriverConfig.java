@@ -1,5 +1,6 @@
 package frc.robot.controls;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.SetFormationX;
@@ -24,7 +25,7 @@ public class Ex3DProDriverConfig extends BaseDriverConfig {
   @Override
   public void configureControls() { 
     kDriver.get(Ex3DProButton.B1).whileTrue(new SetFormationX(super.getDrivetrain()));
-    kDriver.get(Ex3DProButton.B2).onTrue(new InstantCommand(() -> super.getDrivetrain().setYaw(DriveConstants.kStartingHeadingDegrees)));
+    kDriver.get(Ex3DProButton.B2).onTrue(new InstantCommand(() -> super.getDrivetrain().setYaw(DriveConstants.kStartingHeading)));
   }
   
   @Override
@@ -58,7 +59,7 @@ public class Ex3DProDriverConfig extends BaseDriverConfig {
   }
 
   @Override
-  public boolean getIsFieldRelative() {
-    return !kDriver.get(Ex3DProButton.B12).getAsBoolean();
+  public boolean getIsAlign() {
+    return kDriver.get(Ex3DProButton.B12).getAsBoolean();
   }
 }
