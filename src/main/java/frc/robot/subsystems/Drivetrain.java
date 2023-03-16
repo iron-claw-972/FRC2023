@@ -246,16 +246,19 @@ public class Drivetrain extends SubsystemBase {
       }
 
       // An array list of poses returned by different cameras
-      ArrayList<EstimatedRobotPose> estimatedPoses = m_vision.getEstimatedPoses(m_poseEstimator.getEstimatedPosition());
+      ArrayList<EstimatedRobotPose> estimatedPoses = 
+        m_vision.getEstimatedPoses(m_poseEstimator.getEstimatedPosition());
       // The current position as a translation
-      Translation2d currentEstimatedPoseTranslation = m_poseEstimator.getEstimatedPosition().getTranslation();
+      Translation2d currentEstimatedPoseTranslation = 
+        m_poseEstimator.getEstimatedPosition().getTranslation();
       for (int i = 0; i < estimatedPoses.size(); i++) {
         EstimatedRobotPose estimatedPose = estimatedPoses.get(i);
         // The position of the closest april tag as a translation
         Translation2d closestTagPoseTranslation = new Translation2d();
         for (int j = 0; j < estimatedPose.targetsUsed.size(); j++) {
           // The position of the current april tag
-          Pose3d currentTagPose = m_vision.getTagPose(estimatedPose.targetsUsed.get(j).getFiducialId());
+          Pose3d currentTagPose = m_vision.getTagPose(
+            estimatedPose.targetsUsed.get(j).getFiducialId());
           // If it can't find the april tag's pose, don't run the rest of the for loop for
           // this tag
           if (currentTagPose == null) {
@@ -265,21 +268,21 @@ public class Drivetrain extends SubsystemBase {
 
           // If the current april tag position is closer than the closest one, this makes
           // makes it the closest
-          if (j == 0 || currentEstimatedPoseTranslation.getDistance(
-              currentTagPoseTranslation) < currentEstimatedPoseTranslation.getDistance(closestTagPoseTranslation)) {
+          if (j == 0 || currentEstimatedPoseTranslation.getDistance(currentTagPoseTranslation) 
+            < currentEstimatedPoseTranslation.getDistance(closestTagPoseTranslation)) {
             closestTagPoseTranslation = currentTagPoseTranslation;
           }
         }
 
         // Adds the vision measurement for this camera
         m_poseEstimator.addVisionMeasurement(
-            estimatedPose.estimatedPose.toPose2d(),
-            estimatedPose.timestampSeconds,
-            m_chargeStationVision ? VisionConstants.kChargeStationVisionPoseStdDevs.plus(
-                currentEstimatedPoseTranslation.getDistance(closestTagPoseTranslation)
-                    * VisionConstants.kVisionPoseStdDevFactor)
-                : VisionConstants.kBaseVisionPoseStdDevs);
-      }
+          estimatedPose.estimatedPose.toPose2d(),
+          estimatedPose.timestampSeconds,
+          m_chargeStationVision ? VisionConstants.kChargeStationVisionPoseStdDevs.plus(
+            currentEstimatedPoseTranslation.getDistance(closestTagPoseTranslation) 
+            * VisionConstants.kVisionPoseStdDevFactor)
+            : VisionConstants.kBaseVisionPoseStdDevs);
+    }
 
       // If it used vision after going over the charge station, it should trust vision
       // normally again
@@ -297,7 +300,11 @@ public class Drivetrain extends SubsystemBase {
    */
   public void resetOdometry(Pose2d pose) {
     // NOTE: must use pigeon yaw for odometer!
-    m_poseEstimator.resetPosition(Rotation2d.fromDegrees(m_pigeon.getYaw()), getModulePositions(), pose);
+    m_poseEstimator.resetPosition(
+      Rotation2d.fromDegrees(m_pigeon.getYaw()), 
+      getModulePositions(), 
+      pose
+    );
   }
 
   /**
@@ -319,9 +326,10 @@ public class Drivetrain extends SubsystemBase {
   public void setChassisSpeeds(ChassisSpeeds chassisSpeeds, boolean isOpenLoop) {
     if (Robot.isSimulation()) {
       m_pigeon.getSimCollection().addHeading(
-          +Units.radiansToDegrees(chassisSpeeds.omegaRadiansPerSecond * Constants.kLoopTime));
+        Units.radiansToDegrees(chassisSpeeds.omegaRadiansPerSecond * Constants.kLoopTime));
     }
-    SwerveModuleState[] swerveModuleStates = DriveConstants.kKinematics.toSwerveModuleStates(chassisSpeeds);
+    SwerveModuleState[] swerveModuleStates = 
+      DriveConstants.kKinematics.toSwerveModuleStates(chassisSpeeds);
     setModuleStates(swerveModuleStates, isOpenLoop);
   }
 
@@ -337,9 +345,9 @@ public class Drivetrain extends SubsystemBase {
    */
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean isOpenLoop) {
     setChassisSpeeds((fieldRelative
-        ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getYaw())
-        : new ChassisSpeeds(xSpeed, ySpeed, rot)),
-        isOpenLoop);
+      ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getYaw())
+      : new ChassisSpeeds(xSpeed, ySpeed, rot)),
+      isOpenLoop);
   }
 
   /**
@@ -516,20 +524,20 @@ public class Drivetrain extends SubsystemBase {
 
   public ChassisSpeeds getFieldRelativeChassisSpeeds() {
     return ChassisSpeeds.fromFieldRelativeSpeeds(
-        getChassisSpeeds(),
-        getPose().getRotation());
+      getChassisSpeeds(),
+      getPose().getRotation());
   }
 
   public double getChassisSpeedsMagnitude() {
     return Math.hypot(
-        getFieldRelativeChassisSpeeds().vxMetersPerSecond,
-        getFieldRelativeChassisSpeeds().vyMetersPerSecond);
+      getFieldRelativeChassisSpeeds().vxMetersPerSecond,
+      getFieldRelativeChassisSpeeds().vyMetersPerSecond);
   }
 
   public Rotation2d getFieldRelativeHeading() {
     return Rotation2d.fromRadians(Math.atan2(
-        getFieldRelativeChassisSpeeds().vxMetersPerSecond,
-        getFieldRelativeChassisSpeeds().vyMetersPerSecond));
+      getFieldRelativeChassisSpeeds().vxMetersPerSecond,
+      getFieldRelativeChassisSpeeds().vyMetersPerSecond));
   }
 
   /**
@@ -636,20 +644,20 @@ public class Drivetrain extends SubsystemBase {
       m_steerVelocityEntry = m_swerveModulesTab.add("Set Steer Velocity", 0).getEntry();
       m_steerAngleEntry = m_swerveModulesTab.add("Set Steer Angle", 0).getEntry();
       m_driveStaticFeedforwardEntry = m_swerveModulesTab.add(
-          "Drive kS FF",
-          m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]).getEntry();
+        "Drive kS FF",
+        m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]).getEntry();
 
       m_driveVelocityFeedforwardEntry = m_swerveModulesTab.add(
-          "Drive kV FF",
-          m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]).getEntry();
+        "Drive kV FF",
+        m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]).getEntry();
 
       m_steerStaticFeedforwardEntry = m_swerveModulesTab.add(
-          "Steer kS FF",
-          m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]).getEntry();
+        "Steer kS FF",
+        m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]).getEntry();
 
       m_steerVelocityFeedforwardEntry = m_swerveModulesTab.add(
-          "Steer kV FF",
-          m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]).getEntry();
+        "Steer kV FF",
+        m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]).getEntry();
     }
   }
   
@@ -689,28 +697,28 @@ public class Drivetrain extends SubsystemBase {
    */
   private void setUpFeedforwardSavers() {
     m_driveStaticFeedForwardSaver = new Double[] {
-        m_modules[0].getDriveFeedForwardKS(),
-        m_modules[1].getDriveFeedForwardKS(),
-        m_modules[2].getDriveFeedForwardKS(),
-        m_modules[3].getDriveFeedForwardKS()
+      m_modules[0].getDriveFeedForwardKS(),
+      m_modules[1].getDriveFeedForwardKS(),
+      m_modules[2].getDriveFeedForwardKS(),
+      m_modules[3].getDriveFeedForwardKS()
     };
     m_driveVelFeedForwardSaver = new Double[] {
-        m_modules[0].getDriveFeedForwardKV(),
-        m_modules[1].getDriveFeedForwardKV(),
-        m_modules[2].getDriveFeedForwardKV(),
-        m_modules[3].getDriveFeedForwardKV()
+      m_modules[0].getDriveFeedForwardKV(),
+      m_modules[1].getDriveFeedForwardKV(),
+      m_modules[2].getDriveFeedForwardKV(),
+      m_modules[3].getDriveFeedForwardKV()
     };
     m_steerStaticFeedForwardSaver = new Double[] {
-        m_modules[0].getSteerFeedForwardKS(),
-        m_modules[1].getSteerFeedForwardKS(),
-        m_modules[2].getSteerFeedForwardKS(),
-        m_modules[3].getSteerFeedForwardKS()
+      m_modules[0].getSteerFeedForwardKS(),
+      m_modules[1].getSteerFeedForwardKS(),
+      m_modules[2].getSteerFeedForwardKS(),
+      m_modules[3].getSteerFeedForwardKS()
     };
     m_steerVelFeedForwardSaver = new Double[] {
-        m_modules[0].getSteerFeedForwardKV(),
-        m_modules[1].getSteerFeedForwardKV(),
-        m_modules[2].getSteerFeedForwardKV(),
-        m_modules[3].getSteerFeedForwardKV()
+      m_modules[0].getSteerFeedForwardKV(),
+      m_modules[1].getSteerFeedForwardKV(),
+      m_modules[2].getSteerFeedForwardKV(),
+      m_modules[3].getSteerFeedForwardKV()
     };
   }
   public Double[] getDriveStaticFeedforwardArray() {
@@ -727,23 +735,19 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void setDriveVelocityFeedforwardEntry(double value) {
-    if (!Constants.kUseTelemetry)
-      return;
+    if (!Constants.kUseTelemetry) return;
     m_driveVelocityFeedforwardEntry.setDouble(value);
   }
   public void setDriveStaticFeedforwardEntry(double value) {
-    if (!Constants.kUseTelemetry)
-      return;
+    if (!Constants.kUseTelemetry) return;
     m_driveStaticFeedforwardEntry.setDouble(value);
   }
   public void setSteerStaticFeedforwardEntry(double value) {
-    if (!Constants.kUseTelemetry)
-      return;
+    if (!Constants.kUseTelemetry) return;
     m_steerStaticFeedforwardEntry.setDouble(value);
   }
   public void setSteerVelocityFeedforwardEntry(double value) {
-    if (!Constants.kUseTelemetry)
-      return;
+    if (!Constants.kUseTelemetry) return;
     m_steerVelocityFeedforwardEntry.setDouble(value);
   }
 
@@ -751,22 +755,21 @@ public class Drivetrain extends SubsystemBase {
    * Updates the drive module feedforward values on shuffleboard.
    */
   public void updateDriveModuleFeedforwardShuffleboard() {
-    if (!Constants.kUseTelemetry)
-      return;
+    if (!Constants.kUseTelemetry) return;
     // revert to previous saved feed forward data if changed
     if (m_prevModule != m_moduleChooser.getSelected()) {
       m_driveStaticFeedforwardEntry.setDouble(
-          m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]);
+        m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]);
       m_driveVelocityFeedforwardEntry.setDouble(
-          m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]);
+        m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]);
       m_prevModule = m_moduleChooser.getSelected();
     }
 
     // update saved feedforward data
-    m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()] = m_driveStaticFeedforwardEntry
-        .getDouble(0);
-    m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()] = m_driveVelocityFeedforwardEntry
-        .getDouble(0);
+    m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()] = 
+      m_driveStaticFeedforwardEntry.getDouble(0);
+    m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()] = 
+      m_driveVelocityFeedforwardEntry.getDouble(0);
 
     // to set all modules to same feedforward values if all
     // if (m_module.getSelected() == m_allModule) {
@@ -778,16 +781,15 @@ public class Drivetrain extends SubsystemBase {
 
     // set selected module
     m_moduleChooser.getSelected().setDriveFeedForwardValues(
-        m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()],
-        m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]);
+      m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()],
+      m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]);
   }
 
   /**
    * Updates the steer module feedforward values on shuffleboard.
    */
   public void updateSteerModuleFeedforwardShuffleboard() {
-    if (!Constants.kUseTelemetry)
-      return;
+    if (!Constants.kUseTelemetry) return;
 
     // revert to previous saved feed forward data if changed
     if (m_prevModule != m_moduleChooser.getSelected()) {
@@ -799,10 +801,10 @@ public class Drivetrain extends SubsystemBase {
     }
 
     // update saved feedforward data
-    m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()] = m_steerStaticFeedforwardEntry
-        .getDouble(0);
-    m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()] = m_steerVelocityFeedforwardEntry
-        .getDouble(0);
+    m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()] = 
+      m_steerStaticFeedforwardEntry.getDouble(0);
+    m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()] = 
+      m_steerVelocityFeedforwardEntry.getDouble(0);
 
     // to set all modules to same feedforward values if all
     // if (m_module.getSelected() == m_allModule) {
@@ -814,8 +816,8 @@ public class Drivetrain extends SubsystemBase {
 
     // set selected module
     m_moduleChooser.getSelected().setDriveFeedForwardValues(
-        m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()],
-        m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]);
+      m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()],
+      m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]);
   }
 
   /**
@@ -842,8 +844,7 @@ public class Drivetrain extends SubsystemBase {
   public void updateLogs() {
 
     m_loggerStep++;
-    if (m_loggerStep < 4)
-      return;
+    if (m_loggerStep < 4) return;
     m_loggerStep = 0;
 
     double[] pose = {
