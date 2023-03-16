@@ -33,25 +33,9 @@ public class IntakeGamePiece extends CommandBase {
     addRequirements(m_intake);
   }
 
-  /**
-   * Spins the intake until the game piece is inside the intake.
-   * @param intake the intake subsystem
-   * @param type the type of game piece to intake
-   * @param runsForever if the command should end, or run forever. If false, will end based on motor currents
-   */
-  public IntakeGamePiece(RollerIntake intake, GamePieceType type, boolean runsForever) {
-    m_intake = intake; 
-    m_type = type;
-    m_isCone = type == GamePieceType.CONE ? () -> true : () -> false;
-    m_runsForever = runsForever;
-    addRequirements(m_intake);
-  }
-
   @Override
   public void initialize() {
-    if (m_type == null) {
-      m_type = m_isCone.getAsBoolean() ? GamePieceType.CONE : GamePieceType.CUBE;
-    }
+    m_type = m_isCone.getAsBoolean() ? GamePieceType.CONE : GamePieceType.CUBE;
     if (m_type == GamePieceType.CUBE) {
       m_intake.setMode(IntakeMode.INTAKE_CUBE);
     } else if (m_type == GamePieceType.CONE) {
