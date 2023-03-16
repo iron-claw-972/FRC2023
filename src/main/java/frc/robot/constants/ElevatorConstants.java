@@ -10,7 +10,7 @@ public class ElevatorConstants {
   public static final int kMotorID = 13;
     //public static final String kElevatorCAN = kCANivoreCAN;
     public static final TalonFXInvertType kMotorInvert = TalonFXInvertType.Clockwise; // CW goes up
-    public static final NeutralMode kNeutralMode = NeutralMode.Brake;
+    public static final NeutralMode kNeutralMode = NeutralMode.Coast;
 
     public static final double kGearRatio = (50.0 / 12.0) * (50.0 / 30.0) * (36.0 / 24.0); // 10.416:1
     public static final double kSpoolDiameter = Units.inchesToMeters(1.375);
@@ -63,9 +63,9 @@ public class ElevatorConstants {
     // Max distance that the carriage can travel within the first stage
     public static final double kCarriageMaxDistance = Units.inchesToMeters(25 - 0.25); // The 0.25 inches is the bottom hardstop
     // Max distance that the first stage can travel within the base stage
-    public static final double kFirstStageMaxDistance = Units.inchesToMeters(26);
+    // public static final double kFirstStageMaxDistance = Units.inchesToMeters(26);
     // Total max travel distance of elevator (how far it can extend)
-    public static final double kMaxPosition = kCarriageMaxDistance + kFirstStageMaxDistance;
+    public static final double kMaxPosition = 1.4;//kCarriageMaxDistance + kFirstStageMaxDistance;
     // Max height of elevator
     public static final double kMaxHeight = Conversions.ElevatorExtensionToHeight(kMaxPosition);
     // Vertical height of the center of the top surface of the tread hardstop for the carriage when elevator is at minimum height
@@ -78,13 +78,15 @@ public class ElevatorConstants {
     public static final double kTopConeHeight = Conversions.ElevatorExtensionToHeight(Units.inchesToMeters(46));
     
     public static final double kTopCubeHeight = Conversions.ElevatorExtensionToHeight(Units.inchesToMeters(50));
-    public static final double kMiddleConeHeight = Units.inchesToMeters(35);
-    public static final double kMiddleCubeHeight = kMiddleConeHeight;
+    public static final double kMiddleConeHeight = Units.inchesToMeters(40);
+    public static final double kMiddleCubeHeight = Units.inchesToMeters(35);
     public static final double kBottomConeHeight = Conversions.ElevatorExtensionToHeight(Units.inchesToMeters(6));
     public static final double kBottomCubeHeight = kBottomConeHeight;
-    public static final double kShelfConeHeight = Units.inchesToMeters(58.225);
-    public static final double kShelfCubeHeight = kShelfConeHeight;
+    public static final double kShelfHeight = 1.34;
     public static final double kStowHeight = Conversions.ElevatorExtensionToHeight(Units.inchesToMeters(0));
+
+    public static final double kAutoMiddle = 0.771;
+    public static final double kAutoTop = 1.294;
 
     public static final double kCalibrationPower = -0.2;
     public static final double kMotorRamp = 0.1;
