@@ -217,8 +217,7 @@ public class Drivetrain extends SubsystemBase {
 
     m_fieldDisplay.setRobotPose(getPose());
 
-    if (Constants.kLogging)
-      updateLogs();
+    if (Constants.kLogging) updateLogs();
   }
 
   /**
@@ -234,8 +233,7 @@ public class Drivetrain extends SubsystemBase {
    * Updates the field relative position of the robot.
    */
   public void updateOdometry() {
-    // Updates pose based on encoders and gyro. NOTE: must use yaw directly from
-    // gyro!
+    // Updates pose based on encoders and gyro. NOTE: must use yaw directly from gyro!
     m_poseEstimator.update(Rotation2d.fromDegrees(m_pigeon.getYaw()), getModulePositions());
 
     // Updates pose based on vision
