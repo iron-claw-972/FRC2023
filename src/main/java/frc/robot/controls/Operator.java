@@ -7,17 +7,17 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.scoring.PositionIntake;
 import frc.robot.commands.scoring.PositionIntake.Position;
-import frc.robot.commands.scoring.arm.ExtendArm;
 import frc.robot.commands.scoring.elevator.CalibrateElevator;
-import frc.robot.commands.scoring.elevator.MoveElevator;
 import frc.robot.commands.scoring.intake.IntakeGamePiece;
 import frc.robot.commands.scoring.intake.OuttakeGamePiece;
-import frc.robot.constants.ElevatorConstants;
+import frc.robot.commands.scoring.wrist.RotateWrist;
 import frc.robot.constants.OIConstants;
+import frc.robot.constants.WristConstants;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.FourBarArm;
 import frc.robot.subsystems.RollerIntake;
 import frc.robot.subsystems.RollerIntake.IntakeMode;
+import frc.robot.subsystems.Wrist;
+import frc.robot.util.GamePieceType;
 import frc.robot.util.Node;
 import frc.robot.util.Vision;
 import lib.controllers.GameController;
@@ -35,10 +35,9 @@ public class Operator {
   private Vision m_vision;
   
   /**
-   * Configures the operator controls for the deploying Bar.
+   * Configures the operator controls for the wrist, roller intake, elevator, and vision
    */
-  public void configureControls(FourBarArm arm, RollerIntake intake, Elevator elevator, Vision vision) {
-
+  public void configureControls(Wrist wrist, RollerIntake intake, Elevator elevator, Vision vision) {
     m_vision = vision; //should be in constructor
 
     // calibrate elevator
@@ -48,34 +47,35 @@ public class Operator {
     m_operator.get(DPad.UP).onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
 
     //top
-    m_operator.get(Button.Y).onTrue(new PositionIntake(elevator, arm, m_operator.RIGHT_TRIGGER_BUTTON, Position.TOP));
+    m_operator.get(Button.Y).onTrue(new PositionIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, Position.TOP));
     //middle
-    m_operator.get(Button.X).onTrue(new PositionIntake(elevator, arm, m_operator.RIGHT_TRIGGER_BUTTON, Position.MIDDLE));
+    m_operator.get(Button.X).onTrue(new PositionIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, Position.MIDDLE));
     //bottom
-    m_operator.get(Button.A).onTrue(new PositionIntake(elevator, arm, m_operator.RIGHT_TRIGGER_BUTTON, Position.BOTTOM));
+    m_operator.get(Button.A).onTrue(new PositionIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, Position.BOTTOM));
     //shelf
-    m_operator.get(Button.B).onTrue(new PositionIntake(elevator, arm, m_operator.RIGHT_TRIGGER_BUTTON, Position.SHELF).alongWith(new IntakeGamePiece(intake, m_operator.RIGHT_TRIGGER_BUTTON, true)))
+    m_operator.get(Button.B).onTrue(new PositionIntake(elevator, wrist, () -> true, Position.SHELF).alongWith(new IntakeGamePiece(intake, () -> true, true)))
       .onFalse(new SequentialCommandGroup( 
         new InstantCommand(() -> intake.setMode(IntakeMode.DISABLED)),
-        new ExtendArm(arm, 0.8),
-        new MoveElevator(elevator, ElevatorConstants.kStowHeight),
-        new PositionIntake(elevator, arm, m_operator.RIGHT_TRIGGER_BUTTON, Position.STOW)
+        new InstantCommand(() -> intake.setHeldGamePiece(GamePieceType.CONE)),
+        // for shelf, to not hit the shelf, move wrist slightly first
+        new RotateWrist(wrist, WristConstants.kBottomNodeCubePos),
+        new PositionIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, Position.STOW)
       ));
     
     // stow
-    m_operator.get(Button.RB).onTrue(new PositionIntake(elevator, arm, m_operator.RIGHT_TRIGGER_BUTTON, Position.STOW));
+    m_operator.get(Button.RB).onTrue(new PositionIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, Position.STOW));
 
-    //intake
+    // intake
     m_operator.get(Button.LB).onTrue(
-      new PositionIntake(elevator, arm, m_operator.RIGHT_TRIGGER_BUTTON, Position.INTAKE).alongWith(new IntakeGamePiece(intake, m_operator.RIGHT_TRIGGER_BUTTON, true)))
-      .onFalse(new InstantCommand(() -> intake.setMode(IntakeMode.DISABLED)).andThen(new PositionIntake(elevator, arm, m_operator.RIGHT_TRIGGER_BUTTON, Position.STOW)));
-
-    // dunk
-    // m_operator.get(m_operator.RIGHT_TRIGGER_BUTTON).onTrue(new Dunk(arm, intake)).onFalse(new Stow(intake, elevator, arm));
+      new PositionIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, Position.INTAKE).alongWith(new IntakeGamePiece(intake, m_operator.RIGHT_TRIGGER_BUTTON, true)))
+      .onFalse(new SequentialCommandGroup(
+        new InstantCommand(() -> intake.setMode(IntakeMode.DISABLED)),
+        new PositionIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, Position.STOW)
+      ));
 
     // outtake
-    m_operator.get(m_operator.LEFT_TRIGGER_BUTTON).onTrue(new OuttakeGamePiece(intake)).onFalse(new PositionIntake(elevator, arm, m_operator.RIGHT_TRIGGER_BUTTON, Position.STOW));
-    
+    m_operator.get(m_operator.LEFT_TRIGGER_BUTTON).onTrue(new OuttakeGamePiece(intake)).onFalse(new PositionIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, Position.STOW).andThen(new InstantCommand(() -> intake.setMode(IntakeMode.DISABLED), intake)));
+
   
     // Selects which grid to score in
     m_operator.get(m_operator.LEFT_STICK_LEFT).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.GRID, 2)));
@@ -86,9 +86,9 @@ public class Operator {
     m_operator.get(m_operator.RIGHT_STICK_DOWN).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.COLUMN, 1)));
     m_operator.get(m_operator.RIGHT_STICK_RIGHT).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.COLUMN, 0)));
     // Selects the row
-    m_operator.get(DPad.LEFT).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.ROW, 2)));
-    m_operator.get(DPad.DOWN).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.ROW, 1)));
-    m_operator.get(DPad.RIGHT).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.ROW, 0)));
+    // m_operator.get(DPad.LEFT).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.ROW, 2)));
+    // m_operator.get(DPad.DOWN).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.ROW, 1)));
+    // m_operator.get(DPad.RIGHT).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.ROW, 0)));
   }
 
   /**

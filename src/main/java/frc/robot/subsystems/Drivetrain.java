@@ -174,6 +174,7 @@ public class Drivetrain extends SubsystemBase {
       DriveConstants.kHeadingD
     );
     m_rotationController.enableContinuousInput(-Math.PI, Math.PI);
+    m_rotationController.setTolerance(Units.degreesToRadians(0.25), Units.degreesToRadians(0.25));
 
     // initialize pathplanner PIDs
     m_pathplannerXController = new PIDController(
