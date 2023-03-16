@@ -21,7 +21,6 @@ import frc.robot.constants.Constants;
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.constants.swerve.ModuleConstants;
 import frc.robot.util.Conversions;
-import lib.CTREModuleState;
 
 public class Module extends SubsystemBase {
   private final ShuffleboardTab m_swerveTab;
@@ -138,7 +137,7 @@ public class Module extends SubsystemBase {
   * @param desiredState The desired state.
   * @param currentAngle The current module angle.
   */
-  public static SwerveModuleState optimize(SwerveModuleState desiredState, Rotation2d currentAngle) {
+  public static SwerveModuleState optimizeCTRE(SwerveModuleState desiredState, Rotation2d currentAngle) {
     double targetAngle = MathUtil.inputModulus(
       desiredState.angle.getRadians(), 
       currentAngle.getRadians() - Math.PI,
@@ -168,7 +167,7 @@ public class Module extends SubsystemBase {
      * This is a custom optimize function, since default WPILib optimize assumes
      * continuous controller which CTRE and Rev onboard is not
      */
-    desiredState = m_optimizeStates ? CTREModuleState.optimize(desiredState, getState().angle) : desiredState;
+    desiredState = m_optimizeStates ? optimizeCTRE(desiredState, getState().angle) : desiredState;
     m_desiredState = desiredState;
     setAngle(desiredState);
     setSpeed(desiredState, isOpenLoop);
