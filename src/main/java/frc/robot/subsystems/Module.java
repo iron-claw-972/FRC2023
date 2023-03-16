@@ -93,9 +93,8 @@ public class Module extends SubsystemBase {
    * @param isOpenLoop don't use integrated velocity PID and instead set percentage power
    */
   private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
-    // TODO: why is non open loop even a option
+    // TODO: why is open loop even a option check if needed for driver
     if (isOpenLoop) {
-      // FIXME: Speed is no proportional to volatage form 0 at least use satic FF
       double percentOutput = desiredState.speedMetersPerSecond / DriveConstants.kMaxSpeed;
       m_driveMotor.set(ControlMode.PercentOutput, percentOutput);
     } else {
@@ -103,8 +102,6 @@ public class Module extends SubsystemBase {
         desiredState.speedMetersPerSecond, 
         DriveConstants.kWheelCircumference,
         DriveConstants.kDriveGearRatio);
-      // currently assuming sets velocity using onboard PID
-      // TODO: double check how this works
       m_driveMotor.set(ControlMode.Velocity, velocity, DemandType.ArbitraryFeedForward,
           feedforward.calculate(desiredState.speedMetersPerSecond));
     }
