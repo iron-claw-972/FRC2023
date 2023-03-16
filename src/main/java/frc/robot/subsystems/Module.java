@@ -121,11 +121,37 @@ public class Module extends SubsystemBase {
       return;
     }
 
+    setAngle(desiredState.angle);
+  }
+
+  /**
+   * rotates swerve module steer to desired angle
+   * @param rotation2d desired steer angle
+   * @param rotationBlind should the angle be interpreted continuously
+   */
+  public void setAngle(Rotation2d rotation2d, boolean rotationBlind) {
+    double angle = rotation2d.getRadians();
+    if (rotationBlind) angle = MathUtil.inputModulus(
+      angle, 
+      getAngle().getRadians() - Math.PI,
+      getAngle().getRadians() + Math.PI
+    );
+
+    m_desiredState.angle = new Rotation2d(angle);
+
     m_angleMotor.set(ControlMode.Position, Conversions.degreesToFalcon(
-      desiredState.angle.getDegrees(), DriveConstants.kAngleGearRatio
+      rotation2d.getDegrees(), DriveConstants.kAngleGearRatio
     ));
   }
 
+  /**
+   * rotates swerve module steer to desired angle without the angle being interpreted continuously
+   * @param rotation2d desired steer angle
+   */
+  public void setAngle(Rotation2d rotation2d) {
+    setAngle(rotation2d, false);
+  }
+  
   /**
    * sets state deadband enable status used for not running the module if desired speed is too low
    * @param enable should state deadband be enabled
