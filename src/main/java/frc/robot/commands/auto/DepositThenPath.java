@@ -1,10 +1,5 @@
 package frc.robot.commands.auto;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.pathplanner.lib.PathPlannerTrajectory;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
