@@ -166,6 +166,7 @@ public class Wrist extends SubsystemBase {
     m_wristTab.add("wrist PID", m_pid);
     m_wristTab.addNumber("wrist power final", () -> m_motor.get());
     m_wristTab.addNumber("Wrist PID output", () -> m_pidPower);
+    m_wristTab.addNumber("Wrist Error", () -> m_pid.getSetpoint() - getAbsEncoderPos());
   }
 
   public void simulationPeriodic() {
