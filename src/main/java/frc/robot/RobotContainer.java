@@ -227,7 +227,10 @@ public class RobotContainer {
 
     Position autoDepositPos = Position.TOP;
 
-    m_preloadedGamePiece.addOption("Cone", GamePieceType.CONE);
+    // if these are just addOption, then the m_preloadedGamePieceSelect() in updateHeldGamePiece() below will return null
+    // and cause a fault.
+    // Set the default to be Cone.
+    m_preloadedGamePiece.setDefaultOption("Cone", GamePieceType.CONE);
     m_preloadedGamePiece.addOption("Cube", GamePieceType.CUBE);
 
     // add commands below with: m_autoCommand.addOption("Example", new ExampleCommand());
