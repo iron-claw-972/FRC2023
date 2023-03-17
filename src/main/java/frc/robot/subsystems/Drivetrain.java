@@ -101,7 +101,7 @@ public class Drivetrain extends SubsystemBase {
   // modules needed to distinguish in chooser
   private Module m_prevModule;
 
-  boolean m_visionEnabled = true;
+  boolean m_visionEnabled = false;
 
   int m_loggerStep = 0;
 
