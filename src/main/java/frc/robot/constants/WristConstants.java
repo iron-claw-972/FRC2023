@@ -43,7 +43,7 @@ public class WristConstants {
   public static final double kMiddleNodeConePos = 0.070;
   public static final double kTopNodeConePos = 0.070;
   
-  public static final double kIntakeConePos = 0.035;
+  public static final double kIntakeConePos = 0.025;
   public static final double kIntakeCubePos = 0.015;
   public static final double kIntakeShelfPos = 0.035;
 
