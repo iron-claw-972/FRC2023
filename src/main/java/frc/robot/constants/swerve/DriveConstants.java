@@ -82,7 +82,7 @@ public class DriveConstants {
   public static double kBalanceI = 0;
   public static double kBalanceD = 0;
   // max output in m/s
-  public static final double kBalanceMaxOutput = 0.5;
+  public static final double kBalanceMaxOutput = 0.7;
 
   //balance timer
   // when the balance command starts, it will run the pid normally for
@@ -91,7 +91,7 @@ public class DriveConstants {
   // the charge station some time to balance.
   // "A non-linear system requires non-linear control" - jerry
   // "If it's stupid but it works..." - Richie
-  public static double kBalanceNoStopPeriod = 2;
+  public static double kBalanceNoStopPeriod = 2.5;
   public static double kBalanceStopInterval = 0.5;
   public static double kBalanceStopDuration = 0.2;
 
