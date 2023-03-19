@@ -776,15 +776,27 @@ public class Drivetrain extends SubsystemBase {
     LogManager.addDoubleArray("Swerve/Pose2d", pose);
 
     double[] actualStates = {
-      m_modules[0].getDesiredAngle().getRadians() - m_modules[0].getAngle().getRadians(),
-      m_modules[0].getDesiredVelocity() - m_modules[0].getState().speedMetersPerSecond,
-      m_modules[1].getDesiredAngle().getRadians() - m_modules[1].getAngle().getRadians(),
-      m_modules[1].getDesiredVelocity() - m_modules[1].getState().speedMetersPerSecond,
-      m_modules[2].getDesiredAngle().getRadians() - m_modules[2].getAngle().getRadians(),
-      m_modules[2].getDesiredVelocity() - m_modules[2].getState().speedMetersPerSecond,
-      m_modules[3].getDesiredAngle().getRadians() - m_modules[3].getAngle().getRadians(),
-      m_modules[3].getDesiredVelocity() - m_modules[3].getState().speedMetersPerSecond
+      m_modules[0].getAngle().getRadians(),
+      m_modules[0].getState().speedMetersPerSecond,
+      m_modules[1].getAngle().getRadians(),
+      m_modules[1].getState().speedMetersPerSecond,
+      m_modules[2].getAngle().getRadians(),
+      m_modules[2].getState().speedMetersPerSecond,
+      m_modules[3].getAngle().getRadians(),
+      m_modules[3].getState().speedMetersPerSecond
     };
-    LogManager.addDoubleArray("Swerve/swerve states error", actualStates);
+    LogManager.addDoubleArray("Swerve/actual swerve states", actualStates);
+
+    double[] desiredStates = {
+      m_modules[0].getDesiredAngle().getRadians(),
+      m_modules[0].getDesiredVelocity(),
+      m_modules[1].getDesiredAngle().getRadians(),
+      m_modules[1].getDesiredVelocity(),
+      m_modules[2].getDesiredAngle().getRadians(),
+      m_modules[2].getDesiredVelocity(),
+      m_modules[3].getDesiredAngle().getRadians(),
+      m_modules[3].getDesiredVelocity()
+    };
+    LogManager.addDoubleArray("Swerve/desired swerve states", desiredStates);
   }
 }
