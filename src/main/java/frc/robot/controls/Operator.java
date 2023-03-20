@@ -78,15 +78,17 @@ public class Operator {
     // outtake
     m_operator.get(m_operator.LEFT_TRIGGER_BUTTON).onTrue(new OuttakeGamePiece(intake)).onFalse(new PositionIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, Position.STOW).andThen(new InstantCommand(() -> intake.setMode(IntakeMode.DISABLED), intake)));
 
+    // spin intake
+    m_operator.get(DPad.DOWN).onTrue(new IntakeGamePiece(intake, m_operator.RIGHT_TRIGGER_BUTTON, true)).onFalse(new InstantCommand(() -> intake.setMode(IntakeMode.DISABLED), intake));
   
     // Selects which grid to score in
-    m_operator.get(m_operator.LEFT_STICK_LEFT).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.GRID, 2)));
-    m_operator.get(m_operator.LEFT_STICK_DOWN).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.GRID, 1)));
-    m_operator.get(m_operator.LEFT_STICK_RIGHT).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.GRID, 0)));
-    // Selects which column in the grid to score in
-    m_operator.get(m_operator.RIGHT_STICK_LEFT).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.COLUMN, 2)));
-    m_operator.get(m_operator.RIGHT_STICK_DOWN).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.COLUMN, 1)));
-    m_operator.get(m_operator.RIGHT_STICK_RIGHT).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.COLUMN, 0)));
+    // m_operator.get(m_operator.LEFT_STICK_LEFT).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.GRID, 2)));
+    // m_operator.get(m_operator.LEFT_STICK_DOWN).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.GRID, 1)));
+    // m_operator.get(m_operator.LEFT_STICK_RIGHT).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.GRID, 0)));
+    // // Selects which column in the grid to score in
+    // m_operator.get(m_operator.RIGHT_STICK_LEFT).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.COLUMN, 2)));
+    // m_operator.get(m_operator.RIGHT_STICK_DOWN).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.COLUMN, 1)));
+    // m_operator.get(m_operator.RIGHT_STICK_RIGHT).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.COLUMN, 0)));
     // Selects the row
     // m_operator.get(DPad.LEFT).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.ROW, 2)));
     // m_operator.get(DPad.DOWN).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.ROW, 1)));

@@ -74,7 +74,7 @@ public class DriveConstants {
   public static double kSteerOffsetBackRight = 2.626169800758362;//2.771897681057453;
 
   // heading PID
-  public static double kHeadingP = 4.58;
+  public static double kHeadingP = 4.6;
   public static double kHeadingD = 0;
 
   //balance PID
@@ -82,7 +82,7 @@ public class DriveConstants {
   public static double kBalanceI = 0;
   public static double kBalanceD = 0;
   // max output in m/s
-  public static final double kBalanceMaxOutput = 0.5;
+  public static final double kBalanceMaxOutput = 0.7;
 
   //balance timer
   // when the balance command starts, it will run the pid normally for
@@ -91,7 +91,7 @@ public class DriveConstants {
   // the charge station some time to balance.
   // "A non-linear system requires non-linear control" - jerry
   // "If it's stupid but it works..." - Richie
-  public static double kBalanceNoStopPeriod = 2;
+  public static double kBalanceNoStopPeriod = 2.5;
   public static double kBalanceStopInterval = 0.5;
   public static double kBalanceStopDuration = 0.2;
 
@@ -103,7 +103,7 @@ public class DriveConstants {
   public static double kPathplannerHeadingP = 3;
   public static double kPathplannerHeadingD = 0;
   
-  public static double kPathplannerTranslationalP = 3;
+  public static double kPathplannerTranslationalP = 4;
   public static double kPathplannerTranslationalD = 0;
 
   // CAN

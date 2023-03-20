@@ -18,5 +18,5 @@ public final class Constants {
   public static final String kRobotIdKey = "RobotId";
 
   public static final boolean kLogging = true;
-  public static final boolean kUseTelemetry = true;
+  public static final boolean kUseTelemetry = false;
 }

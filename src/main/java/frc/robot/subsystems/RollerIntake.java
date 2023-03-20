@@ -78,8 +78,8 @@ public class RollerIntake extends SubsystemBase {
     setMotorPower(m_power);
 
     if (Constants.kLogging) {
-      LogManager.addDouble("Intake Motor Current", getCurrent());
-      LogManager.addDouble("Intake Power", m_power);
+      LogManager.addDouble("Intake/current", getCurrent());
+      LogManager.addDouble("Intake/power", m_power);
     }
   }
 
