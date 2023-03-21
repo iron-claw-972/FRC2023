@@ -44,23 +44,23 @@ public class VisionConstants {
         )
       ));
     } else {
-      // kCameras = new ArrayList<Pair<String, Transform3d>>(List.of(
-      //   new Pair<String, Transform3d>(
-      //     "Camera_1",
-      //     new Transform3d(
-      //       new Translation3d(Units.inchesToMeters(1.25), Units.inchesToMeters(7.125), Units.inchesToMeters(21)),
-      //       new Rotation3d(0, 0, 0)
-      //     )
-      //   ),
+      kCameras = new ArrayList<Pair<String, Transform3d>>(List.of(
+        new Pair<String, Transform3d>(
+          "Camera_1",
+          new Transform3d(
+            new Translation3d(Units.inchesToMeters(1.25), Units.inchesToMeters(7.125), Units.inchesToMeters(21)),
+            new Rotation3d(0, 0, 0)
+          )
+        ),
 
-      //   new Pair<String, Transform3d>(
-      //     "Camera_2",
-      //     new Transform3d(
-      //       new Translation3d(Units.inchesToMeters(1.25), Units.inchesToMeters(-7.125), Units.inchesToMeters(21)),
-      //       new Rotation3d(0, 0, 0)
-      //     )
-      //   )
-      // ));
+        new Pair<String, Transform3d>(
+          "Camera_2",
+          new Transform3d(
+            new Translation3d(Units.inchesToMeters(1.25), Units.inchesToMeters(-7.125), Units.inchesToMeters(21)),
+            new Rotation3d(0, 0, 0)
+          )
+        )
+      ));
     }
   }
 
