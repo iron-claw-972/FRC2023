@@ -661,7 +661,7 @@ public class Drivetrain extends SubsystemBase {
     }
   }
   
-  public Module getSlectedModule() {
+  public Module getSelectedModule() {
     if (!Constants.kUseTelemetry) return m_modules[0];
     return m_moduleChooser.getSelected();
   }
