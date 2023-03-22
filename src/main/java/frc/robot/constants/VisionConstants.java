@@ -21,6 +21,9 @@ import frc.robot.Robot.RobotId;
  * Container class for vision constants.
  */
 public class VisionConstants {
+  // If vision is enabled
+  public static final boolean kEnabled = true;
+
   //TODO: Change these to whatever the actual distances are
   // How far fromt he grid the robot should be to score in inches
   public static double kGridDistance = 16;
@@ -44,6 +47,7 @@ public class VisionConstants {
         )
       ));
     } else {
+      // DO NOT COMMENT THIS OUT
       kCameras = new ArrayList<Pair<String, Transform3d>>(List.of(
         new Pair<String, Transform3d>(
           "Camera_1",
@@ -52,7 +56,6 @@ public class VisionConstants {
             new Rotation3d(0, 0, 0)
           )
         ),
-
         new Pair<String, Transform3d>(
           "Camera_2",
           new Transform3d(

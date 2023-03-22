@@ -101,7 +101,9 @@ public class Drivetrain extends SubsystemBase {
   // modules needed to distinguish in chooser
   private Module m_prevModule;
 
-  boolean m_visionEnabled = false;
+  // If vision is enabled
+  // Do not change this. Instead, change kVisionEnabled in VisionConstants
+  boolean m_visionEnabled = true;
 
   int m_loggerStep = 0;
 
@@ -372,7 +374,7 @@ public class Drivetrain extends SubsystemBase {
     m_poseEstimator.update(Rotation2d.fromDegrees(m_pigeon.getYaw()), getModulePositions());
 
     // Updates pose based on vision
-    if (m_visionEnabled) {
+    if (m_visionEnabled && VisionConstants.kEnabled) {
 
       // The angle should be greater than 5 degrees if it goes over the charge station
       if (Math.abs(getPitch().getDegrees()) > 5 || Math.abs(getRoll().getDegrees()) > 5) {
