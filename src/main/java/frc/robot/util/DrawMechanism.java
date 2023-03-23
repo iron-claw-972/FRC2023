@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.constants.WristConstants;
+import frc.robot.subsystems.RollerIntake.IntakeMode;
 
 /**
  * Mech2d representation of the robot mechanism and grid.
@@ -15,9 +17,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
  * <p> The construction can be chained.
  * 
  * <p> Maintaining the Mech2d should be inexpensive: values should only be transmitted if they are changed,
- * only a few values are changed (distance, elevator length, and fourbar angle),
+ * only a few values are changed (distance, elevator length, and wrist angle),
  * and those value only need to change rarely.
- * The elevator length and fourbar angle might only be changed when their setpoints are set
+ * The elevator length and wrist angle might only be changed when their setpoints are set
  * rather than trying to track their incremental movement.
  * 
  * <p> See https://docs.wpilib.org/en/stable/docs/software/dashboards/glass/mech2d-widget.html
@@ -40,19 +42,27 @@ public class DrawMechanism {
     /** this element is the length of the elevator (inches) */
     MechanismLigament2d m_elevator;
 
-    /** the FourBar linkage that pivots. Set the angle of this linkage. */
-    MechanismLigament2d m_fb2;
+    /** the wrist linkage that pivots. Set the angle of this linkage. */
+    MechanismLigament2d m_wrist;
 
-    /** the intake linkage that pivots off the FourBar */
+    /** the intake linkage that pivots off the wrist */
     MechanismLigament2d m_intake;
+
+    // a blueish color for disabled intake
+    Color8Bit colorIntakeDisabled = new Color8Bit(128, 128, 255);
+    // yellow color for cone intake/outtake - lighter is outtake
+    Color8Bit colorIntakeConeIn = new Color8Bit(153, 163, 7);
+    Color8Bit colorIntakeConeOut = new Color8Bit(207, 214, 90);
+    // purple color for cube intake/outtake - lighter is outtake
+    Color8Bit colorIntakeCubeIn = new Color8Bit(69, 1, 115);
+    Color8Bit colorIntakeCubeOut = new Color8Bit(184, 93, 245);
 
     private DrawMechanism() {
         // define colors for the linkages
         Color8Bit colorSpace = new Color8Bit(0, 0, 0);
         Color8Bit colorNode = new Color8Bit(0, 255, 0);
         Color8Bit colorElevator = new Color8Bit(255, 128, 128);
-        Color8Bit colorFourBar = new Color8Bit(255, 255, 0);
-        Color8Bit colorIntake = new Color8Bit(128, 128, 255);
+        Color8Bit colorWrist = new Color8Bit(255, 255, 0);
         Color8Bit colorShelf = new Color8Bit(255, 0, 0);
         Color8Bit colorDist =  new Color8Bit(128, 128, 128);
         Color8Bit colorBumper = new Color8Bit(255, 0, 0);
@@ -152,22 +162,26 @@ public class DrawMechanism {
         spaceElevatorBack.append(spaceElevatorUp);
         // the elevator is slanted at 55 degrees.
         m_elevator = new MechanismLigament2d("elevator", 50, 55.0-90.0, 3.0, colorElevator);
+        
+        // elevator bottom stage is permanently there so appending it as a non-moving ligament. m_elevator will be the part that moves.
+        MechanismLigament2d elevatorBar = new MechanismLigament2d("elevatorBar", 50, 55.0-90.0, 3.0, colorElevator);
         spaceElevatorUp.append(m_elevator);
+        spaceElevatorUp.append(elevatorBar);
 
-        // make the four bar (fake for now)
-        // fb1 is portion that is horizontal and extends out from elevator carriage
-        MechanismLigament2d fb1 = new MechanismLigament2d("fb1", 13.5, -55, 3.0, colorFourBar);
-        m_elevator.append(fb1);
-        // m_fb2 is moving part of the FourBar (angle is read by the absolute encoder)
-        m_fb2 = new MechanismLigament2d("fb2", 9.5, 150.0, 3.0, colorFourBar);
-        fb1.append(m_fb2);
+        // make the wrist
+        // wristHandle is portion that is horizontal and extends out from elevator carriage
+        MechanismLigament2d wristHandle = new MechanismLigament2d("wristHandle", 17, -55, 3.0, colorWrist);
+        m_elevator.append(wristHandle);
+        // m_wrist is moving part of the wrist (angle is read by the absolute encoder)
+        m_wrist = new MechanismLigament2d("wrist", 3.5, 150.0, 3.0, colorWrist);
+        wristHandle.append(m_wrist);
 
-        // make the intake. Its angle will be a function of the m_fb2 angle
-        m_intake = new MechanismLigament2d("intake", 13.5, -150.0 * (32.0/48.0), 4.0, colorIntake);
-        m_fb2.append(m_intake);
+        // make the intake
+        m_intake = new MechanismLigament2d("intake", 13, 0, 4.0, colorIntakeDisabled);
+        m_wrist.append(m_intake);
 
-        // set the four bar and intake angles to be consistent
-        setFourBarAngle(144.0);
+        // set the wrist and intake angles to be consistent
+        setWristAngle(WristConstants.kStowPos);
 
         // put the Mechanism2D on the dashboard
         SmartDashboard.putData("Mech2d", m_mech2d);
@@ -178,10 +192,14 @@ public class DrawMechanism {
 
     private void addCommands(DrawMechanism mechanism) {
         // some commands to move the Mech2d diagram
-        SmartDashboard.putData("FB in", new InstantCommand(() -> mechanism.setFourBarAngle(150.0)));
-        SmartDashboard.putData("FB out", new InstantCommand(() -> mechanism.setFourBarAngle(0.0)));
-        SmartDashboard.putData("elevator down", new InstantCommand(() -> mechanism.setElevatorHeight(0.1)));
-        SmartDashboard.putData("elevator up", new InstantCommand(() -> mechanism.setElevatorHeight(1.3)));
+        SmartDashboard.putData("wrist in", new InstantCommand(() -> mechanism.setWristAngle(WristConstants.kStowPos)));
+        SmartDashboard.putData("wrist out", new InstantCommand(() -> mechanism.setWristAngle(WristConstants.kIntakeCubePos)));
+        SmartDashboard.putData("elevator down", new InstantCommand(() -> mechanism.setElevatorExtension(0.1)));
+        SmartDashboard.putData("elevator up", new InstantCommand(() -> mechanism.setElevatorExtension(1.3)));
+        SmartDashboard.putData("drivetrain in", new InstantCommand(() -> mechanism.setDistanceToGrid(16.5)));
+        SmartDashboard.putData("drivetrain away", new InstantCommand(() -> mechanism.setElevatorExtension(48)));
+        SmartDashboard.putData("outtake cone", new InstantCommand(() -> mechanism.setIntakeStatus(IntakeMode.OUTTAKE_CONE)));
+        SmartDashboard.putData("intake disable", new InstantCommand(() -> mechanism.setIntakeStatus(IntakeMode.DISABLED)));
     }
 
     /**
@@ -220,25 +238,41 @@ public class DrawMechanism {
      * Set the slant length of the elevator.
      * @param height slant height in meters
      */
-    public void setElevatorHeight(double height) {
+    public void setElevatorExtension(double height) {
         m_elevator.setLength(Units.metersToInches(height) + 4.0);
     }
 
     /**
-     * Placeholder for setting FourBar state.
-     * The absolute encoder before competition read -0.4 to 0.0 revolutions.
-     * That is -0.4 * 360 = -144 degrees to 0 degrees.
-     * When m_fb2 is is pointing a bit down (20 degrees?), the intake angle is level.
-     * @param angle
+     * Set the wrist angle
+     * @param angle the angle in rotations, zero being forward
      */
-    public void setFourBarAngle(double angle) {
+    public void setWristAngle(double angle) {
         // restrict angle to actual range
-        double ang = MathUtil.clamp(angle, 0.0, 144.0);
+        double ang = MathUtil.clamp(angle, WristConstants.kMinPos, WristConstants.kMaxPos);
 
-        // an angle of 0 is actually down 20 degrees
-        m_fb2.setAngle(ang - 20.0);
+        m_wrist.setAngle(Units.rotationsToDegrees(ang));
+    }
 
-        // 32 tooth to 48 tooth
-        m_intake.setAngle(-ang * (32.0 / 48.0) + 20.0);
+
+    public void setIntakeStatus(IntakeMode mode) {
+        switch (mode) {
+            case DISABLED:
+                m_intake.setColor(colorIntakeDisabled);
+                break;
+            case INTAKE_CONE:
+                m_intake.setColor(colorIntakeConeIn);
+                break;
+            case INTAKE_CUBE:
+                m_intake.setColor(colorIntakeCubeIn);
+                break;
+            case OUTTAKE_CONE:
+                m_intake.setColor(colorIntakeConeOut);
+                break;
+            case OUTTAKE_CUBE:
+                m_intake.setColor(colorIntakeCubeOut);
+                break;
+            default:
+                break;
+        }
     }
 }
