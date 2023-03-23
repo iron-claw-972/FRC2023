@@ -32,9 +32,8 @@ public class PathPlannerCommand extends SequentialCommandGroup {
     this(new ArrayList<PathPlannerTrajectory>(Arrays.asList(PathPlanner.generatePath(
       new PathConstraints(AutoConstants.kMaxAutoSpeed, AutoConstants.kMaxAutoAccel),
       waypoints.get(0),
-      waypoints.get(1),
-      (PathPoint[]) Arrays.copyOfRange(waypoints.toArray(), 2, waypoints.size())
-    ))), 0, drive, true, useAllianceColor);
+      waypoints.get(1)
+    ))), 0, drive, false, useAllianceColor);
   }
   
   public PathPlannerCommand(String pathGroupName, int pathIndex, Drivetrain drive) {
