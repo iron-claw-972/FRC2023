@@ -172,6 +172,7 @@ public class Module extends SubsystemBase {
     setAngle(desiredState);
     setSpeed(desiredState, isOpenLoop);
   }
+
   /**
    * sets desired state velocity
    * @param desiredState desired state with desired velocity
@@ -188,9 +189,10 @@ public class Module extends SubsystemBase {
         DriveConstants.kWheelCircumference,
         DriveConstants.kDriveGearRatio);
       m_driveMotor.set(ControlMode.Velocity, velocity, DemandType.ArbitraryFeedForward,
-          feedforward.calculate(desiredState.speedMetersPerSecond));
+        feedforward.calculate(desiredState.speedMetersPerSecond));
     }
   }
+
   /**
    * sets desired angle base off desired state. Will not move motor is desired speed is too low.
    * @param desiredState desired state of swerve module
@@ -204,6 +206,7 @@ public class Module extends SubsystemBase {
 
     setAngle(desiredState.angle);
   }
+
   /**
    * rotates swerve module steer to desired angle
    * @param rotation2d desired steer angle
@@ -223,6 +226,7 @@ public class Module extends SubsystemBase {
       rotation2d.getDegrees(), DriveConstants.kAngleGearRatio
     ));
   }
+
   /**
    * rotates swerve module steer to desired angle without the angle being interpreted continuously
    * @param rotation2d desired steer angle
@@ -230,6 +234,7 @@ public class Module extends SubsystemBase {
   public void setAngle(Rotation2d rotation2d) {
     setAngle(rotation2d, false);
   }
+
   /**
    * set module motor powers to 0
    */
@@ -237,6 +242,7 @@ public class Module extends SubsystemBase {
     m_driveMotor.set(0);
     m_angleMotor.set(0);
   }
+
   /**
    * sets voltage of drive motor
    * @param voltage voltage to set drive motor to in volts
@@ -279,22 +285,26 @@ public class Module extends SubsystemBase {
    */
   public SwerveModuleState getState() {
     return new SwerveModuleState(
-        getDriveVelocity(),
-        getAngle());
+      getDriveVelocity(),
+      getAngle()
+    );
   }
+
   /**
    * @return desired/ target state of module
    */
   public SwerveModuleState getDesiredState() {
     return m_desiredState;
   }
+
   /**
    * @return current swerve module position 
    */
   public SwerveModulePosition getPosition() {
     return new SwerveModulePosition(
-        getDrivePosition(),
-        getAngle());
+      getDrivePosition(),
+      getAngle()
+    );
   }
 
   /**
@@ -303,6 +313,7 @@ public class Module extends SubsystemBase {
   public double getDesiredVelocity() {
     return getDesiredState().speedMetersPerSecond;
   }
+
   /**
    * @return drive velocity in meters per second
    */
@@ -313,20 +324,22 @@ public class Module extends SubsystemBase {
       DriveConstants.kDriveGearRatio
     );
   }
+
   /**
    * @return difference between desired and actual drive velocity in meters per second
    */
   public double getDriveVelocityError() {
     return m_desiredState.speedMetersPerSecond - getDriveVelocity();
   }
+
   /**
    * @return get encoder position in meters
    */
   public double getDrivePosition(){
     return Conversions.falconToMeters(
-          m_driveMotor.getSelectedSensorPosition(),
-          DriveConstants.kWheelCircumference,
-          DriveConstants.kDriveGearRatio);
+      m_driveMotor.getSelectedSensorPosition(),
+      DriveConstants.kWheelCircumference,
+      DriveConstants.kDriveGearRatio);
   }
   
   /**
@@ -335,6 +348,7 @@ public class Module extends SubsystemBase {
   public Rotation2d getCANcoder() {
     return Rotation2d.fromDegrees(m_CANcoder.getAbsolutePosition() - m_angleOffset.getDegrees());
   }
+
   /**
    * @return module steer angle from steer motor's integrated encoder as Rotation2d with 0 being straight forward
    */
@@ -344,18 +358,21 @@ public class Module extends SubsystemBase {
       DriveConstants.kAngleGearRatio
     ));
   }
+
   /**
    * @return desired module steer angle
    */
   public Rotation2d getDesiredAngle() {
     return getDesiredState().angle;
   }
+
   /**
    * @return error between desired angle and actual angle
    */
   public Rotation2d getAngleError() {
     return new Rotation2d( getAngle().getRadians() - getDesiredAngle().getRadians() );
   }
+  
   /**
    * @return module steer rotational velocity in radians per second
    */

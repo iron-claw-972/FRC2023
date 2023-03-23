@@ -716,6 +716,7 @@ public class Drivetrain extends SubsystemBase {
       m_modules[3].getSteerFeedForwardKV()
     };
   }
+
   public Double[] getDriveStaticFeedforwardArray() {
     return m_driveStaticFeedForwardSaver;
   }
@@ -777,7 +778,8 @@ public class Drivetrain extends SubsystemBase {
     // set selected module
     m_moduleChooser.getSelected().setDriveFeedForwardValues(
       m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()],
-      m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]);
+      m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]
+    );
   }
 
   /**
@@ -789,9 +791,9 @@ public class Drivetrain extends SubsystemBase {
     // revert to previous saved feed forward data if changed
     if (m_prevModule != m_moduleChooser.getSelected()) {
       m_steerStaticFeedforwardEntry.setDouble(
-          m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]);
+        m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]);
       m_steerVelocityFeedforwardEntry.setDouble(
-          m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]);
+        m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]);
       m_prevModule = m_moduleChooser.getSelected();
     }
 
@@ -812,7 +814,8 @@ public class Drivetrain extends SubsystemBase {
     // set selected module
     m_moduleChooser.getSelected().setDriveFeedForwardValues(
       m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()],
-      m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]);
+      m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]
+    );
   }
 
   /**
