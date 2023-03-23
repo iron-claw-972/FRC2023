@@ -101,7 +101,7 @@ public class Drivetrain extends SubsystemBase {
   // modules needed to distinguish in chooser
   private Module m_prevModule;
 
-  boolean m_visionEnabled = true;
+  boolean m_visionEnabled = false;
 
   int m_loggerStep = 0;
 
@@ -798,5 +798,17 @@ public class Drivetrain extends SubsystemBase {
       m_modules[3].getDesiredVelocity()
     };
     LogManager.addDoubleArray("Swerve/desired swerve states", desiredStates);
+
+    // double[] errorStates = {
+    //   desiredStates[0] - actualStates[0],
+    //   desiredStates[1] - actualStates[1],
+    //   desiredStates[2] - actualStates[2],
+    //   desiredStates[3] - actualStates[3],
+    //   desiredStates[4] - actualStates[4],
+    //   desiredStates[5] - actualStates[5],
+    //   desiredStates[6] - actualStates[6],
+    //   desiredStates[7] - actualStates[7]
+    // };
+    // LogManager.addDoubleArray("Swerve/error swerve states", errorStates);
   }
 }

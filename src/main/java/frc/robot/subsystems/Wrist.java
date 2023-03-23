@@ -72,6 +72,8 @@ public class Wrist extends SubsystemBase {
       WristConstants.kPeakCurrentDuration);
     m_motor.setNeutralMode(WristConstants.kNeutralMode);
     m_motor.setInverted(WristConstants.kMotorInvert); 
+
+    m_wristTab = wristTab;
     
     //SIM
     if (RobotBase.isSimulation()) SmartDashboard.putData("Arm Sim", m_mech2d);
@@ -87,7 +89,6 @@ public class Wrist extends SubsystemBase {
     setSetpoint(WristConstants.kStowPos);
 
     if (Constants.kUseTelemetry) {
-      m_wristTab = wristTab;
       setupShuffleboardTab();
     }
   }
