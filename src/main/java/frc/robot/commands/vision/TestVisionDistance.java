@@ -41,7 +41,7 @@ public class TestVisionDistance extends CommandBase{
   }
 
   /**
-   * Starts the timers and siables vision for odometry
+   * Starts the timers and disables vision for odometry
    */
   @Override
   public void initialize(){
