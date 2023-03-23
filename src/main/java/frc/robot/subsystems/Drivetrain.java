@@ -85,21 +85,21 @@ public class Drivetrain extends SubsystemBase {
   
   private GenericEntry 
     m_driveVelocityEntry,
-    m_steerVelocityEntry,
+    m_steerVelocityEntry, 
     m_steerAngleEntry,
-    m_driveStaticFeedforwardEntry,
-    m_driveVelocityFeedforwardEntry,
+    m_driveStaticFeedforwardEntry, 
+    m_driveVelocityFeedforwardEntry, 
     m_steerStaticFeedforwardEntry,
     m_steerVelocityFeedforwardEntry,
     m_xPosEntry,
     m_yPosEntry,
     m_headingEntry;
-
+  
   private Double[] m_driveVelFeedForwardSaver = new Double[4];
   private Double[] m_driveStaticFeedForwardSaver = new Double[4];
   private Double[] m_steerVelFeedForwardSaver = new Double[4];
   private Double[] m_steerStaticFeedForwardSaver = new Double[4];
-
+  
   private SendableChooser<Module> m_moduleChooser = new SendableChooser<>();
   // modules needed to distinguish in chooser
   private Module m_prevModule;
@@ -126,17 +126,17 @@ public class Drivetrain extends SubsystemBase {
 
     if (RobotBase.isReal()) {
       m_modules = new Module[] {
-          new Module(ModuleConstants.FRONT_LEFT, swerveModulesTab),
-          new Module(ModuleConstants.FRONT_RIGHT, swerveModulesTab),
-          new Module(ModuleConstants.BACK_LEFT, swerveModulesTab),
-          new Module(ModuleConstants.BACK_RIGHT, swerveModulesTab),
+        new Module(ModuleConstants.FRONT_LEFT, swerveModulesTab),
+        new Module(ModuleConstants.FRONT_RIGHT, swerveModulesTab),
+        new Module(ModuleConstants.BACK_LEFT, swerveModulesTab),
+        new Module(ModuleConstants.BACK_RIGHT, swerveModulesTab),
       };
     } else {
       m_modules = new ModuleSim[] {
-          new ModuleSim(ModuleConstants.FRONT_LEFT, swerveModulesTab),
-          new ModuleSim(ModuleConstants.FRONT_RIGHT, swerveModulesTab),
-          new ModuleSim(ModuleConstants.BACK_LEFT, swerveModulesTab),
-          new ModuleSim(ModuleConstants.BACK_RIGHT, swerveModulesTab),
+        new ModuleSim(ModuleConstants.FRONT_LEFT, swerveModulesTab),
+        new ModuleSim(ModuleConstants.FRONT_RIGHT, swerveModulesTab),
+        new ModuleSim(ModuleConstants.BACK_LEFT, swerveModulesTab),
+        new ModuleSim(ModuleConstants.BACK_RIGHT, swerveModulesTab),
       };
     }
 
@@ -215,7 +215,7 @@ public class Drivetrain extends SubsystemBase {
     updateDriveModuleFeedforwardShuffleboard();
 
     updateOdometry();
-
+    
     m_fieldDisplay.setRobotPose(getPose());
 
     if (Constants.kLogging) updateLogs();
@@ -320,8 +320,7 @@ public class Drivetrain extends SubsystemBase {
    * Sets the chassis speeds of the robot.
    * 
    * @param chassisSpeeds the target chassis speeds
-   * @param isOpenLoop    if open loop control should be used for the drive
-   *                      velocity
+   * @param isOpenLoop if open loop control should be used for the drive velocity
    */
   public void setChassisSpeeds(ChassisSpeeds chassisSpeeds, boolean isOpenLoop) {
     if (Robot.isSimulation()) {
@@ -336,12 +335,11 @@ public class Drivetrain extends SubsystemBase {
   /**
    * Method to drive the robot using joystick info.
    *
-   * @param xSpeed        speed of the robot in the x direction (forward) in m/s
-   * @param ySpeed        speed of the robot in the y direction (sideways) in m/s
-   * @param rot           angular rate of the robot in rad/s
-   * @param fieldRelative whether the provided x and y speeds are relative to the
-   *                      field
-   * @param isOpenLoop    whether to use velocity control for the drive motors
+   * @param xSpeed speed of the robot in the x direction (forward) in m/s
+   * @param ySpeed speed of the robot in the y direction (sideways) in m/s
+   * @param rot angular rate of the robot in rad/s
+   * @param fieldRelative whether the provided x and y speeds are relative to the field
+   * @param isOpenLoop whether to use velocity control for the drive motors
    */
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean isOpenLoop) {
     setChassisSpeeds((fieldRelative
@@ -353,11 +351,10 @@ public class Drivetrain extends SubsystemBase {
   /**
    * Drives the robot using the provided x speed, y speed, and positional heading.
    * 
-   * @param xSpeed        speed of the robot in the x direction (forward)
-   * @param ySpeed        speed of the robot in the y direction (sideways)
-   * @param heading       target heading of the robot in radians
-   * @param fieldRelative whether the provided x and y speeds are relative to the
-   *                      field
+   * @param xSpeed speed of the robot in the x direction (forward)
+   * @param ySpeed speed of the robot in the y direction (sideways)
+   * @param heading target heading of the robot in radians
+   * @param  whether the provided x and y speeds are relative to the field
    */
   public void driveHeading(double xSpeed, double ySpeed, double heading, boolean fieldRelative) {
     double rot = m_rotationController.calculate(getYaw().getRadians(), heading);
@@ -373,8 +370,8 @@ public class Drivetrain extends SubsystemBase {
    * {@link #drive()} using the PID outputs.
    * This is based on the odometry of the chassis.
    * 
-   * @param x   the position to move to in the x, in meters
-   * @param y   the position to move to in the y, in meters
+   * @param x the position to move to in the x, in meters
+   * @param y the position to move to in the y, in meters
    * @param rot the angle to move to, in radians
    */
   public void runChassisPID(double x, double y, double rot) {
@@ -398,8 +395,7 @@ public class Drivetrain extends SubsystemBase {
   /**
    * Sets the desired states for all swerve modules.
    * 
-   * @param swerveModuleStates an array of module states to set swerve modules to.
-   *                           Order of the array matters here!
+   * @param swerveModuleStates an array of module states to set swerve modules to. Order of the array matters here!
    */
   public void setModuleStates(SwerveModuleState[] swerveModuleStates, boolean isOpenLoop) {
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kMaxSpeed);
@@ -412,8 +408,7 @@ public class Drivetrain extends SubsystemBase {
    * Sets the desired states for all swerve modules. Runs closed loop control. USe
    * this function for pathplanner.
    * 
-   * @param swerveModuleStates an array of module states to set swerve modules to.
-   *                           Order of the array matters here!
+   * @param swerveModuleStates an array of module states to set swerve modules to. Order of the array matters here!
    */
   public void setModuleStates(SwerveModuleState[] swerveModuleStates) {
     setModuleStates(swerveModuleStates, false);
@@ -431,7 +426,7 @@ public class Drivetrain extends SubsystemBase {
   /**
    * sets if vision measurements will be use in pose estimation
    * 
-   * @param enabled
+   * @param enabled will the pose estimator take in vision measurement
    */
   public void enableVision(boolean enabled) {
     m_visionEnabled = enabled;
@@ -773,12 +768,12 @@ public class Drivetrain extends SubsystemBase {
 
     // to set all modules to same feedforward values if all
     // if (m_module.getSelected() == m_allModule) {
-    // for(int i = 0; i < 4; i++) {
-    // m_modules[i].setDriveFeedForwardValues(m_driveStaticFeedForwardSaver.get(m_module.getSelected()),
-    // m_driveVelFeedForwardSaver.get(m_module.getSelected()));
+    //  for(int i = 0; i < 4; i++) {
+    //    m_modules[i].setDriveFeedForwardValues(m_driveStaticFeedForwardSaver.get(m_module.getSelected()),
+    //    m_driveVelFeedForwardSaver.get(m_module.getSelected()));
+    //  }
     // }
-    // }
-
+        
     // set selected module
     m_moduleChooser.getSelected().setDriveFeedForwardValues(
       m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()],
@@ -807,11 +802,11 @@ public class Drivetrain extends SubsystemBase {
       m_steerVelocityFeedforwardEntry.getDouble(0);
 
     // to set all modules to same feedforward values if all
-    // if (m_module.getSelected() == m_allModule) {
-    // for(int i = 0; i < 4; i++) {
-    // m_modules[i].setDriveFeedForwardValues(m_steerStaticFeedForwardSaver[m_module.getSelected().getId()],
-    // m_steerVelFeedForwardSaver[m_module.getSelected().getId()]);
-    // }
+    //  if (m_module.getSelected() == m_allModule) {
+    //  for(int i = 0; i < 4; i++) {
+    //    m_modules[i].setDriveFeedForwardValues(m_steerStaticFeedForwardSaver[m_module.getSelected().getId()],
+    //    m_steerVelFeedForwardSaver[m_module.getSelected().getId()]);
+    //  }
     // }
 
     // set selected module
