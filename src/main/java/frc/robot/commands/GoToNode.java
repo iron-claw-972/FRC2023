@@ -30,7 +30,7 @@ public class GoToNode extends CommandBase {
    * Creates the PathPlanner command and schedules it
    */
   @Override
-  public void initialize(){
+  public void initialize() {
     // Gets the current position of the robot for the start of the path
     PathPoint point1 = PathPoint.fromCurrentHolonomicState(
       m_drive.getPose(),
@@ -57,7 +57,7 @@ public class GoToNode extends CommandBase {
    * @param interrupted If the command is interrupted
    */
   @Override
-  public void end(boolean interrupted){
+  public void end(boolean interrupted) {
     m_command.cancel();
     m_drive.stop();
   }
@@ -67,7 +67,7 @@ public class GoToNode extends CommandBase {
    * @return If the GoToNode command is finished
    */
   @Override
-  public boolean isFinished(){
-    return m_command!=null && m_command.isFinished();
+  public boolean isFinished() {
+    return m_command != null && m_command.isFinished();
   }
 }

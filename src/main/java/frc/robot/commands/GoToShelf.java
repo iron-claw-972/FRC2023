@@ -38,8 +38,8 @@ public class GoToShelf extends CommandBase {
       m_drive.getChassisSpeeds()
     );
     // The shelf position
-    double x = DriverStation.getAlliance()==Alliance.Blue?FieldConstants.kBlueShelfX:FieldConstants.kRedShelfX;
-    double angle = DriverStation.getAlliance()==Alliance.Blue?0:Math.PI;
+    double x = DriverStation.getAlliance() == Alliance.Blue ? FieldConstants.kBlueShelfX : FieldConstants.kRedShelfX;
+    double angle = DriverStation.getAlliance() == Alliance.Blue ? 0 : Math.PI;
     PathPoint point2 = new PathPoint(
       new Translation2d(x, FieldConstants.kShelfY),
       new Rotation2d(angle),
