@@ -27,7 +27,9 @@ public class WristConstants {
 
   public static final NeutralMode kNeutralMode = NeutralMode.Brake;
 
+  /** RoboRIO digital input port for the wrist absolute encoder */
   public static final int kAbsEncoderPort = 7;
+  /** wrist absolute encoder offset (rotations). */
   public static final double kEncoderOffset = 0.704;
 
   public static final double kAutoMiddle = 0.132;
@@ -47,7 +49,9 @@ public class WristConstants {
   public static final double kIntakeCubePos = 0.015;
   public static final double kIntakeShelfPos = 0.035;
 
+  /** Wrist position angle minimum (rotations) */
   public static final double kMinPos = -0.05;
+  /** Wrist position angle maximum (rotations) */
   public static final double kMaxPos = kStowPos;
   
   //SIM

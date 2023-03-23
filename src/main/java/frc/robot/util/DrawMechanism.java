@@ -14,7 +14,9 @@ import frc.robot.subsystems.RollerIntake.IntakeMode;
 /**
  * Mech2d representation of the robot mechanism and grid.
  * 
- * <p> The construction can be chained.
+ * <p> To use this class, get the instance with <code>DrawMechanism.getInstance()</code>.
+ * 
+ * <p> Then use methods such as <code>instance.setElevatorExtension()</code>.
  * 
  * <p> Maintaining the Mech2d should be inexpensive: values should only be transmitted if they are changed,
  * only a few values are changed (distance, elevator length, and wrist angle),
@@ -85,9 +87,9 @@ public class DrawMechanism {
          * Each CUBE NODE is a polycarbonate shelf that is 1 ft. 6¼ in. (~46 cm) wide and 1 ft. 5 in. (~43 cm) deep. 
          * CUBE NODES are surrounded by 3 in. (~8 cm) tall vertical walls, with the exception of the rear wall of the 
          * top ROW CUBE NODE which is angled. The distance from the FIELD carpet to the top of a middle ROW 
-         * CUBE NODE wall is 1 ft. 11½ in. (~60 cm). The distance from the FIELD carpet to the top of a top ROW 
-         * CUBE NODE wall is 2 ft. 11½ in. (~90 cm). The front of a middle ROW CUBE NODE is 1 ft. 2¼ in. (~36 cm) 
-         * from the front face of the GRID. The front of a top ROW CUBE NODE is 2 ft. 7⅝ in. (~80 cm) from the 
+         * CUBE NODE wall is 1 ft. 11.5 in. (~60 cm). The distance from the FIELD carpet to the top of a top ROW 
+         * CUBE NODE wall is 2 ft. 11.5 in. (~90 cm). The front of a middle ROW CUBE NODE is 1 ft. 2.25 in. (~36 cm) 
+         * from the front face of the GRID. The front of a top ROW CUBE NODE is 2 ft. 7.625 in. (~80 cm) from the 
          * front face of the GRID.
          */
         // move from front of grid to middle row cube node is 1 foot 2.25 inches.
@@ -190,14 +192,18 @@ public class DrawMechanism {
         addCommands(this);
     }
 
+    /**
+     * Add some commands to the SmartDashboard to test drawing the mechanism.
+     * @param mechanism
+     */
     private void addCommands(DrawMechanism mechanism) {
         // some commands to move the Mech2d diagram
         SmartDashboard.putData("wrist in", new InstantCommand(() -> mechanism.setWristAngle(WristConstants.kStowPos)));
         SmartDashboard.putData("wrist out", new InstantCommand(() -> mechanism.setWristAngle(WristConstants.kIntakeCubePos)));
         SmartDashboard.putData("elevator down", new InstantCommand(() -> mechanism.setElevatorExtension(0.1)));
         SmartDashboard.putData("elevator up", new InstantCommand(() -> mechanism.setElevatorExtension(1.3)));
-        SmartDashboard.putData("drivetrain in", new InstantCommand(() -> mechanism.setDistanceToGrid(16.5)));
-        SmartDashboard.putData("drivetrain away", new InstantCommand(() -> mechanism.setElevatorExtension(48)));
+        SmartDashboard.putData("drivetrain in", new InstantCommand(() -> mechanism.setDistanceToGrid(Units.inchesToMeters(16.5))));
+        SmartDashboard.putData("drivetrain away", new InstantCommand(() -> mechanism.setDistanceToGrid(2)));
         SmartDashboard.putData("outtake cone", new InstantCommand(() -> mechanism.setIntakeStatus(IntakeMode.OUTTAKE_CONE)));
         SmartDashboard.putData("intake disable", new InstantCommand(() -> mechanism.setIntakeStatus(IntakeMode.DISABLED)));
     }
@@ -218,7 +224,7 @@ public class DrawMechanism {
 
     /**
      * Set the distance of the robot from the grid.
-     * @param dist
+     * @param distance Distance from robot center to front of grid (meters)
      */
     public void setDistanceToGrid(double distance) {
         // convert the distance to inches
@@ -228,7 +234,9 @@ public class DrawMechanism {
         // The center of the robot can be frame length / 2 + bumper thickness away.
         // frame length is 26.
         // Say bumper thickness is 3.5 inches (slight compression)
-        distInches = MathUtil.clamp(distInches, 16.5, 48.0);
+        // so center of robot to outside of front bumper is
+        double distanceMin = 26.0 / 2 + 3.5;
+        distInches = MathUtil.clamp(distInches, distanceMin, 48.0);
         
         // set the display distance
         m_distGrid.setLength(distInches);
@@ -236,10 +244,10 @@ public class DrawMechanism {
 
     /**
      * Set the slant length of the elevator.
-     * @param height slant height in meters
+     * @param length slant length in meters
      */
-    public void setElevatorExtension(double height) {
-        m_elevator.setLength(Units.metersToInches(height) + 4.0);
+    public void setElevatorExtension(double length) {
+        m_elevator.setLength(Units.metersToInches(length) + 4.0);
     }
 
     /**
@@ -247,12 +255,12 @@ public class DrawMechanism {
      * @param angle the angle in rotations, zero being forward
      */
     public void setWristAngle(double angle) {
-        // restrict angle to actual range
+        // restrict angle to actual range of the wrist
         double ang = MathUtil.clamp(angle, WristConstants.kMinPos, WristConstants.kMaxPos);
 
+        // mech2d uses degrees
         m_wrist.setAngle(Units.rotationsToDegrees(ang));
     }
-
 
     public void setIntakeStatus(IntakeMode mode) {
         switch (mode) {
