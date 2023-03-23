@@ -32,7 +32,7 @@ public class Operator {
   // Values for selecting a node
   // Grid, row, and column in the grid
   private int[] selectValues = {1, 1, 1};
-  private Node m_selectedNode;
+  private Node m_selectedNode = new Node();
   
   /**
    * Configures the operator controls for the wrist, roller intake, elevator, and vision
@@ -97,12 +97,12 @@ public class Operator {
    * @param tab The tab on shuffleboard
    */
   public void setUpShuffleboard(ShuffleboardTab tab){
-    tab.addStringArray("Selected node", ()->new String[]{
-      "Alliance: "+getSelectedNode().alliance,
-      "Type: "+getSelectedNode().type,
-      "Row: "+getSelectedNode().row,
-      "Column: "+getSelectedNode().column,
-      String.format("Score pose: (%.2f, %.2f) at %d degrees", 
+    tab.addStringArray("Selected node", () -> new String[] {
+      "Alliance: " + getSelectedNode().alliance,
+      "Type: " + getSelectedNode().type,
+      "Row: " + getSelectedNode().row,
+      "Column: " + getSelectedNode().column,
+      String.format("Score pose: (%.2f, %.2f) at %f degrees", 
         getSelectedNode().scorePose.getX(), 
         getSelectedNode().scorePose.getY(), 
         getSelectedNode().scorePose.getRotation().getDegrees()
