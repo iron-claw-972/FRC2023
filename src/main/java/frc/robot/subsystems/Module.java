@@ -75,7 +75,7 @@ public class Module extends SubsystemBase {
     m_CANcoder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360);
     m_CANcoder.configSensorDirection(DriveConstants.kModuleConstants.canCoderInvert);
     m_CANcoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
-    m_CANcoder.configFeedbackCoefficient(360 / 4096, "deg", SensorTimeBase.PerSecond);
+    m_CANcoder.configFeedbackCoefficient(360.0 / 4096.0, "deg", SensorTimeBase.PerSecond);
   }
 
   /**
