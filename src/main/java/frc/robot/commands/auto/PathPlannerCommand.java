@@ -63,8 +63,9 @@ public class PathPlannerCommand extends SequentialCommandGroup {
     }), 
     new PPSwerveControllerCommand(
       pathGroup.get(pathIndex), 
-      () -> Conversions.absolutePoseToPathPlannerPose(
-      drive.getPose(), DriverStation.getAlliance()), // Pose supplier
+      useAllianceColor ? // Pose supplier
+        () -> Conversions.absolutePoseToPathPlannerPose(drive.getPose(), DriverStation.getAlliance()) : 
+        () -> drive.getPose(), 
       drive.getPathplannerXController(), // X controller can't normal PID as pathplanner has Feed Forward 
       drive.getPathplannerYController(), // Y controller can't normal PID as pathplanner has Feed Forward 
       drive.getPathplannerRotationController(), // Rotation controller can't normal PID as pathplanner has Feed Forward 
