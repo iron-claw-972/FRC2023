@@ -51,7 +51,6 @@ public class RobotContainer {
 
   // Shuffleboard auto chooser
   private final SendableChooser<Command> m_autoCommand = new SendableChooser<>();
-  // private final SendableChooser<GamePieceType> m_preloadedGamePiece = new SendableChooser<>();
 
   //shuffleboard tabs
   private final ShuffleboardTab m_mainTab = Shuffleboard.getTab("Main");
@@ -190,7 +189,6 @@ public class RobotContainer {
     
     autoChooserUpdate();
     m_autoTab.add("Auto Chooser", m_autoCommand);
-    // m_autoTab.add("Preloaded Chooser", m_preloadedGamePiece);
 
     if (Constants.kUseTelemetry) loadCommandSchedulerShuffleboard();
     
@@ -228,9 +226,6 @@ public class RobotContainer {
    * Do Nothing should stay the default, other autos are added with m_autoCommand.addOption()
    */
   public void autoChooserUpdate() {
-
-    // m_preloadedGamePiece.addOption("Cone", GamePieceType.CONE);
-    // m_preloadedGamePiece.addOption("Cube", GamePieceType.CUBE);
 
     m_autoCommand.setDefaultOption("Do Nothing", new PrintCommand("This will do nothing!"));
 
@@ -297,7 +292,7 @@ public class RobotContainer {
    * @param gamePiece the type of game piece
    */
   public void updateHeldGamePiece() {
-    m_intake.setHeldGamePiece(GamePieceType.CONE);//m_preloadedGamePiece.getSelected());
+    m_intake.setHeldGamePiece(GamePieceType.CONE);
   }
 
 }
