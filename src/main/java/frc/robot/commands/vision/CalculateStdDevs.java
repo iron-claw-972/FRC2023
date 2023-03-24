@@ -1,5 +1,9 @@
 package frc.robot.commands.vision;
 
+import java.util.ArrayList;
+
+import org.photonvision.EstimatedRobotPose;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -62,8 +66,14 @@ public class CalculateStdDevs extends CommandBase{
    */
   @Override
   public void end(boolean interrupted){
-    // Store the length
+    // Store the length of the array
     int length = m_poses.length;
+
+    // If the lenght is 0, don't try to calculate std devs
+    if(length==0){
+      System.out.println("There are no poses in the array\nTry again where the robot can see an April tag.");
+      return;
+    }
 
     // If it is interrupted, copy everything into a new array
     if(interrupted){
@@ -102,11 +112,24 @@ public class CalculateStdDevs extends CommandBase{
     double stdDevX = Math.sqrt(totalX/m_poses.length);
     double stdDevY = Math.sqrt(totalY/m_poses.length);
     double stdDevRot = Math.sqrt(totalRot/m_poses.length);
-    double[] stdDevs = {stdDevX, stdDevY, stdDevRot};
-
+    
+    // Calculate distance to closest April tag
+    double closest = Double.POSITIVE_INFINITY;
+    ArrayList<EstimatedRobotPose> estimatedPoses = m_vision.getEstimatedPoses(m_drive.getPose());
+    for(int i = 0; i < estimatedPoses.size(); i++){
+      for(int j = 0; j < estimatedPoses.get(i).targetsUsed.size(); j++){
+        double distance = estimatedPoses.get(i).targetsUsed.get(j).getBestCameraToTarget()
+        .getTranslation().toTranslation2d().getNorm();
+        closest = Math.min(closest, distance);
+      }
+    }
+    
+    // Store data in an array to make logging and shuffleboard easier
+    double[] stdDevs = {stdDevX, stdDevY, stdDevRot, closest};
+    
     // Print, log, and add the values to Shuffleboard
-    System.out.printf("Standard deviation values:\nX: %.5f\nY: %.5f\nRotation: %.5f\n",
-    stdDevX, stdDevY, stdDevRot);
+    System.out.printf("Standard deviation values:\nX: %.5f\nY: %.5f\nRotation: %.5f\nDistance: %.5f\n",
+    stdDevX, stdDevY, stdDevRot, closest);
     if(Constants.kLogging){
       LogManager.addDoubleArray("Vision/StdDevs", stdDevs);
     }
