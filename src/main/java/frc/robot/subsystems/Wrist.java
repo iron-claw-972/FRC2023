@@ -72,6 +72,7 @@ public class Wrist extends SubsystemBase {
     SmartDashboard.putData("Arm Sim", m_mech2d);
     // configure the encoder
     m_absEncoder = new DutyCycleEncoder(WristConstants.kAbsEncoderPort); 
+    m_absEncoder.setDistancePerRotation(2*Math.PI);
     m_EncoderSim = new DutyCycleEncoderSim(m_absEncoder);
 
     // make the PID controller
@@ -107,7 +108,7 @@ public class Wrist extends SubsystemBase {
       if (Constants.kLogging) LogManager.addDouble("Wrist/pidOutput", pidPower);
       if (Constants.kUseTelemetry) SmartDashboard.putNumber("wrist pid output", pidPower);
       // calculate the value of kGravityCompensation
-      double feedforwardPower = WristConstants.kGravityCompensation*Math.cos(getAbsEncoderPos()*Math.PI*2);
+      double feedforwardPower = WristConstants.kGravityCompensation*Math.cos(getAbsEncoderPos());
       // set the motor power
       setMotorPower(pidPower + feedforwardPower);
     }
