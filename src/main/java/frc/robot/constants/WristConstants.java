@@ -20,7 +20,7 @@ public class WristConstants {
 
   public static final double kGravityCompensation = 0.08;
 
-  public static final double kTolerance = 0.005;
+  public static final double kTolerance = 0.03;
   public static final double kMotorPowerClamp = 0.8;
 
   public static final TalonFXInvertType kMotorInvert = TalonFXInvertType.CounterClockwise;
@@ -48,8 +48,8 @@ public class WristConstants {
   //SIM
   public static final DCMotor kGearBox = DCMotor.getFalcon500(1);
   public static final double kArmReduction = 100/1;
-  public static final double kArmLength= 16.1;
-  public static final double kArmMass=0;
+  public static final double kArmLength = 16.1;
+  public static final double kArmMass = 0;
 
   public static final int kMotorPort = 0;
   public static final int kEncoderAChannel = 0;

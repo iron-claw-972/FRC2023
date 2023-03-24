@@ -71,8 +71,7 @@ public class Wrist extends SubsystemBase {
     //SIM
     SmartDashboard.putData("Arm Sim", m_mech2d);
     // configure the encoder
-    m_absEncoder = new DutyCycleEncoder(WristConstants.kAbsEncoderPort); 
-    m_absEncoder.setDistancePerRotation(2*Math.PI);
+    m_absEncoder = new DutyCycleEncoder(WristConstants.kAbsEncoderPort);
     m_EncoderSim = new DutyCycleEncoderSim(m_absEncoder);
 
     // make the PID controller
@@ -146,7 +145,7 @@ public class Wrist extends SubsystemBase {
   public double getAbsEncoderPos() {
     // inverted to make rotating towards stow positive
     // offset makes flat, facing out, zero
-    return -m_absEncoder.getAbsolutePosition() + WristConstants.kEncoderOffset; 
+    return (-m_absEncoder.getAbsolutePosition() + WristConstants.kEncoderOffset) * 2 * Math.PI; 
   }
 
   public void updateLogs() {
