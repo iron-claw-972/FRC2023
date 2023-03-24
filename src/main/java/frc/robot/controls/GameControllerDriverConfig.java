@@ -17,6 +17,7 @@ import frc.robot.util.Functions;
 import lib.controllers.GameController;
 import lib.controllers.GameController.Axis;
 import lib.controllers.GameController.Button;
+import lib.controllers.GameController.DPad;
 
 /**
  * Driver controls for the generic game controller.
@@ -38,14 +39,14 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
     kDriver.get(Button.X).whileTrue(new SetFormationX(super.getDrivetrain()));
 
     // Moves to the selected scoring position using Path Planner
-    kDriver.get(kDriver.LEFT_TRIGGER_BUTTON).whileTrue(new GoToNode(m_operator, getDrivetrain()));
+    kDriver.get(Button.LB).whileTrue(new GoToNode(m_operator, getDrivetrain()));
     // Moves to the selected scoring position using the PID
-    kDriver.get(Button.LB).whileTrue(new GoToNodePID(m_operator, getDrivetrain()));
+    kDriver.get(DPad.LEFT).whileTrue(new GoToNodePID(m_operator, getDrivetrain()));
 
     // Moves to the shelf using Path Planner
-    kDriver.get(kDriver.RIGHT_TRIGGER_BUTTON).whileTrue(new GoToShelf(getDrivetrain()));
+    kDriver.get(Button.RB).whileTrue(new GoToShelf(getDrivetrain()));
     // Moves to the shelf using the PID
-    kDriver.get(Button.RB).whileTrue(new GoToShelfPID(getDrivetrain()));
+    kDriver.get(DPad.RIGHT).whileTrue(new GoToShelfPID(getDrivetrain()));
     
     kDriver.get(Button.B).whileTrue(new BalanceCommand(super.getDrivetrain()));
 
