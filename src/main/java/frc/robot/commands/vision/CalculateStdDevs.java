@@ -15,7 +15,7 @@ import frc.robot.util.Vision;
 /**
  * Gathers data on the distance limits of the camera used for vision.
  */
-public class CalculateStdDevs extends CommandBase{
+public class CalculateStdDevs extends CommandBase {
   private final ShuffleboardTab m_tab;
   private final Drivetrain m_drive;
   private final Vision m_vision;
@@ -28,7 +28,7 @@ public class CalculateStdDevs extends CommandBase{
    * @param drive The drivetrain
    * @param vision The vision
    */
-  public CalculateStdDevs(int time, ShuffleboardTab shuffleboardTab, Drivetrain drive, Vision vision){
+  public CalculateStdDevs(int time, ShuffleboardTab shuffleboardTab, Drivetrain drive, Vision vision) {
     m_tab = shuffleboardTab;
     m_drive = drive;
     m_vision = vision;
@@ -39,7 +39,7 @@ public class CalculateStdDevs extends CommandBase{
    * Resets the pose array
    */
   @Override
-  public void initialize(){
+  public void initialize() {
     m_poses = new Pose2d[m_poses.length];
   }
 
@@ -47,14 +47,14 @@ public class CalculateStdDevs extends CommandBase{
    * Adds a pose to the array
    */
   @Override
-  public void execute(){
+  public void execute() {
     Pose2d pose = m_vision.getPose2d(m_drive.getPose());
     // If the pose exists, add it to the first open spot in the array
-    if(pose!=null){
-      for(int i = 0; i < m_poses.length; i++){
-        if(m_poses[i] == null){
+    if (pose != null) {
+      for (int i = 0; i < m_poses.length; i++) {
+        if (m_poses[i] == null) {
           m_poses[i] = pose;
-          System.out.printf("%.1f%% done", i/m_poses.length*100);
+          System.out.printf("%.1f%% done", ((double)i)/m_poses.length * 100);
           break;
         }
       }
@@ -65,26 +65,27 @@ public class CalculateStdDevs extends CommandBase{
    * Calculates the standard deviation
    */
   @Override
-  public void end(boolean interrupted){
+  public void end(boolean interrupted) {
     // Store the length of the array
     int length = m_poses.length;
 
-    // If the lenght is 0, don't try to calculate std devs
-    if(length==0){
+    // If the length is 0, don't try to calculate std devs
+    if (length == 0) {
       System.out.println("There are no poses in the array\nTry again where the robot can see an April tag.");
       return;
     }
 
     // If it is interrupted, copy everything into a new array
-    if(interrupted){
+    if (interrupted) {
       Pose2d[] poses = m_poses.clone();
-      for(int i = 0; i < length; i++){
-        if(m_poses[i]==null){
-          length = i;
+      for (int i = 0; i < length; i++) {
+        if (m_poses[i] == null) {
+          length = i + 1;
+          break;
         }
       }
       m_poses = new Pose2d[length];
-      for(int i = 0; i < length; i++){
+      for (int i = 0; i < length; i++) {
         m_poses[i] = poses[i];
       }
     }
@@ -93,10 +94,10 @@ public class CalculateStdDevs extends CommandBase{
     double meanX = 0;
     double meanY = 0;
     double meanRot = 0;
-    for(int i = 0; i < m_poses.length; i++){
-      meanX+=m_poses[i].getX();
-      meanY+=m_poses[i].getY();
-      meanRot+=m_poses[i].getRotation().getRadians();
+    for (int i = 0; i < m_poses.length; i++) {
+      meanX += m_poses[i].getX();
+      meanY += m_poses[i].getY();
+      meanRot += m_poses[i].getRotation().getRadians();
     }
     meanX /= m_poses.length;
     meanY /= m_poses.length;
@@ -104,20 +105,20 @@ public class CalculateStdDevs extends CommandBase{
     double totalX = 0;
     double totalY = 0;
     double totalRot = 0;
-    for(int i = 0; i < m_poses.length; i++){
+    for (int i = 0; i < m_poses.length; i++) {
       totalX += Math.pow(m_poses[i].getX() - meanX, 2);
       totalY += Math.pow(m_poses[i].getY() - meanY, 2);
       totalRot += Math.pow(m_poses[i].getRotation().getRadians() - meanRot, 2);
     }
-    double stdDevX = Math.sqrt(totalX/m_poses.length);
-    double stdDevY = Math.sqrt(totalY/m_poses.length);
-    double stdDevRot = Math.sqrt(totalRot/m_poses.length);
+    double stdDevX = Math.sqrt(totalX / m_poses.length);
+    double stdDevY = Math.sqrt(totalY / m_poses.length);
+    double stdDevRot = Math.sqrt(totalRot / m_poses.length);
     
     // Calculate distance to closest April tag
     double closest = Double.POSITIVE_INFINITY;
     ArrayList<EstimatedRobotPose> estimatedPoses = m_vision.getEstimatedPoses(m_drive.getPose());
-    for(int i = 0; i < estimatedPoses.size(); i++){
-      for(int j = 0; j < estimatedPoses.get(i).targetsUsed.size(); j++){
+    for (int i = 0; i < estimatedPoses.size(); i++) {
+      for (int j = 0; j < estimatedPoses.get(i).targetsUsed.size(); j++) {
         double distance = estimatedPoses.get(i).targetsUsed.get(j).getBestCameraToTarget()
         .getTranslation().toTranslation2d().getNorm();
         closest = Math.min(closest, distance);
@@ -130,10 +131,10 @@ public class CalculateStdDevs extends CommandBase{
     // Print, log, and add the values to Shuffleboard
     System.out.printf("Standard deviation values:\nX: %.5f\nY: %.5f\nRotation: %.5f\nDistance: %.5f\n",
     stdDevX, stdDevY, stdDevRot, closest);
-    if(Constants.kLogging){
+    if (Constants.kLogging) {
       LogManager.addDoubleArray("Vision/StdDevs", stdDevs);
     }
-    if(m_tab!=null){
+    if (m_tab!=null) {
       m_tab.add("Standard Deviations", stdDevs);
     }
 
@@ -146,7 +147,7 @@ public class CalculateStdDevs extends CommandBase{
    * @return If the array is full
    */
   @Override
-  public boolean isFinished(){
+  public boolean isFinished() {
     return m_poses[m_poses.length-1] != null;
   }
 }
