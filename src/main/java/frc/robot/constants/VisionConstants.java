@@ -16,6 +16,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Robot.RobotId;
+import frc.robot.constants.swerve.DriveConstants;
 
 /**
  * Container class for vision constants.
@@ -26,9 +27,9 @@ public class VisionConstants {
 
   //TODO: Change these to whatever the actual distances are
   // How far from the grid the robot should be to score for alignment in meters
-  public static double kGridDistanceAlignment = 1;
+  public static double kGridDistanceAlignment = 0 + DriveConstants.kRobotWidthWithBumpers / 2; // meters
   // How far from the shelf the robot should be to intake for alignment in meters
-  public static double kShelfDistanceAlignment = 1;
+  public static double kShelfDistanceAlignment = 0.5 + DriveConstants.kRobotWidthWithBumpers / 2;
 
   public static Pose2d kBlueShelfAlignPose = new Pose2d(FieldConstants.kBlueShelfX - kShelfDistanceAlignment, FieldConstants.kShelfY, new Rotation2d(0));
   public static Pose2d kRedShelfAlignPose = new Pose2d(FieldConstants.kRedShelfX + kShelfDistanceAlignment, FieldConstants.kShelfY, new Rotation2d(Math.PI));

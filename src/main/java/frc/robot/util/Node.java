@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.constants.FieldConstants;
+import frc.robot.constants.VisionConstants;
 
 /**
  * Class to store data about scoring locations
@@ -56,9 +57,9 @@ public class Node {
     // Starting locations
     double x = 0;
     if (alliance == Alliance.Blue) {
-      x = FieldConstants.kAprilTags.get(5).pose.getX() + FieldConstants.kAprilTagOffset + FieldConstants.kRobotDistanceFromNodeTape;
+      x = FieldConstants.kAprilTags.get(5).pose.getX() + FieldConstants.kAprilTagOffset + VisionConstants.kGridDistanceAlignment;
     } else {
-      x = FieldConstants.kAprilTags.get(2).pose.getX() - FieldConstants.kAprilTagOffset - FieldConstants.kRobotDistanceFromNodeTape;
+      x = FieldConstants.kAprilTags.get(2).pose.getX() - FieldConstants.kAprilTagOffset - VisionConstants.kGridDistanceAlignment;
     }
 
     double y = 0;  
