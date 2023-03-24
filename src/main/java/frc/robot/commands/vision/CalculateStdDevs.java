@@ -70,7 +70,7 @@ public class CalculateStdDevs extends CommandBase {
     int length = m_poses.length;
 
     // If the array is empty, don't try to calculate std devs
-    if(m_poses[0]==null){
+    if(m_poses[0] == null){
       System.out.println("There are no poses in the array\nTry again where the robot can see an April tag.");
       return;
     }
@@ -80,7 +80,7 @@ public class CalculateStdDevs extends CommandBase {
       Pose2d[] poses = m_poses.clone();
       for (int i = 0; i < length; i++) {
         if (m_poses[i] == null) {
-          length = i + 1;
+          length = i;
           break;
         }
       }
