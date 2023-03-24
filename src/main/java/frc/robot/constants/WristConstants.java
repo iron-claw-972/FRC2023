@@ -45,7 +45,7 @@ public class WristConstants {
 
   public static final double kMinPos = kIntakeCubePos;
   public static final double kMaxPos = kStowPos;
-}}
+
   
   //SIM
   public static final double kArmReduction = 20/1*62/34*48/18;

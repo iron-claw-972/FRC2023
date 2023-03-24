@@ -36,6 +36,7 @@ public class Wrist extends SubsystemBase {
   private final DutyCycleEncoder m_absEncoder;
   private final ShuffleboardTab m_wristTab;
   private boolean m_enabled = true; 
+  private final DutyCycleEncoderSim m_encoderSim;
   private final SingleJointedArmSim m_armSim =
     new SingleJointedArmSim(
       WristConstants.kGearBox, 
@@ -73,6 +74,7 @@ public class Wrist extends SubsystemBase {
     m_absEncoder = new DutyCycleEncoder(WristConstants.kAbsEncoderPort); 
     m_absEncoder.setPositionOffset(WristConstants.kEncoderOffset);
     m_absEncoder.setDistancePerRotation(2*Math.PI);
+    m_encoderSim = new DutyCycleEncoderSim(m_absEncoder);
 
     // make the PID controller
     m_pid = new PIDController(WristConstants.kP, WristConstants.kI, WristConstants.kD);
@@ -103,7 +105,7 @@ public class Wrist extends SubsystemBase {
   public void periodic() {
     if(m_enabled) {
       // calculate the PID power level
-      double pidPower = m_pid.calculate(RobotBase.isSimulation() ? getSimRads(): getAbsEncoderPos(), MathUtil.clamp(m_pid.getSetpoint(), WristConstants.kMinAngleRads, WristConstants.kMaxAngleRads));
+      double pidPower = m_pid.calculate(!RobotBase.isSimulation()? getAbsEncoderPos(): m_armSim.getAngleRads(), MathUtil.clamp(m_pid.getSetpoint(), WristConstants.kMinAngleRads, WristConstants.kMaxAngleRads));
       if (Constants.kLogging) LogManager.addDouble("Wrist/pidOutput", pidPower);
       if (Constants.kUseTelemetry) SmartDashboard.putNumber("wrist pid output", pidPower);
       // calculate the value of kGravityCompensation
@@ -160,14 +162,13 @@ public class Wrist extends SubsystemBase {
   public void simulationPeriodic() {
 
     // First, we set our "inputs" (voltages)    
-    m_armSim.setInput(m_motor.getMotorOutputVoltage() * RobotController.getBatteryVoltage());
+    m_armSim.setInput(m_motor.get() * RobotController.getBatteryVoltage());
 
     // Next, we update it. The standard loop time is 20ms.
     m_armSim.update(0.02);
-    System.out.println(getSimRads());
     RoboRioSim.setVInVoltage(
         BatterySim.calculateDefaultBatteryLoadedVoltage(m_armSim.getCurrentDrawAmps()));
- 
+    m_encoderSim.setDistance(m_armSim.getAngleRads());
     m_arm.setAngle(Units.radiansToDegrees(getSimRads()));
   }
 
@@ -176,7 +177,6 @@ public class Wrist extends SubsystemBase {
   }
   public double getSimRads(){
     return m_armSim.getAngleRads();
-
   }
 }
 
