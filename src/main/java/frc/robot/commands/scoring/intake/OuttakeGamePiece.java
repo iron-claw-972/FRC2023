@@ -1,6 +1,5 @@
 package frc.robot.commands.scoring.intake;
 
-import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -42,7 +41,6 @@ public class OuttakeGamePiece extends CommandBase {
     if (m_heldPiece.get().equals(GamePieceType.CUBE)) {
       m_intake.setMode(IntakeMode.OUTTAKE_CUBE);
     } else if (m_heldPiece.get().equals(GamePieceType.CONE)) {
-      System.out.println("CONE OUTTAKE!!!!!!!1");
       m_intake.setMode(IntakeMode.OUTTAKE_CONE);
     } else {
       DriverStation.reportWarning("OuttakeGamePiece Command detected GamePieceType.NONE as held game piece.", false);
@@ -55,7 +53,6 @@ public class OuttakeGamePiece extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
-    // m_intake.setHeldGamePiece(GamePieceType.NONE);
     m_intake.setMode(IntakeMode.DISABLED);
   }
   

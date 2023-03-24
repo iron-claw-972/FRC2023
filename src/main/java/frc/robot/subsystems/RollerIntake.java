@@ -34,8 +34,9 @@ public class RollerIntake extends SubsystemBase {
 
   public RollerIntake(ShuffleboardTab intakeTab) {
     m_intakeMotor = MotorFactory.createTalonFX(IntakeConstants.kIntakeMotorId, Constants.kRioCAN);
-    configMotors();
-    
+    m_intakeMotor.setNeutralMode(IntakeConstants.kNeutralMode);
+    m_intakeMotor.enableVoltageCompensation(true);
+
     m_power = 0;
     m_mode = IntakeMode.DISABLED;
     m_heldPiece = GamePieceType.NONE;
@@ -44,11 +45,6 @@ public class RollerIntake extends SubsystemBase {
 
     if (Constants.kUseTelemetry) setupShuffleboard();
 
-  }
-
-  private void configMotors() {
-    m_intakeMotor.setNeutralMode(IntakeConstants.kNeutralMode);
-    m_intakeMotor.enableVoltageCompensation(true);
   }
 
   public void setMode(IntakeMode mode) {
@@ -82,8 +78,8 @@ public class RollerIntake extends SubsystemBase {
     setMotorPower(m_power);
 
     if (Constants.kLogging) {
-      LogManager.addDouble("Intake Motor Current", getCurrent());
-      LogManager.addDouble("Intake Power", m_power);
+      LogManager.addDouble("Intake/current", getCurrent());
+      LogManager.addDouble("Intake/power", m_power);
     }
   }
 

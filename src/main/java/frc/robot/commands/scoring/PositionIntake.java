@@ -6,46 +6,47 @@ import java.util.function.BooleanSupplier;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.scoring.arm.ExtendArm;
+import frc.robot.commands.scoring.wrist.RotateWrist;
 import frc.robot.commands.scoring.elevator.MoveElevator;
-import frc.robot.constants.ArmConstants;
+import frc.robot.constants.WristConstants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.FourBarArm;
+import frc.robot.subsystems.Wrist;
 
 public class PositionIntake extends SequentialCommandGroup {
-  public PositionIntake(Elevator elevator, FourBarArm arm, BooleanSupplier isConeColorSupplier, Position position) {
-    addRequirements(elevator, arm);
+  public PositionIntake(Elevator elevator, Wrist wrist, BooleanSupplier isConeSupplier, Position position) {
+    addRequirements(elevator, wrist);
     addCommands(
       new SelectCommand(Map.ofEntries(
         Map.entry(Position.TOP, new ConditionalCommand(
-          new MoveElevator(elevator, ElevatorConstants.kTopConeHeight).alongWith(new ExtendArm(arm, ArmConstants.kTopNodePos)),
-          new MoveElevator(elevator, ElevatorConstants.kTopCubeHeight).alongWith(new ExtendArm(arm, ArmConstants.kTopNodePos)),
-          isConeColorSupplier
+          new MoveElevator(elevator, ElevatorConstants.kTopConeHeight).alongWith(new RotateWrist(wrist, WristConstants.kTopNodeConePos)),
+          new MoveElevator(elevator, ElevatorConstants.kTopCubeHeight).alongWith(new RotateWrist(wrist, WristConstants.kTopNodeCubePos)),
+          isConeSupplier
         )),
         Map.entry(Position.MIDDLE, new ConditionalCommand(
-          new MoveElevator(elevator, ElevatorConstants.kMiddleConeHeight).alongWith(new ExtendArm(arm, ArmConstants.kMiddleNodePos)),
-          new MoveElevator(elevator, ElevatorConstants.kMiddleCubeHeight).alongWith(new ExtendArm(arm, ArmConstants.kMiddleNodePos)),
-          isConeColorSupplier
+          new MoveElevator(elevator, ElevatorConstants.kMiddleConeHeight).alongWith(new RotateWrist(wrist, WristConstants.kMiddleNodeConePos)),
+          new MoveElevator(elevator, ElevatorConstants.kMiddleCubeHeight).alongWith(new RotateWrist(wrist, WristConstants.kMiddleNodeCubePos)),
+          isConeSupplier
         )),
         Map.entry(Position.BOTTOM, new ConditionalCommand(
-          new MoveElevator(elevator, ElevatorConstants.kBottomConeHeight).alongWith(new ExtendArm(arm, ArmConstants.kBottomNodePos)),
-          new MoveElevator(elevator, ElevatorConstants.kBottomCubeHeight).alongWith(new ExtendArm(arm, ArmConstants.kBottomNodePos)),
-          isConeColorSupplier
+          new MoveElevator(elevator, ElevatorConstants.kBottomConeHeight).alongWith(new RotateWrist(wrist, WristConstants.kBottomNodeConePos)),
+          new MoveElevator(elevator, ElevatorConstants.kBottomCubeHeight).alongWith(new RotateWrist(wrist, WristConstants.kBottomNodeCubePos)),
+          isConeSupplier
         )),
         Map.entry(Position.SHELF, new ConditionalCommand(
-          new MoveElevator(elevator, ElevatorConstants.kShelfConeHeight).alongWith(new ExtendArm(arm, ArmConstants.kShelfPos)),
-          new MoveElevator(elevator, ElevatorConstants.kShelfCubeHeight).alongWith(new ExtendArm(arm, ArmConstants.kShelfPos)),
-          isConeColorSupplier
+          new MoveElevator(elevator, ElevatorConstants.kShelfHeight).alongWith(new RotateWrist(wrist, WristConstants.kIntakeConePos)),
+          new MoveElevator(elevator, ElevatorConstants.kShelfHeight).alongWith(new RotateWrist(wrist, WristConstants.kIntakeShelfPos)),
+          isConeSupplier
         )),
         Map.entry(Position.INTAKE, new ConditionalCommand(
-          new MoveElevator(elevator, ElevatorConstants.kIntakeConeHeight).alongWith(new ExtendArm(arm, ArmConstants.kIntakePos)),
-          new MoveElevator(elevator, ElevatorConstants.kIntakeCubeHeight).alongWith(new ExtendArm(arm, ArmConstants.kIntakePos)),
-          isConeColorSupplier
+          new MoveElevator(elevator, ElevatorConstants.kIntakeConeHeight).alongWith(new RotateWrist(wrist, WristConstants.kIntakeConePos)),
+          new MoveElevator(elevator, ElevatorConstants.kIntakeCubeHeight).alongWith(new RotateWrist(wrist, WristConstants.kIntakeCubePos)),
+          isConeSupplier
         )),
         Map.entry(Position.STOW,
-          new MoveElevator(elevator, ElevatorConstants.kStowHeight).alongWith(new ExtendArm(arm, ArmConstants.kStowPos))
+          new MoveElevator(elevator, ElevatorConstants.kStowHeight).alongWith(new RotateWrist(wrist, WristConstants.kStowPos))
         )
+        
       ), () -> position)
     );
   }

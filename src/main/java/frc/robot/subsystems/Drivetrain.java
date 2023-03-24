@@ -101,7 +101,7 @@ public class Drivetrain extends SubsystemBase {
   // modules needed to distinguish in chooser
   private Module m_prevModule;
 
-  boolean m_visionEnabled = true;
+  boolean m_visionEnabled = false;
 
   int m_loggerStep = 0;
 
@@ -148,20 +148,20 @@ public class Drivetrain extends SubsystemBase {
     Timer.delay(1.0);
     resetModulesToAbsolute();
 
+    m_pigeon.setYaw(DriveConstants.kStartingHeading.getDegrees());
     m_poseEstimator = new SwerveDrivePoseEstimator(
       DriveConstants.kKinematics,
-      getYaw(),
+      Rotation2d.fromDegrees(m_pigeon.getYaw()),
       getModulePositions(),
       new Pose2d() // initial Odometry Location
     );
     m_poseEstimator.setVisionMeasurementStdDevs(VisionConstants.kBaseVisionPoseStdDevs);
 
-    setYaw(DriveConstants.kStartingHeadingDegrees);
-
     m_xController = new PIDController(DriveConstants.kTranslationalP, 0, DriveConstants.kTranslationalD);
     m_yController = new PIDController(DriveConstants.kTranslationalP, 0, DriveConstants.kTranslationalD);
     m_rotationController = new PIDController(DriveConstants.kHeadingP, 0, DriveConstants.kHeadingD);
     m_rotationController.enableContinuousInput(-Math.PI, Math.PI);
+    m_rotationController.setTolerance(Units.degreesToRadians(0.25), Units.degreesToRadians(0.25));
     
     m_pathplannerXController = new PIDController(DriveConstants.kPathplannerTranslationalP, 0, DriveConstants.kPathplannerTranslationalD);
     m_pathplannerYController = new PIDController(DriveConstants.kPathplannerTranslationalP, 0, DriveConstants.kPathplannerTranslationalD);
@@ -234,11 +234,27 @@ public class Drivetrain extends SubsystemBase {
   }  
   
   /**
-  * @return the pigeon's heading in a Rotation2d
+  * @return the yaw of the robot, aka heading, the direction it is facing
   */
   public Rotation2d getYaw() {
-    return (DriveConstants.kInvertGyro) ? Rotation2d.fromDegrees(MathUtil.inputModulus(180 - m_pigeon.getYaw(), -180, 180))
-        : Rotation2d.fromDegrees(MathUtil.inputModulus(m_pigeon.getYaw(), -180, 180));
+    return m_poseEstimator.getEstimatedPosition().getRotation();
+  }  
+  
+  /**
+  * Resets the yaw of the robot.
+  * @param rotation the new yaw angle as Rotation2d
+  */
+  public void setYaw(Rotation2d rotation) {
+    resetOdometry(new Pose2d(getPose().getTranslation(), rotation));
+  }
+
+  /**
+  * Resets the odometry to the given pose.
+  * @param pose the pose to reset to.
+  */
+  public void resetOdometry(Pose2d pose) {
+    // NOTE: must use pigeon yaw for odometer!
+    m_poseEstimator.resetPosition(Rotation2d.fromDegrees(m_pigeon.getYaw()), getModulePositions(), pose);
   }
 
   /**
@@ -286,14 +302,6 @@ public class Drivetrain extends SubsystemBase {
   */
   public Pose2d getPose() {
     return m_poseEstimator.getEstimatedPosition();
-  }
-
-  /**
-  * Resets the odometry to the given pose.
-  * @param pose the pose to reset to.
-  */
-  public void resetOdometry(Pose2d pose) {
-    m_poseEstimator.resetPosition(getYaw(), getModulePositions(), pose);
   }
   
   /**
@@ -352,31 +360,6 @@ public class Drivetrain extends SubsystemBase {
     setModuleStates(swerveModuleStates, isOpenLoop);
   }
 
-  /**
-   * 
-   * Resets the pigeon IMU's yaw.
-   * 
-   * @param degrees the new yaw angle, in degrees.
-   */
-  public void setYaw(double degrees) {
-    // the odometry stores an offset from the current pigeon angle
-    // changing the angle makes that offset inaccurate, so must reset the pose as well.
-    // keep the same translation, but set the odometry angle to what we want the angle to be.
-    m_pigeon.setYaw(degrees);
-    resetOdometry(new Pose2d(getPose().getTranslation(), Rotation2d.fromDegrees(degrees)));
-  }
-
-  /**
-   * 
-   * Resets the pigeon IMU's yaw to the trajectory's intial state, flipped for alliance.
-   * 
-   * @param traj the trajectory to reset to.
-   */
-  public void setPigeonYaw(PathPlannerTrajectory traj) {
-    traj = PathPlannerTrajectory.transformTrajectoryForAlliance(traj, DriverStation.getAlliance());
-    setYaw(traj.getInitialHolonomicPose().getRotation().getDegrees());
-  }
-
   public void resetModulesToAbsolute() {
     for (Module mod : m_modules) {
       mod.resetToAbsolute();
@@ -385,8 +368,8 @@ public class Drivetrain extends SubsystemBase {
 
   /** Updates the field relative position of the robot. */
   public void updateOdometry() {
-    // Updates pose based on encoders and gyro
-    m_poseEstimator.update(getYaw(), getModulePositions());
+    // Updates pose based on encoders and gyro. NOTE: must use yaw directly from gyro!
+    m_poseEstimator.update(Rotation2d.fromDegrees(m_pigeon.getYaw()), getModulePositions());
 
     // Updates pose based on vision
     if (m_visionEnabled) {
@@ -450,7 +433,7 @@ public class Drivetrain extends SubsystemBase {
     //SmartDashboard.putNumber("Heading PID Output", rot);
     setChassisSpeeds((
       fieldRelative
-          ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_pigeon.getRotation2d())
+          ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getYaw())
           : new ChassisSpeeds(xSpeed, ySpeed, rot)
       ),
       false
@@ -564,7 +547,6 @@ public class Drivetrain extends SubsystemBase {
     if (!Constants.kUseTelemetry) return;
 
     m_drivetrainTab.add("Field", m_fieldDisplay);
-    SmartDashboard.putData("Field Display", m_fieldDisplay);
 
     m_drivetrainTab.add("Balance PID", m_balancePID);
 
@@ -588,7 +570,7 @@ public class Drivetrain extends SubsystemBase {
     m_drivetrainTab.addNumber("estimated Y", () -> m_poseEstimator.getEstimatedPosition().getY());
     m_drivetrainTab.addNumber("getPitch", () -> m_pigeon.getPitch());
     m_drivetrainTab.addNumber("getRoll", () -> m_pigeon.getRoll());
-    m_drivetrainTab.addNumber("getYaw", () -> m_pigeon.getYaw());
+    m_drivetrainTab.addNumber("pigeon yaw", () -> m_pigeon.getYaw());
     
     m_drivetrainTab.addNumber("Gyro X", () -> getAngularRate(0));
     m_drivetrainTab.addNumber("Gyro Y", () -> getAngularRate(1));
@@ -816,5 +798,17 @@ public class Drivetrain extends SubsystemBase {
       m_modules[3].getDesiredVelocity()
     };
     LogManager.addDoubleArray("Swerve/desired swerve states", desiredStates);
+
+    // double[] errorStates = {
+    //   desiredStates[0] - actualStates[0],
+    //   desiredStates[1] - actualStates[1],
+    //   desiredStates[2] - actualStates[2],
+    //   desiredStates[3] - actualStates[3],
+    //   desiredStates[4] - actualStates[4],
+    //   desiredStates[5] - actualStates[5],
+    //   desiredStates[6] - actualStates[6],
+    //   desiredStates[7] - actualStates[7]
+    // };
+    // LogManager.addDoubleArray("Swerve/error swerve states", errorStates);
   }
 }

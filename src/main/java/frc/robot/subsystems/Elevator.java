@@ -85,7 +85,7 @@ public class Elevator extends SubsystemBase {
     m_motor.configVoltageCompSaturation(Constants.kRobotVoltage);
     m_motor.enableVoltageCompensation(true);
 
-    m_motor.configClosedloopRamp(ElevatorConstants.kMotorRamp);
+    // m_motor.configClosedloopRamp(ElevatorConstants.kMotorRamp);
 
     m_motor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
 

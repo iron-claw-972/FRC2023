@@ -57,15 +57,15 @@ public abstract class BaseDriverConfig {
   }
 
   public double getForwardTranslation() {
-    return Functions.expoMS(MathUtil.applyDeadband(getRawForwardTranslation(), OIConstants.kDeadband), 2) * DriveConstants.kMaxSpeed * m_translationalSensitivity;
+    return -Functions.expoMS(MathUtil.applyDeadband(getRawForwardTranslation(), OIConstants.kDeadband), 2) * DriveConstants.kMaxSpeed * 1;
   }
 
   public double getSideTranslation() {
-    return Functions.expoMS(MathUtil.applyDeadband(getRawSideTranslation(), OIConstants.kDeadband), 2) * DriveConstants.kMaxSpeed * m_translationalSensitivity;
+    return -Functions.expoMS(MathUtil.applyDeadband(getRawSideTranslation(), OIConstants.kDeadband), 2) * DriveConstants.kMaxSpeed * 1;
   }
   
   public double getRotation() {
-    return -Functions.expoMS(MathUtil.applyDeadband(getRawRotation(), OIConstants.kDeadband), 2) * DriveConstants.kMaxAngularSpeed * m_rotationSensitivity;
+    return -Functions.expoMS(MathUtil.applyDeadband(getRawRotation(), OIConstants.kDeadband), 2) * DriveConstants.kMaxAngularSpeed * 1;
   }
 
   public double getHeading() {
@@ -129,5 +129,5 @@ public abstract class BaseDriverConfig {
   public abstract double getRawHeadingAngle();
   public abstract double getRawHeadingMagnitude();
   public abstract boolean getIsSlowMode();
-  public abstract boolean getIsFieldRelative();
+  public abstract boolean getIsAlign();
 }
