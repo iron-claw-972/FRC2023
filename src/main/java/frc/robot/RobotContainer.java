@@ -37,7 +37,6 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.RollerIntake;
 import frc.robot.subsystems.Wrist;
-import frc.robot.util.DrawMechanism;
 import frc.robot.util.GamePieceType;
 import frc.robot.util.PathGroupLoader;
 import frc.robot.util.Vision;
@@ -79,15 +78,11 @@ public class RobotContainer {
   private final TestController m_testController;
   private final ManualController m_manualController;
 
-  private final DrawMechanism m_drawMechanism;
-
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer(RobotId robotId) {
 
     // PowerDistribution m_PDModule = new PowerDistribution(1, ModuleType.kRev);
     // m_PDModule.clearStickyFaults();
-
-    m_drawMechanism = DrawMechanism.getInstance();
 
     switch (robotId) {
       case SwerveCompetition:
