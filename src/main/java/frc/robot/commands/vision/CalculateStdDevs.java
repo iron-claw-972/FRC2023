@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.photonvision.EstimatedRobotPose;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.Constants;
@@ -13,13 +14,14 @@ import frc.robot.util.LogManager;
 import frc.robot.util.Vision;
 
 /**
- * Gathers data on the distance limits of the camera used for vision.
+ * Calculates standard deviations for vision
  */
 public class CalculateStdDevs extends CommandBase {
   private final ShuffleboardTab m_tab;
   private final Drivetrain m_drive;
   private final Vision m_vision;
   private Pose2d[] m_poses;
+  private Timer m_endTimer;
 
   /**
    * Constructor for CalculateStdDevs
@@ -51,12 +53,21 @@ public class CalculateStdDevs extends CommandBase {
     Pose2d pose = m_vision.getPose2d(m_drive.getPose());
     // If the pose exists, add it to the first open spot in the array
     if (pose != null) {
+      m_endTimer.stop();
+      m_endTimer.reset();
       for (int i = 0; i < m_poses.length; i++) {
         if (m_poses[i] == null) {
           m_poses[i] = pose;
           System.out.printf("%.1f%% done", ((double)i)/m_poses.length * 100);
           break;
         }
+      }
+    }else{
+      m_endTimer.start();
+      // If 5 seconds have passed since it saw an April tag, stop the command
+      // Prevents it from running forever
+      if(m_endTimer.hasElapsed(5)){
+        cancel();
       }
     }
   }
