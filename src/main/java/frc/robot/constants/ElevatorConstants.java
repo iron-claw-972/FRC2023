@@ -32,7 +32,7 @@ public class ElevatorConstants {
     public static final double kBottomI = 0;
     public static final double kBottomD = 0;
     public static final double kBottomF = 0;
-    public static final double kBottomGravityCompensation = 0;
+    public static final double kBottomGravityCompensation = 0.1;
 
     // Slot 1
     public static final double kBottomWithConeP = kBottomP;
@@ -46,7 +46,7 @@ public class ElevatorConstants {
     public static final double kTopI = kBottomI;
     public static final double kTopD = kBottomD;
     public static final double kTopF = kBottomF;
-    public static final double kTopGravityCompensation = 0.2;
+    public static final double kTopGravityCompensation = 0.3;
 
     // Slot 3
     public static final double kTopWithConeP = kTopP;
@@ -73,11 +73,11 @@ public class ElevatorConstants {
     // Angle of elevator from the horizontal axis
     public static final double kElevatorAngle = Units.degreesToRadians(55.0);
 
-    public static final double kIntakeConeHeight = Conversions.ElevatorExtensionToHeight(Units.inchesToMeters(4));
+    public static final double kIntakeConeHeight = Conversions.ElevatorExtensionToHeight(Units.inchesToMeters(0));
     public static final double kIntakeCubeHeight = kIntakeConeHeight;
     public static final double kTopConeHeight = Conversions.ElevatorExtensionToHeight(Units.inchesToMeters(46));
     
-    public static final double kTopCubeHeight = kTopConeHeight;
+    public static final double kTopCubeHeight = Conversions.ElevatorExtensionToHeight(Units.inchesToMeters(50));
     public static final double kMiddleConeHeight = Units.inchesToMeters(35);
     public static final double kMiddleCubeHeight = kMiddleConeHeight;
     public static final double kBottomConeHeight = Conversions.ElevatorExtensionToHeight(Units.inchesToMeters(6));
@@ -87,6 +87,6 @@ public class ElevatorConstants {
     public static final double kStowHeight = Conversions.ElevatorExtensionToHeight(Units.inchesToMeters(0));
 
     public static final double kCalibrationPower = -0.2;
-    public static final double kMotorRamp = 0.2;
+    public static final double kMotorRamp = 0.1;
 }
 

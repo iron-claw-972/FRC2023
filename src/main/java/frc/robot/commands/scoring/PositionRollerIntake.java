@@ -19,18 +19,18 @@ public class PositionRollerIntake extends SequentialCommandGroup {
     addCommands(
       new SelectCommand(Map.ofEntries(
         Map.entry(RollerPosition.TOP, new ConditionalCommand(
-          new MoveElevator(elevator, ElevatorConstants.kTopConeHeight).alongWith(new RotateWrist(wrist, WristConstants.kTopNodePos)),
-          new MoveElevator(elevator, ElevatorConstants.kTopCubeHeight).alongWith(new RotateWrist(wrist, WristConstants.kTopNodePos)),
+          new MoveElevator(elevator, ElevatorConstants.kTopConeHeight).alongWith(new RotateWrist(wrist, WristConstants.kTopNodeConePos)),
+          new MoveElevator(elevator, ElevatorConstants.kTopCubeHeight).alongWith(new RotateWrist(wrist, WristConstants.kTopNodeCubePos)),
           isConeSupplier
         )),
         Map.entry(RollerPosition.MIDDLE, new ConditionalCommand(
-          new MoveElevator(elevator, ElevatorConstants.kMiddleConeHeight).alongWith(new RotateWrist(wrist, WristConstants.kMiddleNodePos)),
-          new MoveElevator(elevator, ElevatorConstants.kMiddleCubeHeight).alongWith(new RotateWrist(wrist, WristConstants.kMiddleNodePos)),
+          new MoveElevator(elevator, ElevatorConstants.kMiddleConeHeight).alongWith(new RotateWrist(wrist, WristConstants.kMiddleNodeConePos)),
+          new MoveElevator(elevator, ElevatorConstants.kMiddleCubeHeight).alongWith(new RotateWrist(wrist, WristConstants.kMiddleNodeCubePos)),
           isConeSupplier
         )),
         Map.entry(RollerPosition.BOTTOM, new ConditionalCommand(
-          new MoveElevator(elevator, ElevatorConstants.kBottomConeHeight).alongWith(new RotateWrist(wrist, WristConstants.kBottomNodePos)),
-          new MoveElevator(elevator, ElevatorConstants.kBottomCubeHeight).alongWith(new RotateWrist(wrist, WristConstants.kBottomNodePos)),
+          new MoveElevator(elevator, ElevatorConstants.kBottomConeHeight).alongWith(new RotateWrist(wrist, WristConstants.kBottomNodeConePos)),
+          new MoveElevator(elevator, ElevatorConstants.kBottomCubeHeight).alongWith(new RotateWrist(wrist, WristConstants.kBottomNodeCubePos)),
           isConeSupplier
         )),
         Map.entry(RollerPosition.SHELF, new ConditionalCommand(
