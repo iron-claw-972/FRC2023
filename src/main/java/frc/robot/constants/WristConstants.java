@@ -20,7 +20,7 @@ public class WristConstants {
 
   public static final double kGravityCompensation = 0.08;
 
-  public static final double kTolerance = 0.03;
+  public static final double kTolerance = 0.06;
   public static final double kMotorPowerClamp = 0.8;
 
   public static final TalonFXInvertType kMotorInvert = TalonFXInvertType.CounterClockwise;
