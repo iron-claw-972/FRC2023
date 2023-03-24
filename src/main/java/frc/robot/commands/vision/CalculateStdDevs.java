@@ -20,7 +20,8 @@ public class CalculateStdDevs extends CommandBase {
   private final ShuffleboardTab m_tab;
   private final Drivetrain m_drive;
   private final Vision m_vision;
-  private Pose2d[] m_poses;
+  private ArrayList<Pose2d> m_poses;
+  private int m_arrayLength;
   private Timer m_endTimer;
 
   /**
@@ -34,7 +35,7 @@ public class CalculateStdDevs extends CommandBase {
     m_tab = shuffleboardTab;
     m_drive = drive;
     m_vision = vision;
-    m_poses = new Pose2d[time];
+    m_arrayLength = time;
   }
 
   /**
@@ -42,7 +43,7 @@ public class CalculateStdDevs extends CommandBase {
    */
   @Override
   public void initialize() {
-    m_poses = new Pose2d[m_poses.length];
+    m_poses = new ArrayList<Pose2d>();
   }
 
   /**
@@ -55,14 +56,9 @@ public class CalculateStdDevs extends CommandBase {
     if (pose != null) {
       m_endTimer.stop();
       m_endTimer.reset();
-      for (int i = 0; i < m_poses.length; i++) {
-        if (m_poses[i] == null) {
-          m_poses[i] = pose;
-          System.out.printf("%.1f%% done", ((double)i)/m_poses.length * 100);
-          break;
-        }
-      }
-    }else{
+      m_poses.add(pose);
+      System.out.printf("%.1f%% done", ((double)m_poses.size())/m_arrayLength * 100);
+    } else {
       m_endTimer.start();
       // If 5 seconds have passed since it saw an April tag, stop the command
       // Prevents it from running forever
@@ -77,57 +73,35 @@ public class CalculateStdDevs extends CommandBase {
    */
   @Override
   public void end(boolean interrupted) {
-    // Store the length of the array
-    int length = m_poses.length;
-
     // If the array is empty, don't try to calculate std devs
-    if(m_poses[0] == null){
+    if(m_poses.size() == 0){
       System.out.println("There are no poses in the array\nTry again where the robot can see an April tag.");
       return;
-    }
-
-    // If it is interrupted, copy everything into a new array
-    if (interrupted) {
-      Pose2d[] poses = m_poses.clone();
-      for (int i = 0; i < length; i++) {
-        if (m_poses[i] == null) {
-          length = i;
-          break;
-        }
-      }
-      m_poses = new Pose2d[length];
-
-      // Set the length back to the original value after using it
-      length = poses.length;
-
-      for(int i = 0; i < m_poses.length; i++){
-        m_poses[i] = poses[i];
-      }
     }
     
     // Calculate std devs
     double meanX = 0;
     double meanY = 0;
     double meanRot = 0;
-    for (int i = 0; i < m_poses.length; i++) {
-      meanX += m_poses[i].getX();
-      meanY += m_poses[i].getY();
-      meanRot += m_poses[i].getRotation().getRadians();
+    for (int i = 0; i < m_poses.size(); i++) {
+      meanX += m_poses.get(i).getX();
+      meanY += m_poses.get(i).getY();
+      meanRot += m_poses.get(i).getRotation().getRadians();
     }
-    meanX /= m_poses.length;
-    meanY /= m_poses.length;
-    meanRot /= m_poses.length;
+    meanX /= m_poses.size();
+    meanY /= m_poses.size();
+    meanRot /= m_poses.size();
     double totalX = 0;
     double totalY = 0;
     double totalRot = 0;
-    for (int i = 0; i < m_poses.length; i++) {
-      totalX += Math.pow(m_poses[i].getX() - meanX, 2);
-      totalY += Math.pow(m_poses[i].getY() - meanY, 2);
-      totalRot += Math.pow(m_poses[i].getRotation().getRadians() - meanRot, 2);
+    for (int i = 0; i < m_poses.size(); i++) {
+      totalX += Math.pow(m_poses.get(i).getX() - meanX, 2);
+      totalY += Math.pow(m_poses.get(i).getY() - meanY, 2);
+      totalRot += Math.pow(m_poses.get(i).getRotation().getRadians() - meanRot, 2);
     }
-    double stdDevX = Math.sqrt(totalX / m_poses.length);
-    double stdDevY = Math.sqrt(totalY / m_poses.length);
-    double stdDevRot = Math.sqrt(totalRot / m_poses.length);
+    double stdDevX = Math.sqrt(totalX / m_poses.size());
+    double stdDevY = Math.sqrt(totalY / m_poses.size());
+    double stdDevRot = Math.sqrt(totalRot / m_poses.size());
     
     // Calculate distance to closest April tag
     double closest = Double.POSITIVE_INFINITY;
@@ -152,9 +126,6 @@ public class CalculateStdDevs extends CommandBase {
     if (m_tab!=null) {
       m_tab.add("Standard Deviations", stdDevs);
     }
-
-    // Reset the length to the original value if interrupted
-    m_poses = new Pose2d[length];
   }
 
   /**
@@ -163,6 +134,6 @@ public class CalculateStdDevs extends CommandBase {
    */
   @Override
   public boolean isFinished() {
-    return m_poses[m_poses.length-1] != null;
+    return m_poses.size() == m_arrayLength;
   }
 }
