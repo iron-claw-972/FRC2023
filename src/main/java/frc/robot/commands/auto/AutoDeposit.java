@@ -17,9 +17,17 @@ import frc.robot.subsystems.RollerIntake;
 import frc.robot.subsystems.Wrist;
 import frc.robot.util.GamePieceType;
 
-public class Deposit extends SequentialCommandGroup {
+public class AutoDeposit extends SequentialCommandGroup {
 
-  public Deposit(Position depositPosition, Elevator elevator, Wrist wrist, RollerIntake intake) {
+  /**
+   * Deposit a game piece in the given row during auto. This command assumes that the robot is already in the correct column position and that the intake is already holding a game piece.
+   * 
+   * @param depositPosition the row to deposit the game piece in
+   * @param elevator the elevator subsystem
+   * @param wrist the wrist subsystem
+   * @param intake the intake subsystem
+   */
+  public AutoDeposit(Position depositPosition, Elevator elevator, Wrist wrist, RollerIntake intake) {
     addRequirements(elevator, wrist, intake);
 
     Command depositCommand;
