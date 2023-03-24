@@ -16,7 +16,7 @@ public class WristConstants {
 
   public static final double kP = 12;
   public static final double kI = 0;
-  public static final double kD = 0.1;
+  public static final double kD = RobotBase.isSimulation()? 1:0.1;
   public static final double kF = 0;
 
   public static final double kGravityCompensation = 0.08;

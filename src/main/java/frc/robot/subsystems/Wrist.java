@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 import frc.robot.constants.FalconConstants;
 import frc.robot.constants.WristConstants;
+import frc.robot.util.DrawMechanism;
 import frc.robot.util.LogManager;
 import frc.robot.util.MotorFactory;
 
@@ -46,20 +47,10 @@ public class Wrist extends SubsystemBase {
       true,
       VecBuilder.fill(2*Math.PI/FalconConstants.kResolution)
       );
+  DrawMechanism m_drawMechanism = DrawMechanism.getInstance();
   private double m_pidPower = 0;
 
   // Create a Mechanism2d display of the wrist
-  private final Mechanism2d m_mech2d = new Mechanism2d(60, 60);
-  private final MechanismRoot2d m_armPivot = m_mech2d.getRoot("ArmPivot", 30, 30);
-  private final MechanismLigament2d m_armTower = m_armPivot.append(new MechanismLigament2d("ArmTower", -90, 0));
-  private final MechanismLigament2d m_arm =
-    m_armPivot.append(
-        new MechanismLigament2d(
-            "Arm",
-            30,
-            Units.radiansToDegrees(m_armSim.getAngleRads()),
-            6,
-            new Color8Bit(Color.kYellow)));
   
   public Wrist(ShuffleboardTab wristTab) {
     // configure the motor.
@@ -75,7 +66,7 @@ public class Wrist extends SubsystemBase {
     m_wristTab = wristTab;
     
     //SIM
-    if (RobotBase.isSimulation()) SmartDashboard.putData("Arm Sim", m_mech2d);
+  
     // configure the encoder
     m_absEncoder = new DutyCycleEncoder(WristConstants.kAbsEncoderPort); 
     m_absEncoder.setPositionOffset(WristConstants.kEncoderOffset);
@@ -109,7 +100,7 @@ public class Wrist extends SubsystemBase {
   public void periodic() {
     if (m_enabled) {
       // calculate the PID power level
-      m_pidPower = m_pid.calculate(!RobotBase.isSimulation()? getAbsEncoderPos(): m_armSim.getAngleRads(), MathUtil.clamp(m_pid.getSetpoint(), WristConstants.kMinAngleRads, WristConstants.kMaxAngleRads));
+      m_pidPower = m_pid.calculate(m_armSim.getAngleRads(), MathUtil.clamp(m_pid.getSetpoint(), WristConstants.kMinAngleRads, WristConstants.kMaxAngleRads));
       if (Constants.kLogging) LogManager.addDouble("Wrist/pidOutput", m_pidPower);
       if (Constants.kUseTelemetry) SmartDashboard.putNumber("wrist pid output", m_pidPower);
       // calculate the value of kGravityCompensation
@@ -155,7 +146,7 @@ public class Wrist extends SubsystemBase {
   public double getAbsEncoderPos() {
     // inverted to make rotating towards stow positive
     // offset makes flat, facing out, zero
-    return -m_absEncoder.getAbsolutePosition() + WristConstants.kEncoderOffset; 
+    return !RobotBase.isSimulation()?-m_absEncoder.getAbsolutePosition() + WristConstants.kEncoderOffset:getSimRads(); 
   }
 
   public void updateLogs() {
@@ -182,7 +173,7 @@ public class Wrist extends SubsystemBase {
     RoboRioSim.setVInVoltage(
         BatterySim.calculateDefaultBatteryLoadedVoltage(m_armSim.getCurrentDrawAmps()));
     m_encoderSim.setDistance(m_armSim.getAngleRads());
-    m_arm.setAngle(Units.radiansToDegrees(getSimRads()));
+    m_drawMechanism.setWristAngle(m_armSim.getAngleRads());
   }
 
   public double getMotorvoltage(){
