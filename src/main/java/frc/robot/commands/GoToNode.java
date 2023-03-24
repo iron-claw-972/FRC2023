@@ -5,6 +5,9 @@ import java.util.List;
 
 import com.pathplanner.lib.PathPoint;
 
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.commands.auto.PathPlannerCommand;
 import frc.robot.controls.Operator;
@@ -37,8 +40,11 @@ public class GoToNode extends CommandBase {
       m_drive.getChassisSpeeds()
     );
     // Uses the operator's selected node to find the end point for the path
+    double x = m_operator.getSelectedNode().scorePose.getTranslation().getX();
+    double yOffset = (DriverStation.getAlliance() == Alliance.Blue?1:-1)*0; //TODO: Add distance sensor measurement
+    double y = m_operator.getSelectedNode().scorePose.getTranslation().getY() + yOffset;
     PathPoint point2 = new PathPoint(
-      m_operator.getSelectedNode().scorePose.getTranslation(),
+      new Translation2d(x, y),
       m_operator.getSelectedNode().scorePose.getRotation(),
       m_operator.getSelectedNode().scorePose.getRotation()
     );

@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.controls.Operator;
 import frc.robot.subsystems.Drivetrain;
@@ -28,7 +30,8 @@ public class GoToNodePID extends CommandBase {
   @Override
   public void execute() {
     double x = m_operator.getSelectedNode().scorePose.getX();
-    double y = m_operator.getSelectedNode().scorePose.getY();
+    double yOffset = (DriverStation.getAlliance() == Alliance.Blue?1:-1)*0; //TODO: Add distance sensor measurement
+    double y = m_operator.getSelectedNode().scorePose.getY() + yOffset;
     double rot = m_operator.getSelectedNode().scorePose.getRotation().getRadians();
     m_drive.runChassisPID(x, y, rot);
   }
