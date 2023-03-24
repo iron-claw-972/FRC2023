@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.commands.vision.CalculateStdDevs;
 import frc.robot.commands.vision.TestVisionAlignment;
 import frc.robot.commands.vision.TestVisionDistance;
-import frc.robot.constants.VisionConstants;
+import frc.robot.constants.FieldConstants;
 import frc.robot.subsystems.Drivetrain;
 
 public class Vision {
@@ -49,7 +49,7 @@ public class Vision {
       m_aprilTagFieldLayout = AprilTagFields.k2023ChargedUp.loadAprilTagLayoutField();
     } catch (IOException e) {
       // If it can't find it, use the layout in the constants
-      m_aprilTagFieldLayout = new AprilTagFieldLayout(VisionConstants.kAprilTags, VisionConstants.kFieldLength, VisionConstants.kFieldWidth);
+      m_aprilTagFieldLayout = new AprilTagFieldLayout(FieldConstants.kAprilTags, FieldConstants.kFieldLength, FieldConstants.kFieldWidth);
       DriverStation.reportWarning("Could not find k2023ChargedUp.m_resourceFile, check that GradleRIO is updated to at least 2023.2.1 in build.gradle",  e.getStackTrace());
     }
     // Sets the origin to the right side of the blue alliance wall

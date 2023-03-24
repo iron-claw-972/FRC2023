@@ -5,6 +5,7 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -26,6 +27,7 @@ import frc.robot.commands.scoring.PositionIntake.Position;
 import frc.robot.commands.scoring.intake.IntakeGamePiece;
 import frc.robot.commands.scoring.intake.OuttakeGamePiece;
 import frc.robot.constants.Constants;
+import frc.robot.constants.FieldConstants;
 import frc.robot.constants.VisionConstants;
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.controls.BaseDriverConfig;
@@ -213,6 +215,9 @@ public class RobotContainer {
 
     if (m_drive != null) {
       m_drive.addTestCommands(m_testTab, testEntry);
+      m_testTab.add("Reset Odometry to node", new InstantCommand(() -> m_drive.resetOdometry(m_operator.getSelectedNode().scorePose)));
+      m_testTab.add("Reset Odometry to Blue Shelf", new InstantCommand(() -> m_drive.resetOdometry(VisionConstants.kBlueShelfAlignPose)));
+      m_testTab.add("Reset Odometry to Red Shelf", new InstantCommand(() -> m_drive.resetOdometry(VisionConstants.kRedShelfAlignPose)));
     }
 
     if (m_vision != null) {

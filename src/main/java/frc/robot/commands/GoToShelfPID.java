@@ -1,11 +1,13 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.FieldConstants;
+import frc.robot.constants.VisionConstants;
 import frc.robot.subsystems.Drivetrain;
 
 /**
@@ -29,9 +31,10 @@ public class GoToShelfPID extends CommandBase {
   
   @Override
   public void execute() {
-    double x = DriverStation.getAlliance()==Alliance.Blue?FieldConstants.kBlueShelfX:FieldConstants.kRedShelfX;
-    double y = FieldConstants.kShelfY;
-    double rot = DriverStation.getAlliance()==Alliance.Blue?0:Math.PI;
+    Pose2d goalPose = DriverStation.getAlliance() == Alliance.Blue ? VisionConstants.kBlueShelfAlignPose : VisionConstants.kRedShelfAlignPose;
+    double x = goalPose.getX();
+    double y = goalPose.getY();
+    double rot = goalPose.getRotation().getRadians();
     m_drive.runChassisPID(x, y, rot);
   }
   

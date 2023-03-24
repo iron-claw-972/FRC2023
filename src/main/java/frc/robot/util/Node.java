@@ -5,7 +5,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.constants.FieldConstants;
-import frc.robot.constants.VisionConstants;
 
 /**
  * Class to store data about scoring locations
@@ -57,9 +56,9 @@ public class Node {
     // Starting locations
     double x = 0;
     if (alliance == Alliance.Blue) {
-      x = VisionConstants.kAprilTags.get(5).pose.getX() + FieldConstants.kAprilTagOffset + FieldConstants.kRobotDistanceFromNodeTape;
+      x = FieldConstants.kAprilTags.get(5).pose.getX() + FieldConstants.kAprilTagOffset + FieldConstants.kRobotDistanceFromNodeTape;
     } else {
-      x = VisionConstants.kAprilTags.get(2).pose.getX() - FieldConstants.kAprilTagOffset - FieldConstants.kRobotDistanceFromNodeTape;
+      x = FieldConstants.kAprilTags.get(2).pose.getX() - FieldConstants.kAprilTagOffset - FieldConstants.kRobotDistanceFromNodeTape;
     }
 
     double y = 0;  
@@ -74,11 +73,11 @@ public class Node {
     }
 
     if (column <= 3) {
-      y = VisionConstants.kAprilTags.get(7).pose.getY();
+      y = FieldConstants.kAprilTags.get(7).pose.getY();
     } else if (column <= 6) {
-      y = VisionConstants.kAprilTags.get(6).pose.getY();
+      y = FieldConstants.kAprilTags.get(6).pose.getY();
     } else {
-      y = VisionConstants.kAprilTags.get(5).pose.getY();
+      y = FieldConstants.kAprilTags.get(5).pose.getY();
     }
     y += yOffset;
 

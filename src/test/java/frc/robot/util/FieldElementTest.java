@@ -13,7 +13,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.constants.FieldConstants;
-import frc.robot.constants.VisionConstants;
 import frc.robot.util.Node.NodeType;
 
 /**
@@ -94,9 +93,9 @@ public class FieldElementTest {
     @Test
     public void cubeNodeTest() {
         // the AprilTag y values are
-        AprilTag atag1 = VisionConstants.kAprilTags.get(0);
-        AprilTag atag2 = VisionConstants.kAprilTags.get(1);
-        AprilTag atag3 = VisionConstants.kAprilTags.get(2);
+        AprilTag atag1 = FieldConstants.kAprilTags.get(0);
+        AprilTag atag2 = FieldConstants.kAprilTags.get(1);
+        AprilTag atag3 = FieldConstants.kAprilTags.get(2);
 
         double y1 = Units.metersToInches(atag1.pose.getY());
         double y2 = Units.metersToInches(atag2.pose.getY());
@@ -283,9 +282,9 @@ public class FieldElementTest {
             int j = 9 - i;
 
             // get tag i
-            Pose2d poseBlue = VisionConstants.kAprilTags.get(i-1).pose.toPose2d();
+            Pose2d poseBlue = FieldConstants.kAprilTags.get(i-1).pose.toPose2d();
             // should mirror to tag j
-            Pose2d poseRed = VisionConstants.kAprilTags.get(j-1).pose.toPose2d();
+            Pose2d poseRed = FieldConstants.kAprilTags.get(j-1).pose.toPose2d();
 
             // System.out.printf("Test %d %d\n", i, j);
             // System.out.printf("   %8f %8f %8f\n", poseBlue.getX(), poseBlue.getY(), poseBlue.getRotation().getDegrees());
@@ -335,14 +334,14 @@ public class FieldElementTest {
         assertEquals(27.38, 23.375 + 0.5 * heightAprilTag - 0.63 - 0.75, 0.15);
         
         // Check the simple values
-        assertEquals(Units.inchesToMeters(18.22), VisionConstants.kAprilTags.get(0).pose.getZ(), 0.001);
-        assertEquals(Units.inchesToMeters(18.22), VisionConstants.kAprilTags.get(1).pose.getZ(), 0.001);
-        assertEquals(Units.inchesToMeters(18.22), VisionConstants.kAprilTags.get(2).pose.getZ(), 0.001);
-        assertEquals(Units.inchesToMeters(27.38), VisionConstants.kAprilTags.get(3).pose.getZ(), 0.001);
-        assertEquals(Units.inchesToMeters(27.38), VisionConstants.kAprilTags.get(4).pose.getZ(), 0.001);
-        assertEquals(Units.inchesToMeters(18.22), VisionConstants.kAprilTags.get(5).pose.getZ(), 0.001);
-        assertEquals(Units.inchesToMeters(18.22), VisionConstants.kAprilTags.get(6).pose.getZ(), 0.001);
-        assertEquals(Units.inchesToMeters(18.22), VisionConstants.kAprilTags.get(7).pose.getZ(), 0.001);
+        assertEquals(Units.inchesToMeters(18.22), FieldConstants.kAprilTags.get(0).pose.getZ(), 0.001);
+        assertEquals(Units.inchesToMeters(18.22), FieldConstants.kAprilTags.get(1).pose.getZ(), 0.001);
+        assertEquals(Units.inchesToMeters(18.22), FieldConstants.kAprilTags.get(2).pose.getZ(), 0.001);
+        assertEquals(Units.inchesToMeters(27.38), FieldConstants.kAprilTags.get(3).pose.getZ(), 0.001);
+        assertEquals(Units.inchesToMeters(27.38), FieldConstants.kAprilTags.get(4).pose.getZ(), 0.001);
+        assertEquals(Units.inchesToMeters(18.22), FieldConstants.kAprilTags.get(5).pose.getZ(), 0.001);
+        assertEquals(Units.inchesToMeters(18.22), FieldConstants.kAprilTags.get(6).pose.getZ(), 0.001);
+        assertEquals(Units.inchesToMeters(18.22), FieldConstants.kAprilTags.get(7).pose.getZ(), 0.001);
     }
 
     @Test

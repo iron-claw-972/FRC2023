@@ -5,13 +5,12 @@ import java.util.List;
 
 import com.pathplanner.lib.PathPoint;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.commands.auto.PathPlannerCommand;
-import frc.robot.constants.FieldConstants;
+import frc.robot.constants.VisionConstants;
 import frc.robot.subsystems.Drivetrain;
 
 public class GoToShelf extends CommandBase {
@@ -38,12 +37,11 @@ public class GoToShelf extends CommandBase {
       m_drive.getChassisSpeeds()
     );
     // The shelf position
-    double x = DriverStation.getAlliance() == Alliance.Blue ? FieldConstants.kBlueShelfX : FieldConstants.kRedShelfX;
-    double angle = DriverStation.getAlliance() == Alliance.Blue ? 0 : Math.PI;
+    Pose2d alignPose = DriverStation.getAlliance() == Alliance.Blue ? VisionConstants.kBlueShelfAlignPose : VisionConstants.kRedShelfAlignPose;
     PathPoint point2 = new PathPoint(
-      new Translation2d(x, FieldConstants.kShelfY),
-      new Rotation2d(angle),
-      new Rotation2d(angle)
+      alignPose.getTranslation(),
+      alignPose.getRotation(),
+      alignPose.getRotation()
     );
     // Creates the command using the two points
     m_command = new PathPlannerCommand(

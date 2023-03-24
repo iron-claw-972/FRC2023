@@ -3,12 +3,12 @@ package frc.robot.constants;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.MatBuilder;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.Pair;
-import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -25,10 +25,13 @@ public class VisionConstants {
   public static final boolean kEnabled = true;
 
   //TODO: Change these to whatever the actual distances are
-  // How far fromt he grid the robot should be to score in inches
-  public static double kGridDistance = 16;
-  // How far fromt he shelf the robot should be to intake in inches
-  public static double kShelfDistance = 16;
+  // How far from the grid the robot should be to score for alignment in meters
+  public static double kGridDistanceAlignment = 1;
+  // How far from the shelf the robot should be to intake for alignment in meters
+  public static double kShelfDistanceAlignment = 1;
+
+  public static Pose2d kBlueShelfAlignPose = new Pose2d(FieldConstants.kBlueShelfX - kShelfDistanceAlignment, FieldConstants.kShelfY, new Rotation2d(0));
+  public static Pose2d kRedShelfAlignPose = new Pose2d(FieldConstants.kRedShelfX + kShelfDistanceAlignment, FieldConstants.kShelfY, new Rotation2d(Math.PI));
 
   public static ArrayList<Pair<String, Transform3d>> kCameras = new ArrayList<>();
 
@@ -85,19 +88,4 @@ public class VisionConstants {
   // This is how much is added to std dev for vision when closest visible Apriltag is 1 meter away
    //TODO: how much? was 0.1 but richie had zero, WPI recommends not to include measurements >1 m, so maybe should be higher
   public static final double kVisionPoseStdDevFactor = 0.01;
-
-  public static final double kFieldLength = Units.inchesToMeters(54*12 + 3.25);
-  public static final double kFieldWidth = Units.inchesToMeters(26*12 + 3.5);
-
-  // Array to use if it can't find the April tag field layout
-  public static final ArrayList<AprilTag> kAprilTags = new ArrayList<AprilTag>(List.of(
-    new AprilTag(1, new Pose3d(Units.inchesToMeters(610.77), Units.inchesToMeters( 42.19), Units.inchesToMeters(18.22), new Rotation3d(0.0, 0.0, Math.PI))),
-    new AprilTag(2, new Pose3d(Units.inchesToMeters(610.77), Units.inchesToMeters(108.19), Units.inchesToMeters(18.22), new Rotation3d(0.0, 0.0, Math.PI))),
-    new AprilTag(3, new Pose3d(Units.inchesToMeters(610.77), Units.inchesToMeters(174.19), Units.inchesToMeters(18.22), new Rotation3d(0.0, 0.0, Math.PI))),
-    new AprilTag(4, new Pose3d(Units.inchesToMeters(636.96), Units.inchesToMeters(265.74), Units.inchesToMeters(27.38), new Rotation3d(0.0, 0.0, Math.PI))),
-    new AprilTag(5, new Pose3d(Units.inchesToMeters( 14.25), Units.inchesToMeters(265.74), Units.inchesToMeters(27.38), new Rotation3d(0.0, 0.0, 0.0))),
-    new AprilTag(6, new Pose3d(Units.inchesToMeters( 40.45), Units.inchesToMeters(174.19), Units.inchesToMeters(18.22), new Rotation3d(0.0, 0.0, 0.0))),
-    new AprilTag(7, new Pose3d(Units.inchesToMeters( 40.45), Units.inchesToMeters(108.19), Units.inchesToMeters(18.22), new Rotation3d(0.0, 0.0, 0.0))),
-    new AprilTag(8, new Pose3d(Units.inchesToMeters( 40.45), Units.inchesToMeters( 42.19), Units.inchesToMeters(18.22), new Rotation3d(0.0, 0.0, 0.0)))
-  ));
 }
