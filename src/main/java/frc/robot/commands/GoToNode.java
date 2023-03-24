@@ -46,7 +46,8 @@ public class GoToNode extends CommandBase {
     PathPoint point2 = new PathPoint(
       new Translation2d(x, y),
       m_operator.getSelectedNode().scorePose.getRotation(),
-      m_operator.getSelectedNode().scorePose.getRotation()
+      m_operator.getSelectedNode().scorePose.getRotation(),
+      0
     );
     // Creates the command using the two points
     m_command = new PathPlannerCommand(

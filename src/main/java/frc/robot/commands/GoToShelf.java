@@ -41,7 +41,8 @@ public class GoToShelf extends CommandBase {
     PathPoint point2 = new PathPoint(
       alignPose.getTranslation(),
       alignPose.getRotation(),
-      alignPose.getRotation()
+      alignPose.getRotation(),
+      0
     );
     // Creates the command using the two points
     m_command = new PathPlannerCommand(
