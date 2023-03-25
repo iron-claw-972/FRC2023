@@ -42,6 +42,10 @@ public class DriveConstants {
   // TODO: tune this better.
   public static double kMaxAngularAccel = 8 * 2 * Math.PI; // 8 rotations per second per second
 
+  // Slew rate limiter on Acceleration
+  public static double kTranLim = 3;
+  public static double kRotLim = 3;
+
   public static int kPigeon = 0;
 
   public static Rotation2d kStartingHeading = new Rotation2d();

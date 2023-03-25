@@ -11,6 +11,7 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -102,6 +103,11 @@ public class Drivetrain extends SubsystemBase {
   private Module m_prevModule;
 
   boolean m_visionEnabled = false;
+
+  SlewRateLimiter xLimiter = new SlewRateLimiter(DriveConstants.kTranLim, -DriveConstants.kTranLim, 0);
+  SlewRateLimiter yLimiter = new SlewRateLimiter(DriveConstants.kTranLim, -DriveConstants.kTranLim, 0);
+  SlewRateLimiter RotLimiter = new SlewRateLimiter(DriveConstants.kRotLim, -DriveConstants.kRotLim, 0);
+  SlewRateLimiter DiagLimiter = new SlewRateLimiter(DriveConstants.kTranLim, -DriveConstants.kTranLim, 0);
 
   int m_loggerStep = 0;
 
@@ -267,6 +273,9 @@ public class Drivetrain extends SubsystemBase {
   * @param isOpenLoop whether to use velocity control for the drive motors
   */
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean isOpenLoop) {           
+    xSpeed=xLimiter.calculate(xSpeed);
+    ySpeed=yLimiter.calculate(ySpeed);
+    rot=RotLimiter.calculate(rot);
     setChassisSpeeds((
       fieldRelative
           ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getYaw())
