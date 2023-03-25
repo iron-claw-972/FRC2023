@@ -26,22 +26,23 @@ public class Wrist extends SubsystemBase {
   private final PIDController m_pid;
   private final DutyCycleEncoder m_absEncoder;
   private final ShuffleboardTab m_wristTab;
-  private boolean m_enabled = true; 
-  private final DutyCycleEncoderSim m_encoderSim;
+  private boolean m_enabled = true;
+  private double m_pidPower = 0;
+
+  /** Physics Simulator for the wrist. takes in a motor voltage and calculates how much the arm will move. */
   private final SingleJointedArmSim m_armSim =
     new SingleJointedArmSim(
+      // to know how much the arm will move with a certain power, needs to know the motor, gear ratio, MOI, and length
       WristConstants.kGearBox, 
       WristConstants.kGearRatio,
       WristConstants.kMomentOfInertia,
       WristConstants.kLength,
+      // prevents moving past min/max
       WristConstants.kMinPos,
       WristConstants.kMaxPos,
-      true,
-      VecBuilder.fill(2*Math.PI/FalconConstants.kResolution)
-      );
-  private double m_pidPower = 0;
-
-  // Create a Mechanism2d display of the wrist
+      true, // will simulate gravity
+      VecBuilder.fill(2*Math.PI / FalconConstants.kResolution) // a deviation of one motor tick in the angle
+    );
   
   public Wrist(ShuffleboardTab wristTab) {
     // configure the motor.
@@ -57,8 +58,7 @@ public class Wrist extends SubsystemBase {
     m_wristTab = wristTab;
 
     // configure the encoder
-    m_absEncoder = new DutyCycleEncoder(WristConstants.kAbsEncoderPort); 
-    m_encoderSim = new DutyCycleEncoderSim(m_absEncoder);
+    m_absEncoder = new DutyCycleEncoder(WristConstants.kAbsEncoderPort);
 
     // make the PID controller
     m_pid = new PIDController(WristConstants.kP, WristConstants.kI, WristConstants.kD);
@@ -87,7 +87,7 @@ public class Wrist extends SubsystemBase {
   public void periodic() {
     if (m_enabled) {
       // calculate the PID power level
-      m_pidPower = m_pid.calculate(m_armSim.getAngleRads(), MathUtil.clamp(m_pid.getSetpoint(), WristConstants.kMinAngleRads, WristConstants.kMaxAngleRads));
+      m_pidPower = m_pid.calculate(getAbsEncoderPos(), MathUtil.clamp(m_pid.getSetpoint(), WristConstants.kMinAngleRads, WristConstants.kMaxAngleRads));
       // calculate the value of kGravityCompensation
       double feedforwardPower = WristConstants.kGravityCompensation * Math.cos(getAbsEncoderPos());
       // set the motor power
@@ -129,7 +129,7 @@ public class Wrist extends SubsystemBase {
    * @return the absolute encoder position in rotations, zero being facing forward
    */
   public double getAbsEncoderPos() {
-    if (RobotBase.isReal()) return m_armSim.getAngleRads();
+    if (RobotBase.isSimulation()) return m_armSim.getAngleRads();
     // inverted to make rotating towards stow positive
     // offset makes flat, facing out, zero
     return (-m_absEncoder.getAbsolutePosition() + WristConstants.kEncoderOffset) * 2 * Math.PI; 
@@ -155,8 +155,9 @@ public class Wrist extends SubsystemBase {
 
     // update the physics simulation, telling it how much time has passed, and it will calculate how much the wrist has moved
     m_armSim.update(Constants.kLoopTime);
+    // calculate the battery voltage based on the theoretical drawn amps.
     RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(m_armSim.getCurrentDrawAmps()));
-    m_encoderSim.setDistance(m_armSim.getAngleRads());
+    // update the drawing of the robot
     DrawMechanism.getInstance().setWristAngle(m_armSim.getAngleRads());
   }
 }
