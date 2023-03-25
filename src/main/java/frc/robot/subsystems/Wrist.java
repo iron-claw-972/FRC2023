@@ -41,8 +41,8 @@ public class Wrist extends SubsystemBase {
       WristConstants.kGearRatio,
       WristConstants.kMomentOfInertia,
       WristConstants.kLength,
-      WristConstants.kMinAngleRads,
-      WristConstants.kMaxAngleRads,
+      WristConstants.kMinPos,
+      WristConstants.kMaxPos,
       true,
       VecBuilder.fill(2*Math.PI/FalconConstants.kResolution)
       );
@@ -110,7 +110,7 @@ public class Wrist extends SubsystemBase {
       // calculate the PID power level
       m_pidPower = m_pid.calculate(getAbsEncoderPos(), MathUtil.clamp(m_pid.getSetpoint(), WristConstants.kMinPos, WristConstants.kMaxPos));
       // calculate the value of kGravityCompensation
-      double feedforwardPower = WristConstants.kGravityCompensation*Math.cos(getAbsEncoderPos()*Math.PI*2);
+      double feedforwardPower = WristConstants.kGravityCompensation*Math.cos(getAbsEncoderPos());
       // set the motor power
       setMotorPower(m_pidPower + feedforwardPower);
     }
@@ -153,7 +153,7 @@ public class Wrist extends SubsystemBase {
   public double getAbsEncoderPos() {
     // inverted to make rotating towards stow positive
     // offset makes flat, facing out, zero
-    return -m_absEncoder.getAbsolutePosition() + WristConstants.kEncoderOffset; 
+    return (-m_absEncoder.getAbsolutePosition() + WristConstants.kEncoderOffset) * 2 * Math.PI; 
   }
 
   public void updateLogs() {
