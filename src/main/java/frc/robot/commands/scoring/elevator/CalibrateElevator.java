@@ -1,5 +1,6 @@
 package frc.robot.commands.scoring.elevator;
 
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Elevator.ElevatorMode;
@@ -33,6 +34,6 @@ public class CalibrateElevator extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return m_elevator.isBottomLimitSwitchReached();
+    return m_elevator.isBottomLimitSwitchReached() || RobotBase.isSimulation();
   }
 }
