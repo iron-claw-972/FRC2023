@@ -16,6 +16,10 @@ public final class IntakeConstants {
   public static final double kIntakeConePower = -0.6;
   public static final double kOuttakeConePower = 0.6;
 
+  //TODO: Change this when the distance sensor is added
+  // Distance sensor value when the game piece is in the cneter
+  public static final double kCenterDist = 0.5;
+
   public static final NeutralMode kNeutralMode = NeutralMode.Brake;
 
   /**

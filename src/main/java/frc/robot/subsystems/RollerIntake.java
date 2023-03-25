@@ -121,4 +121,13 @@ public class RollerIntake extends SubsystemBase {
   public void setHeldGamePiece(GamePieceType m_type) {
     m_heldPiece = m_type;
   }
+
+  //TODO: Add this when the distance sensor is added
+  /**
+   * Returns the distance from the sensor
+   * @return Currently always returns the center position
+   */
+  public double getDistnace(){
+    return IntakeConstants.kCenterDist;
+  }
 } 

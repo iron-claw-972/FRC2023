@@ -5,7 +5,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.constants.FieldConstants;
+import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.VisionConstants;
+import frc.robot.subsystems.RollerIntake;
 
 /**
  * Class to store data about scoring locations
@@ -42,7 +44,7 @@ public class Node {
    * @param column
    *  column from field boundary to loading zone (1 to 9)
    */
-  public Node(Alliance alliance, int row, int column) {
+  public Node(RollerIntake intake, Alliance alliance, int row, int column) {
 
     this.alliance = alliance;
     this.row = row;
@@ -86,6 +88,8 @@ public class Node {
     if (alliance == Alliance.Blue) {
       rotation = Rotation2d.fromDegrees(180);
     }
+    double distanceSensorOffset = intake.getDistnace() - IntakeConstants.kCenterDist;
+    y += distanceSensorOffset * (alliance==Alliance.Blue?1:-1);
     scorePose = new Pose2d(x, y, rotation);
   }
 }
