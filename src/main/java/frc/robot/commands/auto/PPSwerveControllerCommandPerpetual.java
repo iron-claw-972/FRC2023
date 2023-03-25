@@ -13,9 +13,9 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
-public class PPSwerveControllerCommandContinuous extends PPSwerveControllerCommand{
+public class PPSwerveControllerCommandPerpetual extends PPSwerveControllerCommand{
 
-  public PPSwerveControllerCommandContinuous(
+  public PPSwerveControllerCommandPerpetual(
       PathPlannerTrajectory trajectory,
       Supplier<Pose2d> poseSupplier,
       PIDController xController,
@@ -35,7 +35,7 @@ public class PPSwerveControllerCommandContinuous extends PPSwerveControllerComma
       requirements);
   }
 
-  public PPSwerveControllerCommandContinuous(
+  public PPSwerveControllerCommandPerpetual(
       PathPlannerTrajectory trajectory,
       Supplier<Pose2d> poseSupplier,
       PIDController xController,
@@ -53,7 +53,7 @@ public class PPSwerveControllerCommandContinuous extends PPSwerveControllerComma
       requirements);
   }
 
-  public PPSwerveControllerCommandContinuous(
+  public PPSwerveControllerCommandPerpetual(
       PathPlannerTrajectory trajectory,
       Supplier<Pose2d> poseSupplier,
       SwerveDriveKinematics kinematics,
@@ -75,7 +75,7 @@ public class PPSwerveControllerCommandContinuous extends PPSwerveControllerComma
       requirements);
   }
 
-  public PPSwerveControllerCommandContinuous(
+  public PPSwerveControllerCommandPerpetual(
       PathPlannerTrajectory trajectory,
       Supplier<Pose2d> poseSupplier,
       SwerveDriveKinematics kinematics,
