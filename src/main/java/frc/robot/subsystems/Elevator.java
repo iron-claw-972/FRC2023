@@ -142,6 +142,9 @@ public class Elevator extends SubsystemBase {
    * @return position (m)
    */
   public double getPosition() {
+    // in simulation, assume we are at the desired position
+    if (RobotBase.isSimulation()) return m_desiredPosition;
+    // calculate extension based on falcon encoder
     return Conversions.falconToMeters(
       m_motor.getSelectedSensorPosition(),
       ElevatorConstants.kSpoolCircumference,
