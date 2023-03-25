@@ -249,7 +249,7 @@ public class DrawMechanism {
     public void setElevatorExtension(double length) {
         m_elevator.setLength(Units.metersToInches(length) + 4.0);
     }
-
+    
     /**
      * Set the wrist angle
      * @param angle the angle in rotations, zero being forward
@@ -259,7 +259,7 @@ public class DrawMechanism {
         double ang = MathUtil.clamp(angle, WristConstants.kMinPos, WristConstants.kMaxPos);
 
         // mech2d uses degrees
-        m_wrist.setAngle(Units.rotationsToDegrees(ang));
+        m_wrist.setAngle(Units.radiansToDegrees(ang));
     }
 
     public void setIntakeStatus(IntakeMode mode) {
