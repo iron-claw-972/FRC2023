@@ -56,9 +56,9 @@ public class ElevatorConstants {
     public static final double kTopWithConeGravityCompensation = kTopGravityCompensation;
 
     public static final int kContinuousCurrentLimit = 30; // FIXME: Elevator
-    public static final int kPeakCurrentLimit = 50;
+    public static final int kPeakCurrentLimit = 60;
     public static final double kPeakCurrentDuration = 0.1;
-    public static final boolean kEnableCurrentLimit = false;
+    public static final boolean kEnableCurrentLimit = true;
 
     // Max distance that the carriage can travel within the first stage
     public static final double kCarriageMaxDistance = Units.inchesToMeters(25 - 0.25); // The 0.25 inches is the bottom hardstop
