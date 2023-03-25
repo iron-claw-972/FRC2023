@@ -5,22 +5,14 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.DutyCycleEncoderSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
-import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
-import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
-import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 import frc.robot.constants.FalconConstants;
@@ -47,7 +39,6 @@ public class Wrist extends SubsystemBase {
       true,
       VecBuilder.fill(2*Math.PI/FalconConstants.kResolution)
       );
-  DrawMechanism m_drawMechanism = DrawMechanism.getInstance();
   private double m_pidPower = 0;
 
   // Create a Mechanism2d display of the wrist
@@ -64,9 +55,7 @@ public class Wrist extends SubsystemBase {
     m_motor.setInverted(WristConstants.kMotorInvert); 
 
     m_wristTab = wristTab;
-    
-    //SIM
-  
+
     // configure the encoder
     m_absEncoder = new DutyCycleEncoder(WristConstants.kAbsEncoderPort); 
     m_encoderSim = new DutyCycleEncoderSim(m_absEncoder);
@@ -99,12 +88,10 @@ public class Wrist extends SubsystemBase {
     if (m_enabled) {
       // calculate the PID power level
       m_pidPower = m_pid.calculate(m_armSim.getAngleRads(), MathUtil.clamp(m_pid.getSetpoint(), WristConstants.kMinAngleRads, WristConstants.kMaxAngleRads));
-      if (Constants.kLogging) LogManager.addDouble("Wrist/pidOutput", m_pidPower);
-      if (Constants.kUseTelemetry) SmartDashboard.putNumber("wrist pid output", m_pidPower);
       // calculate the value of kGravityCompensation
-      double feedforwardPower = WristConstants.kGravityCompensation*Math.cos(getAbsEncoderPos());
+      double feedforwardPower = WristConstants.kGravityCompensation * Math.cos(getAbsEncoderPos());
       // set the motor power
-      setMotorPower(m_pidPower+feedforwardPower);
+      setMotorPower(m_pidPower + feedforwardPower);
     }
 
     if (Constants.kLogging) updateLogs();
@@ -163,15 +150,13 @@ public class Wrist extends SubsystemBase {
   }
 
   public void simulationPeriodic() {
-
     // First, we set our "inputs" (voltages)    
     m_armSim.setInput(m_motor.get() * RobotController.getBatteryVoltage());
 
-    // Next, we update it. The standard loop time is 20ms.
-    m_armSim.update(0.02);
-    RoboRioSim.setVInVoltage(
-        BatterySim.calculateDefaultBatteryLoadedVoltage(m_armSim.getCurrentDrawAmps()));
+    // update the physics simulation, telling it how much time has passed, and it will calculate how much the wrist has moved
+    m_armSim.update(Constants.kLoopTime);
+    RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(m_armSim.getCurrentDrawAmps()));
     m_encoderSim.setDistance(m_armSim.getAngleRads());
-    m_drawMechanism.setWristAngle(m_armSim.getAngleRads());
+    DrawMechanism.getInstance().setWristAngle(m_armSim.getAngleRads());
   }
 }
