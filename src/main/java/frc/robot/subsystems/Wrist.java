@@ -39,11 +39,11 @@ public class Wrist extends SubsystemBase {
   private final SingleJointedArmSim m_armSim =
     new SingleJointedArmSim(
       WristConstants.kGearBox, 
-      WristConstants.kArmReduction,
-      WristConstants.kMOI,
-      WristConstants.kArmLength,
-      WristConstants.kMinAngleRads,
-      WristConstants.kMaxAngleRads,
+      WristConstants.kGearRatio,
+      WristConstants.kMomentOfInertia,
+      WristConstants.kLength,
+      WristConstants.kMinPos,
+      WristConstants.kMaxPos,
       true,
       VecBuilder.fill(2*Math.PI/FalconConstants.kResolution)
       );
@@ -69,8 +69,6 @@ public class Wrist extends SubsystemBase {
   
     // configure the encoder
     m_absEncoder = new DutyCycleEncoder(WristConstants.kAbsEncoderPort); 
-    m_absEncoder.setPositionOffset(WristConstants.kEncoderOffset);
-    m_absEncoder.setDistancePerRotation(2*Math.PI);
     m_encoderSim = new DutyCycleEncoderSim(m_absEncoder);
 
     // make the PID controller
@@ -144,9 +142,10 @@ public class Wrist extends SubsystemBase {
    * @return the absolute encoder position in rotations, zero being facing forward
    */
   public double getAbsEncoderPos() {
+    if (RobotBase.isReal()) return m_armSim.getAngleRads();
     // inverted to make rotating towards stow positive
     // offset makes flat, facing out, zero
-    return !RobotBase.isSimulation()?-m_absEncoder.getAbsolutePosition() + WristConstants.kEncoderOffset:getSimRads(); 
+    return (-m_absEncoder.getAbsolutePosition() + WristConstants.kEncoderOffset) * 2 * Math.PI; 
   }
 
   public void updateLogs() {
@@ -174,12 +173,5 @@ public class Wrist extends SubsystemBase {
         BatterySim.calculateDefaultBatteryLoadedVoltage(m_armSim.getCurrentDrawAmps()));
     m_encoderSim.setDistance(m_armSim.getAngleRads());
     m_drawMechanism.setWristAngle(m_armSim.getAngleRads());
-  }
-
-  public double getMotorvoltage(){
-    return m_motor.getMotorOutputVoltage();
-  }
-  public double getSimRads(){
-    return m_armSim.getAngleRads();
   }
 }
