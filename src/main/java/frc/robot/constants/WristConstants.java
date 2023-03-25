@@ -5,7 +5,6 @@ import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.RobotBase;
 
 public class WristConstants {
   public static final int kMotorID = 2;
@@ -16,9 +15,10 @@ public class WristConstants {
 
   public static final double kP = 12;
   public static final double kI = 0;
-  public static final double kD = RobotBase.isSimulation()? 1:0.1;
+  public static final double kD = 0;
   public static final double kF = 0;
 
+  /** the gravity compensation amount as a percent of full motor power, scaled by a cosine term (this value is the max FF) */
   public static final double kGravityCompensation = 0.08;
 
   public static final double kTolerance = 0.06;
@@ -55,34 +55,11 @@ public class WristConstants {
   /** Wrist position angle maximum (radians) */
   public static final double kMaxPos = kStowPos;
 
-  
   //SIM
-  public static final double kArmReduction = 20/1*62/34*48/18;
-  public static final double kArmLength= 16.1;
-  public static final double kArmMass=0;
-  public static final double kMinAngleRads = 0;
-  public static final double kMaxAngleRads = kStowPos;//0.96
-  public static final double kMOI = 24.109;
-
-  public static final int kMotorPort = 0;
-  public static final int kEncoderAChannel = 0;
-  public static final int kEncoderBChannel = 1;
-  public static final int kJoystickPort = 0;
-
-  public static final String kArmPositionKey = "ArmPosition";
-  public static final String kArmPKey = "ArmP";
+  // to know how much the arm will move with a certain power, the sim needs to know the motor, gear ratio, MOI, and length
   public static final DCMotor kGearBox = DCMotor.getFalcon500(1);
-
-  // The P gain for the PID controller that drives this arm.
-  public static final double kDefaultArmKp = 50.0;
-  public static final double kDefaultArmSetpointDegrees = 75.0;
-
-  // distance per pulse = (angle per revolution) / (pulses per revolution)
-  //  = (2 * PI rads) / (4096 pulses)
-  public static final double kArmEncoderDistPerPulse = 2.0 * Math.PI / 4096;
-  public static final double kMaxArmExtensionPos = 0.49;
-  public static final double kGearRatio = 100/1;
-  public static final double kLength = 16.1;
+  public static final double kGearRatio = 20/1 * 62/34 * 48/18;
   // moment of inertia represents how hard it is to angularly accelerate (ie spin) something
   public static final double kMomentOfInertia = 24.109;
+  public static final double kLength = 16.1;
 }

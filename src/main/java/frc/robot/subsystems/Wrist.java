@@ -87,7 +87,7 @@ public class Wrist extends SubsystemBase {
   public void periodic() {
     if (m_enabled) {
       // calculate the PID power level
-      m_pidPower = m_pid.calculate(getAbsEncoderPos(), MathUtil.clamp(m_pid.getSetpoint(), WristConstants.kMinAngleRads, WristConstants.kMaxAngleRads));
+      m_pidPower = m_pid.calculate(getAbsEncoderPos(), MathUtil.clamp(m_pid.getSetpoint(), WristConstants.kMinPos, WristConstants.kMaxPos));
       // calculate the value of kGravityCompensation
       double feedforwardPower = WristConstants.kGravityCompensation * Math.cos(getAbsEncoderPos());
       // set the motor power
