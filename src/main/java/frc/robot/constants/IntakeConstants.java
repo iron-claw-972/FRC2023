@@ -24,6 +24,12 @@ public final class IntakeConstants {
   // TODO: Set these values to tested values
   public static final double kCubeIntakeCurrentStopPoint = 5;
   public static final double kConeIntakeCurrentStopPoint = 5;
+
+  //assuming PD 2
+  public static final int kContinuousCurrentLimit = 20;
+  public static final int kPeakCurrentLimit = 30;
+  public static final double kPeakCurrentDuration = 0.1;
+  public static final boolean kEnableCurrentLimit = true;
   
   /**
    * How many seconds the outtake will run for. This needs to be tested.

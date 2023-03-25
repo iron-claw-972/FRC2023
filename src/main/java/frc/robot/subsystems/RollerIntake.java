@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj.RobotBase;
@@ -36,6 +37,12 @@ public class RollerIntake extends SubsystemBase {
 
   public RollerIntake(ShuffleboardTab intakeTab) {
     m_intakeMotor = MotorFactory.createTalonFX(IntakeConstants.kIntakeMotorId, Constants.kRioCAN);
+    m_intakeMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(
+      IntakeConstants.kEnableCurrentLimit,
+      IntakeConstants.kContinuousCurrentLimit,
+      IntakeConstants.kPeakCurrentLimit,
+      IntakeConstants.kPeakCurrentDuration
+    ));
     m_intakeMotor.setNeutralMode(IntakeConstants.kNeutralMode);
     m_intakeMotor.enableVoltageCompensation(true);
 
