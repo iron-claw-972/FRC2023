@@ -111,10 +111,10 @@ public class Wrist extends SubsystemBase {
   public void setMotorPower(double power) {
     power = MathUtil.clamp(power, -WristConstants.kMotorPowerClamp, WristConstants.kMotorPowerClamp);
     
-    if (getAbsEncoderPos() <= WristConstants.kMinPos && power < 0 && !RobotBase.isSimulation()) {
+    if (getAbsEncoderPos() <= WristConstants.kMinPos && power < 0) {
       power = 0;
     }
-    if (getAbsEncoderPos() >= WristConstants.kMaxPos && power > 0 && !RobotBase.isSimulation()) {
+    if (getAbsEncoderPos() >= WristConstants.kMaxPos && power > 0) {
       power = 0;
     }
     
