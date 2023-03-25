@@ -373,7 +373,7 @@ public class Drivetrain extends SubsystemBase {
   public void updateOdometry() {
     // Updates pose based on encoders and gyro. NOTE: must use yaw directly from gyro!
     m_poseEstimator.update(Rotation2d.fromDegrees(m_pigeon.getYaw()), getModulePositions());
-    m_mechanism.setDistanceToGrid(m_poseEstimator.getEstimatedPosition().getX());
+    m_mechanism.setDistanceToGrid(Math.max(m_poseEstimator.getEstimatedPosition().getX(), 0));
     // Updates pose based on vision
     if (m_visionEnabled) {
 
