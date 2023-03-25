@@ -41,6 +41,7 @@ import frc.robot.constants.Constants;
 import frc.robot.constants.VisionConstants;
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.constants.swerve.ModuleConstants;
+import frc.robot.util.DrawMechanism;
 import frc.robot.util.LogManager;
 import frc.robot.util.Vision;
 /** 
@@ -58,6 +59,7 @@ public class Drivetrain extends SubsystemBase {
 
   // Odometry
   private final SwerveDrivePoseEstimator m_poseEstimator;
+  private final DrawMechanism m_mechanism;
 
   // This is left intentionally public
   public final Module[] m_modules;
@@ -156,6 +158,7 @@ public class Drivetrain extends SubsystemBase {
       new Pose2d() // initial Odometry Location
     );
     m_poseEstimator.setVisionMeasurementStdDevs(VisionConstants.kBaseVisionPoseStdDevs);
+    m_mechanism = DrawMechanism.getInstance();
 
     m_xController = new PIDController(DriveConstants.kTranslationalP, 0, DriveConstants.kTranslationalD);
     m_yController = new PIDController(DriveConstants.kTranslationalP, 0, DriveConstants.kTranslationalD);
@@ -370,7 +373,7 @@ public class Drivetrain extends SubsystemBase {
   public void updateOdometry() {
     // Updates pose based on encoders and gyro. NOTE: must use yaw directly from gyro!
     m_poseEstimator.update(Rotation2d.fromDegrees(m_pigeon.getYaw()), getModulePositions());
-
+    m_mechanism.setDistanceToGrid(m_poseEstimator.getEstimatedPosition().getX());
     // Updates pose based on vision
     if (m_visionEnabled) {
 
