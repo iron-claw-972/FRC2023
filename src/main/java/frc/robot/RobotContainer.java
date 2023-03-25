@@ -299,7 +299,10 @@ public class RobotContainer {
    * @param gamePiece the type of game piece
    */
   public void updateHeldGamePiece() {
-    m_intake.setHeldGamePiece(GamePieceType.CONE);//m_preloadedGamePiece.getSelected());
+    if(m_intake != null)
+    {
+      m_intake.setHeldGamePiece(GamePieceType.CONE);/
+    }
   }
 
 }
