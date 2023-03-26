@@ -10,8 +10,10 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot.RobotId;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.auto.AutoDeposit;
@@ -230,52 +232,130 @@ public class RobotContainer {
 
     if (m_drive != null && m_elevator != null && m_wrist != null && m_intake != null) {
 
-      m_autoCommand.addOption("ROUTINE 1: Grid 4 Engage Hybrid", new AutoDeposit(Position.BOTTOM, m_elevator, m_wrist, m_intake).andThen(new PathPlannerCommand("Grid 4 Engage No Mobility", 0, m_drive, true)));
-      m_autoCommand.addOption("ROUTINE 2: Grid 4 Engage Mid", new AutoDeposit(Position.MIDDLE, m_elevator, m_wrist, m_intake).andThen(new PathPlannerCommand("Grid 4 Engage No Mobility", 0, m_drive, true)));
-      m_autoCommand.addOption("ROUTINE 3: Grid 4 Engage Top", new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake).andThen(new PathPlannerCommand("Grid 4 Engage No Mobility", 0, m_drive, true)));
+      m_autoCommand.addOption("ROUTINE 1: Grid 4 Engage Hybrid", Commands.sequence(
+          new AutoDeposit(Position.BOTTOM, m_elevator, m_wrist, m_intake),
+          new PathPlannerCommand("Grid 4 Engage No Mobility", 0, m_drive, true)));
+      m_autoCommand.addOption("ROUTINE 2: Grid 4 Engage Mid", Commands.sequence(
+          new AutoDeposit(Position.MIDDLE, m_elevator, m_wrist, m_intake),
+          new PathPlannerCommand("Grid 4 Engage No Mobility", 0, m_drive, true)));
+      m_autoCommand.addOption("ROUTINE 3: Grid 4 Engage Top", Commands.sequence(
+          new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake),
+          new PathPlannerCommand("Grid 4 Engage No Mobility", 0, m_drive, true)));
 
-      m_autoCommand.addOption("ROUTINE 4: Grid 6 Engage Hybrid", new AutoDeposit(Position.BOTTOM, m_elevator, m_wrist, m_intake).andThen(new PathPlannerCommand("Grid 6 Engage No Mobility", 0, m_drive, true)));
-      m_autoCommand.addOption("ROUTINE 5: Grid 6 Engage Mid", new AutoDeposit(Position.MIDDLE, m_elevator, m_wrist, m_intake).andThen(new PathPlannerCommand("Grid 6 Engage No Mobility", 0, m_drive, true)));
-      m_autoCommand.addOption("ROUTINE 6: Grid 6 Engage Top", new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake).andThen(new PathPlannerCommand("Grid 6 Engage No Mobility", 0, m_drive, true)));
+      m_autoCommand.addOption("ROUTINE 4: Grid 6 Engage Hybrid", Commands.sequence(
+          new AutoDeposit(Position.BOTTOM, m_elevator, m_wrist, m_intake),
+          new PathPlannerCommand("Grid 6 Engage No Mobility", 0, m_drive, true)));
+      m_autoCommand.addOption("ROUTINE 5: Grid 6 Engage Mid", Commands.sequence(
+          new AutoDeposit(Position.MIDDLE, m_elevator, m_wrist, m_intake),
+          new PathPlannerCommand("Grid 6 Engage No Mobility", 0, m_drive, true)));
+      m_autoCommand.addOption("ROUTINE 6: Grid 6 Engage Top", Commands.sequence(
+          new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake),
+          new PathPlannerCommand("Grid 6 Engage No Mobility", 0, m_drive, true)));
 
-      m_autoCommand.addOption("ROUTINE 7: Grid 1 Mobility Hybrid", new AutoDeposit(Position.BOTTOM, m_elevator, m_wrist, m_intake).andThen(new PathPlannerCommand("Grid 1 Mobility", 0, m_drive, true)));
-      m_autoCommand.addOption("ROUTINE 8: Grid 1 Mobility Mid", new AutoDeposit(Position.MIDDLE, m_elevator, m_wrist, m_intake).andThen(new PathPlannerCommand("Grid 1 Mobility", 0, m_drive, true)));
-      m_autoCommand.addOption("ROUTINE 9: Grid 1 Mobility Top", new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake).andThen(new PathPlannerCommand("Grid 1 Mobility", 0, m_drive, true)));
+      m_autoCommand.addOption("ROUTINE 7: Grid 1 Mobility Hybrid", Commands.sequence(
+          new AutoDeposit(Position.BOTTOM, m_elevator, m_wrist, m_intake),
+          new PathPlannerCommand("Grid 1 Mobility", 0, m_drive, true)));
+      m_autoCommand.addOption("ROUTINE 8: Grid 1 Mobility Mid", Commands.sequence(
+          new AutoDeposit(Position.MIDDLE, m_elevator, m_wrist, m_intake),
+          new PathPlannerCommand("Grid 1 Mobility", 0, m_drive, true)));
+      m_autoCommand.addOption("ROUTINE 9: Grid 1 Mobility Top", Commands.sequence(
+          new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake),
+          new PathPlannerCommand("Grid 1 Mobility", 0, m_drive, true)));
 
-      m_autoCommand.addOption("ROUTINE 10: Grid 9 Mobility Hybrid", new AutoDeposit(Position.BOTTOM, m_elevator, m_wrist, m_intake).andThen(new PathPlannerCommand("Grid 9 Mobility", 0, m_drive, true)));
-      m_autoCommand.addOption("ROUTINE 11: Grid 9 Mobility Mid", new AutoDeposit(Position.MIDDLE, m_elevator, m_wrist, m_intake).andThen(new PathPlannerCommand("Grid 9 Mobility", 0, m_drive, true)));
-      m_autoCommand.addOption("ROUTINE 12: Grid 9 Mobility Top", new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake).andThen(new PathPlannerCommand("Grid 9 Mobility", 0, m_drive, true)));
+      m_autoCommand.addOption("ROUTINE 10: Grid 9 Mobility Hybrid", Commands.sequence(
+          new AutoDeposit(Position.BOTTOM, m_elevator, m_wrist, m_intake),
+          new PathPlannerCommand("Grid 9 Mobility", 0, m_drive, true)));
+      m_autoCommand.addOption("ROUTINE 11: Grid 9 Mobility Mid", Commands.sequence(
+          new AutoDeposit(Position.MIDDLE, m_elevator, m_wrist, m_intake),
+          new PathPlannerCommand("Grid 9 Mobility", 0, m_drive, true)));
+      m_autoCommand.addOption("ROUTINE 12: Grid 9 Mobility Top", Commands.sequence(
+          new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake),
+          new PathPlannerCommand("Grid 9 Mobility", 0, m_drive, true)));
 
-      m_autoCommand.addOption("ROUTINE 13: Grid 1 Engage Hybrid", new AutoDeposit(Position.BOTTOM, m_elevator, m_wrist, m_intake).andThen(new PathPlannerCommand("Grid 1 Engage", 0, m_drive, true)));
-      m_autoCommand.addOption("ROUTINE 14: Grid 1 Engage Mid", new AutoDeposit(Position.MIDDLE, m_elevator, m_wrist, m_intake).andThen(new PathPlannerCommand("Grid 1 Engage", 0, m_drive, true)));
-      m_autoCommand.addOption("ROUTINE 15: Grid 1 Engage Top", new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake).andThen(new PathPlannerCommand("Grid 1 Engage", 0, m_drive, true)));
+      m_autoCommand.addOption("ROUTINE 13: Grid 1 Engage Hybrid", Commands.sequence(
+          new AutoDeposit(Position.BOTTOM, m_elevator, m_wrist, m_intake),
+          new PathPlannerCommand("Grid 1 Engage", 0, m_drive, true)));
+      m_autoCommand.addOption("ROUTINE 14: Grid 1 Engage Mid", Commands.sequence(
+          new AutoDeposit(Position.MIDDLE, m_elevator, m_wrist, m_intake),
+          new PathPlannerCommand("Grid 1 Engage", 0, m_drive, true)));
+      m_autoCommand.addOption("ROUTINE 15: Grid 1 Engage Top", Commands.sequence(
+          new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake),
+          new PathPlannerCommand("Grid 1 Engage", 0, m_drive, true)));
 
-      m_autoCommand.addOption("ROUTINE 16: Grid 9 Engage Hybrid", new AutoDeposit(Position.BOTTOM, m_elevator, m_wrist, m_intake).andThen(new PathPlannerCommand("Grid 9 Engage", 0, m_drive, true)));
-      m_autoCommand.addOption("ROUTINE 17: Grid 9 Engage Mid", new AutoDeposit(Position.MIDDLE, m_elevator, m_wrist, m_intake).andThen(new PathPlannerCommand("Grid 9 Engage", 0, m_drive, true)));
-      m_autoCommand.addOption("ROUTINE 18: Grid 9 Engage Top", new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake).andThen(new PathPlannerCommand("Grid 9 Engage", 0, m_drive, true)));
+      m_autoCommand.addOption("ROUTINE 16: Grid 9 Engage Hybrid", Commands.sequence(
+          new AutoDeposit(Position.BOTTOM, m_elevator, m_wrist, m_intake),
+          new PathPlannerCommand("Grid 9 Engage", 0, m_drive, true)));
+      m_autoCommand.addOption("ROUTINE 17: Grid 9 Engage Mid", Commands.sequence(
+          new AutoDeposit(Position.MIDDLE, m_elevator, m_wrist, m_intake),
+          new PathPlannerCommand("Grid 9 Engage", 0, m_drive, true)));
+      m_autoCommand.addOption("ROUTINE 18: Grid 9 Engage Top", Commands.sequence(
+          new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake),
+          new PathPlannerCommand("Grid 9 Engage", 0, m_drive, true)));
 
-      m_autoCommand.addOption("ROUTINE 19: Grid 1 Intake Cone Top", new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake).andThen(new PathPlannerCommand("Grid 1 Mobility", 0, m_drive, true)).alongWith(new PositionIntake(m_elevator, m_wrist, () -> true, Position.INTAKE)).andThen(new IntakeGamePiece(m_intake, () -> true, false)));
-      m_autoCommand.addOption("ROUTINE 20: Grid 1 Intake Cube Top", new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake).andThen(new PathPlannerCommand("Grid 1 Mobility", 0, m_drive, true)).alongWith(new PositionIntake(m_elevator, m_wrist, () -> false, Position.INTAKE)).andThen(new IntakeGamePiece(m_intake, () -> false, false)));
+      m_autoCommand.addOption("ROUTINE 19: Grid 1 Intake Cone Top",
+          Commands.sequence(
+              new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake),
+              new PathPlannerCommand("Grid 1 Mobility", 0, m_drive, true)
+                  .alongWith(new PositionIntake(m_elevator, m_wrist, () -> true, Position.INTAKE)),
+              new IntakeGamePiece(m_intake, () -> true, false)));
+      m_autoCommand.addOption("ROUTINE 20: Grid 1 Intake Cube Top",
+          Commands.sequence(
+              new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake),
+              new PathPlannerCommand("Grid 1 Mobility", 0, m_drive, true)
+                  .alongWith(new PositionIntake(m_elevator, m_wrist, () -> false, Position.INTAKE)),
+              new IntakeGamePiece(m_intake, () -> false, false)));
 
-      m_autoCommand.addOption("ROUTINE 21: Grid 9 Intake Cone Top", new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake).andThen(new PathPlannerCommand("Grid 9 Intake", 0, m_drive, true)).alongWith(new PositionIntake(m_elevator, m_wrist, () -> true, Position.INTAKE)).andThen(new IntakeGamePiece(m_intake, () -> true, false)));
-      m_autoCommand.addOption("ROUTINE 22: Grid 9 Intake Cube Top", new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake).andThen(new PathPlannerCommand("Grid 9 Intake", 0, m_drive, true)).alongWith(new PositionIntake(m_elevator, m_wrist, () -> false, Position.INTAKE)).andThen(new IntakeGamePiece(m_intake, () -> false, false)));
+      m_autoCommand.addOption("ROUTINE 21: Grid 9 Intake Cone Top",
+          Commands.sequence(
+              new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake),
+              new PathPlannerCommand("Grid 9 Intake", 0, m_drive, true)
+                  .alongWith(new PositionIntake(m_elevator, m_wrist, () -> true, Position.INTAKE)),
+              new IntakeGamePiece(m_intake, () -> true, false)));
+      m_autoCommand.addOption("ROUTINE 22: Grid 9 Intake Cube Top",
+          Commands.sequence(
+              new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake),
+              new PathPlannerCommand("Grid 9 Intake", 0, m_drive, true)
+                  .alongWith(new PositionIntake(m_elevator, m_wrist, () -> false, Position.INTAKE)),
+              new IntakeGamePiece(m_intake, () -> false, false)));
 
-      m_autoCommand.addOption("ROUTINE 23: Grid 1 Two Piece Cone Top", new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake).andThen(new PathPlannerCommand("Grid 1 Two Piece", 0, m_drive, true)).alongWith(new PositionIntake(m_elevator, m_wrist, () -> true, Position.INTAKE)).andThen(new IntakeGamePiece(m_intake, () -> true, false)).andThen(new PathPlannerCommand("Grid 1 Two Piece", 1, m_drive, true)));
-      m_autoCommand.addOption("ROUTINE 24: Grid 1 Two Piece Cube Top", new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake).andThen(new PathPlannerCommand("Grid 1 Two Piece", 0, m_drive, true)).alongWith(new PositionIntake(m_elevator, m_wrist, () -> false, Position.INTAKE)).andThen(new IntakeGamePiece(m_intake, () -> false, false)).andThen(new PathPlannerCommand("Grid 1 Two Piece", 1, m_drive, true)));
+      m_autoCommand.addOption("ROUTINE 23: Grid 1 Two Piece Cone Top",
+          Commands.sequence(
+              new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake),
+              new PathPlannerCommand("Grid 1 Two Piece", 0, m_drive, true)
+                  .alongWith(new PositionIntake(m_elevator, m_wrist, () -> true, Position.INTAKE)),
+              new IntakeGamePiece(m_intake, () -> true, false),
+              new PathPlannerCommand("Grid 1 Two Piece", 1, m_drive, true)
+                  .alongWith(new PositionIntake(m_elevator, m_wrist, () -> true, Position.INTAKE)),
+              new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake, () -> true)));
+      m_autoCommand.addOption("ROUTINE 24: Grid 1 Two Piece Cube Top",
+          Commands.sequence(
+              new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake),
+              new PathPlannerCommand("Grid 1 Two Piece", 0, m_drive, true)
+                  .alongWith(new PositionIntake(m_elevator, m_wrist, () -> false, Position.INTAKE)),
+              new IntakeGamePiece(m_intake, () -> false, false),
+              new PathPlannerCommand("Grid 1 Two Piece", 1, m_drive, true)
+                  .alongWith(new PositionIntake(m_elevator, m_wrist, () -> false, Position.INTAKE)),
+              new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake, () -> false)));
 
-      m_autoCommand.addOption("ROUTINE 25: Grid 9 Two Piece Cone Top", new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake).andThen(new PathPlannerCommand("Grid 9 Two Piece", 0, m_drive, true)).alongWith(new PositionIntake(m_elevator, m_wrist, () -> true, Position.INTAKE)).andThen(new IntakeGamePiece(m_intake, () -> true, false)).andThen(new PathPlannerCommand("Grid 9 Two Piece", 1, m_drive, true)).alongWith(new PositionIntake(m_elevator, m_wrist, () -> true, Position.TOP)).andThen(new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake)));
-      m_autoCommand.addOption("ROUTINE 26: Grid 9 Two Piece Cube Top", new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake).andThen(new PathPlannerCommand("Grid 9 Two Piece", 0, m_drive, true)).alongWith(new PositionIntake(m_elevator, m_wrist, () -> false, Position.INTAKE)).andThen(new IntakeGamePiece(m_intake, () -> false, false)).andThen(new PathPlannerCommand("Grid 9 Two Piece", 1, m_drive, true)).alongWith(new PositionIntake(m_elevator, m_wrist, () -> false, Position.TOP)).andThen(new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake)));
-      // m_autoCommand.addOption("NO DEPOSIT Grid 6 Engage (no mobility)",
-      //   new PathPlannerCommand("Grid 6 Engage No Mobility", 0, m_drive, true).andThen(
-      //   new PathPlannerCommand("Grid 6 Engage No Mobility", 1, m_drive, true)).andThen(
-      //   new BalanceCommand(m_drive))
-      // );
+      m_autoCommand.addOption("ROUTINE 25: Grid 9 Two Piece Cone Top",
+          Commands.sequence(
+              new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake),
+              new PathPlannerCommand("Grid 9 Two Piece", 0, m_drive, true)
+                  .alongWith(new PositionIntake(m_elevator, m_wrist, () -> true, Position.INTAKE)),
+              new IntakeGamePiece(m_intake, () -> true, false),
+              new PathPlannerCommand("Grid 9 Two Piece", 1, m_drive, true)
+                  .alongWith(new PositionIntake(m_elevator, m_wrist, () -> true, Position.INTAKE)),
+              new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake, () -> true)));
 
-      // m_autoCommand.addOption("NO DEPOSIT Grid 1 Engage",
-      //   new PathPlannerCommand("Grid 1 Engage", 0, m_drive, true).andThen(
-      //   new PathPlannerCommand("Grid 1 Engage", 1, m_drive, true)).andThen(
-      //   new BalanceCommand(m_drive))
-      // );
+      m_autoCommand.addOption("ROUTINE 26: Grid 9 Two Piece Cube Top",
+          Commands.sequence(
+              new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake),
+              new PathPlannerCommand("Grid 9 Two Piece", 0, m_drive, true)
+                  .alongWith(new PositionIntake(m_elevator, m_wrist, () -> false, Position.INTAKE)),
+              new IntakeGamePiece(m_intake, () -> false, false),
+              new PathPlannerCommand("Grid 9 Two Piece", 1, m_drive, true)
+                  .alongWith(new PositionIntake(m_elevator, m_wrist, () -> false, Position.INTAKE)),
+              new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake, () -> false)));
     }
   }
 

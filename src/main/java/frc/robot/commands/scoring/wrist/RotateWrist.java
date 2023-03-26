@@ -1,6 +1,7 @@
 package frc.robot.commands.scoring.wrist;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.subsystems.Wrist;
 
 public class RotateWrist extends CommandBase {
