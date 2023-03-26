@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.pathplanner.lib.PathPoint;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.commands.auto.PathPlannerCommand;
 import frc.robot.controls.Operator;
@@ -14,7 +16,7 @@ public class GoToNode extends CommandBase {
 
   private Operator m_operator;
   private Drivetrain m_drive;
-  private PathPlannerCommand m_command;
+  private CommandBase m_command;
 
   /**
    * Uses PathPlanner to go to the selected node
@@ -35,20 +37,35 @@ public class GoToNode extends CommandBase {
     PathPoint point1 = PathPoint.fromCurrentHolonomicState(
       m_drive.getPose(),
       m_drive.getChassisSpeeds()
-    );
+    ).withControlLengths(0.001, 0.001);
+
+    // get the desired score pose
+    Pose2d scorePose = m_operator.getSelectedNode().scorePose;
     // Uses the operator's selected node to find the end point for the path
     PathPoint point2 = new PathPoint(
-      m_operator.getSelectedNode().scorePose.getTranslation(),
-      m_operator.getSelectedNode().scorePose.getRotation(),
-      m_operator.getSelectedNode().scorePose.getRotation(),
+      scorePose.getTranslation(),
+      scorePose.getRotation(),
+      scorePose.getRotation(),
       0
-    );
+    ).withControlLengths(0.001, 0.001);
+
     // Creates the command using the two points
     m_command = new PathPlannerCommand(
       new ArrayList<PathPoint>(List.of(point1, point2)),
       m_drive,
       false
     );
+
+    double dist = m_drive.getPose().minus(scorePose).getTranslation().getNorm();
+    if (dist > 3) {
+      m_command = new DoNothing();
+      DriverStation.reportWarning("Alignment Path too long, doing nothing, GoToNode.java", false);
+    }
+    if (dist < 0.2) {
+      m_command = new DoNothing();
+      DriverStation.reportWarning("Alignment Path too short, doing nothing, GoToNode.java", false);
+    }
+
     // Starts the command
     m_command.schedule();
   }

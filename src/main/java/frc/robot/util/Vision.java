@@ -9,6 +9,7 @@ import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
@@ -26,6 +27,7 @@ import frc.robot.commands.vision.CalculateStdDevs;
 import frc.robot.commands.vision.TestVisionAlignment;
 import frc.robot.commands.vision.TestVisionDistance;
 import frc.robot.constants.FieldConstants;
+import frc.robot.constants.VisionConstants;
 import frc.robot.subsystems.Drivetrain;
 
 public class Vision {
@@ -74,7 +76,7 @@ public class Vision {
       // April tags that don't exist might return a result that is present but doesn't have a pose
       if (estimatedPose.isPresent() && estimatedPose.get().estimatedPose!=null) {
         estimatedPoses.add(estimatedPose.get());
-        LogManager.addDoubleArray("Vison/estimated pose2d", new double[]{
+        LogManager.addDoubleArray("Vison/camera " + i + "/estimated pose2d", new double[] {
           estimatedPose.get().estimatedPose.getX(),
           estimatedPose.get().estimatedPose.getY(),
           estimatedPose.get().estimatedPose.getRotation().getZ()
@@ -166,7 +168,8 @@ public class Vision {
         camera, 
         robotToCam
       );
-      photonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.CLOSEST_TO_REFERENCE_POSE);
+      photonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+      photonPoseEstimator.setReferencePose(new Pose2d());
     }
   
     /**
@@ -177,6 +180,18 @@ public class Vision {
     public Optional<EstimatedRobotPose> getEstimatedPose(Pose2d referencePose) {
       photonPoseEstimator.setReferencePose(referencePose);
       Optional<EstimatedRobotPose> pose = photonPoseEstimator.update();
+      
+      // if there is a pose, check the ambiguity isn't too high
+      if (pose.isPresent()) {
+        // go through all the targets
+        List<PhotonTrackedTarget> targetsUsed = pose.get().targetsUsed;
+        for (int i = 0; i < targetsUsed.size(); i++) {
+          // check their ambiguity, if it is above the highest wanted amount, return nothing
+          if (targetsUsed.get(i).getPoseAmbiguity() > VisionConstants.highestAmbiguity) {
+            return Optional.empty();
+          }
+        }
+      }
       return pose;
     }
   }
