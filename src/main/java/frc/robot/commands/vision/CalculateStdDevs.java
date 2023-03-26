@@ -6,7 +6,6 @@ import org.photonvision.EstimatedRobotPose;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.Drivetrain;
@@ -17,7 +16,6 @@ import frc.robot.util.Vision;
  * Calculates standard deviations for vision
  */
 public class CalculateStdDevs extends CommandBase {
-  private final ShuffleboardTab m_tab;
   private final Drivetrain m_drive;
   private final Vision m_vision;
   private ArrayList<Pose2d> m_poses;
@@ -27,12 +25,10 @@ public class CalculateStdDevs extends CommandBase {
   /**
    * Constructor for CalculateStdDevs
    * @param time How long to run the command, also how many poses to use
-   * @param shuffleboardTab The shuffleboard tab to output to
    * @param drive The drivetrain
    * @param vision The vision
    */
-  public CalculateStdDevs(int time, ShuffleboardTab shuffleboardTab, Drivetrain drive, Vision vision) {
-    m_tab = shuffleboardTab;
+  public CalculateStdDevs(int time, Drivetrain drive, Vision vision) {
     m_drive = drive;
     m_vision = vision;
     m_arrayLength = time;
@@ -119,12 +115,12 @@ public class CalculateStdDevs extends CommandBase {
      */
     
     // Calculate distance to closest April tag
-    double closest = Double.POSITIVE_INFINITY;
+    double closest = 1000000;
     ArrayList<EstimatedRobotPose> estimatedPoses = m_vision.getEstimatedPoses(m_drive.getPose());
     for (int i = 0; i < estimatedPoses.size(); i++) {
       for (int j = 0; j < estimatedPoses.get(i).targetsUsed.size(); j++) {
         double distance = estimatedPoses.get(i).targetsUsed.get(j).getBestCameraToTarget()
-        .getTranslation().toTranslation2d().getNorm();
+          .getTranslation().toTranslation2d().getNorm();
         closest = Math.min(closest, distance);
       }
     }
