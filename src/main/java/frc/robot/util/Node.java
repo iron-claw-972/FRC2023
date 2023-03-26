@@ -90,6 +90,8 @@ public class Node {
     }
     double distanceSensorOffset = intake==null?0:(intake.getDistnace() - IntakeConstants.kCenterDist);
     y += distanceSensorOffset * (alliance==Alliance.Blue?1:-1);
+    //TODO: move this somewhere else
+    y += -0.07;
     scorePose = new Pose2d(x, y, rotation);
   }
 }
