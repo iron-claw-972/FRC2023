@@ -88,7 +88,7 @@ public class Node {
     if (alliance == Alliance.Blue) {
       rotation = Rotation2d.fromDegrees(180);
     }
-    double distanceSensorOffset = intake.getDistnace() - IntakeConstants.kCenterDist;
+    double distanceSensorOffset = intake==null?0:(intake.getDistnace() - IntakeConstants.kCenterDist);
     y += distanceSensorOffset * (alliance==Alliance.Blue?1:-1);
     scorePose = new Pose2d(x, y, rotation);
   }
