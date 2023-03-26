@@ -44,7 +44,7 @@ import frc.robot.constants.swerve.ModuleConstants;
 import frc.robot.util.LogManager;
 import frc.robot.util.Vision;
 
-/**
+/** 
  * Represents a swerve drive style drivetrain.
  * 
  * Module IDs are:
@@ -108,8 +108,8 @@ public class Drivetrain extends SubsystemBase {
 
   /**
    * Creates a new Swerve Style Drivetrain.
-   * 
-   * @param drivetrainTab    the shuffleboard tab to display drivetrain data on
+   *
+   * @param drivetrainTab the shuffleboard tab to display drivetrain data on
    * @param swerveModulesTab the shuffleboard tab to display module data on
    */
   public Drivetrain(ShuffleboardTab drivetrainTab, ShuffleboardTab swerveModulesTab, Vision vision) {
@@ -170,7 +170,7 @@ public class Drivetrain extends SubsystemBase {
     );
     m_rotationController = new PIDController(
       DriveConstants.kHeadingP, 
-      DriveConstants.kTranslationalI, 
+      DriveConstants.kHeadingI, 
       DriveConstants.kHeadingD
     );
     m_rotationController.enableContinuousInput(-Math.PI, Math.PI);
@@ -179,17 +179,17 @@ public class Drivetrain extends SubsystemBase {
     // initialize pathplanner PIDs
     m_pathplannerXController = new PIDController(
       DriveConstants.kPathplannerTranslationalP, 
-      DriveConstants.kTranslationalI,
+      DriveConstants.kPathplannerTranslationalI,
       DriveConstants.kPathplannerTranslationalD
     );
     m_pathplannerYController = new PIDController(
       DriveConstants.kPathplannerTranslationalP, 
-      DriveConstants.kTranslationalI,
+      DriveConstants.kPathplannerTranslationalI,
       DriveConstants.kPathplannerTranslationalD
     );
     m_pathplannerRotationController = new PIDController(
       DriveConstants.kPathplannerHeadingP, 
-      DriveConstants.kTranslationalI,
+      DriveConstants.kPathplannerHeadingI,
       DriveConstants.kPathplannerHeadingD
     );
     m_pathplannerRotationController.enableContinuousInput(-Math.PI, Math.PI);
@@ -259,16 +259,14 @@ public class Drivetrain extends SubsystemBase {
           // The position of the current april tag
           Pose3d currentTagPose = m_vision.getTagPose(
             estimatedPose.targetsUsed.get(j).getFiducialId());
-          // If it can't find the april tag's pose, don't run the rest of the for loop for
-          // this tag
-          if (currentTagPose == null) {
-            continue;
-          }
+          // If it can't find the april tag's pose, don't run the rest of the for loop for this tag
+          if (currentTagPose == null) continue;
+
           Translation2d currentTagPoseTranslation = currentTagPose.toPose2d().getTranslation();
 
-          // If the current april tag position is closer than the closest one, this makes
-          // makes it the closest
-          if (j == 0 || currentEstimatedPoseTranslation.getDistance(currentTagPoseTranslation) 
+          // If the current april tag position is closer than the closest one, this makes it the closest
+          if (j == 0 || 
+            currentEstimatedPoseTranslation.getDistance(currentTagPoseTranslation) 
             < currentEstimatedPoseTranslation.getDistance(closestTagPoseTranslation)) {
             closestTagPoseTranslation = currentTagPoseTranslation;
           }
@@ -284,8 +282,7 @@ public class Drivetrain extends SubsystemBase {
             : VisionConstants.kBaseVisionPoseStdDevs);
     }
 
-      // If it used vision after going over the charge station, it should trust vision
-      // normally again
+      // If it used vision after going over the charge station, it should trust vision normally again
       if (estimatedPoses.size() > 0) {
         m_chargeStationVision = false;
       }
@@ -354,20 +351,21 @@ public class Drivetrain extends SubsystemBase {
    * @param xSpeed speed of the robot in the x direction (forward)
    * @param ySpeed speed of the robot in the y direction (sideways)
    * @param heading target heading of the robot in radians
-   * @param  whether the provided x and y speeds are relative to the field
+   * @param fieldRelative whether the provided x and y speeds are relative to the field
    */
   public void driveHeading(double xSpeed, double ySpeed, double heading, boolean fieldRelative) {
     double rot = m_rotationController.calculate(getYaw().getRadians(), heading);
-    // SmartDashboard.putNumber("Heading PID Output", rot);
-    setChassisSpeeds((fieldRelative
-      ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_pigeon.getRotation2d())
-      : new ChassisSpeeds(xSpeed, ySpeed, rot)),
-      false);
+    //SmartDashboard.putNumber("Heading PID Output", rot);
+    setChassisSpeeds((
+      fieldRelative
+        ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_pigeon.getRotation2d())
+        : new ChassisSpeeds(xSpeed, ySpeed, rot)),
+      false
+    );
   }
 
   /**
-   * Runs the PID controllers with the provided x, y, and rot values. Then, calls
-   * {@link #drive()} using the PID outputs.
+   * Runs the PID controllers with the provided x, y, and rot values. Then, calls {@link #drive()} using the PID outputs.
    * This is based on the odometry of the chassis.
    * 
    * @param x the position to move to in the x, in meters
@@ -382,8 +380,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   /**
-   * Runs the PID controllers with the provided x, y, and rot values. Then, calls
-   * {@link #drive()} using the PID outputs.
+   * Runs the PID controllers with the provided pose. Then, calls {@link #drive()} using the PID outputs.
    * This is based on the odometry of the chassis.
    * 
    * @param pose desired pose
@@ -405,8 +402,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   /**
-   * Sets the desired states for all swerve modules. Runs closed loop control. USe
-   * this function for pathplanner.
+   * Sets the desired states for all swerve modules. Runs closed loop control
    * 
    * @param swerveModuleStates an array of module states to set swerve modules to. Order of the array matters here!
    */
@@ -490,21 +486,21 @@ public class Drivetrain extends SubsystemBase {
   }
 
   /**
-   * @return the yaw of the robot, aka heading, the direction it is facing
+   * @return the yaw of the robot, aka heading, the direction it is facing from the estimated pose estimator
    */
   public Rotation2d getYaw() {
     return m_poseEstimator.getEstimatedPosition().getRotation();
   }
 
   /**
-   * @return the pitch of the robot
+   * @return the pitch of the robot form the pigeon
    */
   public Rotation2d getPitch() {
     return Rotation2d.fromDegrees(m_pigeon.getPitch());
   }
 
   /**
-   * @return the roll of the robot
+   * @return the roll of the robot form the pigeon
    */
   public Rotation2d getRoll() {
     return Rotation2d.fromDegrees(m_pigeon.getRoll());
@@ -630,7 +626,7 @@ public class Drivetrain extends SubsystemBase {
       m_moduleChooser.addOption("Front Right", m_modules[1]);
       m_moduleChooser.addOption("Back Left", m_modules[2]);
       m_moduleChooser.addOption("Back Right", m_modules[3]);
-
+      
       setUpFeedforwardSavers();
 
       // inputs
@@ -804,12 +800,12 @@ public class Drivetrain extends SubsystemBase {
       m_steerVelocityFeedforwardEntry.getDouble(0);
 
     // to set all modules to same feedforward values if all
-    //  if (m_module.getSelected() == m_allModule) {
-    //  for(int i = 0; i < 4; i++) {
-    //    m_modules[i].setDriveFeedForwardValues(m_steerStaticFeedForwardSaver[m_module.getSelected().getId()],
-    //    m_steerVelFeedForwardSaver[m_module.getSelected().getId()]);
-    //  }
+    //if (m_module.getSelected() == m_allModule) {
+    // for(int i = 0; i < 4; i++) {
+    //   m_modules[i].setDriveFeedForwardValues(m_steerStaticFeedForwardSaver[m_module.getSelected().getId()],
+    //   m_steerVelFeedForwardSaver[m_module.getSelected().getId()]);
     // }
+    //}
 
     // set selected module
     m_moduleChooser.getSelected().setDriveFeedForwardValues(
