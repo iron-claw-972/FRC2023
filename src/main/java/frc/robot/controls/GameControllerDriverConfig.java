@@ -36,7 +36,7 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
     kDriver.get(Button.START).onTrue(new InstantCommand(() -> super.getDrivetrain().setYaw(
       new Rotation2d(DriverStation.getAlliance() == Alliance.Blue ? 0 : Math.PI)
     )));
-    kDriver.get(Button.X).whileTrue(new SetFormationX(super.getDrivetrain()));
+    kDriver.get(Button.X).onTrue(new SetFormationX(super.getDrivetrain()));
 
     // Moves to the selected scoring position using Path Planner
     kDriver.get(Button.LB).whileTrue(new GoToNode(m_operator, getDrivetrain()));

@@ -36,6 +36,7 @@ public class CalculateStdDevs extends CommandBase {
     m_drive = drive;
     m_vision = vision;
     m_arrayLength = time;
+    m_endTimer = new Timer();
   }
 
   /**
@@ -102,6 +103,20 @@ public class CalculateStdDevs extends CommandBase {
     double stdDevX = Math.sqrt(totalX / m_poses.size());
     double stdDevY = Math.sqrt(totalY / m_poses.size());
     double stdDevRot = Math.sqrt(totalRot / m_poses.size());
+
+    /*
+     * Standard deviation values:
+      X: 0.21803
+      Y: 0.15641
+      Rotation: 0.08443
+      Distance: Infinity
+
+      deviation values:
+      X: 0.00471
+      Y: 0.03537
+      Rotation: 0.01886
+      Distance: Infinity
+     */
     
     // Calculate distance to closest April tag
     double closest = Double.POSITIVE_INFINITY;
@@ -122,9 +137,6 @@ public class CalculateStdDevs extends CommandBase {
     stdDevX, stdDevY, stdDevRot, closest);
     if (Constants.kLogging) {
       LogManager.addDoubleArray("Vision/StdDevs", stdDevs);
-    }
-    if (m_tab!=null) {
-      m_tab.add("Standard Deviations", stdDevs);
     }
   }
 

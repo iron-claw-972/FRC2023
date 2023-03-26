@@ -54,14 +54,14 @@ public class VisionConstants {
       // DO NOT COMMENT THIS OUT
       kCameras = new ArrayList<Pair<String, Transform3d>>(List.of(
         new Pair<String, Transform3d>(
-          "Camera_1",
+          "Left_Camera",
           new Transform3d(
             new Translation3d(Units.inchesToMeters(1.25), Units.inchesToMeters(7.125), Units.inchesToMeters(21)),
             new Rotation3d(0, 0, 0)
-          )
-        ),
+          ))
+        ,
         new Pair<String, Transform3d>(
-          "Camera_2",
+          "Right_Camera",
           new Transform3d(
             new Translation3d(Units.inchesToMeters(1.25), Units.inchesToMeters(-7.125), Units.inchesToMeters(21)),
             new Rotation3d(0, 0, 0)
@@ -71,22 +71,24 @@ public class VisionConstants {
     }
   }
 
+  /** Poses that use targets with an ambiguity above this amount will be ignored */
+  public static final double highestAmbiguity = 0.04;
+
   // TODO: check/tune vision weight
   // How much to trust vision measurements normally
   public static final Matrix<N3, N1> kBaseVisionPoseStdDevs = new MatBuilder<>(Nat.N3(), Nat.N1()).fill(
-    0.9, // x in meters (default=0.9)
-    0.9, // y in meters (default=0.9)
-    0.9 // heading in radians (default=0.9)
+    0.5, // x in meters (default=0.9)
+    0.5, // y in meters (default=0.9)
+    10000 // heading in radians (default=0.9)
   );
 
   public static final Matrix<N3, N1> kChargeStationVisionPoseStdDevs = new MatBuilder<>(Nat.N3(), Nat.N1()).fill(
-    0.01, // x in meters
-    0.01, // y in meters
-    0.01 // heading in radians
+    0.5, // x in meters
+    0.5, // y in meters
+    10000 // heading in radians
   );
 
   // Increasing this makes pose estimation trust vision measurements less as distance from Apriltags increases
   // This is how much is added to std dev for vision when closest visible Apriltag is 1 meter away
-   //TODO: how much? was 0.1 but richie had zero, WPI recommends not to include measurements >1 m, so maybe should be higher
-  public static final double kVisionPoseStdDevFactor = 0.01;
+  public static final double kVisionPoseStdDevFactor = 0.5;
 }
