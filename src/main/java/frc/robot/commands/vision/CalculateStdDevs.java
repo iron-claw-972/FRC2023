@@ -8,8 +8,10 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.Constants;
+import frc.robot.constants.VisionConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.util.LogManager;
+import frc.robot.util.StatisticsUtil;
 import frc.robot.util.Vision;
 
 /**
@@ -28,10 +30,10 @@ public class CalculateStdDevs extends CommandBase {
    * @param drive The drivetrain
    * @param vision The vision
    */
-  public CalculateStdDevs(int time, Drivetrain drive, Vision vision) {
+  public CalculateStdDevs(int posesToUse, Drivetrain drive, Vision vision) {
     m_drive = drive;
     m_vision = vision;
-    m_arrayLength = time;
+    m_arrayLength = posesToUse;
     m_endTimer = new Timer();
   }
 
@@ -59,7 +61,7 @@ public class CalculateStdDevs extends CommandBase {
       m_endTimer.start();
       // If 5 seconds have passed since it saw an April tag, stop the command
       // Prevents it from running forever
-      if(m_endTimer.hasElapsed(5)){
+      if(m_endTimer.hasElapsed(VisionConstants.kStdDevCommandEndTime)){
         cancel();
       }
     }
@@ -77,28 +79,17 @@ public class CalculateStdDevs extends CommandBase {
     }
     
     // Calculate std devs
-    double meanX = 0;
-    double meanY = 0;
-    double meanRot = 0;
-    for (int i = 0; i < m_poses.size(); i++) {
-      meanX += m_poses.get(i).getX();
-      meanY += m_poses.get(i).getY();
-      meanRot += m_poses.get(i).getRotation().getRadians();
+    double[] xArray = new double[m_poses.size()];
+    double[] yArray = new double[m_poses.size()];
+    double[] rotArray = new double[m_poses.size()];
+    for(int i = 0; i < m_poses.size(); i++){
+      xArray[i] = m_poses.get(i).getX();
+      yArray[i] = m_poses.get(i).getY();
+      rotArray[i] = m_poses.get(i).getRotation().getRadians();
     }
-    meanX /= m_poses.size();
-    meanY /= m_poses.size();
-    meanRot /= m_poses.size();
-    double totalX = 0;
-    double totalY = 0;
-    double totalRot = 0;
-    for (int i = 0; i < m_poses.size(); i++) {
-      totalX += Math.pow(m_poses.get(i).getX() - meanX, 2);
-      totalY += Math.pow(m_poses.get(i).getY() - meanY, 2);
-      totalRot += Math.pow(m_poses.get(i).getRotation().getRadians() - meanRot, 2);
-    }
-    double stdDevX = Math.sqrt(totalX / m_poses.size());
-    double stdDevY = Math.sqrt(totalY / m_poses.size());
-    double stdDevRot = Math.sqrt(totalRot / m_poses.size());
+    double stdDevX = StatisticsUtil.stdDev(xArray);
+    double stdDevY = StatisticsUtil.stdDev(yArray);
+    double stdDevRot = StatisticsUtil.stdDev(rotArray);
 
     /*
      * Standard deviation values:

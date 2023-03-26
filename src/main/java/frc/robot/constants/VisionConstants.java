@@ -34,6 +34,8 @@ public class VisionConstants {
   public static Pose2d kBlueShelfAlignPose = new Pose2d(FieldConstants.kBlueShelfX - kShelfDistanceAlignment, FieldConstants.kShelfY, new Rotation2d(0));
   public static Pose2d kRedShelfAlignPose = new Pose2d(FieldConstants.kRedShelfX + kShelfDistanceAlignment, FieldConstants.kShelfY, new Rotation2d(Math.PI));
 
+  public static double kStdDevCommandEndTime = 5;
+
   public static ArrayList<Pair<String, Transform3d>> kCameras = new ArrayList<>();
 
   /**
