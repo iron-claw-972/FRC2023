@@ -1,5 +1,7 @@
 package frc.robot;
 
+import java.util.function.DoubleSupplier;
+
 import com.pathplanner.lib.PathPlannerTrajectory;
 
 import edu.wpi.first.cameraserver.CameraServer;
@@ -8,6 +10,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -28,6 +31,7 @@ import frc.robot.commands.scoring.intake.IntakeGamePiece;
 import frc.robot.commands.scoring.intake.OuttakeGamePiece;
 import frc.robot.constants.Constants;
 import frc.robot.constants.FieldConstants;
+import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.VisionConstants;
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.controls.BaseDriverConfig;
@@ -96,9 +100,6 @@ public class RobotContainer {
 
         // Create Drivetrain
         m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab, m_vision);
-        m_operator = new Operator();
-
-        m_driver = new GameControllerDriverConfig(m_drive, m_operator, m_controllerTab, false);
 
         m_intake = new RollerIntake(m_intakeTab);
         m_elevator = new Elevator(m_elevatorTab, () -> m_intake.containsGamePiece());
@@ -107,6 +108,10 @@ public class RobotContainer {
         m_testController = new TestController(m_wrist, m_intake, m_elevator);
         m_manualController = new ManualController(m_intake, m_elevator);
   
+        m_operator = new Operator();
+
+        DoubleSupplier intakeDist = () -> (m_intake.getDistance() - IntakeConstants.kCenterDist) * (DriverStation.getAlliance() == Alliance.Blue ? 1 : -1);
+        m_driver = new GameControllerDriverConfig(m_drive, intakeDist, m_operator, m_controllerTab, false);
         m_operator.configureControls(m_wrist, m_intake, m_elevator, m_vision);
         // m_testController.configureControls();
         // m_manualController.configureControls();
@@ -137,7 +142,7 @@ public class RobotContainer {
         // Create Drivetrain, because every robot will have a drivetrain
         m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab, m_vision);
         m_operator = new Operator();
-        m_driver = new GameControllerDriverConfig(m_drive, m_operator, m_controllerTab, false);
+        m_driver = new GameControllerDriverConfig(m_drive, () -> 0, m_operator, m_controllerTab, false);
 
         DriverStation.reportWarning("Not registering subsystems and controls due to incorrect robot", false);
 

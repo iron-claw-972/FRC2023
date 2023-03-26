@@ -2,10 +2,14 @@ package frc.robot.commands;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.DoubleSupplier;
 
 import com.pathplanner.lib.PathPoint;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.commands.auto.PathPlannerCommand;
@@ -17,15 +21,18 @@ public class GoToNode extends CommandBase {
   private Operator m_operator;
   private Drivetrain m_drive;
   private CommandBase m_command;
+  private DoubleSupplier m_yOffsetSup;
 
   /**
    * Uses PathPlanner to go to the selected node
    * @param operator The operator
    * @param drive The drivetrain
    */
-  public GoToNode(Operator operator, Drivetrain drive) {
+  public GoToNode(Operator operator, Drivetrain drive, DoubleSupplier yOffsetSup) {
     m_operator = operator;
     m_drive = drive;
+    m_yOffsetSup = yOffsetSup;
+    addRequirements(drive);
   }
 
   /**
@@ -41,6 +48,16 @@ public class GoToNode extends CommandBase {
 
     // get the desired score pose
     Pose2d scorePose = m_operator.getSelectedNode().scorePose;
+
+    // get a y offset from the supplier (currently we use the intake to offset scoring)
+    double yOffset = m_yOffsetSup.getAsDouble();
+
+    // modify pose by offsets
+    scorePose.plus(new Transform2d(
+      new Translation2d(0, -0.07 + yOffset), 
+      new Rotation2d(0)
+    ));
+
     // Uses the operator's selected node to find the end point for the path
     PathPoint point2 = new PathPoint(
       scorePose.getTranslation(),

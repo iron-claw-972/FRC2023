@@ -1,5 +1,7 @@
 package frc.robot.controls;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -26,9 +28,9 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
   
   private final GameController kDriver = new GameController(OIConstants.kDriverJoy);
   private final Operator m_operator;
-  public GameControllerDriverConfig(Drivetrain drive, Operator operator, ShuffleboardTab controllerTab, boolean shuffleboardUpdates) {
-    super(drive, controllerTab, shuffleboardUpdates);
-    m_operator=operator;
+  public GameControllerDriverConfig(Drivetrain drive, DoubleSupplier intakeOffset, Operator operator, ShuffleboardTab controllerTab, boolean shuffleboardUpdates) {
+    super(drive, intakeOffset, controllerTab, shuffleboardUpdates);
+    m_operator = operator;
   }
   
   @Override
@@ -39,14 +41,10 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
     kDriver.get(Button.X).onTrue(new SetFormationX(super.getDrivetrain()));
 
     // Moves to the selected scoring position using Path Planner
-    kDriver.get(Button.LB).whileTrue(new GoToNode(m_operator, getDrivetrain()));
-    // Moves to the selected scoring position using the PID
-    kDriver.get(DPad.LEFT).whileTrue(new GoToNodePID(m_operator, getDrivetrain()));
+    kDriver.get(Button.LB).whileTrue(new GoToNode(m_operator, getDrivetrain(), super.getIntakeOffset()));
 
     // Moves to the shelf using Path Planner
     kDriver.get(Button.RB).whileTrue(new GoToShelf(getDrivetrain()));
-    // Moves to the shelf using the PID
-    kDriver.get(DPad.RIGHT).whileTrue(new GoToShelfPID(getDrivetrain()));
     
     kDriver.get(Button.B).whileTrue(new BalanceCommand(super.getDrivetrain()));
 

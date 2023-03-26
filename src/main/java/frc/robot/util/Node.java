@@ -66,32 +66,25 @@ public class Node {
 
     double y = 0;  
 
-    double yOffset = 0;
-
     // Distance from the field boundary to the boundary separating the grid and loading zone
     if (column % 3 == 0) {
-      yOffset = FieldConstants.kConeNodeOffset;
+      y = FieldConstants.kConeNodeOffset;
     } else if (column % 3 == 1) {
-      yOffset = -FieldConstants.kConeNodeOffset;
+      y = -FieldConstants.kConeNodeOffset;
     }
 
     if (column <= 3) {
-      y = FieldConstants.kAprilTags.get(7).pose.getY();
+      y += FieldConstants.kAprilTags.get(7).pose.getY();
     } else if (column <= 6) {
-      y = FieldConstants.kAprilTags.get(6).pose.getY();
+      y += FieldConstants.kAprilTags.get(6).pose.getY();
     } else {
-      y = FieldConstants.kAprilTags.get(5).pose.getY();
+      y += FieldConstants.kAprilTags.get(5).pose.getY();
     }
-    y += yOffset;
 
     Rotation2d rotation = new Rotation2d();
     if (alliance == Alliance.Blue) {
       rotation = Rotation2d.fromDegrees(180);
     }
-    double distanceSensorOffset = intake==null?0:(intake.getDistnace() - IntakeConstants.kCenterDist);
-    y += distanceSensorOffset * (alliance==Alliance.Blue?1:-1);
-    //TODO: move this somewhere else
-    y += -0.07;
     scorePose = new Pose2d(x, y, rotation);
   }
 }

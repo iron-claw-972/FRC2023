@@ -127,7 +127,7 @@ public class RollerIntake extends SubsystemBase {
    * Returns the distance from the sensor
    * @return Currently always returns the center position
    */
-  public double getDistnace(){
+  public double getDistance(){
     return IntakeConstants.kCenterDist;
   }
 } 
