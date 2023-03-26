@@ -8,7 +8,11 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.revrobotics.Rev2mDistanceSensor;
+import com.revrobotics.Rev2mDistanceSensor.Port;
+import com.revrobotics.Rev2mDistanceSensor.Unit;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -28,6 +32,7 @@ public class RollerIntake extends SubsystemBase {
 
   private final WPI_TalonFX m_intakeMotor;
   private final ShuffleboardTab m_intakeTab;
+  // private final Rev2mDistanceSensor m_distSensor;
 
   private IntakeMode m_mode;
   private GamePieceType m_heldPiece;
@@ -38,6 +43,15 @@ public class RollerIntake extends SubsystemBase {
     m_intakeMotor = MotorFactory.createTalonFX(IntakeConstants.kIntakeMotorId, Constants.kRioCAN);
     m_intakeMotor.setNeutralMode(IntakeConstants.kNeutralMode);
     m_intakeMotor.enableVoltageCompensation(true);
+
+    // if (RobotBase.isReal()) {
+    //   m_distSensor = new Rev2mDistanceSensor(Port.kMXP);
+    //   m_distSensor.setDistanceUnits(Unit.kMillimeters);
+    //   m_distSensor.setEnabled(true);
+    //   m_distSensor.setAutomaticMode(true);
+    // } else {
+    //   m_distSensor = null;
+    // }
 
     m_power = 0;
     m_mode = IntakeMode.DISABLED;
@@ -92,6 +106,7 @@ public class RollerIntake extends SubsystemBase {
     m_intakeTab.addDouble("Intake Motor Current", () -> getCurrent());
     m_intakeTab.addDouble("Intake Power", () -> m_power);
     m_intakeTab.addString("Held Game Piece", () -> m_heldPiece.name());
+    m_intakeTab.addDouble("Distance Sensor Range", () -> getConePos());
   }
   
   public boolean containsGamePiece() {
@@ -122,12 +137,24 @@ public class RollerIntake extends SubsystemBase {
     m_heldPiece = m_type;
   }
 
-  //TODO: Add this when the distance sensor is added
   /**
-   * Returns the distance from the sensor
-   * @return Currently always returns the center position
+   * @return the position of the cone in the intake in meters. 
+   * zero being middle, positive away from the distance sensor. 
+   * Returns zero if no cone.
    */
-  public double getDistance(){
-    return IntakeConstants.kCenterDist;
+  public double getConePos() {
+    // get the range in millimeters
+    double range = -1;
+    if (RobotBase.isReal()) {
+      // range = m_distSensor.getRange();
+    }
+
+    // just assume center distance if it can't detect anything
+    if (range == -1) {
+      return 0;
+    }
+
+    // convert to meters and clamp to reasonable values
+    return MathUtil.clamp((range / 1000.0), 0, IntakeConstants.kMaxDistanceSensorRange) - IntakeConstants.kCenterDist;
   }
 } 

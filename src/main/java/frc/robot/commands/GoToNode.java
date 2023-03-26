@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import java.sql.Driver;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.DoubleSupplier;
@@ -11,6 +12,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.commands.auto.PathPlannerCommand;
 import frc.robot.controls.Operator;
@@ -51,10 +53,11 @@ public class GoToNode extends CommandBase {
 
     // get a y offset from the supplier (currently we use the intake to offset scoring)
     double yOffset = m_yOffsetSup.getAsDouble();
+    double xOffset = DriverStation.getAlliance() == Alliance.Blue ? -0.1 : 0.1;
 
     // modify pose by offsets
     scorePose.plus(new Transform2d(
-      new Translation2d(0, -0.07 + yOffset), 
+      new Translation2d(xOffset, -0.07 + 0), 
       new Rotation2d(0)
     ));
 
@@ -77,10 +80,16 @@ public class GoToNode extends CommandBase {
     if (dist > 3) {
       m_command = new DoNothing();
       DriverStation.reportWarning("Alignment Path too long, doing nothing, GoToNode.java", false);
-    }
-    if (dist < 0.2) {
+    } else if (dist < 0.2) {
       m_command = new DoNothing();
       DriverStation.reportWarning("Alignment Path too short, doing nothing, GoToNode.java", false);
+    } else {
+      // Creates the command using the two points
+      m_command = new PathPlannerCommand(
+        new ArrayList<PathPoint>(List.of(point1, point2)),
+        m_drive,
+        false
+      );
     }
 
     // Starts the command
