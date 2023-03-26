@@ -60,7 +60,7 @@ public class GoToNode extends SequentialCommandGroup {
 
     // modify pose by offsets
     scorePose.plus(new Transform2d(
-      new Translation2d(0, -0.07 + yOffset), 
+      new Translation2d(0, -0.07 + 0), 
       new Rotation2d(0)
     ));
 

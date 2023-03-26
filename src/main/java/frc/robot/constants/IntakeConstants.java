@@ -16,9 +16,11 @@ public final class IntakeConstants {
   public static final double kIntakeConePower = -0.75;
   public static final double kOuttakeConePower = 0.6;
 
-  //TODO: Change this when the distance sensor is added
-  // Distance sensor value when the game piece is in the cneter
-  public static final double kCenterDist = 0.5;
+  // Distance sensor value when the game piece is in the center
+  public static final double kCenterDist = 0.25;
+  
+  // max distance from the center a game piece can be, the distance sensor will be limited to this amount.
+  public static final double kMaxDistanceSensorRange = 0.4;
 
   public static final NeutralMode kNeutralMode = NeutralMode.Brake;
 
