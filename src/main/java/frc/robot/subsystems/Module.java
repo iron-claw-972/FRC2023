@@ -258,17 +258,6 @@ public class Module extends SubsystemBase {
    //with voltage compensation enabled do not use setVoltage
   }
 
-  public void setDriveFeedForwardValues(double kS, double kV) {    
-  }
-
-  public double getSteerFeedForwardKV() {
-    return 0;
-  }
-
-  public double getSteerFeedForwardKS() {
-    return 0;
-  }
-
   public void setAngle(Rotation2d rotation2d) {
   }
 }

@@ -508,18 +508,6 @@ public class Drivetrain extends SubsystemBase {
       m_modules[2].getDriveFeedForwardKV(),
       m_modules[3].getDriveFeedForwardKV()
     };
-    m_steerStaticFeedForwardSaver = new Double[] {
-      m_modules[0].getSteerFeedForwardKS(),
-      m_modules[1].getSteerFeedForwardKS(),
-      m_modules[2].getSteerFeedForwardKS(),
-      m_modules[3].getSteerFeedForwardKS()
-    };
-    m_steerVelFeedForwardSaver = new Double[] {
-      m_modules[0].getSteerFeedForwardKV(),
-      m_modules[1].getSteerFeedForwardKV(),
-      m_modules[2].getSteerFeedForwardKV(),
-      m_modules[3].getSteerFeedForwardKV()
-    };
   }
   
   public Double[] getDriveStaticFeedforwardArray() {
@@ -688,11 +676,6 @@ public class Drivetrain extends SubsystemBase {
     //   }
     // }
         
-    //set selected module
-    m_moduleChooser.getSelected().setDriveFeedForwardValues(
-      m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()],
-      m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]
-    );
   }
 
   /**
@@ -726,10 +709,7 @@ public class Drivetrain extends SubsystemBase {
     // }
     
     //set selected module
-    m_moduleChooser.getSelected().setDriveFeedForwardValues(
-      m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()],
-      m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]
-    );
+    
   }
   
   public Module getModuleChoosen() {
