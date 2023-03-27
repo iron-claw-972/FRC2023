@@ -62,7 +62,7 @@ public class VisionConstants {
           "Left_Camera",
           new Transform3d(
             // 1.25, 7.125, 21
-            new Translation3d(Units.inchesToMeters(9.75), Units.inchesToMeters(6.5), Units.inchesToMeters(37)),
+            new Translation3d(Units.inchesToMeters(8.996), Units.inchesToMeters(6.48), Units.inchesToMeters(37.44)),
             new Rotation3d(Math.PI, Units.degreesToRadians(18), 0)
           ))
         ,
