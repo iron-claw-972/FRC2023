@@ -25,6 +25,9 @@ public class VisionConstants {
   // If vision is enabled
   public static final boolean kEnabled = true;
 
+  // The anglel to use charge station vision at in degrees
+  public static final double kChargeStationAngle = 2.5;
+
   //TODO: Change these to whatever the actual distances are
   // How far from the grid the robot should be to score for alignment in meters
   public static double kGridDistanceAlignment = 0 + DriveConstants.kRobotWidthWithBumpers / 2; // meters
@@ -53,7 +56,6 @@ public class VisionConstants {
         )
       ));
     } else {
-      // DO NOT COMMENT THIS OUT
       kCameras = new ArrayList<Pair<String, Transform3d>>(List.of(
         //TODO: figure out new camera position
         // new Pair<String, Transform3d>(
@@ -83,13 +85,15 @@ public class VisionConstants {
   public static final Matrix<N3, N1> kBaseVisionPoseStdDevs = new MatBuilder<>(Nat.N3(), Nat.N1()).fill(
     0.5, // x in meters (default=0.9)
     0.5, // y in meters (default=0.9)
-    10000 // heading in radians (default=0.9)
+    0.5 // heading in radians (default=0.9)
   );
 
+  // How much to trust vision after passing over the charge station
+  // Should be lower to correct pose after charge station
   public static final Matrix<N3, N1> kChargeStationVisionPoseStdDevs = new MatBuilder<>(Nat.N3(), Nat.N1()).fill(
-    0.5, // x in meters
-    0.5, // y in meters
-    10000 // heading in radians
+    0.0001, // x in meters
+    0.0001, // y in meters
+    0.0001 // heading in radians
   );
 
   // Increasing this makes pose estimation trust vision measurements less as distance from Apriltags increases

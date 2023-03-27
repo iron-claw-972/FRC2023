@@ -374,10 +374,10 @@ public class Drivetrain extends SubsystemBase {
     m_poseEstimator.update(Rotation2d.fromDegrees(m_pigeon.getYaw()), getModulePositions());
 
     // Updates pose based on vision
-    if (m_visionEnabled && VisionConstants.kEnabled) {
+    if (RobotBase.isReal() && m_visionEnabled && VisionConstants.kEnabled) {
 
-      // The angle should be greater than 5 degrees if it goes over the charge station
-      if (Math.abs(getPitch().getDegrees()) > 5 || Math.abs(getRoll().getDegrees()) > 5) {
+      // When the angle is greater than the threshold, then set charge station vision to true
+      if (Math.abs(getPitch().getDegrees()) > VisionConstants.kChargeStationAngle || Math.abs(getRoll().getDegrees()) > VisionConstants.kChargeStationAngle) {
         m_chargeStationVision = true;
       }
 
