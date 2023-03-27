@@ -10,11 +10,13 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.util.Conversions;
+import frc.robot.util.DrawMechanism;
 import frc.robot.util.LogManager;
 
 
@@ -174,6 +176,9 @@ public class Elevator extends SubsystemBase {
    * @return position (m)
    */
   public double getPosition() {
+    // in simulation, assume we are at the desired position
+    if (RobotBase.isSimulation()) return m_desiredPosition;
+    // calculate extension based on falcon encoder
     return Conversions.falconToMeters(
       m_motor.getSelectedSensorPosition(),
       ElevatorConstants.kSpoolCircumference,
@@ -185,6 +190,12 @@ public class Elevator extends SubsystemBase {
    * set the desired power to the m_desiredPower variable
    * @param power
    */
+  public void setDesiredPosition(double desiredPosition) {
+    m_desiredPosition = desiredPosition;
+    if (m_mode == ElevatorMode.POSITION && m_isCalibrated && RobotBase.isSimulation())
+      DrawMechanism.getInstance().setElevatorExtension(m_desiredPosition);
+  }
+
   public void setDesiredPower(double power) {
     m_desiredPower = power;
   }
@@ -207,6 +218,8 @@ public class Elevator extends SubsystemBase {
   public void setMode(ElevatorMode mode) {
     if (!m_isCalibrated && !(mode == ElevatorMode.CALIBRATION || mode == ElevatorMode.DISABLED)) return;
     m_mode = mode;
+    if (m_mode == ElevatorMode.POSITION)
+      DrawMechanism.getInstance().setElevatorExtension(m_desiredPosition);
   }
 
   /**
