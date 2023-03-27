@@ -44,6 +44,10 @@ public class GoToNode extends CommandBase {
     PathPoint point1 = PathPoint.fromCurrentHolonomicState(
       m_drive.getPose(),
       m_drive.getChassisSpeeds()
+    
+      // set the control lengths. This controls how strong the heading is
+      // aka how much the robot will curve to get to the point. 
+      // We want it to follow a straight line, and with swerve, it isn't too necessary.
     ).withControlLengths(0.001, 0.001);
 
     // get the desired score pose
@@ -64,6 +68,9 @@ public class GoToNode extends CommandBase {
       scorePose.getRotation(),
       scorePose.getRotation(),
       0
+      // set the control lengths. This controls how strong the heading is
+      // aka how much the robot will curve to get to the point. 
+      // We want it to follow a straight line, and with swerve, it isn't too necessary.
     ).withControlLengths(0.001, 0.001);
 
     // Creates the command using the two points
@@ -73,8 +80,11 @@ public class GoToNode extends CommandBase {
       false
     );
 
+    // get the distance to the score position.
     double dist = m_drive.getPose().minus(scorePose).getTranslation().getNorm();
-    if (dist > 3) {
+
+    // if greater than 4m or less than 20 cm, don't run it. If the path is too small pathplanner makes weird paths.
+    if (dist > 4) {
       m_command = new DoNothing();
       DriverStation.reportWarning("Alignment Path too long, doing nothing, GoToNode.java", false);
     } else if (dist < 0.2) {
