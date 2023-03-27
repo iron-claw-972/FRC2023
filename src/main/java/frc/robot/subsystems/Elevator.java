@@ -37,7 +37,7 @@ public class Elevator extends SubsystemBase {
   private double m_gravityCompensation = 0;
 
   public Elevator(ShuffleboardTab elevatorTab, BooleanSupplier hasConeSupplier) {
-    m_elevatorTab = elevatorTab; 
+    m_elevatorTab = elevatorTab;
 
     m_hasConeSupplier = hasConeSupplier;
     m_mode = ElevatorMode.DISABLED;
@@ -110,7 +110,6 @@ public class Elevator extends SubsystemBase {
    * the motor will be set to neutral mode once it passes the limits
    * 
    * @param enabled
-   * @return none
    */
   public void toggleSoftLimits(boolean enabled) {
     m_motor.configForwardSoftLimitEnable(enabled);
@@ -136,7 +135,6 @@ public class Elevator extends SubsystemBase {
   /**
    * Cap the peak motor power that the talonFX will send to the falcon motor (forward and reverse). 
    * @param power
-   * @return none
    */
   public void setMaxOutput(double power) {
     m_motor.configPeakOutputForward(power);
@@ -144,7 +142,7 @@ public class Elevator extends SubsystemBase {
   }
 
   /**
-   * Using the elevator position/extension calculate the actual height of the elevator
+   * Using the elevator position calculate the actual height of the elevator
    * from the ground to the bottom of the carriage
    * 
    * @return elevator height from ground to bottom of carriage
@@ -154,8 +152,8 @@ public class Elevator extends SubsystemBase {
   }
 
   /**
-   * Set the desired elevator height from the ground. Do this by converting the elevator height to the
-   * required position/extension, then passing in the value to the setDesiredPosition function (Defined above)
+   * Convert the desired height(from ground to bottom of carriage) to elevator position, then pass it into 
+   * the setDesiredPosition method. 
    * @param desiredHeight the height we want the elevator to move to from the ground
    */
   public void setDesiredHeight(double desiredHeight) {
@@ -163,13 +161,13 @@ public class Elevator extends SubsystemBase {
   }
 
   /**
-   * Get position of carriage above bottom position. AKA extension
+   * Get position of carriage above bottom position.
    * @return position (m)
    */
   public double getPosition() {
     // in simulation, assume we are at the desired position
     if (RobotBase.isSimulation()) return m_desiredPosition;
-    // calculate extension based on falcon encoder
+    // calculate elevator position based on falcon encoder
     return Conversions.falconToMeters(
       m_motor.getSelectedSensorPosition(),
       ElevatorConstants.kSpoolCircumference,
@@ -178,7 +176,7 @@ public class Elevator extends SubsystemBase {
   }
 
   /**
-   * set the desired power to the m_desiredPower variable
+   * Set the desired elevator positoin
    * @param power
    */
   public void setDesiredPosition(double desiredPosition) {
@@ -187,6 +185,10 @@ public class Elevator extends SubsystemBase {
       DrawMechanism.getInstance().setElevatorExtension(m_desiredPosition);
   }
 
+  /**
+   * Set the desired power for the manual ElevatorMode
+   * @param power
+   */
   public void setDesiredPower(double power) {
     m_desiredPower = power;
   }
@@ -228,7 +230,7 @@ public class Elevator extends SubsystemBase {
   /**
    * Calculate whether or not the current elevator position is within a set range of the desired position and that
    * the velocity/speed of the elevator is less than a set velocity tolerance. 
-   * @return true or false-- whether or not the elevator has reached it's desired position
+   * @return true or false -- whether or not the elevator has reached it's desired position
 
    */
   public boolean reachedDesiredPosition() {
@@ -236,48 +238,51 @@ public class Elevator extends SubsystemBase {
           && Math.abs(getVelocity()) < ElevatorConstants.kVelocityTolerance;
   }
 
-  /*
+  /**
    * Create enums for the different elevator positions:
-   *    Bottom without cone
-   *    Bottom with cone
-   *    Top without cone
-   *    Top with cone
+   *    Bottom without cone, 
+   *    Bottom with cone, 
+   *    Top without cone, 
+   *    Top with cone, 
    *    None
    */
-
   enum ElevatorStatus {
     BOTTOM, BOTTOM_CONE, TOP, TOP_CONE, NONE
   }
   
-  /* 
-   * Create enums for the elevator mode, whether we want the elevator to calibrate, 
-   * use manual control, position control, or if we want the elevator to be disabled 
+  /**
+   * Create enums for the elevator mode, whether we want the elevator to:
+   *    calibrate, 
+   *    use manual control, 
+   *    position control,
+   *    be disabled 
    */
   public enum ElevatorMode {
     CALIBRATION, MANUAL, POSITION, DISABLED
   }
 
   /**
-   * If our elevator position is less than the distance that the carraige can travel in the first stage, 
-   * check whether hasCone is true or false. If hasCone is true, set m_status to the ElevatorStatus enum BOTTOM_CONE. 
-   * If hasCone is false, set m_status to the ElevatorStatus enum BOTTOM. 
-   * 
-   * <p>
-   * 
-   * If our elelevator position is more than the distance that the carriage can travel in the first stage, check whether hasCone is
-   * true or false. If hasCone is true, set m_status to the ElevatorStatus enum TOP_CONE. If it's false, set m_status to the ElevatorStatus enum TOP.
+   * Updates the elevator status based on the position and held game piece
+   *
   */
   private void updateElevatorStatus() {
+     
     boolean hasCone = m_hasConeSupplier.getAsBoolean();
-    if (getPosition() < ElevatorConstants.kCarriageMaxDistance) {
+
+    //check if our elevator position is less than the distance that the carriage can travel in the first stage, 
+    if (getPosition() < ElevatorConstants.kCarriageMaxDistance) { 
+      //check whether hasCone is true or false. If hasCone is true, set m_status to the ElevatorStatus enum BOTTOM_CONE. 
+      //If hasCone is false, set m_status to the ElevatorStatus enum BOTTOM. 
       m_status = hasCone ? ElevatorStatus.BOTTOM_CONE : ElevatorStatus.BOTTOM;
     } else {
+      //if hasCone is true, set m_status to the ElevatorStatus enum TOP_CONE. 
+      //If it's false, set m_status to the ElevatorStatus enum TOP.
       m_status = hasCone ? ElevatorStatus.TOP_CONE : ElevatorStatus.TOP;
     }
   }
 
   /**
-   * Sepending on the elevator status select the right PID and 
+   * Depending on the elevator status select the right PID and 
    * set the right gravity compensation constant to m_gravityCompensation
    */
   private void updateClosedLoopSlot() {
@@ -304,7 +309,8 @@ public class Elevator extends SubsystemBase {
   }
 
   /**
-   * If the elevator is calibrated, set m_isCalibrated to true
+   * Let the subsystem know if the elevator is calibrated or not. This comes in handy for the switch statements
+   * in the periodic function and for the setDesiredPosition() method.
    */
   public void setIsCalibrated() {
     m_isCalibrated = true;
@@ -335,12 +341,12 @@ public class Elevator extends SubsystemBase {
         m_motor.set(ControlMode.PercentOutput, m_desiredPower);
         break;
       case POSITION:
-        if (!m_isCalibrated) break; //if the elevator is not calibrated don't do anything. 
-        updateElevatorStatus(); //set the m_status variable to the desired status requested by a command or trigger or something(not completely sure)
+        if (!m_isCalibrated) break; //if the elevator is not calibrated don't do anything
+        updateElevatorStatus(); //set the m_status variable to the desired status variable requested
         updateClosedLoopSlot(); //select the right PIDs and set m_gravityCompenstion to the right gravity compensation variable
         m_motor.set( 
           ControlMode.Position, //type of control we want to use(PID control is position control, so use ControlMode.Position)
-          Conversions.MetersToFalcon(m_desiredPosition, ElevatorConstants.kSpoolCircumference, ElevatorConstants.kGearRatio), //process variable(elevator position/extension)
+          Conversions.MetersToFalcon(m_desiredPosition, ElevatorConstants.kSpoolCircumference, ElevatorConstants.kGearRatio), //process variable(elevator position)
           DemandType.ArbitraryFeedForward, //type of feedforward
           m_gravityCompensation // put in the m_gravityCompensation variable
         );
