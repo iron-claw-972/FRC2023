@@ -33,7 +33,6 @@ public class GoToNode extends CommandBase {
     m_operator = operator;
     m_drive = drive;
     m_yOffsetSup = yOffsetSup;
-    addRequirements(drive);
   }
 
   /**
