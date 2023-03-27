@@ -318,16 +318,7 @@ public class RobotContainer {
                   .alongWith(new PositionIntake(m_elevator, m_wrist, () -> false, Position.INTAKE)),
               new IntakeGamePiece(m_intake, () -> false, false)));
 
-      m_autoCommand.addOption("ROUTINE 23: Grid 1 Two Piece Cone Top",
-          Commands.sequence(
-              new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake),
-              new PathPlannerCommand("Grid 1 Two Piece", 0, m_drive, true)
-                  .alongWith(new PositionIntake(m_elevator, m_wrist, () -> true, Position.INTAKE)),
-              new IntakeGamePiece(m_intake, () -> true, false),
-              new PathPlannerCommand("Grid 1 Two Piece", 1, m_drive, true)
-                  .alongWith(new PositionIntake(m_elevator, m_wrist, () -> true, Position.INTAKE)),
-              new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake, () -> true)));
-      m_autoCommand.addOption("ROUTINE 24: Grid 1 Two Piece Cube Top",
+      m_autoCommand.addOption("ROUTINE 23: Grid 1 Two Piece Cube Top",
           Commands.sequence(
               new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake),
               new PathPlannerCommand("Grid 1 Two Piece", 0, m_drive, true)
@@ -337,17 +328,7 @@ public class RobotContainer {
                   .alongWith(new PositionIntake(m_elevator, m_wrist, () -> false, Position.INTAKE)),
               new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake, () -> false)));
 
-      m_autoCommand.addOption("ROUTINE 25: Grid 9 Two Piece Cone Top",
-          Commands.sequence(
-              new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake),
-              new PathPlannerCommand("Grid 9 Two Piece", 0, m_drive, true)
-                  .alongWith(new PositionIntake(m_elevator, m_wrist, () -> true, Position.INTAKE)),
-              new IntakeGamePiece(m_intake, () -> true, false),
-              new PathPlannerCommand("Grid 9 Two Piece", 1, m_drive, true)
-                  .alongWith(new PositionIntake(m_elevator, m_wrist, () -> true, Position.INTAKE)),
-              new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake, () -> true)));
-
-      m_autoCommand.addOption("ROUTINE 26: Grid 9 Two Piece Cube Top",
+      m_autoCommand.addOption("ROUTINE 24: Grid 9 Two Piece Cube Top",
           Commands.sequence(
               new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake),
               new PathPlannerCommand("Grid 9 Two Piece", 0, m_drive, true)
