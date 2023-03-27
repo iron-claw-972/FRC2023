@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot.RobotId;
+import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.auto.AutoDeposit;
 import frc.robot.commands.auto.PathPlannerCommand;
@@ -223,23 +224,29 @@ public class RobotContainer {
 
       m_autoCommand.addOption("ROUTINE 1: Grid 4 Engage Hybrid", Commands.sequence(
           new AutoDeposit(Position.BOTTOM, m_elevator, m_wrist, m_intake),
-          new PathPlannerCommand("Grid 4 Engage No Mobility", 0, m_drive, true)));
+          new PathPlannerCommand("Grid 4 Engage No Mobility", 0, m_drive, true),
+          new BalanceCommand(m_drive)));
       m_autoCommand.addOption("ROUTINE 2: Grid 4 Engage Mid", Commands.sequence(
           new AutoDeposit(Position.MIDDLE, m_elevator, m_wrist, m_intake),
-          new PathPlannerCommand("Grid 4 Engage No Mobility", 0, m_drive, true)));
+          new PathPlannerCommand("Grid 4 Engage No Mobility", 0, m_drive, true),
+          new BalanceCommand(m_drive)));
       m_autoCommand.addOption("ROUTINE 3: Grid 4 Engage Top", Commands.sequence(
           new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake),
-          new PathPlannerCommand("Grid 4 Engage No Mobility", 0, m_drive, true)));
+          new PathPlannerCommand("Grid 4 Engage No Mobility", 0, m_drive, true),
+          new BalanceCommand(m_drive)));
 
       m_autoCommand.addOption("ROUTINE 4: Grid 6 Engage Hybrid", Commands.sequence(
           new AutoDeposit(Position.BOTTOM, m_elevator, m_wrist, m_intake),
-          new PathPlannerCommand("Grid 6 Engage No Mobility", 0, m_drive, true)));
+          new PathPlannerCommand("Grid 6 Engage No Mobility", 0, m_drive, true),
+          new BalanceCommand(m_drive)));
       m_autoCommand.addOption("ROUTINE 5: Grid 6 Engage Mid", Commands.sequence(
           new AutoDeposit(Position.MIDDLE, m_elevator, m_wrist, m_intake),
-          new PathPlannerCommand("Grid 6 Engage No Mobility", 0, m_drive, true)));
+          new PathPlannerCommand("Grid 6 Engage No Mobility", 0, m_drive, true),
+          new BalanceCommand(m_drive)));
       m_autoCommand.addOption("ROUTINE 6: Grid 6 Engage Top", Commands.sequence(
           new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake),
-          new PathPlannerCommand("Grid 6 Engage No Mobility", 0, m_drive, true)));
+          new PathPlannerCommand("Grid 6 Engage No Mobility", 0, m_drive, true),
+          new BalanceCommand(m_drive)));
 
       m_autoCommand.addOption("ROUTINE 7: Grid 1 Mobility Hybrid", Commands.sequence(
           new AutoDeposit(Position.BOTTOM, m_elevator, m_wrist, m_intake),
@@ -263,23 +270,29 @@ public class RobotContainer {
 
       m_autoCommand.addOption("ROUTINE 13: Grid 1 Engage Hybrid", Commands.sequence(
           new AutoDeposit(Position.BOTTOM, m_elevator, m_wrist, m_intake),
-          new PathPlannerCommand("Grid 1 Engage", 0, m_drive, true)));
+          new PathPlannerCommand("Grid 1 Engage", 0, m_drive, true),
+          new BalanceCommand(m_drive)));
       m_autoCommand.addOption("ROUTINE 14: Grid 1 Engage Mid", Commands.sequence(
           new AutoDeposit(Position.MIDDLE, m_elevator, m_wrist, m_intake),
-          new PathPlannerCommand("Grid 1 Engage", 0, m_drive, true)));
+          new PathPlannerCommand("Grid 1 Engage", 0, m_drive, true),
+          new BalanceCommand(m_drive)));
       m_autoCommand.addOption("ROUTINE 15: Grid 1 Engage Top", Commands.sequence(
           new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake),
-          new PathPlannerCommand("Grid 1 Engage", 0, m_drive, true)));
+          new PathPlannerCommand("Grid 1 Engage", 0, m_drive, true),
+          new BalanceCommand(m_drive)));
 
       m_autoCommand.addOption("ROUTINE 16: Grid 9 Engage Hybrid", Commands.sequence(
           new AutoDeposit(Position.BOTTOM, m_elevator, m_wrist, m_intake),
-          new PathPlannerCommand("Grid 9 Engage", 0, m_drive, true)));
+          new PathPlannerCommand("Grid 9 Engage", 0, m_drive, true),
+          new BalanceCommand(m_drive)));
       m_autoCommand.addOption("ROUTINE 17: Grid 9 Engage Mid", Commands.sequence(
           new AutoDeposit(Position.MIDDLE, m_elevator, m_wrist, m_intake),
-          new PathPlannerCommand("Grid 9 Engage", 0, m_drive, true)));
+          new PathPlannerCommand("Grid 9 Engage", 0, m_drive, true),
+          new BalanceCommand(m_drive)));
       m_autoCommand.addOption("ROUTINE 18: Grid 9 Engage Top", Commands.sequence(
           new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake),
-          new PathPlannerCommand("Grid 9 Engage", 0, m_drive, true)));
+          new PathPlannerCommand("Grid 9 Engage", 0, m_drive, true),
+          new BalanceCommand(m_drive)));
 
       m_autoCommand.addOption("ROUTINE 19: Grid 1 Intake Cone Top",
           Commands.sequence(
