@@ -35,7 +35,7 @@ public class GoToShelf extends CommandBase {
     PathPoint point1 = PathPoint.fromCurrentHolonomicState(
       m_drive.getPose(),
       m_drive.getChassisSpeeds()
-    );
+    ).withControlLengths(0.001, 0.001);
     // The shelf position
     Pose2d alignPose = DriverStation.getAlliance() == Alliance.Blue ? VisionConstants.kBlueShelfAlignPose : VisionConstants.kRedShelfAlignPose;
     PathPoint point2 = new PathPoint(
@@ -43,7 +43,7 @@ public class GoToShelf extends CommandBase {
       alignPose.getRotation(),
       alignPose.getRotation(),
       0
-    );
+    ).withControlLengths(0.001, 0.001);
     // Creates the command using the two points
     m_command = new PathPlannerCommand(
       new ArrayList<PathPoint>(List.of(point1, point2)),
