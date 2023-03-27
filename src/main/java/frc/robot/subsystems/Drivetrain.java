@@ -24,6 +24,7 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -38,6 +39,7 @@ import frc.robot.commands.test.TestDriveVelocity;
 import frc.robot.commands.test.TestHeadingPID;
 import frc.robot.commands.test.TestSteerAngle;
 import frc.robot.constants.Constants;
+import frc.robot.constants.FieldConstants;
 import frc.robot.constants.VisionConstants;
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.constants.swerve.ModuleConstants;
@@ -373,7 +375,16 @@ public class Drivetrain extends SubsystemBase {
   public void updateOdometry() {
     // Updates pose based on encoders and gyro. NOTE: must use yaw directly from gyro!
     m_poseEstimator.update(Rotation2d.fromDegrees(m_pigeon.getYaw()), getModulePositions());
-    m_mechanism.setDistanceToGrid(Math.max(m_poseEstimator.getEstimatedPosition().getX()-1.95+DriveConstants.kRobotWidthWithBumpers/2, 0));
+    if (DriverStation.getAlliance() == Alliance.Blue) {
+      m_mechanism.setDistanceToGrid(Math.max(m_poseEstimator.getEstimatedPosition().getX()
+      - (VisionConstants.kAprilTags.get(5).pose.getX() + FieldConstants.kAprilTagOffset)
+      + DriveConstants.kRobotWidthWithBumpers/2, 0));
+    }
+    else {
+      m_mechanism.setDistanceToGrid(Math.max(Math.abs(m_poseEstimator.getEstimatedPosition().getX()-FieldConstants.kFieldLength)
+      - (VisionConstants.kAprilTags.get(5).pose.getX() + FieldConstants.kAprilTagOffset)
+      + DriveConstants.kRobotWidthWithBumpers/2, 0));
+    }
     // Updates pose based on vision
     if (m_visionEnabled) {
 
