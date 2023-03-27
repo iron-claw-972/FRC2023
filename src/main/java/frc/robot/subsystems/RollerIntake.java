@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 import frc.robot.constants.IntakeConstants;
+import frc.robot.util.DrawMechanism;
 import frc.robot.util.GamePieceType;
 import frc.robot.util.LogManager;
 import frc.robot.util.MotorFactory;
@@ -66,7 +67,9 @@ public class RollerIntake extends SubsystemBase {
   }
 
   public void setMode(IntakeMode mode) {
-    m_mode = mode; 
+    m_mode = mode;
+    if (RobotBase.isSimulation())
+      DrawMechanism.getInstance().setIntakeStatus(m_mode);
   }
 
   private void setMotorPower(double power) {

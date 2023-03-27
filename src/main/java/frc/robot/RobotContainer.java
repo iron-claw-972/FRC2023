@@ -1,10 +1,5 @@
 package frc.robot;
 
-import com.pathplanner.lib.PathPlannerTrajectory;
-
-import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -20,17 +15,12 @@ import frc.robot.Robot.RobotId;
 import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.auto.DepositThenPath;
-import frc.robot.commands.auto.PathPlannerCommand;
-import frc.robot.commands.scoring.PositionIntake;
 import frc.robot.commands.scoring.PositionIntake.Position;
-import frc.robot.commands.scoring.intake.IntakeGamePiece;
-import frc.robot.commands.scoring.intake.OuttakeGamePiece;
 import frc.robot.constants.Constants;
 import frc.robot.constants.VisionConstants;
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.controls.BaseDriverConfig;
 import frc.robot.controls.GameControllerDriverConfig;
-import frc.robot.controls.ManualController;
 import frc.robot.controls.Operator;
 import frc.robot.controls.TestController;
 import frc.robot.subsystems.Drivetrain;
@@ -51,7 +41,6 @@ public class RobotContainer {
 
   // Shuffleboard auto chooser
   private final SendableChooser<Command> m_autoCommand = new SendableChooser<>();
-  // private final SendableChooser<GamePieceType> m_preloadedGamePiece = new SendableChooser<>();
 
   //shuffleboard tabs
   private final ShuffleboardTab m_mainTab = Shuffleboard.getTab("Main");
@@ -77,7 +66,6 @@ public class RobotContainer {
   private final BaseDriverConfig m_driver;
   private final Operator m_operator;
   private final TestController m_testController;
-  private final ManualController m_manualController;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer(RobotId robotId) {
@@ -103,7 +91,6 @@ public class RobotContainer {
 
         m_operator = new Operator();
         m_testController = new TestController(m_wrist, m_intake, m_elevator);
-        m_manualController = new ManualController(m_intake, m_elevator);
   
         m_operator.configureControls(m_wrist, m_intake, m_elevator, m_vision);
         // m_testController.configureControls();
@@ -111,9 +98,6 @@ public class RobotContainer {
   
         // load paths before auto starts
         PathGroupLoader.loadPathGroups();
-
-        // add camera display
-        CameraServer.startAutomaticCapture();
 
         m_driver.configureControls();
 
@@ -144,13 +128,9 @@ public class RobotContainer {
   
         m_operator = null;
         m_testController = null;
-        m_manualController = null;
 
         // load paths before auto starts
         PathGroupLoader.loadPathGroups();
-
-        // add camera display
-        CameraServer.startAutomaticCapture();
 
         m_driver.configureControls();
 
@@ -175,7 +155,6 @@ public class RobotContainer {
 
         m_operator = null;
         m_testController = null;
-        m_manualController = null;
         break;
     }
 
@@ -187,7 +166,6 @@ public class RobotContainer {
     
     autoChooserUpdate();
     m_autoTab.add("Auto Chooser", m_autoCommand);
-    // m_autoTab.add("Preloaded Chooser", m_preloadedGamePiece);
 
     if (Constants.kUseTelemetry) loadCommandSchedulerShuffleboard();
     
@@ -225,9 +203,6 @@ public class RobotContainer {
    * Do Nothing should stay the default, other autos are added with m_autoCommand.addOption()
    */
   public void autoChooserUpdate() {
-
-    // m_preloadedGamePiece.addOption("Cone", GamePieceType.CONE);
-    // m_preloadedGamePiece.addOption("Cube", GamePieceType.CUBE);
 
     m_autoCommand.setDefaultOption("Do Nothing", new PrintCommand("This will do nothing!"));
 
@@ -294,7 +269,7 @@ public class RobotContainer {
    * @param gamePiece the type of game piece
    */
   public void updateHeldGamePiece() {
-    m_intake.setHeldGamePiece(GamePieceType.CONE);//m_preloadedGamePiece.getSelected());
+    m_intake.setHeldGamePiece(GamePieceType.CONE);
   }
 
 }
