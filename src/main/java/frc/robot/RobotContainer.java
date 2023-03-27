@@ -119,9 +119,6 @@ public class RobotContainer {
         // load paths before auto starts
         PathGroupLoader.loadPathGroups();
 
-        // add camera display
-        CameraServer.startAutomaticCapture();
-
         m_driver.configureControls();
 
         m_vision.setupVisionShuffleboard();
