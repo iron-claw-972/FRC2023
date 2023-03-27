@@ -44,7 +44,7 @@ public class DriveConstants {
 
   // Slew rate limiter on Acceleration
   public static double kTranLim = 3;
-  public static double kRotLim = 3;
+
 
   public static int kPigeon = 0;
 

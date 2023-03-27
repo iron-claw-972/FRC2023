@@ -102,12 +102,11 @@ public class Drivetrain extends SubsystemBase {
   // modules needed to distinguish in chooser
   private Module m_prevModule;
 
-  boolean m_visionEnabled = false;
+  Translation2d m_prevTranslation2d = new Translation2d(0, 0);
+  SlewRateLimiter m_Limiter = new SlewRateLimiter(DriveConstants.kTranLim, -DriveConstants.kTranLim, 0);
+  double m_prevRot = 0;
 
-  SlewRateLimiter xLimiter = new SlewRateLimiter(DriveConstants.kTranLim, -DriveConstants.kTranLim, 0);
-  SlewRateLimiter yLimiter = new SlewRateLimiter(DriveConstants.kTranLim, -DriveConstants.kTranLim, 0);
-  SlewRateLimiter RotLimiter = new SlewRateLimiter(DriveConstants.kRotLim, -DriveConstants.kRotLim, 0);
-  SlewRateLimiter DiagLimiter = new SlewRateLimiter(DriveConstants.kTranLim, -DriveConstants.kTranLim, 0);
+  boolean m_visionEnabled = false;
 
   int m_loggerStep = 0;
 
@@ -273,13 +272,20 @@ public class Drivetrain extends SubsystemBase {
   * @param isOpenLoop whether to use velocity control for the drive motors
   */
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean isOpenLoop) {           
-    xSpeed=xLimiter.calculate(xSpeed);
-    ySpeed=yLimiter.calculate(ySpeed);
-    rot=RotLimiter.calculate(rot);
+    double factor = 1;
+    Translation2d m_Translation2d = new Translation2d(xSpeed, ySpeed);
+    Translation2d m_AccelTranslation = m_Translation2d.minus(m_prevTranslation2d).div(Constants.kLoopTime);
+    double rotAccel = (rot-m_prevRot)/Constants.kLoopTime * ((DriveConstants.kTrackWidth/2) * Math.sqrt(2));
+    if (m_AccelTranslation.getNorm() + Math.abs(rotAccel) > DriveConstants.kTranLim){
+      factor = DriveConstants.kTranLim/ m_AccelTranslation.getNorm() + Math.abs(rotAccel);
+    }
+    double xVel = m_AccelTranslation.getX() * factor * Constants.kLoopTime + m_prevTranslation2d.getX();
+    double yVel = m_AccelTranslation.getY() * Constants.kLoopTime * factor + m_prevTranslation2d.getY();
+    double rotVel = rotAccel/((DriveConstants.kTrackWidth/2) * Math.sqrt(2))*Constants.kLoopTime * factor + m_prevRot;   
     setChassisSpeeds((
       fieldRelative
-          ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getYaw())
-          : new ChassisSpeeds(xSpeed, ySpeed, rot)
+          ? ChassisSpeeds.fromFieldRelativeSpeeds(xVel, yVel, rotVel, getYaw())
+          : new ChassisSpeeds(xVel, yVel, rotVel)
       ),
       isOpenLoop
     );
