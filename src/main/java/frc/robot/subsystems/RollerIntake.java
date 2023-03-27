@@ -138,7 +138,7 @@ public class RollerIntake extends SubsystemBase {
   }
 
   /**
-   * @return The distance (in cm) of the cone from the center of the intake as a double
+   * @return The distance (meters) of the cone from the center of the intake as a double
    */
   public double getConePos() {
     // Get the range in millimeters
