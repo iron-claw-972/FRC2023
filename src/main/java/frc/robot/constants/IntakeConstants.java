@@ -38,8 +38,12 @@ public final class IntakeConstants {
   public static final double kIntakeStallTime = 0.15;
 
   /**
-   * Port number on the RoboRIO that the lidar distannce sensor is connected to
+  * Distance sensor value when the game piece is in the center
+  */
+  public static final double kCenterDist = 0.22;
+
+  /**
+   * Max distance from the center a game piece can be, the distance sensor will be limited to this amount.
    */
-  // TODO: Add a better description after testing the sensor
-  public static final int kLIDARPort = 0;
+  public static final double kMaxDistanceSensorRange = 0.4;
 }
