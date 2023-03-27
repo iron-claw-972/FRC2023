@@ -36,4 +36,10 @@ public final class IntakeConstants {
    */
   //TODO: set this to a tested value
   public static final double kIntakeStallTime = 0.15;
+
+  /**
+   * Port number on the RoboRIO that the lidar distannce sensor is connected to
+   */
+  // TODO: Add a better description after testing the sensor
+  public static final int kLIDARPort = 0;
 }

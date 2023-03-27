@@ -9,6 +9,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
@@ -32,6 +33,8 @@ public class RollerIntake extends SubsystemBase {
 
   private double m_power;
 
+  private Counter m_LIDAR;
+
   public RollerIntake(ShuffleboardTab intakeTab) {
     m_intakeMotor = MotorFactory.createTalonFX(IntakeConstants.kIntakeMotorId, Constants.kRioCAN);
     m_intakeMotor.setNeutralMode(IntakeConstants.kNeutralMode);
@@ -42,6 +45,11 @@ public class RollerIntake extends SubsystemBase {
     m_heldPiece = GamePieceType.NONE;
 
     m_intakeTab = intakeTab;
+
+    m_LIDAR = new Counter(IntakeConstants.kLIDARPort); // TODO: Create constant for sensor port
+    m_LIDAR.setMaxPeriod(1.00);
+    m_LIDAR.setSemiPeriodMode(true);
+    m_LIDAR.reset();
 
     if (Constants.kUseTelemetry) setupShuffleboard();
 
@@ -88,6 +96,8 @@ public class RollerIntake extends SubsystemBase {
     m_intakeTab.addDouble("Intake Motor Current", () -> getCurrent());
     m_intakeTab.addDouble("Intake Power", () -> m_power);
     m_intakeTab.addString("Held Game Piece", () -> m_heldPiece.name());
+
+    m_intakeTab.addDouble("Cone distance", () -> getConeDistance());
   }
   
   public boolean containsGamePiece() {
@@ -116,5 +126,10 @@ public class RollerIntake extends SubsystemBase {
 
   public void setHeldGamePiece(GamePieceType m_type) {
     m_heldPiece = m_type;
+  }
+
+  // TODO: Add JavaDoc comments for this method
+  public double getConeDistance() {
+    return m_LIDAR.getPeriod() * 1000000.0/10.0; // TODO: See if any of this needs to be added to constants
   }
 } 
