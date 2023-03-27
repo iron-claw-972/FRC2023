@@ -301,7 +301,7 @@ public class RobotContainer {
   public void updateHeldGamePiece() {
     if(m_intake != null)
     {
-      m_intake.setHeldGamePiece(GamePieceType.CONE);/
+      m_intake.setHeldGamePiece(GamePieceType.CONE);
     }
   }
 
