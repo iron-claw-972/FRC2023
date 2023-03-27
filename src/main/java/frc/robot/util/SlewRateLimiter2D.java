@@ -19,18 +19,27 @@ public class SlewRateLimiter2D {
     private double xVel = 0;
     private double yVel = 0;
     private double rotVel = 0;
-    public void calculate(double xSpeed, double ySpeed, double rot){
-        double factor = 1;
+    private double factor = 1;
+    private double m_radius = (DriveConstants.kTrackWidth/2);
+    
+    public void calculate(double xSpeed, double ySpeed, double rot){ 
+
         Translation2d m_Translation2d = new Translation2d(xSpeed, ySpeed);
         Translation2d m_AccelTranslation = m_Translation2d.minus(m_prevTranslation2d).div(Constants.kLoopTime);
-        double rotAccel = (rot-m_prevRot)/Constants.kLoopTime * ((DriveConstants.kTrackWidth/2) * Math.sqrt(2));
-        if (m_AccelTranslation.getNorm() + Math.abs(rotAccel) > DriveConstants.kTranLim){
-          factor = DriveConstants.kTranLim/ m_AccelTranslation.getNorm() + Math.abs(rotAccel);
+        
+        double rotAccel = (rot-m_prevRot)/Constants.kLoopTime * m_radius;
+        double centrapidalAccel = Math.pow(m_prevRot,2)*m_radius;
+        double centrapidalmagnitude = Math.hypot(rotAccel,centrapidalAccel);
+        
+        if (m_AccelTranslation.getNorm() + centrapidalmagnitude > DriveConstants.kTranLim){
+          factor = DriveConstants.kTranLim/(m_AccelTranslation.getNorm() + centrapidalmagnitude);
         }
+        
         xVel = m_AccelTranslation.getX() * factor * Constants.kLoopTime + m_prevTranslation2d.getX();
         yVel = m_AccelTranslation.getY() * Constants.kLoopTime * factor + m_prevTranslation2d.getY();
-        rotVel = rotAccel/((DriveConstants.kTrackWidth/2) * Math.sqrt(2))*Constants.kLoopTime * factor + m_prevRot;
+        rotVel = rotAccel/m_radius*Constants.kLoopTime * factor + m_prevRot;
     }
+    
     public double getXvel(){
         return xVel;
     }
