@@ -150,12 +150,8 @@ public class Vision {
   
   public void setupVisionShuffleboard() {
   }
-
-  public VisionCamera getCamera (int index){
-    return m_cameras.get(index);
-  }
   
-  public class VisionCamera {
+  class VisionCamera {
     PhotonCamera camera;
     PhotonPoseEstimator photonPoseEstimator;
   
@@ -174,10 +170,6 @@ public class Vision {
       );
       photonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
       photonPoseEstimator.setReferencePose(new Pose2d());
-    }
-
-    public String getName(){
-      return camera.getName();
     }
   
     /**

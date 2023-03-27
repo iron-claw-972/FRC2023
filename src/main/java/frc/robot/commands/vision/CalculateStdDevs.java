@@ -20,8 +20,7 @@ import frc.robot.util.Vision;
 public class CalculateStdDevs extends CommandBase {
   private final Drivetrain m_drive;
   private final Vision m_vision;
-  private ArrayList<Pose2d> m_poses1;
-  private ArrayList<Pose2d> m_poses2;
+  private ArrayList<Pose2d> m_poses;
   private int m_arrayLength;
   private Timer m_endTimer;
 
@@ -43,8 +42,7 @@ public class CalculateStdDevs extends CommandBase {
    */
   @Override
   public void initialize() {
-    m_poses1 = new ArrayList<Pose2d>();
-    m_poses2 = new ArrayList<Pose2d>();
+    m_poses = new ArrayList<Pose2d>();
   }
 
   /**
@@ -52,14 +50,13 @@ public class CalculateStdDevs extends CommandBase {
    */
   @Override
   public void execute() {
-    ArrayList<EstimatedRobotPose> poses = m_vision.getEstimatedPoses(m_drive.getPose());
-    // If both cameras see an April tag, add the poses to the arrays
-    if (poses.size() == 2) {
+    Pose2d pose = m_vision.getPose2d(m_drive.getPose());
+    // If the pose exists, add it to the first open spot in the array
+    if (pose != null) {
       m_endTimer.stop();
       m_endTimer.reset();
-      m_poses1.add(poses.get(0).estimatedPose.toPose2d());
-      m_poses2.add(poses.get(1).estimatedPose.toPose2d());
-      System.out.printf("%.1f%% done", ((double)m_poses1.size())/m_arrayLength * 100);
+      m_poses.add(pose);
+      System.out.printf("%.1f%% done", ((double)m_poses.size())/m_arrayLength * 100);
     } else {
       m_endTimer.start();
       // If 5 seconds have passed since it saw an April tag, stop the command
@@ -75,70 +72,44 @@ public class CalculateStdDevs extends CommandBase {
    */
   @Override
   public void end(boolean interrupted) {
-    // If the arrays are empty, don't try to calculate std devs
-    if(m_poses1.size() == 0){
-      System.out.println("There are no poses in the arrays\nTry again where the robot can see an April tag.");
+    // If the array is empty, don't try to calculate std devs
+    if(m_poses.size() == 0){
+      System.out.println("There are no poses in the array\nTry again where the robot can see an April tag.");
       return;
     }
     
     // Calculate std devs
-    double[] xArray1 = new double[m_poses1.size()];
-    double[] yArray1 = new double[m_poses1.size()];
-    double[] rotArray1 = new double[m_poses1.size()];
-    double[] xArray2 = new double[m_poses1.size()];
-    double[] yArray2 = new double[m_poses1.size()];
-    double[] rotArray2 = new double[m_poses1.size()];
-    for(int i = 0; i < m_poses1.size(); i++){
-      xArray1[i] = m_poses1.get(i).getX();
-      yArray1[i] = m_poses1.get(i).getY();
-      rotArray1[i] = m_poses1.get(i).getRotation().getRadians();
-      xArray2[i] = m_poses2.get(i).getX();
-      yArray2[i] = m_poses2.get(i).getY();
-      rotArray2[i] = m_poses2.get(i).getRotation().getRadians();
+    double[] xArray = new double[m_poses.size()];
+    double[] yArray = new double[m_poses.size()];
+    double[] rotArray = new double[m_poses.size()];
+    for(int i = 0; i < m_poses.size(); i++){
+      xArray[i] = m_poses.get(i).getX();
+      yArray[i] = m_poses.get(i).getY();
+      rotArray[i] = m_poses.get(i).getRotation().getRadians();
     }
-    double stdDevX1 = StatisticsUtil.stdDev(xArray1);
-    double stdDevY1 = StatisticsUtil.stdDev(yArray1);
-    double stdDevRot1 = StatisticsUtil.stdDev(rotArray1);
-    double stdDevX2 = StatisticsUtil.stdDev(xArray2);
-    double stdDevY2 = StatisticsUtil.stdDev(yArray2);
-    double stdDevRot2 = StatisticsUtil.stdDev(rotArray2);
+    double stdDevX = StatisticsUtil.stdDev(xArray);
+    double stdDevY = StatisticsUtil.stdDev(yArray);
+    double stdDevRot = StatisticsUtil.stdDev(rotArray);
     
     // Calculate distance to closest April tag
-    double closest1 = 1000000;
-    double closest2 = 1000000;
+    double closest = 1000000;
     ArrayList<EstimatedRobotPose> estimatedPoses = m_vision.getEstimatedPoses(m_drive.getPose());
-    if(estimatedPoses.size() > 0) {
-      for (int i = 0; i < estimatedPoses.get(0).targetsUsed.size(); i++) {
-        double distance = estimatedPoses.get(0).targetsUsed.get(i).getBestCameraToTarget()
-        .getTranslation().toTranslation2d().getNorm();
-        closest1 = Math.min(closest1, distance);
-      }
-    }
-    if(estimatedPoses.size() > 1) {
-      for (int i = 0; i < estimatedPoses.get(1).targetsUsed.size(); i++) {
-        double distance = estimatedPoses.get(1).targetsUsed.get(i).getBestCameraToTarget()
+    for (int i = 0; i < estimatedPoses.size(); i++) {
+      for (int j = 0; j < estimatedPoses.get(i).targetsUsed.size(); j++) {
+        double distance = estimatedPoses.get(i).targetsUsed.get(j).getBestCameraToTarget()
           .getTranslation().toTranslation2d().getNorm();
-        closest2 = Math.min(closest2, distance);
+        closest = Math.min(closest, distance);
       }
     }
     
-    // Camera names
-    String name1 = m_vision.getCamera(0).getName();
-    String name2 = m_vision.getCamera(1).getName();
-
     // Store data in an array to make logging and shuffleboard easier
-    double[] stdDevs1 = {stdDevX1, stdDevY1, stdDevRot1, closest1};
-    double[] stdDevs2 = {stdDevX2, stdDevY2, stdDevRot2, closest2};
+    double[] stdDevs = {stdDevX, stdDevY, stdDevRot, closest};
     
     // Print, log, and add the values to Shuffleboard
-    System.out.println("\n\nStandard deviation values:");
-    System.out.printf("%s:\nX: %.5f\nY: %.5f\nRotation: %.5f\nDistance: %.5f\n",
-      name1, stdDevX1, stdDevY1, stdDevRot1, closest1);
-    System.out.printf("%s:\nX: %.5f\nY: %.5f\nRotation: %.5f\nDistance: %.5f\n",
-      name2, stdDevX2, stdDevY2, stdDevRot2, closest2);
+    System.out.printf("Standard deviation values:\nX: %.5f\nY: %.5f\nRotation: %.5f\nDistance: %.5f\n",
+    stdDevX, stdDevY, stdDevRot, closest);
     if (Constants.kLogging) {
-      LogManager.addDoubleArray("Vision/StdDevs/"+name1, stdDevs1);
-      LogManager.addDoubleArray("Vision/StdDevs/"+name2, stdDevs2);
+      LogManager.addDoubleArray("Vision/StdDevs", stdDevs);
     }
   }
 
