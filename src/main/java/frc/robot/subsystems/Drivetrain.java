@@ -32,8 +32,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.commands.test.CircleDrive;
-import frc.robot.commands.test.DriveFeedForwardCharacterization;
-import frc.robot.commands.test.SteerFeedForwardCharacterizationSingle;
 import frc.robot.commands.test.TestDriveVelocity;
 import frc.robot.commands.test.TestHeadingPID;
 import frc.robot.commands.test.TestSteerAngle;
@@ -745,8 +743,6 @@ public class Drivetrain extends SubsystemBase {
   public void addTestCommands(ShuffleboardTab testTab, GenericEntry testEntry)  {
     if (Constants.kUseTelemetry) {
       testTab.add("Circle Drive", new CircleDrive(this));
-      testTab.add("Drive FeedForward", new DriveFeedForwardCharacterization(this));
-      testTab.add("Steer Single FeedForward", new SteerFeedForwardCharacterizationSingle(this));
       testTab.add("Test Drive Velocity", new TestDriveVelocity(this, testEntry));
       testTab.add("Heading PID", new TestHeadingPID(this, testEntry));
       testTab.add("Steer angle", new TestSteerAngle(this, testEntry));
