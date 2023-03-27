@@ -35,7 +35,7 @@ public class Elevator extends SubsystemBase {
   private double m_gravityCompensation = 0;
 
   public Elevator(ShuffleboardTab elevatorTab, BooleanSupplier hasConeSupplier) {
-    m_elevatorTab = elevatorTab;
+    m_elevatorTab = elevatorTab; 
 
     m_hasConeSupplier = hasConeSupplier;
     m_mode = ElevatorMode.DISABLED;
@@ -59,7 +59,9 @@ public class Elevator extends SubsystemBase {
       ElevatorConstants.kPeakCurrentLimit,
       ElevatorConstants.kPeakCurrentDuration
     ));
-
+    
+    //configure PIDS and feedforwards within motor(not RoboRiO)
+    //each PID is for a different condition
     m_motor.config_kP(0, ElevatorConstants.kBottomP);
     m_motor.config_kI(0, ElevatorConstants.kBottomI);
     m_motor.config_kD(0, ElevatorConstants.kBottomD);
@@ -101,6 +103,13 @@ public class Elevator extends SubsystemBase {
     toggleSoftLimits(false);
   }
 
+  /**
+   * Turn on or off soft limits for the motors -- encoder positions
+   * the motor will be set to neutral mode once it passes the limits
+   * 
+   * @param enabled
+   * @return none
+   */
   public void toggleSoftLimits(boolean enabled) {
     m_motor.configForwardSoftLimitEnable(enabled);
     m_motor.configReverseSoftLimitEnable(enabled);
@@ -122,21 +131,46 @@ public class Elevator extends SubsystemBase {
     return m_bottomLimitSwitch.get() != ElevatorConstants.kBottomLimitSwitchNC;
   }
 
+  /**
+   * Cap the peak motor power that the talonFX will send to the falcon motor (forward and reverse). 
+   * @param power
+   * @return none
+   */
   public void setMaxOutput(double power) {
     m_motor.configPeakOutputForward(power);
     m_motor.configPeakOutputReverse(power);
   }
 
+  /**
+   * Using the elevator position/extension calculate the actual height of the elevator
+   * from the ground to the bottom of the carriage
+   * 
+   * @return elevator height from ground to bottom of carriage
+   */
   public double getHeight() {
     return Conversions.ElevatorExtensionToHeight(getPosition());
   }
 
+  /**
+   * set the desired position/extension to m_desiredPosition
+   * @param desiredPosition
+   */
+  public void setDesiredPosition(double desiredPosition) {
+    m_desiredPosition = desiredPosition;
+  }
+
+
+  /**
+   * Set the desired elevator height from the ground. Do this by converting the elevator height to the
+   * required position/extension, then passing in the value to the setDesiredPosition function (Defined above)
+   * @param desiredHeight the height we want the elevator to move to from the ground
+   */
   public void setDesiredHeight(double desiredHeight) {
     setDesiredPosition(Conversions.ElevatorHeightToExtension(desiredHeight));
   }
 
   /**
-   * Get position of carriage above bottom position
+   * Get position of carriage above bottom position. AKA extension
    * @return position (m)
    */
   public double getPosition() {
@@ -147,23 +181,38 @@ public class Elevator extends SubsystemBase {
     );
   }
 
-  public void setDesiredPosition(double desiredPosition) {
-    m_desiredPosition = desiredPosition;
-  }
-
+  /**
+   * set the desired power to the m_desiredPower variable
+   * @param power
+   */
   public void setDesiredPower(double power) {
     m_desiredPower = power;
   }
 
+  /**
+   * Reset/zero the inbuilt falcon motor encoder
+   */
   public void zeroEncoder() {
     m_motor.setSelectedSensorPosition(0.0);
   }
 
+  /**
+   * If we are not calibrated and we are trying to set the elevator mode to 
+   * something other than CALIBRATION Or DISABLED, don't do anything.
+   * 
+   * If we are calibrated, set the mode to whatever we desire. 
+   * 
+   * @param mode
+   */
   public void setMode(ElevatorMode mode) {
     if (!m_isCalibrated && !(mode == ElevatorMode.CALIBRATION || mode == ElevatorMode.DISABLED)) return;
     m_mode = mode;
   }
 
+  /**
+   * Get the velocity of the elevator in meters per seocnd
+   * @return elevator velocity
+   */
   public double getVelocity() {
     return Conversions.falconToMPS(
       m_motor.getSelectedSensorVelocity(),
@@ -171,20 +220,49 @@ public class Elevator extends SubsystemBase {
       ElevatorConstants.kGearRatio
     );
   }
+  
+  /**
+   * Calculate whether or not the current elevator position is within a set range of the desired position and that
+   * the velocity/speed of the elevator is less than a set velocity tolerance. 
+   * @return true or false-- whether or not the elevator has reached it's desired position
 
+   */
   public boolean reachedDesiredPosition() {
     return Math.abs(m_desiredPosition - getPosition()) < ElevatorConstants.kPositionTolerance
           && Math.abs(getVelocity()) < ElevatorConstants.kVelocityTolerance;
   }
 
+  /*
+   * Create enums for the different elevator positions:
+   *    Bottom without cone
+   *    Bottom with cone
+   *    Top without cone
+   *    Top with cone
+   *    None
+   */
+
   enum ElevatorStatus {
     BOTTOM, BOTTOM_CONE, TOP, TOP_CONE, NONE
   }
-
+  
+  /* 
+   * Create enums for the elevator mode, whether we want the elevator to calibrate, 
+   * use manual control, position control, or if we want the elevator to be disabled 
+   */
   public enum ElevatorMode {
     CALIBRATION, MANUAL, POSITION, DISABLED
   }
 
+  /**
+   * If our elevator position is less than the distance that the carraige can travel in the first stage, 
+   * check whether hasCone is true or false. If hasCone is true, set m_status to the ElevatorStatus enum BOTTOM_CONE. 
+   * If hasCone is false, set m_status to the ElevatorStatus enum BOTTOM. 
+   * 
+   * <p>
+   * 
+   * If our elelevator position is more than the distance that the carriage can travel in the first stage, check whether hasCone is
+   * true or false. If hasCone is true, set m_status to the ElevatorStatus enum TOP_CONE. If it's false, set m_status to the ElevatorStatus enum TOP.
+  */
   private void updateElevatorStatus() {
     boolean hasCone = m_hasConeSupplier.getAsBoolean();
     if (getPosition() < ElevatorConstants.kCarriageMaxDistance) {
@@ -194,6 +272,10 @@ public class Elevator extends SubsystemBase {
     }
   }
 
+  /**
+   * Sepending on the elevator status select the right PID and 
+   * set the right gravity compensation constant to m_gravityCompensation
+   */
   private void updateClosedLoopSlot() {
     switch (m_status) {
       case BOTTOM:
@@ -217,19 +299,25 @@ public class Elevator extends SubsystemBase {
     };
   }
 
+  /**
+   * If the elevator is calibrated, set m_isCalibrated to true
+   */
   public void setIsCalibrated() {
     m_isCalibrated = true;
   }
 
+  /**The periodic method for the subsystem, it runs forever from the moment that the robot is enabled */
   @Override
   public void periodic() {
+    //calculate the position error. We will use this to stop the motors when the top or bottom limit switches are hit. 
+    //The motor know the error already for PID usage.
     double positionError = m_desiredPosition - getPosition();
     if ((isBottomLimitSwitchReached() && (positionError < 0 || m_desiredPower < 0))
         || (isTopLimitSwitchReached() && (positionError > 0 || m_desiredPower > 0))) {
       m_motor.stopMotor();
       return;
     }
-
+    //depending on the elevatorMode, do certain things.
     switch (m_mode) {
       case CALIBRATION:
         m_motor.set(ControlMode.PercentOutput, ElevatorConstants.kCalibrationPower);
@@ -238,28 +326,29 @@ public class Elevator extends SubsystemBase {
         m_motor.stopMotor();
         break;
       case MANUAL:
-        if (!m_isCalibrated) break;
+        if (!m_isCalibrated) break; //if the elevator is not calibrated don't do anything. 
         updateElevatorStatus();
         m_motor.set(ControlMode.PercentOutput, m_desiredPower);
         break;
       case POSITION:
-        if (!m_isCalibrated) break;
-        updateElevatorStatus();
-        updateClosedLoopSlot();
-        m_motor.set(
-          ControlMode.Position,
-          Conversions.MetersToFalcon(m_desiredPosition, ElevatorConstants.kSpoolCircumference, ElevatorConstants.kGearRatio),
-          DemandType.ArbitraryFeedForward,
-          m_gravityCompensation
+        if (!m_isCalibrated) break; //if the elevator is not calibrated don't do anything. 
+        updateElevatorStatus(); //set the m_status variable to the desired status requested by a command or trigger or something(not completely sure)
+        updateClosedLoopSlot(); //select the right PIDs and set m_gravityCompenstion to the right gravity compensation variable
+        m_motor.set( 
+          ControlMode.Position, //type of control we want to use(PID control is position control, so use ControlMode.Position)
+          Conversions.MetersToFalcon(m_desiredPosition, ElevatorConstants.kSpoolCircumference, ElevatorConstants.kGearRatio), //process variable(elevator position/extension)
+          DemandType.ArbitraryFeedForward, //type of feedforward
+          m_gravityCompensation // put in the m_gravityCompensation variable
         );
         break;
     }
     
-    if (Constants.kLogging) updateLogs();
+    if (Constants.kLogging) updateLogs(); //if we are logging(Constants.kLogging is set to true), update the elevator logs
   }
 
   private void setupShuffleboard() {
-    if (Constants.kUseTelemetry) {
+    if (Constants.kUseTelemetry) { 
+      //if we are using telemetry(Constants.kUseTelemetry is set to true), put a bunch of stuff on the elevatorTab on shuffleboard
       m_elevatorTab.addDouble("Current Position (m)", this::getPosition);
       m_elevatorTab.addDouble("Current Height (m)", this::getHeight);
       m_elevatorTab.addDouble("Desired Position (m)", () -> m_desiredPosition);
@@ -279,6 +368,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public void updateLogs() {
+    //update the elevator logs
     LogManager.addDouble("Elevator/desiredPosition", m_desiredPosition);
     LogManager.addDouble("Elevator/extension", getPosition());
     LogManager.addBoolean("Elevator/bottomLimitSwitch", isBottomLimitSwitchReached());
