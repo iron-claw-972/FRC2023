@@ -154,15 +154,6 @@ public class Elevator extends SubsystemBase {
   }
 
   /**
-   * set the desired position/extension to m_desiredPosition
-   * @param desiredPosition
-   */
-  public void setDesiredPosition(double desiredPosition) {
-    m_desiredPosition = desiredPosition;
-  }
-
-
-  /**
    * Set the desired elevator height from the ground. Do this by converting the elevator height to the
    * required position/extension, then passing in the value to the setDesiredPosition function (Defined above)
    * @param desiredHeight the height we want the elevator to move to from the ground
