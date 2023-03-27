@@ -58,14 +58,14 @@ public class VisionConstants {
     } else {
       kCameras = new ArrayList<Pair<String, Transform3d>>(List.of(
         //TODO: figure out new camera position
-        // new Pair<String, Transform3d>(
-        //   "Left_Camera",
-        //   new Transform3d(
-        //     // 1.25, 7.125, 21
-        //     new Translation3d(Units.inchesToMeters(9.75), Units.inchesToMeters(6.5), Units.inchesToMeters(37)),
-        //     new Rotation3d(Math.PI, Units.degreesToRadians(18.4), 0)
-        //   ))
-        // ,
+        new Pair<String, Transform3d>(
+          "Left_Camera",
+          new Transform3d(
+            // 1.25, 7.125, 21
+            new Translation3d(Units.inchesToMeters(9.75), Units.inchesToMeters(6.5), Units.inchesToMeters(37)),
+            new Rotation3d(Math.PI, Units.degreesToRadians(18), 0)
+          ))
+        ,
         new Pair<String, Transform3d>(
           "Right_Camera",
           new Transform3d(
@@ -85,7 +85,7 @@ public class VisionConstants {
   public static final Matrix<N3, N1> kBaseVisionPoseStdDevs = new MatBuilder<>(Nat.N3(), Nat.N1()).fill(
     0.5, // x in meters (default=0.9)
     0.5, // y in meters (default=0.9)
-    0.5 // heading in radians (default=0.9)
+    1 // heading in radians (default=0.9)
   );
 
   // How much to trust vision after passing over the charge station
@@ -93,7 +93,7 @@ public class VisionConstants {
   public static final Matrix<N3, N1> kChargeStationVisionPoseStdDevs = new MatBuilder<>(Nat.N3(), Nat.N1()).fill(
     0.0001, // x in meters
     0.0001, // y in meters
-    0.0001 // heading in radians
+    1 // heading in radians
   );
 
   // Increasing this makes pose estimation trust vision measurements less as distance from Apriltags increases
