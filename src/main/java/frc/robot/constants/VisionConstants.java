@@ -85,7 +85,7 @@ public class VisionConstants {
   public static final Matrix<N3, N1> kBaseVisionPoseStdDevs = new MatBuilder<>(Nat.N3(), Nat.N1()).fill(
     0.5, // x in meters (default=0.9)
     0.5, // y in meters (default=0.9)
-    1 // heading in radians (default=0.9)
+    100 // heading in radians (default=0.9)
   );
 
   // How much to trust vision after passing over the charge station
@@ -93,7 +93,7 @@ public class VisionConstants {
   public static final Matrix<N3, N1> kChargeStationVisionPoseStdDevs = new MatBuilder<>(Nat.N3(), Nat.N1()).fill(
     0.0001, // x in meters
     0.0001, // y in meters
-    1 // heading in radians
+    100 // heading in radians
   );
 
   // Increasing this makes pose estimation trust vision measurements less as distance from Apriltags increases
