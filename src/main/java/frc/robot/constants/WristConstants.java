@@ -13,7 +13,7 @@ public class WristConstants {
   public static final int kPeakCurrentLimit = 45;
   public static final double kPeakCurrentDuration = 0.5;
 
-  public static final double kP = 1.8;
+  public static final double kP = 1.9;
   public static final double kI = 0;
   public static final double kD = 0;
   public static final double kF = 0;
@@ -46,7 +46,7 @@ public class WristConstants {
   public static final double kMiddleNodeConePos = Units.rotationsToRadians(0.070);
   public static final double kTopNodeConePos = Units.rotationsToRadians(0.070);
   
-  public static final double kIntakeConePos = Units.rotationsToRadians(0.035); // 0.025 when untensioned
+  public static final double kIntakeConePos = Units.rotationsToRadians(0.025); // 0.035
   public static final double kIntakeCubePos = Units.rotationsToRadians(0.015);
   public static final double kIntakeShelfPos = Units.rotationsToRadians(0.035);
 

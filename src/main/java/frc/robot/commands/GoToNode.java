@@ -52,11 +52,10 @@ public class GoToNode extends CommandBase {
 
     // get a y offset from the supplier (currently we use the intake to offset scoring)
     double yOffset = m_yOffsetSup.getAsDouble();
-    double xOffset = DriverStation.getAlliance() == Alliance.Blue ? -0.1 : 0.1;
 
     // modify pose by offsets
-    scorePose.plus(new Transform2d(
-      new Translation2d(xOffset, -0.07 + 0), 
+    scorePose = scorePose.plus(new Transform2d(
+      new Translation2d(0, -0.07 + yOffset), 
       new Rotation2d(0)
     ));
 
