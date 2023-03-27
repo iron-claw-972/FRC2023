@@ -102,20 +102,6 @@ public class CalculateStdDevs extends CommandBase {
     double stdDevX2 = StatisticsUtil.stdDev(xArray2);
     double stdDevY2 = StatisticsUtil.stdDev(yArray2);
     double stdDevRot2 = StatisticsUtil.stdDev(rotArray2);
-
-    /*
-     * Standard deviation values:
-      X: 0.21803
-      Y: 0.15641
-      Rotation: 0.08443
-      Distance: Infinity
-
-      deviation values:
-      X: 0.00471
-      Y: 0.03537
-      Rotation: 0.01886
-      Distance: Infinity
-     */
     
     // Calculate distance to closest April tag
     double closest1 = 1000000;
