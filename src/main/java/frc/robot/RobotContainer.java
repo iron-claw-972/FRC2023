@@ -1,10 +1,5 @@
 package frc.robot;
 
-import com.pathplanner.lib.PathPlannerTrajectory;
-
-import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -20,11 +15,7 @@ import frc.robot.Robot.RobotId;
 import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.auto.DepositThenPath;
-import frc.robot.commands.auto.PathPlannerCommand;
-import frc.robot.commands.scoring.PositionIntake;
 import frc.robot.commands.scoring.PositionIntake.Position;
-import frc.robot.commands.scoring.intake.IntakeGamePiece;
-import frc.robot.commands.scoring.intake.OuttakeGamePiece;
 import frc.robot.constants.Constants;
 import frc.robot.constants.VisionConstants;
 import frc.robot.constants.swerve.DriveConstants;
@@ -140,9 +131,6 @@ public class RobotContainer {
 
         // load paths before auto starts
         PathGroupLoader.loadPathGroups();
-
-        // add camera display
-        CameraServer.startAutomaticCapture();
 
         m_driver.configureControls();
 
