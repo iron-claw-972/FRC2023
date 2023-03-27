@@ -43,6 +43,7 @@ import frc.robot.constants.VisionConstants;
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.constants.swerve.ModuleConstants;
 import frc.robot.util.LogManager;
+import frc.robot.util.SlewRateLimiter2D;
 import frc.robot.util.Vision;
 /** 
  * Represents a swerve drive style drivetrain.
@@ -102,9 +103,7 @@ public class Drivetrain extends SubsystemBase {
   // modules needed to distinguish in chooser
   private Module m_prevModule;
 
-  Translation2d m_prevTranslation2d = new Translation2d(0, 0);
-  SlewRateLimiter m_Limiter = new SlewRateLimiter(DriveConstants.kTranLim, -DriveConstants.kTranLim, 0);
-  double m_prevRot = 0;
+  SlewRateLimiter2D m_Limiter2d = new SlewRateLimiter2D();
 
   boolean m_visionEnabled = false;
 
@@ -272,20 +271,11 @@ public class Drivetrain extends SubsystemBase {
   * @param isOpenLoop whether to use velocity control for the drive motors
   */
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean isOpenLoop) {           
-    double factor = 1;
-    Translation2d m_Translation2d = new Translation2d(xSpeed, ySpeed);
-    Translation2d m_AccelTranslation = m_Translation2d.minus(m_prevTranslation2d).div(Constants.kLoopTime);
-    double rotAccel = (rot-m_prevRot)/Constants.kLoopTime * ((DriveConstants.kTrackWidth/2) * Math.sqrt(2));
-    if (m_AccelTranslation.getNorm() + Math.abs(rotAccel) > DriveConstants.kTranLim){
-      factor = DriveConstants.kTranLim/ m_AccelTranslation.getNorm() + Math.abs(rotAccel);
-    }
-    double xVel = m_AccelTranslation.getX() * factor * Constants.kLoopTime + m_prevTranslation2d.getX();
-    double yVel = m_AccelTranslation.getY() * Constants.kLoopTime * factor + m_prevTranslation2d.getY();
-    double rotVel = rotAccel/((DriveConstants.kTrackWidth/2) * Math.sqrt(2))*Constants.kLoopTime * factor + m_prevRot;   
+    m_Limiter2d.calculate(xSpeed, ySpeed, rot);
     setChassisSpeeds((
       fieldRelative
-          ? ChassisSpeeds.fromFieldRelativeSpeeds(xVel, yVel, rotVel, getYaw())
-          : new ChassisSpeeds(xVel, yVel, rotVel)
+          ? ChassisSpeeds.fromFieldRelativeSpeeds(m_Limiter2d.getXvel(), m_Limiter2d.getYvel(), m_Limiter2d.getRotvel(), getYaw())
+          : new ChassisSpeeds(m_Limiter2d.getXvel(), m_Limiter2d.getYvel(), m_Limiter2d.getRotvel())
       ),
       isOpenLoop
     );
