@@ -1,6 +1,5 @@
 package frc.robot;
 
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -21,12 +20,12 @@ import frc.robot.commands.auto.PathPlannerCommand;
 import frc.robot.commands.scoring.PositionIntake;
 import frc.robot.commands.scoring.PositionIntake.Position;
 import frc.robot.commands.scoring.intake.IntakeGamePiece;
+import frc.robot.commands.scoring.intake.OuttakeGamePiece;
 import frc.robot.constants.Constants;
 import frc.robot.constants.VisionConstants;
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.controls.BaseDriverConfig;
 import frc.robot.controls.GameControllerDriverConfig;
-import frc.robot.controls.ManualController;
 import frc.robot.controls.Operator;
 import frc.robot.controls.TestController;
 import frc.robot.subsystems.Drivetrain;
@@ -72,7 +71,6 @@ public class RobotContainer {
   private final BaseDriverConfig m_driver;
   private final Operator m_operator;
   private final TestController m_testController;
-  private final ManualController m_manualController;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer(RobotId robotId) {
@@ -98,7 +96,6 @@ public class RobotContainer {
 
         m_operator = new Operator();
         m_testController = new TestController(m_wrist, m_intake, m_elevator);
-        m_manualController = new ManualController(m_intake, m_elevator);
   
         m_operator.configureControls(m_wrist, m_intake, m_elevator, m_vision);
         // m_testController.configureControls();
@@ -106,9 +103,6 @@ public class RobotContainer {
   
         // load paths before auto starts
         PathGroupLoader.loadPathGroups();
-
-        // add camera display
-        CameraServer.startAutomaticCapture();
 
         m_driver.configureControls();
 
@@ -139,13 +133,9 @@ public class RobotContainer {
   
         m_operator = null;
         m_testController = null;
-        m_manualController = null;
 
         // load paths before auto starts
         PathGroupLoader.loadPathGroups();
-
-        // add camera display
-        CameraServer.startAutomaticCapture();
 
         m_driver.configureControls();
 
@@ -170,7 +160,6 @@ public class RobotContainer {
 
         m_operator = null;
         m_testController = null;
-        m_manualController = null;
         break;
     }
 
