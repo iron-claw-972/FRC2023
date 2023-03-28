@@ -11,10 +11,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.ProxyCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot.RobotId;
 import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.DefaultDriveCommand;
+import frc.robot.commands.SupplierCommand;
 import frc.robot.commands.auto.DepositThenPath;
+import frc.robot.commands.auto.PathPlannerCommand;
 import frc.robot.commands.scoring.PositionIntake.Position;
 import frc.robot.constants.Constants;
 import frc.robot.constants.VisionConstants;
@@ -251,6 +255,19 @@ public class RobotContainer {
       //   new PathPlannerCommand("Grid 1 Engage", 1, m_drive, true)).andThen(
       //   new BalanceCommand(m_drive))
       // );
+
+      // fails to run the proxy sub command so only moves/ resets pose twice
+      m_autoCommand.addOption("Proxy Demo", new SequentialCommandGroup(
+        new PathPlannerCommand("One Meter", 0, m_drive, true),
+        new ProxyCommand( () -> new PathPlannerCommand("One Meter", 0, m_drive, true)),
+        new PathPlannerCommand("One Meter", 0, m_drive, true)
+      ));
+      // runs 3 times so visably moves and resets pose three time
+      m_autoCommand.addOption("Supplier Demo", new SequentialCommandGroup(
+        new PathPlannerCommand("One Meter", 0, m_drive, true),
+        new SupplierCommand( () -> new PathPlannerCommand("One Meter", 0, m_drive, true)),
+        new PathPlannerCommand("One Meter", 0, m_drive, true)
+      ));
     }
   }
 
