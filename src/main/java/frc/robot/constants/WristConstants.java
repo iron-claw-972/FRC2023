@@ -21,6 +21,7 @@ public class WristConstants {
   /** the gravity compensation amount as a percent of full motor power, scaled by a cosine term (this value is the max FF) */
   public static final double kGravityCompensation = 0.08;
 
+  // TODO: this is an accuracy of 3.6 degrees (1/20 radian -> 0.75 inches)
   public static final double kTolerance = Units.rotationsToRadians(0.01);
   public static final double kMotorPowerClamp = 0.8;
 
@@ -58,8 +59,10 @@ public class WristConstants {
   //SIM
   // to know how much the arm will move with a certain power, the sim needs to know the motor, gear ratio, MOI, and length
   public static final DCMotor kGearBox = DCMotor.getFalcon500(1);
-  public static final double kGearRatio = 20/1 * 62/34 * 48/18;
-  // moment of inertia represents how hard it is to angularly accelerate (ie spin) something
-  public static final double kMomentOfInertia = 24.109;
+  public static final double kGearRatio = (20.0/1.0) * (62.0/34.0) * (48.0/18.0);
+  /** Wrist moment of inertia represents how hard it is to angularly accelerate (ie spin) something. */
+  // TODO: MOI of 24.109 is HUGE! It is equivalent to 24 kg at 1 meter! We should have less than 5 kg at 0.5 meter.
+  public static final double kMomentOfInertia = 24.109 * 0.05;
+  /** Length of the wrist joint (meters). Used in simulation and extimating accuracy. */
   public static final double kLength = Units.inchesToMeters(16.1);
 }
