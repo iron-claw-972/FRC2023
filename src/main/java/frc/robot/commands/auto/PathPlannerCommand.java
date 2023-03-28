@@ -1,5 +1,6 @@
 package frc.robot.commands.auto;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -11,7 +12,6 @@ import com.pathplanner.lib.PathPoint;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.constants.AutoConstants;
@@ -21,9 +21,6 @@ import frc.robot.util.PathGroupLoader;
 
 
 public class PathPlannerCommand extends SequentialCommandGroup {
-  
-  Alliance alliance;
-  boolean m_perpetual;
   
   public PathPlannerCommand(ArrayList<PathPoint> waypoints, Drivetrain drive) {
     this(new ArrayList<PathPlannerTrajectory>(Arrays.asList(PathPlanner.generatePath(
@@ -46,43 +43,47 @@ public class PathPlannerCommand extends SequentialCommandGroup {
     this(pathGroup, pathIndex, drive, resetPose, false);
   }
   
-  public PathPlannerCommand(List<PathPlannerTrajectory> pathGroup, int pathIndex, Drivetrain drive, boolean resetPose, boolean perpetual) {
-    m_perpetual = perpetual;
+  public PathPlannerCommand(List<PathPlannerTrajectory> pathGroup, int pathIndex, Drivetrain drive, boolean resetPose, boolean isPerpetual) {
     addRequirements(drive);
     if (pathIndex < 0 || pathIndex > pathGroup.size() - 1) {
       throw new IndexOutOfBoundsException("Path index out of range"); 
     }
     
-    addCommands(new InstantCommand( () -> {
-      PathPlannerTrajectory path = PathPlannerTrajectory.transformTrajectoryForAlliance(
-        pathGroup.get(pathIndex), DriverStation.getAlliance());
-      if (resetPose) {
-        drive.resetOdometry(Conversions.absolutePoseToPathPlannerPose(path.getInitialHolonomicPose(), DriverStation.getAlliance()));
-      }
-    }), 
-    (m_perpetual ? 
-      new PPSwerveControllerCommandPerpetual(
-        pathGroup.get(pathIndex), 
-        () -> Conversions.absolutePoseToPathPlannerPose(
-        drive.getPose(), DriverStation.getAlliance()), // Pose supplier
-        drive.getPathplannerXController(), // X controller can't normal PID as pathplanner has Feed Forward 
-        drive.getPathplannerYController(), // Y controller can't normal PID as pathplanner has Feed Forward 
-        drive.getPathplannerRotationController(), // Rotation controller can't normal PID as pathplanner has Feed Forward 
-        (chassisSpeeds) -> { drive.setChassisSpeeds(chassisSpeeds, false); }, // chassis Speeds consumer
-        true,  // use Alliance color
-        drive // Requires this drive subsystem
-      ) :
-      new PPSwerveControllerCommand(
-        pathGroup.get(pathIndex), 
-        () -> Conversions.absolutePoseToPathPlannerPose(
-        drive.getPose(), DriverStation.getAlliance()), // Pose supplier
-        drive.getPathplannerXController(), // X controller can't normal PID as pathplanner has Feed Forward 
-        drive.getPathplannerYController(), // Y controller can't normal PID as pathplanner has Feed Forward 
-        drive.getPathplannerRotationController(), // Rotation controller can't normal PID as pathplanner has Feed Forward 
-        (chassisSpeeds) -> { drive.setChassisSpeeds(chassisSpeeds, false); }, // chassis Speeds consumer
-        true,  // use Alliance color
-        drive // Requires this drive subsystem
-      )
-    ));
+    addCommands(
+      new InstantCommand( () -> {
+        PathPlannerTrajectory path = PathPlannerTrajectory.transformTrajectoryForAlliance(
+          pathGroup.get(pathIndex), DriverStation.getAlliance());
+        if (resetPose) {
+          drive.resetOdometry(Conversions.absolutePoseToPathPlannerPose(path.getInitialHolonomicPose(), DriverStation.getAlliance()));
+        }
+      }),
+      createSwerveControllerCommand(pathGroup, pathIndex, drive, isPerpetual)
+    );
+  }
+  
+  public static PPSwerveControllerCommand createSwerveControllerCommand(List<PathPlannerTrajectory> pathGroup, int pathIndex, Drivetrain drive, boolean isPerpetual) {
+    if (isPerpetual) return new PPSwerveControllerCommandPerpetual(
+      pathGroup.get(pathIndex), 
+      () -> Conversions.absolutePoseToPathPlannerPose(
+      drive.getPose(), DriverStation.getAlliance()), // Pose supplier
+      drive.getPathplannerXController(), // X controller can't normal PID as pathplanner has Feed Forward 
+      drive.getPathplannerYController(), // Y controller can't normal PID as pathplanner has Feed Forward 
+      drive.getPathplannerRotationController(), // Rotation controller can't normal PID as pathplanner has Feed Forward 
+      (chassisSpeeds) -> { drive.setChassisSpeeds(chassisSpeeds, false); }, // chassis Speeds consumer
+      true,  // use Alliance color
+      drive // Requires this drive subsystem
+    );
+
+    return new PPSwerveControllerCommand(
+      pathGroup.get(pathIndex), 
+      () -> Conversions.absolutePoseToPathPlannerPose(
+      drive.getPose(), DriverStation.getAlliance()), // Pose supplier
+      drive.getPathplannerXController(), // X controller can't normal PID as pathplanner has Feed Forward 
+      drive.getPathplannerYController(), // Y controller can't normal PID as pathplanner has Feed Forward 
+      drive.getPathplannerRotationController(), // Rotation controller can't normal PID as pathplanner has Feed Forward 
+      (chassisSpeeds) -> { drive.setChassisSpeeds(chassisSpeeds, false); }, // chassis Speeds consumer
+      true,  // use Alliance color
+      drive // Requires this drive subsystem
+    );
   }
 }
