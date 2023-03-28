@@ -25,9 +25,8 @@ public final class IntakeConstants {
   public static final double kCubeIntakeCurrentStopPoint = 5;
   public static final double kConeIntakeCurrentStopPoint = 5;
 
-  //assuming PD 2
-  public static final int kContinuousCurrentLimit = 20;
-  public static final int kPeakCurrentLimit = 30;
+  public static final int kContinuousCurrentLimit = 25;
+  public static final int kPeakCurrentLimit = 55;
   public static final double kPeakCurrentDuration = 0.1;
   public static final boolean kEnableCurrentLimit = true;
   

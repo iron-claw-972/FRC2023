@@ -8,11 +8,10 @@ import edu.wpi.first.math.util.Units;
 
 public class WristConstants {
   
-  //assuming PD 3
   public static final int kMotorID = 2;
   public static final boolean kEnableCurrentLimit = true;
   public static final int kContinuousCurrentLimit = 30;
-  public static final int kPeakCurrentLimit = 55;
+  public static final int kPeakCurrentLimit = 50;
   public static final double kPeakCurrentDuration = 0.5;
 
   public static final double kP = 2;
