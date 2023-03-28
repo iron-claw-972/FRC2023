@@ -43,7 +43,7 @@ public final class IntakeConstants {
   public static final double kCenterDist = 0.22;
 
   /**
-   * Max distance from the center a game piece can be, the distance sensor will be limited to this amount.
+   * Max distance from the sensor a game piece can be, the distance sensor will be limited to this amount.
    */
   public static final double kMaxDistanceSensorRange = 0.4;
 }

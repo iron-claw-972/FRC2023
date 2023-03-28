@@ -150,7 +150,7 @@ public class RollerIntake extends SubsystemBase {
     }
 
     // Just assume center distance if it can't detect anything
-    if (range == -1) {
+    if (range == -1 || range/1000.0>IntakeConstants.kMaxDistanceSensorRange+0.024) {
       return 0;
     }
 
