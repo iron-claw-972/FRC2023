@@ -516,7 +516,7 @@ public class Drivetrain extends SubsystemBase {
   public ChassisSpeeds getFieldRelativeChassisSpeeds() {
     return ChassisSpeeds.fromFieldRelativeSpeeds(
       getChassisSpeeds(),
-      getPose().getRotation());
+      getYaw());
   }
 
   public double getChassisSpeedsMagnitude() {
