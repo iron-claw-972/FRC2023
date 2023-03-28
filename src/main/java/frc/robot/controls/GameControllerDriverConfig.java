@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.GoToPose;
 import frc.robot.commands.SetFormationX;
+import frc.robot.constants.FieldConstants;
 import frc.robot.constants.OIConstants;
 import frc.robot.constants.VisionConstants;
 import frc.robot.subsystems.Drivetrain;
@@ -43,8 +44,19 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
     // Moves to the selected scoring position using Path Planner
     kDriver.get(Button.LB).whileTrue(new GoToPose(()->getNodePose(), getDrivetrain()));
 
+    // Moves to the single substation using Path Planner
+    kDriver.get(Button.RB).whileTrue(new GoToPose(()->new Pose2d(
+      DriverStation.getAlliance()==Alliance.Blue?FieldConstants.kBlueSingleSubstationX:FieldConstants.kRedSingleSubstationX, 
+      getDrivetrain().getPose().getY(),
+      new Rotation2d(Math.PI/2)), 
+      getDrivetrain())
+    );
+
     // Moves to the shelf using Path Planner
-    kDriver.get(Button.RB).whileTrue(new GoToPose(()->(DriverStation.getAlliance()==Alliance.Blue?VisionConstants.kBlueShelfAlignPose:VisionConstants.kRedShelfAlignPose), getDrivetrain()));
+    kDriver.get(Button.LEFT_JOY).whileTrue(new GoToPose(()->(
+      DriverStation.getAlliance()==Alliance.Blue?VisionConstants.kBlueShelfAlignPose:VisionConstants.kRedShelfAlignPose), 
+      getDrivetrain())
+    );
     
     kDriver.get(Button.B).whileTrue(new BalanceCommand(super.getDrivetrain()));
 

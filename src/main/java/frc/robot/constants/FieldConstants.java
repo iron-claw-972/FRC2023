@@ -22,6 +22,9 @@ public class FieldConstants {
   // The distance from center of apriltag to the cone node
   public static final double kConeNodeOffset = Units.inchesToMeters(22); // meters
 
+  // Distance from the April tag to the single substation in the x direction
+  public static final double kSingleSubstationDistance = Units.inchesToMeters(79.395);
+
   // Array to use if it can't find the April tag field layout
   public static final ArrayList<AprilTag> kAprilTags = new ArrayList<AprilTag>(List.of(
     new AprilTag(1, new Pose3d(Units.inchesToMeters(610.77), Units.inchesToMeters( 42.19), Units.inchesToMeters(18.22), new Rotation3d(0.0, 0.0, Math.PI))),
@@ -37,6 +40,9 @@ public class FieldConstants {
   // Where the robot needs to go to intake from the shelf
   public static double kBlueShelfX = kAprilTags.get(3).pose.getX();
   public static double kRedShelfX = kAprilTags.get(4).pose.getX();
+  // X coordinates of the single substations
+  public static final double kBlueSingleSubstationX = kAprilTags.get(3).pose.getX() - kSingleSubstationDistance;
+  public static final double kRedSingleSubstationX = kAprilTags.get(4).pose.getX() + kSingleSubstationDistance;
   // 15 from april tag to edge of portal (where cones are accessible). That area is 34.21 inches wide, just aim for the center
   public static double kShelfY = kAprilTags.get(3).pose.getY() - Units.inchesToMeters(15 + (34.21 / 2));
 }
