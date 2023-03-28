@@ -150,11 +150,11 @@ public class RollerIntake extends SubsystemBase {
     }
 
     // Just assume center distance if it can't detect anything
-    if (range == -1 || range/1000.0>IntakeConstants.kMaxDistanceSensorRange+0.024) {
+    if (range == -1 || range/1000.0-IntakeConstants.kCenterDist>IntakeConstants.kMaxDistanceSensorRange+0.024) {
       return 0;
     }
 
     // Convert to meters and clamp to reasonable values
-    return MathUtil.clamp((range / 1000.0), 0, IntakeConstants.kMaxDistanceSensorRange) - IntakeConstants.kCenterDist;
+    return MathUtil.clamp((range / 1000.0) - IntakeConstants.kCenterDist, -IntakeConstants.kMaxDistanceSensorRange, IntakeConstants.kMaxDistanceSensorRange);
   }
 } 
