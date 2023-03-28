@@ -636,19 +636,23 @@ public class Drivetrain extends SubsystemBase {
       m_steerAngleEntry = m_swerveModulesTab.add("Set Steer Angle", 0).getEntry();
       m_driveStaticFeedforwardEntry = m_swerveModulesTab.add(
         "Drive kS FF",
-        m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]).getEntry();
+        m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]
+      ).getEntry();
 
       m_driveVelocityFeedforwardEntry = m_swerveModulesTab.add(
         "Drive kV FF",
-        m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]).getEntry();
+        m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]
+      ).getEntry();
 
       m_steerStaticFeedforwardEntry = m_swerveModulesTab.add(
         "Steer kS FF",
-        m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]).getEntry();
+        m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]
+      ).getEntry();
 
       m_steerVelocityFeedforwardEntry = m_swerveModulesTab.add(
         "Steer kV FF",
-        m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]).getEntry();
+        m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]
+      ).getEntry();
     }
   }
   
