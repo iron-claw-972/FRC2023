@@ -39,6 +39,7 @@ public class RollerIntake extends SubsystemBase {
 
   private double m_power;
 
+
   public RollerIntake(ShuffleboardTab intakeTab) {
     m_intakeMotor = MotorFactory.createTalonFX(IntakeConstants.kIntakeMotorId, Constants.kRioCAN);
     m_intakeMotor.setNeutralMode(IntakeConstants.kNeutralMode);
@@ -58,6 +59,7 @@ public class RollerIntake extends SubsystemBase {
     m_heldPiece = GamePieceType.NONE;
 
     m_intakeTab = intakeTab;
+
 
     if (Constants.kUseTelemetry) setupShuffleboard();
 
@@ -106,7 +108,7 @@ public class RollerIntake extends SubsystemBase {
     m_intakeTab.addDouble("Intake Motor Current", () -> getCurrent());
     m_intakeTab.addDouble("Intake Power", () -> m_power);
     m_intakeTab.addString("Held Game Piece", () -> m_heldPiece.name());
-    m_intakeTab.addDouble("Distance Sensor Range", () -> getConePos());
+    m_intakeTab.addDouble("Cone distance from center", () -> getConePos());
   }
   
   public boolean containsGamePiece() {
@@ -138,23 +140,21 @@ public class RollerIntake extends SubsystemBase {
   }
 
   /**
-   * @return the position of the cone in the intake in meters. 
-   * zero being middle, positive away from the distance sensor. 
-   * Returns zero if no cone.
+   * @return The distance (meters) of the cone from the center of the intake as a double
    */
   public double getConePos() {
-    // get the range in millimeters
+    // Get the range in millimeters
     double range = -1;
     if (RobotBase.isReal()) {
       range = m_distSensor.getRange();
     }
 
-    // just assume center distance if it can't detect anything
+    // Just assume center distance if it can't detect anything
     if (range == -1) {
       return 0;
     }
 
-    // convert to meters and clamp to reasonable values
+    // Convert to meters and clamp to reasonable values
     return MathUtil.clamp((range / 1000.0), 0, IntakeConstants.kMaxDistanceSensorRange) - IntakeConstants.kCenterDist;
   }
 } 
