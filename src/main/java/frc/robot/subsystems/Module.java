@@ -237,14 +237,6 @@ public class Module extends SubsystemBase {
     return getDesiredState().speedMetersPerSecond - getState().speedMetersPerSecond;
   }
 
-  public double getDriveFeedForwardKV() {
-    return DriveConstants.kDriveKV;
-  }
-
-  public double getDriveFeedForwardKS() {
-    return DriveConstants.kDriveKS;
-  }
-
   public void stop() {
     m_driveMotor.set(0);
     m_angleMotor.set(0);

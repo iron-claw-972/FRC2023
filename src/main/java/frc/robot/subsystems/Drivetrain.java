@@ -491,24 +491,6 @@ public class Drivetrain extends SubsystemBase {
       m_modules[i].stop();
     }
   }
-
-  /**
-   * Sets up feedforward savers.
-   */
-  private void setUpFeedforwardSavers() {
-    m_driveStaticFeedForwardSaver = new Double[] {
-      m_modules[0].getDriveFeedForwardKS(),
-      m_modules[1].getDriveFeedForwardKS(),
-      m_modules[2].getDriveFeedForwardKS(),
-      m_modules[3].getDriveFeedForwardKS()
-    };
-    m_driveVelFeedForwardSaver = new Double[] {
-      m_modules[0].getDriveFeedForwardKV(),
-      m_modules[1].getDriveFeedForwardKV(),
-      m_modules[2].getDriveFeedForwardKV(),
-      m_modules[3].getDriveFeedForwardKV()
-    };
-  }
   
   public Double[] getDriveStaticFeedforwardArray() {
     return m_driveStaticFeedForwardSaver;
@@ -575,8 +557,6 @@ public class Drivetrain extends SubsystemBase {
       m_moduleChooser.addOption("Front Right", m_modules[1]);
       m_moduleChooser.addOption("Back Left", m_modules[2]);
       m_moduleChooser.addOption("Back Right", m_modules[3]);
-
-      setUpFeedforwardSavers();
       
       // inputs
       m_swerveModulesTab.add("Module Chooser", m_moduleChooser);
@@ -676,40 +656,6 @@ public class Drivetrain extends SubsystemBase {
     //   }
     // }
         
-  }
-
-  /**
-   * Updates the steer module feedforward values on shuffleboard.
-   */
-  public void updateSteerModuleFeedforwardShuffleboard() {
-    if (!Constants.kUseTelemetry) return;
-    
-    //revert to previous saved feed forward data if changed
-    if (m_prevModule != m_moduleChooser.getSelected()) {
-      m_steerStaticFeedforwardEntry.setDouble(
-        m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]
-      );
-      m_steerVelocityFeedforwardEntry.setDouble(
-        m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]
-      );
-      m_prevModule = m_moduleChooser.getSelected();
-    }
-    
-    // update saved feedforward data
-    m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()] = 
-      m_steerStaticFeedforwardEntry.getDouble(0);
-    m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()] = 
-      m_steerVelocityFeedforwardEntry.getDouble(0);
-    
-    //to set all modules to same feedforward values if all
-    // if (m_module.getSelected() == m_allModule) {
-    //   for(int i = 0; i < 4; i++) {
-    //     m_modules[i].setDriveFeedForwardValues(m_steerStaticFeedForwardSaver[m_module.getSelected().getId()], m_steerVelFeedForwardSaver[m_module.getSelected().getId()]);
-    //   }
-    // }
-    
-    //set selected module
-    
   }
   
   public Module getModuleChoosen() {
