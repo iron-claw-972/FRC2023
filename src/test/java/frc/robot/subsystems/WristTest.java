@@ -6,12 +6,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.simulation.DutyCycleEncoderSim;
+import edu.wpi.first.wpilibj.util.WPILibVersion;
 import frc.robot.constants.Constants;
 import frc.robot.constants.WristConstants;
 
@@ -58,17 +60,25 @@ public class WristTest {
      * Test the encoder.
      * <p>
      * The results are unexpected: set(rotations) works but setDistance(distance) does not.
+     * <p>
+     * Will be fixed in a later WPILIB release
+     * <p>
+     * .see https://github.com/wpilibsuite/allwpilib/pull/5147
      */
     @Test
+    @Disabled
     public void testWristEncoder() {
         DutyCycleEncoder encoder = m_wrist.m_absEncoder;
         DutyCycleEncoderSim encoderSim = m_wrist.m_absEncoderSim;
+
+        // "2023.4.2"
+        // System.out.println(WPILibVersion.Version);
 
         // the encoder objects should exist
         assertNotNull(encoder);
         assertNotNull(encoderSim);
 
-        // The offset and scale should have been set...
+        // The offset and scale were set...
 
         // 0.704
         // System.out.println(encoder.getPositionOffset());
@@ -78,36 +88,43 @@ public class WristTest {
         // System.out.println(encoder.getDistancePerRotation());
         assertEquals(-2.0 * Math.PI, encoder.getDistancePerRotation(), 0.000001);
 
-        // the absolution encoder should start out at zero
+        // the absolute encoder should start out at zero
+        // These results may not be correct but they are what we get
         assertEquals(0.0, encoder.getAbsolutePosition(), 0.001);
         assertEquals(0.0, encoder.getDistance(), 0.001);
 
-        // now things are crazy...
-        System.out.println("crazy times");
-
         // print the known value
         // 1.910
-        System.out.println(WristConstants.kStowPos);
+        // System.out.println(WristConstants.kStowPos);
 
+        // now things are crazy...
+        // System.out.println("encoderSim.set(rotations) works");
 
         // we can set rotations
-        encoderSim.set(WristConstants.kStowPos);
+        encoderSim.set(WristConstants.kStowPos / encoder.getDistancePerRotation());
         // 1.910
-        System.out.println(encoder.get());
-        assertEquals(WristConstants.kStowPos, encoder.get(), 0.001);
+        // System.out.println(encoder.get() * encoder.getDistancePerRotation());
+        assertEquals(WristConstants.kStowPos, encoder.get() * encoder.getDistancePerRotation(), 0.001);
         // -12.0014
-        System.out.println(encoder.getDistance());
+        // System.out.println(encoder.getDistance());
         // distance should be a multiple
-        assertEquals(WristConstants.kStowPos, encoder.getDistance() / encoder.getDistancePerRotation(), 0.001);
+        assertEquals(WristConstants.kStowPos, encoder.getDistance(), 0.001);
 
-        System.out.println("Try setDistance() -- fails!");
+        System.out.println("encoderSim.setDistance() -- fails!");
         // we cannot set a distance
         encoderSim.setDistance(WristConstants.kStowPos);
-        System.out.println(encoder.get());
-        System.out.println(encoder.getDistance());
+        // This is the expected value -- FAILS
+        assertEquals(WristConstants.kStowPos, encoder.getDistance(), 0.001);
+        // 1.910
+        // System.out.println(encoder.get());
+        // This is unexpected
+        // assertEquals(WristConstants.kStowPos, encoder.get(), 0.001);
+        // -12.0014
+        // System.out.println(encoder.getDistance());
+        // This is unexpected
+        // assertEquals(WristConstants.kStowPos, encoder.getDistance() / encoder.getDistancePerRotation(), 0.001);
         // TODO: setDistance() fails; set() and setDistance() are the same? Only getDistance() is scaled?
         // .see https://github.com/wpilibsuite/allwpilib/blob/main/wpilibj/src/main/java/edu/wpi/first/wpilibj/simulation/DutyCycleEncoderSim.java
-        // assertEquals(WristConstants.kStowPos, encoder.getDistance(), 0.001);
 
         // GetAbsolutePosition() - GetPositionOffset() will give an encoder absolute position relative to the last reset. 
 
@@ -120,7 +137,52 @@ public class WristTest {
     }
 
     /**
-     * The second test.
+     * Consolidated duty cycle encoder test.
+     * <p>
+     * .see https://github.com/wpilibsuite/allwpilib/issues/5245
+     * <p>
+     * Will be fixed in a later WPILIB release
+     * <p>
+     * .see https://github.com/wpilibsuite/allwpilib/pull/5147
+     */
+    @Test
+    @Disabled
+    public void testDutyCycleEncoder() {
+        int channel = 6;
+        DutyCycleEncoder dceEncoder = new DutyCycleEncoder(channel);
+        DutyCycleEncoderSim dceSim = new DutyCycleEncoderSim(dceEncoder);
+
+        // "2023.4.2"
+        System.out.println(WPILibVersion.Version);
+
+        double gain = 3.0;
+        dceEncoder.setDistancePerRotation(gain);
+
+        double rotations = 1.0;
+
+        System.out.println("dceSim.set() works");
+        dceSim.set(rotations);
+        // 1.0
+        System.out.printf(" dceEncoder.get()         = %8f\n", dceEncoder.get());
+        // 3.0
+        System.out.printf(" dceEncoder.getDistance() = %8f\n", dceEncoder.getDistance());
+        assertEquals(rotations, dceEncoder.get(), 0.001);
+        assertEquals(rotations * gain, dceEncoder.getDistance(), 0.001);
+
+        System.out.println("dceSim.setDistance() fails");
+        dceSim.setDistance(rotations * gain);
+        // 3.0
+        System.out.printf(" dceEncoder.get()         = %8f\n", dceEncoder.get());
+        // 9.0
+        System.out.printf(" dceEncoder.getDistance() = %8f\n", dceEncoder.getDistance());
+        assertEquals(rotations, dceEncoder.get(), 0.001);
+        assertEquals(rotations * gain, dceEncoder.getDistance(), 0.001);
+
+        dceEncoder.close();
+    }
+
+    /**
+     * Simulate moving the wrist.
      */
     @Test
     public void testWristMovement() {

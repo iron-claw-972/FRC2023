@@ -84,7 +84,7 @@ public class Wrist extends SubsystemBase {
       );
 
       // make the encoder simulator
-      // this allows us to set the encoder...
+      // this allows us to set the encoder during simulations...
       m_absEncoderSim = new DutyCycleEncoderSim(m_absEncoder);
     }
   }
@@ -187,7 +187,8 @@ public class Wrist extends SubsystemBase {
     m_armSim.update(Constants.kLoopTime);
 
     // Cleaner encoder implementation: we know the angle now, so set the encoder to that value
-    // TODO: ARGH! .setDistance() is setting rotations, so use .set()
+    // ARGH! .setDistance() is setting rotations, so use .set()
+    // This will be fixed in a later WPILIB release: https://github.com/wpilibsuite/allwpilib/pull/5147
     // m_absEncoderSim.setDistance(m_armSim.getAngleRads());
     m_absEncoderSim.set(m_armSim.getAngleRads() / m_absEncoder.getDistancePerRotation());
 

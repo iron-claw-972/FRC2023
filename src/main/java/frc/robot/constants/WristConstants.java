@@ -59,6 +59,7 @@ public class WristConstants {
   //SIM
   // to know how much the arm will move with a certain power, the sim needs to know the motor, gear ratio, MOI, and length
   public static final DCMotor kGearBox = DCMotor.getFalcon500(1);
+  // TODO: check wrist gear ratios
   public static final double kGearRatio = (20.0/1.0) * (62.0/34.0) * (48.0/18.0);
   /** Wrist moment of inertia represents how hard it is to angularly accelerate (ie spin) something. */
   // TODO: MOI of 24.109 is HUGE! It is equivalent to 24 kg at 1 meter! We should have less than 5 kg at 0.5 meter.
