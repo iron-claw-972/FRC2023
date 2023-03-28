@@ -87,6 +87,7 @@
       },
       "holonomicAngle": 0.0,
       "isReversal": true,
+      "isReversal": true,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": true,
