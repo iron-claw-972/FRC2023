@@ -43,6 +43,7 @@ public class CalculateStdDevs extends CommandBase {
   @Override
   public void initialize() {
     m_poses = new ArrayList<Pose2d>();
+    m_drive.enableVision(false);
   }
 
   /**
@@ -72,6 +73,8 @@ public class CalculateStdDevs extends CommandBase {
    */
   @Override
   public void end(boolean interrupted) {
+    m_drive.enableVision(false);
+    
     // If the array is empty, don't try to calculate std devs
     if(m_poses.size() == 0){
       System.out.println("There are no poses in the array\nTry again where the robot can see an April tag.");
@@ -110,7 +113,7 @@ public class CalculateStdDevs extends CommandBase {
     stdDevX, stdDevY, stdDevRot, closest);
     if (Constants.kLogging) {
       LogManager.addDoubleArray("Vision/StdDevs", stdDevs);
-    }
+    }    
   }
 
   /**

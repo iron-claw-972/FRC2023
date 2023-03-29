@@ -23,6 +23,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.vision.CalculateStdDevs;
 import frc.robot.commands.vision.TestVisionAlignment;
 import frc.robot.commands.vision.TestVisionDistance;
@@ -197,7 +198,7 @@ public class Vision {
   }
 
   public void addTestCommands(ShuffleboardTab testTab, GenericEntry testEntry, Drivetrain drive){
-    testTab.add("Calculate vision std devs", new CalculateStdDevs(1000, drive, this));
+    testTab.add("Calculate vision std devs", new CalculateStdDevs(1000, drive, this).beforeStarting(new WaitCommand(5)));
     testTab.add("Test vision (forward)", new TestVisionDistance(0.2, drive, this));
     testTab.add("Test vision (backward)", new TestVisionDistance(-0.2, drive, this));
     testTab.add("Align to 0 degrees", new TestVisionAlignment(0, drive, this));
