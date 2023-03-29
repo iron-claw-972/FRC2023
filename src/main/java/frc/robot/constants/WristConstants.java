@@ -21,7 +21,7 @@ public class WristConstants {
   /** the gravity compensation amount as a percent of full motor power, scaled by a cosine term (this value is the max FF) */
   public static final double kGravityCompensation = 0.08;
 
-  // TODO: this is an accuracy of 3.6 degrees (1/20 radian -> 0.75 inches)
+  // TODO: this is a tolerance of 3.6 degrees (1/16 radian -> 1 inches)
   public static final double kTolerance = Units.rotationsToRadians(0.01);
   public static final double kMotorPowerClamp = 0.8;
 

@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -47,13 +48,20 @@ public class WristTest {
     public void testWristAccuracy() {
         // angular accuracy of the encoder
         double deltaRadians = 2.0 * Math.PI / 1024.0;
+
         // convert to arc error
         double arcError = deltaRadians * WristConstants.kLength;
 
-        // System.out.printf("Wrist height accuracy = %8f meters (%8f inches)\n", arcError, Units.metersToInches(arcError));
-
-        // want accuracy to be less than 3 mm (about 0.125 inches)
+        // Limit of the angle measurement
+        System.out.printf("Wrist height resolution = %8f meters (%8f inches)\n", arcError, Units.metersToInches(arcError));
+        // want the resolution to be less than 3 mm (about 0.125 inches)
         assertTrue(arcError < 0.003);
+
+        // kTolerance is much worse
+        arcError = WristConstants.kTolerance * WristConstants.kLength;
+        // TODO: kTolerance is large (26 mm)
+        System.out.printf("Wrist height tolerance  = %8f meters (%8f inches)\n", arcError, Units.metersToInches(arcError));
+        assertTrue(arcError < 0.03);
     }
 
     /**
@@ -78,7 +86,7 @@ public class WristTest {
         assertNotNull(encoder);
         assertNotNull(encoderSim);
 
-        // The offset and scale were set...
+        // The offset and scale were set when the Wrist was constructed ...
 
         // 0.704
         // System.out.println(encoder.getPositionOffset());
@@ -123,7 +131,7 @@ public class WristTest {
         // System.out.println(encoder.getDistance());
         // This is unexpected
         // assertEquals(WristConstants.kStowPos, encoder.getDistance() / encoder.getDistancePerRotation(), 0.001);
-        // TODO: setDistance() fails; set() and setDistance() are the same? Only getDistance() is scaled?
+        // setDistance() fails; set() and setDistance() are the same? Only getDistance() is scaled?
         // .see https://github.com/wpilibsuite/allwpilib/blob/main/wpilibj/src/main/java/edu/wpi/first/wpilibj/simulation/DutyCycleEncoderSim.java
 
         // GetAbsolutePosition() - GetPositionOffset() will give an encoder absolute position relative to the last reset. 
@@ -199,6 +207,8 @@ public class WristTest {
         // make sure we are at the stow position
         assertEquals(WristConstants.kStowPos, m_wrist.getAbsEncoderPos(), 0.03);
 
+        assertTrue(m_wrist.reachedSetpoint());
+
         // change the setpoint
         m_wrist.setSetpoint(WristConstants.kAutoTop);
 
@@ -211,6 +221,7 @@ public class WristTest {
 
         // make sure we are at the stow position
         assertEquals(WristConstants.kAutoTop, m_wrist.getAbsEncoderPos(), 0.03);
+
+        assertTrue(m_wrist.reachedSetpoint());
     }
-    
 }
