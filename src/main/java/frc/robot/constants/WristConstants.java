@@ -46,7 +46,7 @@ public class WristConstants {
   public static final double kMiddleNodeConePos = Units.rotationsToRadians(0.070);
   public static final double kTopNodeConePos = Units.rotationsToRadians(0.070);
   
-  public static final double kIntakeConePos = Units.rotationsToRadians(0.035); // 0.025 when untensioned
+  public static final double kIntakeConePos = Units.rotationsToRadians(0.025); // 0.035
   public static final double kIntakeCubePos = Units.rotationsToRadians(0.015);
   public static final double kIntakeShelfPos = Units.rotationsToRadians(0.035);
 
