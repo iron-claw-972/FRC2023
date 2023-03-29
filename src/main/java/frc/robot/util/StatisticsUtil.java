@@ -25,6 +25,6 @@ public class StatisticsUtil {
     for (int i = 0; i < data.length; i++) {
       total += Math.pow(data[i] - mean, 2);
     }
-    return Math.sqrt(total / data.length);
+    return Math.sqrt(total / (data.length-1));
   }
 }

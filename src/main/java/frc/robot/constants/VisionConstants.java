@@ -51,13 +51,12 @@ public class VisionConstants {
           "Camera_2",
           new Transform3d(
             new Translation3d(Units.inchesToMeters(15), Units.inchesToMeters(-3.3125), Units.inchesToMeters(10)),
-            new Rotation3d(0, 0, Math.PI)
+            new Rotation3d(0, 0, 0)
           )
         )
       ));
     } else {
       kCameras = new ArrayList<Pair<String, Transform3d>>(List.of(
-        //TODO: figure out new camera position
         new Pair<String, Transform3d>(
           "Left_Camera",
           new Transform3d(
