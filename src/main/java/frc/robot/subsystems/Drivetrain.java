@@ -380,13 +380,25 @@ public class Drivetrain extends SubsystemBase {
   }
 
   /**
+   * Runs the PID controllers with the provided x, y, and rot values. Then, calls {@link #drive()} using the PID outputs.
+   * This is based on the odometry of the chassis.
+   * 
+   * @param x the position to move to in the x, in meters
+   * @param y the position to move to in the y, in meters
+   * @param rot the angle to move to, as Roatation2d
+   */
+  public void runChassisPID(double x, double y, Rotation2d rot) {
+    runChassisPID(x, y, rot.getRadians());
+  }
+
+  /**
    * Runs the PID controllers with the provided pose. Then, calls {@link #drive()} using the PID outputs.
    * This is based on the odometry of the chassis.
    * 
    * @param pose desired pose
    */
   public void runChassisPID(Pose2d pose) {
-    runChassisPID(pose.getX(), pose.getY(), pose.getRotation().getRadians());
+    runChassisPID(pose.getX(), pose.getY(), pose.getRotation());
   }
 
   /**
