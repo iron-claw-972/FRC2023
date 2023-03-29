@@ -74,7 +74,7 @@ public class CalculateStdDevs extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_drive.enableVision(false);
-    
+
     // If the array is empty, don't try to calculate std devs
     if(m_poses.size() == 0){
       System.out.println("There are no poses in the array\nTry again where the robot can see an April tag.");
@@ -105,14 +105,14 @@ public class CalculateStdDevs extends CommandBase {
       }
     }
     
-    // Store data in an array to make logging and shuffleboard easier
-    double[] stdDevs = {stdDevX, stdDevY, stdDevRot, closest};
-    
     // Print, log, and add the values to Shuffleboard
     System.out.printf("Standard deviation values:\nX: %.5f\nY: %.5f\nRotation: %.5f\nDistance: %.5f\n",
-    stdDevX, stdDevY, stdDevRot, closest);
+      stdDevX, stdDevY, stdDevRot, closest);
     if (Constants.kLogging) {
-      LogManager.addDoubleArray("Vision/StdDevs", stdDevs);
+      LogManager.addDouble("Vision/StdDevTest/StdDevX", stdDevX);
+      LogManager.addDouble("Vision/StdDevTest/StdDevY", stdDevY);
+      LogManager.addDouble("Vision/StdDevTest/StdDevRotation", stdDevRot);
+      LogManager.addDouble("Vision/StdDevTest/Distance", closest);
     }    
   }
 
