@@ -10,7 +10,7 @@ public class WristConstants {
   
   public static final int kMotorID = 2;
   public static final boolean kEnableCurrentLimit = true;
-  public static final int kContinuousCurrentLimit = 30;
+  public static final int kContinuousCurrentLimit = 20;
   public static final int kPeakCurrentLimit = 50;
   public static final double kPeakCurrentDuration = 0.5;
 
