@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.GoToPose;
+import frc.robot.commands.GoToPosePID;
 import frc.robot.commands.SetFormationX;
 import frc.robot.constants.FieldConstants;
 import frc.robot.constants.OIConstants;
@@ -21,6 +22,7 @@ import frc.robot.util.Functions;
 import lib.controllers.GameController;
 import lib.controllers.GameController.Axis;
 import lib.controllers.GameController.Button;
+import lib.controllers.GameController.DPad;
 
 /**
  * Driver controls for the generic game controller.
@@ -43,6 +45,8 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
 
     // Moves to the selected scoring position using Path Planner
     kDriver.get(Button.LB).whileTrue(new GoToPose(()->getNodePose(), getDrivetrain()));
+    // Moves to the selected scoring position using PID
+    kDriver.get(DPad.LEFT).whileTrue(new GoToPosePID(getDrivetrain(), ()->getNodePose()));
 
     // Moves to the single substation using Path Planner
     kDriver.get(Button.RB).whileTrue(new GoToPose(()->new Pose2d(
@@ -51,11 +55,23 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
       new Rotation2d(Math.PI/2)), 
       getDrivetrain())
     );
+    // Moves to the single substation using PID
+    kDriver.get(DPad.DOWN).whileTrue(new GoToPosePID(getDrivetrain(), 
+      ()->new Pose2d(
+        DriverStation.getAlliance()==Alliance.Blue?FieldConstants.kBlueSingleSubstationX:FieldConstants.kRedSingleSubstationX, 
+        getDrivetrain().getPose().getY(),
+        new Rotation2d(Math.PI/2)
+      ))
+    );
 
     // Moves to the shelf using Path Planner
     kDriver.get(Button.LEFT_JOY).whileTrue(new GoToPose(()->(
       DriverStation.getAlliance()==Alliance.Blue?VisionConstants.kBlueShelfAlignPose:VisionConstants.kRedShelfAlignPose), 
       getDrivetrain())
+    );
+    // Moves to the shelf using PID
+    kDriver.get(DPad.RIGHT).whileTrue(new GoToPosePID(getDrivetrain(), ()->(
+      DriverStation.getAlliance()==Alliance.Blue?VisionConstants.kBlueShelfAlignPose:VisionConstants.kRedShelfAlignPose))
     );
     
     kDriver.get(Button.B).whileTrue(new BalanceCommand(super.getDrivetrain()));
