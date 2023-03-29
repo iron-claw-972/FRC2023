@@ -55,7 +55,7 @@ public class ElevatorConstants {
     public static final double kTopWithConeF = kTopF;
     public static final double kTopWithConeGravityCompensation = kTopGravityCompensation;
 
-    public static final int kContinuousCurrentLimit = 30; // FIXME: Elevator
+    public static final int kContinuousCurrentLimit = 30;
     public static final int kPeakCurrentLimit = 60;
     public static final double kPeakCurrentDuration = 0.1;
     public static final boolean kEnableCurrentLimit = true;
