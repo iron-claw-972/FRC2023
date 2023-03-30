@@ -16,7 +16,7 @@ public class GoToPosePID extends CommandBase {
   
   private Supplier<Pose2d> m_pose;
   
-  public GoToPosePID(Drivetrain drive, Supplier<Pose2d> pose) {
+  public GoToPosePID(Supplier<Pose2d> pose, Drivetrain drive) {
     m_drive = drive; 
     // finalPose is position after robot moves from current position-- startPose-- by the values that are inputted-- distanceToMove
     m_pose = pose;

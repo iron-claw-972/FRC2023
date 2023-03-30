@@ -46,7 +46,7 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
     // Moves to the selected scoring position using Path Planner
     kDriver.get(Button.LB).whileTrue(new GoToPose(()->getNodePose(), getDrivetrain()));
     // Moves to the selected scoring position using PID
-    kDriver.get(DPad.LEFT).whileTrue(new GoToPosePID(getDrivetrain(), ()->getNodePose()));
+    kDriver.get(DPad.LEFT).whileTrue(new GoToPosePID(()->getNodePose(), getDrivetrain()));
 
     // Moves to the single substation using Path Planner
     kDriver.get(Button.RB).whileTrue(new GoToPose(()->new Pose2d(
@@ -56,12 +56,11 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
       getDrivetrain())
     );
     // Moves to the single substation using PID
-    kDriver.get(DPad.DOWN).whileTrue(new GoToPosePID(getDrivetrain(), 
-      ()->new Pose2d(
-        DriverStation.getAlliance()==Alliance.Blue?FieldConstants.kBlueSingleSubstationX:FieldConstants.kRedSingleSubstationX, 
-        getDrivetrain().getPose().getY(),
-        new Rotation2d(Math.PI/2)
-      ))
+    kDriver.get(DPad.DOWN).whileTrue(new GoToPosePID(()->new Pose2d(
+      DriverStation.getAlliance()==Alliance.Blue?FieldConstants.kBlueSingleSubstationX:FieldConstants.kRedSingleSubstationX, 
+      getDrivetrain().getPose().getY(),
+      new Rotation2d(Math.PI/2)),
+      getDrivetrain())
     );
 
     // Moves to the shelf using Path Planner
@@ -70,8 +69,9 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
       getDrivetrain())
     );
     // Moves to the shelf using PID
-    kDriver.get(DPad.RIGHT).whileTrue(new GoToPosePID(getDrivetrain(), ()->(
-      DriverStation.getAlliance()==Alliance.Blue?VisionConstants.kBlueShelfAlignPose:VisionConstants.kRedShelfAlignPose))
+    kDriver.get(DPad.RIGHT).whileTrue(new GoToPosePID(()->(
+      DriverStation.getAlliance()==Alliance.Blue?VisionConstants.kBlueShelfAlignPose:VisionConstants.kRedShelfAlignPose),
+      getDrivetrain())
     );
     
     kDriver.get(Button.B).whileTrue(new BalanceCommand(super.getDrivetrain()));
