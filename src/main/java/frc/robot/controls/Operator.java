@@ -82,17 +82,17 @@ public class Operator {
     m_operator.get(Button.START).onTrue(new IntakeGamePiece(intake, m_operator.RIGHT_TRIGGER_BUTTON, true)).onFalse(new InstantCommand(() -> intake.setMode(IntakeMode.DISABLED), intake));
   
     // Selects which column to score in
-    m_operator.get(m_operator.LEFT_STICK_LEFT).onTrue(new InstantCommand(() -> selectColumn(9)));
-    m_operator.get(m_operator.LEFT_STICK_DOWN).onTrue(new InstantCommand(() -> selectColumn(8));
-    m_operator.get(m_operator.LEFT_STICK_RIGHT).onTrue(new InstantCommand(() -> selectColumn(7)));
+    m_operator.get(m_operator.LEFT_STICK_LEFT).onTrue(new InstantCommand(() -> selectColumn(9, true)));
+    m_operator.get(m_operator.LEFT_STICK_DOWN).onTrue(new InstantCommand(() -> selectColumn(8, true)));
+    m_operator.get(m_operator.LEFT_STICK_RIGHT).onTrue(new InstantCommand(() -> selectColumn(7, true)));
     
-    m_operator.get(DPad.LEFT).onTrue(new InstantCommand(() -> selectColumn(6)));
-    m_operator.get(DPad.DOWN).onTrue(new InstantCommand(() -> selectColumn(5));
-    m_operator.get(DPad.RIGHT).onTrue(new InstantCommand(() -> selectColumn(4)));
+    m_operator.get(DPad.LEFT).onTrue(new InstantCommand(() -> selectColumn(6, true)));
+    m_operator.get(DPad.DOWN).onTrue(new InstantCommand(() -> selectColumn(5, true)));
+    m_operator.get(DPad.RIGHT).onTrue(new InstantCommand(() -> selectColumn(4, true)));
 
-    m_operator.get(m_operator.RIGHT_STICK_LEFT).onTrue(new InstantCommand(() -> selectColumn(3)));
-    m_operator.get(m_operator.RIGHT_STICK_DOWN).onTrue(new InstantCommand(() -> selectColumn(2)));
-    m_operator.get(m_operator.RIGHT_STICK_RIGHT).onTrue(new InstantCommand(() -> selectColumn(1)));
+    m_operator.get(m_operator.RIGHT_STICK_LEFT).onTrue(new InstantCommand(() -> selectColumn(3, true)));
+    m_operator.get(m_operator.RIGHT_STICK_DOWN).onTrue(new InstantCommand(() -> selectColumn(2, true)));
+    m_operator.get(m_operator.RIGHT_STICK_RIGHT).onTrue(new InstantCommand(() -> selectColumn(1, true)));
 
     // Selects the row
     m_operator.get(Button.Y).onTrue(new InstantCommand(() -> selectRow(3)));
