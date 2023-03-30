@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.scoring.PositionIntake;
 import frc.robot.commands.scoring.PositionIntake.Position;
 import frc.robot.commands.scoring.elevator.CalibrateElevator;
-import frc.robot.commands.scoring.elevator.MoveElevator;
 import frc.robot.commands.scoring.intake.IntakeGamePiece;
 import frc.robot.commands.scoring.intake.OuttakeGamePiece;
 import frc.robot.commands.scoring.wrist.RotateWrist;
@@ -34,14 +33,11 @@ public class Operator {
   // Grid, row, and column in the grid
   private int[] selectValues = {2, 2, 2};
   private Node m_selectedNode = new Node();
-
-  private RollerIntake m_intake;
   
   /**
    * Configures the operator controls for the wrist, roller intake, elevator, and vision
    */
   public void configureControls(Wrist wrist, RollerIntake intake, Elevator elevator, Vision vision) {
-    m_intake = intake;
     selectValue(NodePositionIndex.ROW, 3);
 
     // calibrate elevator
@@ -125,7 +121,7 @@ public class Operator {
   public void selectValue(NodePositionIndex index, int value) {
     if (index!=NodePositionIndex.ROW && DriverStation.getAlliance() == Alliance.Red) {value = 2-value;}
     selectValues[index.id] = value;
-    m_selectedNode = new Node(m_intake, DriverStation.getAlliance(), selectValues[NodePositionIndex.ROW.id]+1, (selectValues[NodePositionIndex.GRID.id]*3)+selectValues[NodePositionIndex.COLUMN.id]+1);
+    m_selectedNode = new Node(DriverStation.getAlliance(), selectValues[NodePositionIndex.ROW.id]+1, (selectValues[NodePositionIndex.GRID.id]*3)+selectValues[NodePositionIndex.COLUMN.id]+1);
   }
 
   public Node getSelectedNode() {

@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.constants.FieldConstants;
 import frc.robot.constants.VisionConstants;
-import frc.robot.subsystems.RollerIntake;
 
 /**
  * Class to store data about scoring locations
@@ -43,7 +42,7 @@ public class Node {
    * @param column
    *  column from field boundary to loading zone (1 to 9)
    */
-  public Node(RollerIntake intake, Alliance alliance, int row, int column) {
+  public Node(Alliance alliance, int row, int column) {
 
     this.alliance = alliance;
     this.row = row;

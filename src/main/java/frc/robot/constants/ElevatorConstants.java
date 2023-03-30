@@ -83,7 +83,7 @@ public class ElevatorConstants {
     public static final double kBottomConeHeight = Conversions.ElevatorExtensionToHeight(Units.inchesToMeters(6));
     public static final double kBottomCubeHeight = kBottomConeHeight;
     public static final double kShelfHeight = 1.30;
-    public static final double kStowHeight = Conversions.ElevatorExtensionToHeight(0);
+    public static final double kStowHeight = Conversions.ElevatorExtensionToHeight(Units.inchesToMeters(0));
 
     public static final double kAutoMiddle = 0.771;
     public static final double kAutoTop = 1.294;
