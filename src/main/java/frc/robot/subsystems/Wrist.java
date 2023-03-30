@@ -21,13 +21,14 @@ import frc.robot.util.MotorFactory;
 
 public class Wrist extends SubsystemBase {
   private final WPI_TalonFX m_motor;
-  final PIDController m_pid;
+  private final PIDController m_pid;
 
-  final DutyCycleEncoder m_absEncoder;
-  DutyCycleEncoderSim m_absEncoderSim;
+  // unit tests want access to the DutyCycleEncoder and DutyCycleEncoderSim
+  protected final DutyCycleEncoder m_absEncoder;
+  protected DutyCycleEncoderSim m_absEncoderSim;
 
   private boolean m_enabled = true;
-  double m_pidPower = 0;
+  private double m_pidPower = 0;
 
   /** Physics Simulator for the wrist. takes in a motor voltage and calculates how much the arm will move. */
   private SingleJointedArmSim m_armSim;
@@ -129,7 +130,7 @@ public class Wrist extends SubsystemBase {
   /**
    * Sets the motor power, clamping it and ensuring it will not activate below/above the min/max positions
    */
-  public void setMotorPower(double power) {
+  private void setMotorPower(double power) {
     // clamp power to a safe range
     power = MathUtil.clamp(power, -WristConstants.kMotorPowerClamp, WristConstants.kMotorPowerClamp);
     
@@ -177,6 +178,7 @@ public class Wrist extends SubsystemBase {
     wristTab.addNumber("Wrist Error", () -> m_pid.getSetpoint() - getAbsEncoderPos());
   }
 
+  @Override
   public void simulationPeriodic() {
     // First, we set our "inputs" (the motor voltage)    
     m_armSim.setInput(m_motor.get() * RobotController.getBatteryVoltage());
