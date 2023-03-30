@@ -30,16 +30,17 @@ public class Operator {
   private GameController m_operator = new GameController(OIConstants.kOperatorJoy);
 
   // Values for selecting a node
-  // Grid, row, and column in the grid
-  private int[] selectValues = {2, 2, 2};
+  // the row (hybrid, middle, top) for scoring in
+  private int row = 3;
+  // the column, 1 - 9. 1 is closest to the field boundary. 9 is closest to loading zone
+  private int column = 0;
+  // the currently selected node.
   private Node m_selectedNode = new Node();
   
   /**
    * Configures the operator controls for the wrist, roller intake, elevator, and vision
    */
   public void configureControls(Wrist wrist, RollerIntake intake, Elevator elevator, Vision vision) {
-    // Call function to update selectedNode
-    selectValue(NodePositionIndex.ROW, 3);
 
     // calibrate elevator
     m_operator.get(Button.BACK).onTrue(new CalibrateElevator(elevator));
@@ -80,18 +81,23 @@ public class Operator {
     // spin intake
     m_operator.get(Button.START).onTrue(new IntakeGamePiece(intake, m_operator.RIGHT_TRIGGER_BUTTON, true)).onFalse(new InstantCommand(() -> intake.setMode(IntakeMode.DISABLED), intake));
   
-    // Selects which grid to score in
-    m_operator.get(m_operator.LEFT_STICK_LEFT).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.GRID, 2)));
-    m_operator.get(m_operator.LEFT_STICK_DOWN).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.GRID, 1)));
-    m_operator.get(m_operator.LEFT_STICK_RIGHT).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.GRID, 0)));
-    // Selects which column in the grid to score in
-    m_operator.get(m_operator.RIGHT_STICK_LEFT).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.COLUMN, 2)));
-    m_operator.get(m_operator.RIGHT_STICK_DOWN).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.COLUMN, 1)));
-    m_operator.get(m_operator.RIGHT_STICK_RIGHT).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.COLUMN, 0)));
+    // Selects which column to score in
+    m_operator.get(m_operator.LEFT_STICK_LEFT).onTrue(new InstantCommand(() -> selectColumn(9)));
+    m_operator.get(m_operator.LEFT_STICK_DOWN).onTrue(new InstantCommand(() -> selectColumn(8));
+    m_operator.get(m_operator.LEFT_STICK_RIGHT).onTrue(new InstantCommand(() -> selectColumn(7)));
+    
+    m_operator.get(DPad.LEFT).onTrue(new InstantCommand(() -> selectColumn(6)));
+    m_operator.get(DPad.DOWN).onTrue(new InstantCommand(() -> selectColumn(5));
+    m_operator.get(DPad.RIGHT).onTrue(new InstantCommand(() -> selectColumn(4)));
+
+    m_operator.get(m_operator.RIGHT_STICK_LEFT).onTrue(new InstantCommand(() -> selectColumn(3)));
+    m_operator.get(m_operator.RIGHT_STICK_DOWN).onTrue(new InstantCommand(() -> selectColumn(2)));
+    m_operator.get(m_operator.RIGHT_STICK_RIGHT).onTrue(new InstantCommand(() -> selectColumn(1)));
+
     // Selects the row
-    m_operator.get(Button.Y).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.ROW, 2)));
-    m_operator.get(Button.X).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.ROW, 1)));
-    m_operator.get(Button.A).onTrue(new InstantCommand(() -> selectValue(NodePositionIndex.ROW, 0)));
+    m_operator.get(Button.Y).onTrue(new InstantCommand(() -> selectRow(3)));
+    m_operator.get(Button.X).onTrue(new InstantCommand(() -> selectRow(2)));
+    m_operator.get(Button.A).onTrue(new InstantCommand(() -> selectRow(1)));
   }
 
   /**
@@ -114,26 +120,26 @@ public class Operator {
   }
 
   /**
-   * This function puts a number in selectValues and uses those values to select a node.
-   * THESE VALUES ARE RELATIVE TO THE BLUE ALLIANCE, AND WILL BE SWITCHED FOR RED AUTOMATICALLY
-   * @param index Which item in the array to change
-   * @param value What value to set it to, between 0 and 2 (0 is lower row (hybrid node), or for column/grid the closest one to field boundry)
+   * Selects which row (hybrid, middle, top) to score in
+   * @param value What value to set it to, between 1 and 3 (1 is lower row (hybrid node))
    */
-  public void selectValue(NodePositionIndex index, int value) {
-    if (index!=NodePositionIndex.ROW && DriverStation.getAlliance() == Alliance.Red) {value = 2-value;}
-    selectValues[index.id] = value;
-    m_selectedNode = new Node(DriverStation.getAlliance(), selectValues[NodePositionIndex.ROW.id]+1, (selectValues[NodePositionIndex.GRID.id]*3)+selectValues[NodePositionIndex.COLUMN.id]+1);
+  public void selectRow(int value) {
+    row = value;
+    m_selectedNode = new Node(DriverStation.getAlliance(), row, column);
+  }
+
+  /**
+   * Selects which column (1-9) to score in. 1 is closest to field boundary, 9 is closest to loading zone
+   * @param value What value to set it to, between 1 and 9
+   * @param allianceRelative if true, will swap the grids if on red alliance.
+   */
+  public void selectColumn(int value, boolean allianceRelative) {
+    if (allianceRelative && DriverStation.getAlliance() == Alliance.Red) {value = 10 - value;}
+    column = value;
+    m_selectedNode = new Node(DriverStation.getAlliance(), row, column);
   }
 
   public Node getSelectedNode() {
     return m_selectedNode;
-  }
-
-  private enum NodePositionIndex {
-    GRID(0), ROW(1), COLUMN(2);
-    int id;
-    private NodePositionIndex(int id) {
-      this.id = id;
-    }
   }
 }
