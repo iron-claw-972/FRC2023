@@ -13,7 +13,6 @@ import com.revrobotics.Rev2mDistanceSensor;
 import com.revrobotics.Rev2mDistanceSensor.Port;
 import com.revrobotics.Rev2mDistanceSensor.Unit;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -147,7 +146,7 @@ public class RollerIntake extends SubsystemBase {
   }
 
   /**
-   * @return The distance (meters) of the cone from the center of the intake as a double
+   * @return The distance (meters) of the cone from the center of the intake as a double. Zero if no cone detected.
    */
   public double getConePos() {
     // Get the range in millimeters
@@ -157,11 +156,11 @@ public class RollerIntake extends SubsystemBase {
     }
 
     // Just assume center distance if it can't detect anything
-    if (range == -1) {
+    if (range == -1 || (range / 1000.0) > IntakeConstants.kMaxDistanceSensorRange) {
       return 0;
     }
 
-    // Convert to meters and clamp to reasonable values
-    return MathUtil.clamp((range / 1000.0), 0, IntakeConstants.kMaxDistanceSensorRange) - IntakeConstants.kCenterDist;
+    // Convert to meters and adjust to center offset
+    return (range / 1000.0) - IntakeConstants.kCenterDist;
   }
 } 
