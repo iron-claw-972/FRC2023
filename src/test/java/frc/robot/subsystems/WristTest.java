@@ -93,7 +93,7 @@ public class WristTest {
 
         // torque added per tick
         double torqueAdd = WristConstants.kP * (2.0 * Math.PI / 1024.0) * torqueAvailable;
-        System.out.printf("torque step           = %8.4f Nm\n", torqueAdd);
+        System.out.printf("Wrist torque step     = %8.4f Nm\n", torqueAdd);
         
         double fraction = torqueRequired / torqueAvailable;
         System.out.printf("Wrist fraction        = %8.4f PWM\n", fraction);

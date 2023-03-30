@@ -105,8 +105,7 @@ public class Wrist extends SubsystemBase {
 
       // calculate the PID power level
       // for safety, clamp the setpoint to prevent tuning with SmartDashboard/Shuffleboard from commanding out of range
-      // This continually changes the setpoint.
-      // TODO: m_pidPower should be a local; logging and Shuffleboard should use m_motor.get()
+      // This method continually changes the setpoint.
       m_pidPower = m_pid.calculate(position, MathUtil.clamp(m_pid.getSetpoint(), WristConstants.kMinPos, WristConstants.kMaxPos));
       
       // calculate the value of kGravityCompensation
@@ -162,14 +161,14 @@ public class Wrist extends SubsystemBase {
     return m_absEncoder.getDistance();
   }
 
-  // changed to private; not called from outside
+  // changed to private method; not called from outside
   private void updateLogs() {
     LogManager.addDouble("Wrist/position", getAbsEncoderPos());
     LogManager.addDouble("Wrist/motor power", m_motor.get());
     LogManager.addDouble("Wrist/pidOutput", m_pidPower);
   }
 
-  // change to private; not called from outside
+  // change to private method; not called from outside
   private void setupShuffleboardTab(ShuffleboardTab wristTab) {
     wristTab.addNumber("Wrist Position", () -> getAbsEncoderPos());
     wristTab.add("wrist PID", m_pid);
