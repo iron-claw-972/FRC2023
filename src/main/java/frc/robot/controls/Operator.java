@@ -38,6 +38,7 @@ public class Operator {
    * Configures the operator controls for the wrist, roller intake, elevator, and vision
    */
   public void configureControls(Wrist wrist, RollerIntake intake, Elevator elevator, Vision vision) {
+    // Call function to update selectedNode
     selectValue(NodePositionIndex.ROW, 3);
 
     // calibrate elevator
