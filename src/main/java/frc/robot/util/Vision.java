@@ -111,12 +111,11 @@ public class Vision {
         estimatedPoses.get(0).estimatedPose.toPose2d().getTranslation()
           .plus(estimatedPoses.get(1).estimatedPose.toPose2d().getTranslation())
           .div(2),
-          
-          new Rotation2d(Functions.modulusMidpoint(
-            estimatedPoses.get(0).estimatedPose.toPose2d().getRotation().getRadians(),
-            estimatedPoses.get(1).estimatedPose.toPose2d().getRotation().getRadians(),
-            -Math.PI, Math.PI
-          )
+        
+        new Rotation2d(Functions.modulusMidpoint(
+          estimatedPoses.get(0).estimatedPose.toPose2d().getRotation().getRadians(),
+          estimatedPoses.get(1).estimatedPose.toPose2d().getRotation().getRadians(),
+          -Math.PI, Math.PI)
         )
       );
     }
