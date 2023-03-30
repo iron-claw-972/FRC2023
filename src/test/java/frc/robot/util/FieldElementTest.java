@@ -150,7 +150,7 @@ public class FieldElementTest {
                 NodeType nt = (row == 1) ? NodeType.HYBRID : (((i%3) == 1) ? NodeType.CUBE : NodeType.CONE);
 
                 // get the Blue node
-                Node nodeBlue = new Node(null, Alliance.Blue, row, i+1);
+                Node nodeBlue = new Node(Alliance.Blue, row, i+1);
                 // check its y value
                 assertEquals(Units.inchesToMeters(y), nodeBlue.scorePose.getY(), eps);
                 assertEquals(nt, nodeBlue.type);
@@ -159,7 +159,7 @@ public class FieldElementTest {
                 assertEquals(Units.inchesToMeters(x), nodeBlue.scorePose.getX(), eps);
                 
                 // get the Red node
-                Node nodeRed = new Node(null, Alliance.Red, row, i+1);
+                Node nodeRed = new Node(Alliance.Red, row, i+1);
                 // check its y value
                 assertEquals(Units.inchesToMeters(y), nodeRed.scorePose.getY(), eps);
                 assertEquals(nt, nodeRed.type);
@@ -175,7 +175,7 @@ public class FieldElementTest {
     public void testBlueNodeRotation() {
         // The scorePose should have the correct rotation
 
-        Node n = new Node(null, Alliance.Blue, 2, 5);
+        Node n = new Node(Alliance.Blue, 2, 5);
         double ang = n.scorePose.getRotation().getRadians() - Math.PI;
         ang = Math.IEEEremainder(ang, 2 * Math.PI);
         assertEquals(0.0, ang, 0.000001);
@@ -185,7 +185,7 @@ public class FieldElementTest {
     public void testRedNodeRotation() {
         // The scorePose should have the correct rotation
 
-        Node n = new Node(null, Alliance.Red, 2, 5);
+        Node n = new Node(Alliance.Red, 2, 5);
         double ang = n.scorePose.getRotation().getRadians();
         ang = Math.IEEEremainder(ang, 2 * Math.PI);
         assertEquals(0.0, ang, 0.000001);
