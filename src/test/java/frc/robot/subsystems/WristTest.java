@@ -103,6 +103,15 @@ public class WristTest {
         // System.out.printf("Wrist fraction amps   = %8.4f\n", fraction * gearbox.stallCurrentAmps);
 
         System.out.printf("Wrist gravity comp    = %8.4f PWM\n", WristConstants.kGravityCompensation);
+
+        double ohms = gearbox.rOhms;
+        double ampsContinuous = WristConstants.kContinuousCurrentLimit;
+        double wattsContinuous = ampsContinuous * ampsContinuous * ohms;
+        System.out.printf("Wrist max power       = %8.4f Watts\n", wattsContinuous);
+
+        double amps = torqueRequired / WristConstants.kGearRatio / gearbox.KtNMPerAmp;
+        double wattsRequired = amps * amps * ohms;
+        System.out.printf("Wrist expected power  = %8.4f Watts\n", wattsRequired);
     }
 
     /**
