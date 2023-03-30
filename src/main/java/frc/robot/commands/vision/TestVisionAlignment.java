@@ -10,7 +10,7 @@ import frc.robot.util.Vision;
  * Command to test alignment using vision
  * It only works if it can see an april tag at the setpoint
  */
-public class TestVisionAlignment extends CommandBase{
+public class TestVisionAlignment extends CommandBase {
   private Drivetrain m_drive;
   private Vision m_vision;
   private double m_setpoint;
@@ -22,7 +22,7 @@ public class TestVisionAlignment extends CommandBase{
    * @param drive The drivetrain
    * @param vision The vision
    */
-  public TestVisionAlignment(double targetAngle, Drivetrain drive, Vision vision){
+  public TestVisionAlignment(double targetAngle, Drivetrain drive, Vision vision) {
     addRequirements(drive);
     m_setpoint = targetAngle;
     m_drive = drive;
@@ -63,7 +63,7 @@ public class TestVisionAlignment extends CommandBase{
    * @return If the rotation PID is at the setpoint
    */
   @Override
-  public boolean isFinished(){
+  public boolean isFinished() {
     return m_drive.getRotationController().atSetpoint();
   }
 
@@ -71,7 +71,7 @@ public class TestVisionAlignment extends CommandBase{
    * Gets the angle from vision
    * @return The angle from the vision, the previous angle if it doensn't get a value
    */
-  private double getAngle(){
+  private double getAngle() {
     Pose2d pose = m_vision.getPose2d(m_drive.getPose());
     if (pose != null) {
       m_mostRecentAngle = pose.getRotation().getRadians();

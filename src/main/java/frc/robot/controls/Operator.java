@@ -104,7 +104,7 @@ public class Operator {
    * Sets up shuffleboard
    * @param tab The tab on shuffleboard
    */
-  public void setUpShuffleboard(ShuffleboardTab tab){
+  public void setUpShuffleboard(ShuffleboardTab tab) {
     tab.addStringArray("Selected node", () -> new String[] {
       "Alliance: " + getSelectedNode().alliance,
       "Type: " + getSelectedNode().type,
@@ -123,7 +123,7 @@ public class Operator {
    * Selects which row (hybrid, middle, top) to score in
    * @param value What value to set it to, between 1 and 3 (1 is lower row (hybrid node))
    */
-  public void selectRow(int value) {
+  private void selectRow(int value) {
     row = value;
     m_selectedNode = new Node(DriverStation.getAlliance(), row, column);
   }
@@ -133,7 +133,7 @@ public class Operator {
    * @param value What value to set it to, between 1 and 9
    * @param allianceRelative if true, will swap the grids if on red alliance.
    */
-  public void selectColumn(int value, boolean allianceRelative) {
+  private void selectColumn(int value, boolean allianceRelative) {
     if (allianceRelative && DriverStation.getAlliance() == Alliance.Red) {value = 10 - value;}
     column = value;
     m_selectedNode = new Node(DriverStation.getAlliance(), row, column);

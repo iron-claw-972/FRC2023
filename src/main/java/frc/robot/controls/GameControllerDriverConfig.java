@@ -38,48 +38,63 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
   
   @Override
   public void configureControls() { 
+
+    // reset the yaw forward if it hasn't been. Mainly useful for testing/driver practice 
     kDriver.get(Button.START).onTrue(new InstantCommand(() -> super.getDrivetrain().setYaw(
       new Rotation2d(DriverStation.getAlliance() == Alliance.Blue ? 0 : Math.PI)
     )));
+
+    // set the wheels to X
     kDriver.get(Button.X).onTrue(new SetFormationX(super.getDrivetrain()));
 
     // Moves to the selected scoring position using Path Planner
-    kDriver.get(Button.LB).whileTrue(new GoToPose(()->getNodePose(), getDrivetrain()));
+    kDriver.get(Button.LB).whileTrue(new GoToPose(() -> getNodePose(), getDrivetrain()));
+
     // Moves to the selected scoring position using PID
-    kDriver.get(DPad.LEFT).whileTrue(new GoToPosePID(()->getNodePose(), getDrivetrain()));
+    kDriver.get(DPad.LEFT).whileTrue(new GoToPosePID(() -> getNodePose(), getDrivetrain()));
 
     // Moves to the single substation using Path Planner
-    kDriver.get(Button.RB).whileTrue(new GoToPose(()->new Pose2d(
-      DriverStation.getAlliance()==Alliance.Blue?FieldConstants.kBlueSingleSubstationX:FieldConstants.kRedSingleSubstationX, 
+    kDriver.get(Button.RB).whileTrue(new GoToPose(() -> new Pose2d(
+      // the single substation X
+      DriverStation.getAlliance() == Alliance.Blue ? FieldConstants.kBlueSingleSubstationX : FieldConstants.kRedSingleSubstationX, 
+      // don't move the robot in the Y
       getDrivetrain().getPose().getY(),
+      // facing upwards
       new Rotation2d(Math.PI/2)), 
       getDrivetrain())
     );
+
     // Moves to the single substation using PID
-    kDriver.get(DPad.DOWN).whileTrue(new GoToPosePID(()->new Pose2d(
-      DriverStation.getAlliance()==Alliance.Blue?FieldConstants.kBlueSingleSubstationX:FieldConstants.kRedSingleSubstationX, 
+    kDriver.get(DPad.DOWN).whileTrue(new GoToPosePID(() -> new Pose2d(
+      // the single substation X
+      DriverStation.getAlliance() == Alliance.Blue ? FieldConstants.kBlueSingleSubstationX : FieldConstants.kRedSingleSubstationX, 
+      // don't move the robot in the Y
       getDrivetrain().getPose().getY(),
+      // facing upwards
       new Rotation2d(Math.PI/2)),
       getDrivetrain())
     );
 
     // Moves to the shelf using Path Planner
-    kDriver.get(Button.LEFT_JOY).whileTrue(new GoToPose(()->(
-      DriverStation.getAlliance()==Alliance.Blue?VisionConstants.kBlueShelfAlignPose:VisionConstants.kRedShelfAlignPose), 
+    kDriver.get(Button.LEFT_JOY).whileTrue(new GoToPose(() -> (
+      DriverStation.getAlliance() == Alliance.Blue ? VisionConstants.kBlueShelfAlignPose : VisionConstants.kRedShelfAlignPose), 
       getDrivetrain())
     );
+
     // Moves to the shelf using PID
-    kDriver.get(DPad.RIGHT).whileTrue(new GoToPosePID(()->(
-      DriverStation.getAlliance()==Alliance.Blue?VisionConstants.kBlueShelfAlignPose:VisionConstants.kRedShelfAlignPose),
+    kDriver.get(DPad.RIGHT).whileTrue(new GoToPosePID(() -> (
+      DriverStation.getAlliance() == Alliance.Blue ? VisionConstants.kBlueShelfAlignPose : VisionConstants.kRedShelfAlignPose),
       getDrivetrain())
     );
     
+    // Balances the robot
     kDriver.get(Button.B).whileTrue(new BalanceCommand(super.getDrivetrain()));
 
+    // Resets the modules to absolute if they are having the unresolved zeroing error
     kDriver.get(Button.A).onTrue(new InstantCommand(() -> getDrivetrain().resetModulesToAbsolute()));
   }
 
-  public Pose2d getNodePose(){
+  public Pose2d getNodePose() {
     // get the desired score pose
     Pose2d scorePose = m_operator.getSelectedNode().scorePose;
 

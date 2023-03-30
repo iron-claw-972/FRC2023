@@ -70,10 +70,10 @@ public class GoToPose extends CommandBase {
     // if greater than 4m or less than 20 cm, don't run it. If the path is too small pathplanner makes weird paths.
     if (dist > 4) {
       m_command = new DoNothing();
-      DriverStation.reportWarning("Alignment Path too long, doing nothing, GoToNode.java", false);
+      DriverStation.reportWarning("Alignment Path too long, doing nothing, GoToPose.java", false);
     } else if (dist < 0.2) {
       m_command = new DoNothing();
-      DriverStation.reportWarning("Alignment Path too short, doing nothing, GoToNode.java", false);
+      DriverStation.reportWarning("Alignment Path too short, doing nothing, GoToPose.java", false);
     } else {
       // Creates the command using the two points
       m_command = new PathPlannerCommand(
@@ -99,7 +99,7 @@ public class GoToPose extends CommandBase {
 
   /**
    * Returns if the PathPlannerCommand exists and is finished
-   * @return If the GoToNode command is finished
+   * @return If the command is finished
    */
   @Override
   public boolean isFinished() {

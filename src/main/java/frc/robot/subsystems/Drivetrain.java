@@ -102,7 +102,7 @@ public class Drivetrain extends SubsystemBase {
   private Module m_prevModule;
 
   // If vision is enabled
-  // Do not change this. Instead, change kVisionEnabled in VisionConstants
+  // Do not change this. Instead, change kEnabled in VisionConstants
   boolean m_visionEnabled = true;
 
   int m_loggerStep = 0;

@@ -9,7 +9,7 @@ import frc.robot.constants.VisionConstants;
 
 /**
  * Class to store data about scoring locations
- * positions are stored from field border to barrier instead of left to right
+ * positions are stored from field border to barrier.
  */
 public class Node {
 

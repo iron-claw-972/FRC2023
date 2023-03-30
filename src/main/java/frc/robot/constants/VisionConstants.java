@@ -25,17 +25,21 @@ public class VisionConstants {
   // If vision is enabled
   public static final boolean kEnabled = true;
 
-  // The anglel to use charge station vision at in degrees
+  // The angle to use charge station vision at in degrees. 
+  // If the pitch or the roll of the robot is above this amount, it will trust vision more for a bit.
   public static final double kChargeStationAngle = 2.5;
 
   //TODO: Change these to whatever the actual distances are
-  // How far from the grid the robot should be to score for alignment in meters
+  /**  How far from the grid the robot should be to score for alignment, in meters */
   public static double kGridDistanceAlignment = 0 + DriveConstants.kRobotWidthWithBumpers / 2; // meters
-  // How far from the shelf the robot should be to intake for alignment in meters
+  /** How far from the shelf the robot should be to intake for alignment, in meters */
   public static double kShelfDistanceAlignment = 0.5 + DriveConstants.kRobotWidthWithBumpers / 2;
 
+  /** The Pose2d the robot should align to for the Blue Shelf */
   public static Pose2d kBlueShelfAlignPose = new Pose2d(FieldConstants.kBlueShelfX - kShelfDistanceAlignment, FieldConstants.kShelfY, new Rotation2d(0));
+  /** The Pose2d the robot should align to for the Red Shelf */
   public static Pose2d kRedShelfAlignPose = new Pose2d(FieldConstants.kRedShelfX + kShelfDistanceAlignment, FieldConstants.kShelfY, new Rotation2d(Math.PI));
+
 
   public static double kStdDevCommandEndTime = 5;
 
@@ -60,7 +64,6 @@ public class VisionConstants {
         new Pair<String, Transform3d>(
           "Left_Camera",
           new Transform3d(
-            // 1.25, 7.125, 21
             new Translation3d(Units.inchesToMeters(8.996), Units.inchesToMeters(6.48), Units.inchesToMeters(37.44)),
             new Rotation3d(Math.PI, Units.degreesToRadians(18), 0)
           ))
@@ -84,7 +87,7 @@ public class VisionConstants {
   public static final Matrix<N3, N1> kBaseVisionPoseStdDevs = new MatBuilder<>(Nat.N3(), Nat.N1()).fill(
     0.5, // x in meters (default=0.9)
     0.5, // y in meters (default=0.9)
-    100 // heading in radians (default=0.9)
+    100 // heading in radians. The gyroscope is very accurate, so as long as it is reset correctly it is unnecessary to correct it with vision
   );
 
   // How much to trust vision after passing over the charge station
@@ -92,7 +95,7 @@ public class VisionConstants {
   public static final Matrix<N3, N1> kChargeStationVisionPoseStdDevs = new MatBuilder<>(Nat.N3(), Nat.N1()).fill(
     0.0001, // x in meters
     0.0001, // y in meters
-    100 // heading in radians
+    100 // heading in radians. The gyroscope is very accurate, so as long as it is reset correctly it is unnecessary to correct it with vision
   );
 
   // Increasing this makes pose estimation trust vision measurements less as distance from Apriltags increases

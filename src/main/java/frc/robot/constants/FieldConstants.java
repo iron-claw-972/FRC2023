@@ -37,12 +37,17 @@ public class FieldConstants {
     new AprilTag(8, new Pose3d(Units.inchesToMeters( 40.45), Units.inchesToMeters( 42.19), Units.inchesToMeters(18.22), new Rotation3d(0.0, 0.0, 0.0)))
   ));
 
-  // Where the robot needs to go to intake from the shelf
+  /** The Blue Shelf April Tag X position */
   public static double kBlueShelfX = kAprilTags.get(3).pose.getX();
+  /** The Red Shelf April Tag X position */
   public static double kRedShelfX = kAprilTags.get(4).pose.getX();
-  // X coordinates of the single substations
+
+  /** The Blue Single Substation X Position */
   public static final double kBlueSingleSubstationX = kAprilTags.get(3).pose.getX() - kSingleSubstationDistance;
+  /** The Red Single Substation X Position */
   public static final double kRedSingleSubstationX = kAprilTags.get(4).pose.getX() + kSingleSubstationDistance;
+
+  /** The Y position of the bottom double substation shelf, the one closer to the grids */
   // 15 from april tag to edge of portal (where cones are accessible). That area is 34.21 inches wide, just aim for the center
   public static double kShelfY = kAprilTags.get(3).pose.getY() - Units.inchesToMeters(15 + (34.21 / 2));
 }

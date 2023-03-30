@@ -26,7 +26,7 @@ public class CalculateStdDevs extends CommandBase {
 
   /**
    * Constructor for CalculateStdDevs
-   * @param time How long to run the command, also how many poses to use
+   * @param posesToUse the amount of poses to take the standard deviation of. More poses will take more time.
    * @param drive The drivetrain
    * @param vision The vision
    */
@@ -42,7 +42,11 @@ public class CalculateStdDevs extends CommandBase {
    */
   @Override
   public void initialize() {
+    // create the ArrayList of poses to store
+    // an ArrayList prevents issues if the command ends early, and makes checking if the command has finished easy
     m_poses = new ArrayList<Pose2d>();
+    // disable the drivetrain's vision usage. The drivetrain uses vision for the odometry which is used for the reference pose
+    // that can affect the vision pose slightly if we are using the REFERENCE_POSE strategy
     m_drive.enableVision(false);
   }
 
@@ -54,15 +58,17 @@ public class CalculateStdDevs extends CommandBase {
     Pose2d pose = m_vision.getPose2d(m_drive.getPose());
     // If the pose exists, add it to the first open spot in the array
     if (pose != null) {
+      // if we see a pose, reset the timer (it will be started the next time it doesn't get a pose)
       m_endTimer.stop();
       m_endTimer.reset();
+      // add the pose to our data
       m_poses.add(pose);
       System.out.printf("%.1f%% done", ((double)m_poses.size())/m_arrayLength * 100);
     } else {
       m_endTimer.start();
-      // If 5 seconds have passed since it saw an April tag, stop the command
+      // If kStdDevCommandEndTime seconds have passed since it saw an April tag, stop the command
       // Prevents it from running forever
-      if(m_endTimer.hasElapsed(VisionConstants.kStdDevCommandEndTime)){
+      if (m_endTimer.hasElapsed(VisionConstants.kStdDevCommandEndTime)) {
         cancel();
       }
     }
@@ -73,23 +79,29 @@ public class CalculateStdDevs extends CommandBase {
    */
   @Override
   public void end(boolean interrupted) {
-    m_drive.enableVision(false);
+
+    // re-enable vision for drivetrain odometry
+    m_drive.enableVision(true);
 
     // If the array is empty, don't try to calculate std devs
-    if(m_poses.size() == 0){
+    if (m_poses.size() == 0) {
       System.out.println("There are no poses in the array\nTry again where the robot can see an April tag.");
       return;
     }
     
-    // Calculate std devs
+    // create arrays of the poses by X, Y, and Rotation for calculations
     double[] xArray = new double[m_poses.size()];
     double[] yArray = new double[m_poses.size()];
     double[] rotArray = new double[m_poses.size()];
-    for(int i = 0; i < m_poses.size(); i++){
+
+    // copy the values into the arrays
+    for (int i = 0; i < m_poses.size(); i++) {
       xArray[i] = m_poses.get(i).getX();
       yArray[i] = m_poses.get(i).getY();
       rotArray[i] = m_poses.get(i).getRotation().getRadians();
     }
+
+    // Calculate the standard deviations
     double stdDevX = StatisticsUtil.stdDev(xArray);
     double stdDevY = StatisticsUtil.stdDev(yArray);
     double stdDevRot = StatisticsUtil.stdDev(rotArray);

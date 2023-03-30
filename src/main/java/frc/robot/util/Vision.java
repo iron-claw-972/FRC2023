@@ -75,9 +75,9 @@ public class Vision {
       Optional<EstimatedRobotPose> estimatedPose = m_cameras.get(i).getEstimatedPose(referencePose);
       // If the camera can see an april tag that exists, add it to the array list
       // April tags that don't exist might return a result that is present but doesn't have a pose
-      if (estimatedPose.isPresent() && estimatedPose.get().estimatedPose!=null) {
+      if (estimatedPose.isPresent() && estimatedPose.get().estimatedPose != null) {
         estimatedPoses.add(estimatedPose.get());
-        LogManager.addDoubleArray("Vison/camera " + i + "/estimated pose2d", new double[] {
+        LogManager.addDoubleArray("Vision/camera " + i + "/estimated pose2d", new double[] {
           estimatedPose.get().estimatedPose.getX(),
           estimatedPose.get().estimatedPose.getY(),
           estimatedPose.get().estimatedPose.getRotation().getZ()
