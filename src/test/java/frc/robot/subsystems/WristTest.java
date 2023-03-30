@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -18,6 +19,11 @@ import edu.wpi.first.wpilibj.util.WPILibVersion;
 import frc.robot.constants.Constants;
 import frc.robot.constants.WristConstants;
 
+/**
+ * Test the Wrist subsystem.
+ * <p>
+ * The tests uncovered a problem with the DutyCycleEncoderSim class.
+ */
 public class WristTest {
     // get the Wrist tab (needed to construct a Wrist)
     static ShuffleboardTab m_wristTab = Shuffleboard.getTab("Wrist");
@@ -27,8 +33,8 @@ public class WristTest {
 
     @BeforeEach
     public void prepare() {
-        // This must be turned off to avoid an Illegal Argument exception.
-        // Otherwise there will be multiple adds to the tab with the same key.
+        // The kUseTelemetry must be turned off to avoid an Illegal Argument exception.
+        // Otherwise there will be multiple .add method calls to the tab with the same key.
         Constants.kUseTelemetry = false;
 
         // build the wrist
@@ -59,9 +65,41 @@ public class WristTest {
 
         // kTolerance is much worse
         arcError = WristConstants.kTolerance * WristConstants.kLength;
-        // TODO: kTolerance is large (26 mm)
+        // TODO: WristConstants.kTolerance is large (26 mm)
         System.out.printf("Wrist height tolerance  = %8f meters (%8f inches)\n", arcError, Units.metersToInches(arcError));
         assertTrue(arcError < 0.03);
+    }
+
+    /**
+     * Check the wrist torque.
+     */
+    @Test
+    public void testWristTorque() {
+        // The gearbox will give stall torque
+        DCMotor gearbox = WristConstants.kGearBox;
+        double torqueStall = gearbox.stallTorqueNewtonMeters;
+
+        // the gearing will increase the available torque
+        double torqueAvailable = torqueStall * WristConstants.kGearRatio;
+        System.out.printf("Wrist torqueAvailable = %8.4f Nm\n", torqueAvailable);
+
+        // torque from current limited motor
+        double torqueLimited = torqueAvailable * WristConstants.kContinuousCurrentLimit / gearbox.stallCurrentAmps;
+        System.out.printf("Wrist torqueLimited   = %8.4f Nm\n", torqueLimited);
+
+        // estimated torque requirement
+        double torqueRequired = 0.67 * WristConstants.kMomentOfInertia / WristConstants.kLength * Constants.kGravitationalAccel;
+        System.out.printf("Wrist torque          = %8.4f Nm\n", torqueRequired);
+
+        // torque added per tick
+        double torqueAdd = WristConstants.kP * (2.0 * Math.PI / 1024.0) * torqueAvailable;
+        System.out.printf("torque step           = %8.4f Nm\n", torqueAdd);
+        
+        double fraction = torqueRequired / torqueAvailable;
+        System.out.printf("Wrist fraction        = %8.4f PWM\n", fraction);
+        // System.out.printf("Wrist fraction amps   = %8.4f\n", fraction * gearbox.stallCurrentAmps);
+
+        System.out.printf("Wrist gravity comp    = %8.4f PWM\n", WristConstants.kGravityCompensation);
     }
 
     /**
@@ -69,7 +107,7 @@ public class WristTest {
      * <p>
      * The results are unexpected: set(rotations) works but setDistance(distance) does not.
      * <p>
-     * Will be fixed in a later WPILIB release
+     * Will be fixed in a later WPILIB release.
      * <p>
      * .see https://github.com/wpilibsuite/allwpilib/pull/5147
      */
@@ -139,8 +177,8 @@ public class WristTest {
         // System.out.println(encoder.getAbsolutePosition() - encoder.getPositionOffset());
         // System.out.println(m_wrist.getAbsEncoderPos());
 
-        // WristConstants.kMinPos;
-        // WristConstants.kMaxPos;
+        // WristConstants.kMinPos
+        // WristConstants.kMaxPos
         // WristConstants.kEncoderOffset
     }
 
@@ -149,7 +187,7 @@ public class WristTest {
      * <p>
      * .see https://github.com/wpilibsuite/allwpilib/issues/5245
      * <p>
-     * Will be fixed in a later WPILIB release
+     * Will be fixed in a later WPILIB release.
      * <p>
      * .see https://github.com/wpilibsuite/allwpilib/pull/5147
      */

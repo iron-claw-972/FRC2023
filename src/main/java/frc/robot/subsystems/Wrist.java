@@ -26,7 +26,6 @@ public class Wrist extends SubsystemBase {
   final DutyCycleEncoder m_absEncoder;
   DutyCycleEncoderSim m_absEncoderSim;
 
-  private final ShuffleboardTab m_wristTab;
   private boolean m_enabled = true;
   double m_pidPower = 0;
 
@@ -43,8 +42,6 @@ public class Wrist extends SubsystemBase {
       WristConstants.kPeakCurrentDuration);
     m_motor.setNeutralMode(WristConstants.kNeutralMode);
     m_motor.setInverted(WristConstants.kMotorInvert); 
-
-    m_wristTab = wristTab;
 
     // configure the encoder
     m_absEncoder = new DutyCycleEncoder(WristConstants.kAbsEncoderPort);
@@ -63,7 +60,7 @@ public class Wrist extends SubsystemBase {
     setSetpoint(WristConstants.kStowPos);
 
     if (Constants.kUseTelemetry) {
-      setupShuffleboardTab();
+      setupShuffleboardTab(wristTab);
     }
 
     // if a simulation, set up the simulation resources
@@ -165,18 +162,20 @@ public class Wrist extends SubsystemBase {
     return m_absEncoder.getDistance();
   }
 
-  public void updateLogs() {
+  // changed to private; not called from outside
+  private void updateLogs() {
     LogManager.addDouble("Wrist/position", getAbsEncoderPos());
     LogManager.addDouble("Wrist/motor power", m_motor.get());
     LogManager.addDouble("Wrist/pidOutput", m_pidPower);
   }
 
-  public void setupShuffleboardTab() {
-    m_wristTab.addNumber("Wrist Position", () -> getAbsEncoderPos());
-    m_wristTab.add("wrist PID", m_pid);
-    m_wristTab.addNumber("wrist power final", () -> m_motor.get());
-    m_wristTab.addNumber("Wrist PID output", () -> m_pidPower);
-    m_wristTab.addNumber("Wrist Error", () -> m_pid.getSetpoint() - getAbsEncoderPos());
+  // change to private; not called from outside
+  private void setupShuffleboardTab(ShuffleboardTab wristTab) {
+    wristTab.addNumber("Wrist Position", () -> getAbsEncoderPos());
+    wristTab.add("wrist PID", m_pid);
+    wristTab.addNumber("wrist power final", () -> m_motor.get());
+    wristTab.addNumber("Wrist PID output", () -> m_pidPower);
+    wristTab.addNumber("Wrist Error", () -> m_pid.getSetpoint() - getAbsEncoderPos());
   }
 
   public void simulationPeriodic() {
