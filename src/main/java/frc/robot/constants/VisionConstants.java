@@ -93,8 +93,8 @@ public class VisionConstants {
   // How much to trust vision after passing over the charge station
   // Should be lower to correct pose after charge station
   public static final Matrix<N3, N1> kChargeStationVisionPoseStdDevs = new MatBuilder<>(Nat.N3(), Nat.N1()).fill(
-    0.0001, // x in meters
-    0.0001, // y in meters
+    0.001, // x in meters
+    0.001, // y in meters
     100 // heading in radians. The gyroscope is very accurate, so as long as it is reset correctly it is unnecessary to correct it with vision
   );
 
