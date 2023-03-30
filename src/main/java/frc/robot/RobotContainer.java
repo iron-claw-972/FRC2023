@@ -282,4 +282,11 @@ public class RobotContainer {
     m_intake.setHeldGamePiece(GamePieceType.CONE);
   }
 
+  /**
+   * Resets the swerve modules to their absolute positions.
+   */
+  public void resetModules() {
+    m_drive.resetModulesToAbsolute();
+  }
+
 }
