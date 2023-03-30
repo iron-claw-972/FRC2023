@@ -251,7 +251,6 @@ public class WristTest {
         for (int i = 0; i < 40; i++) {
             m_wrist.periodic();
             m_wrist.simulationPeriodic();
-            // System.out.printf("goal %8f position %8f motor %8f\n", m_wrist.m_pid.getSetpoint(), m_wrist.getAbsEncoderPos(), m_wrist.m_pidPower);
         }
 
         // make sure we are at the stow position
@@ -266,7 +265,6 @@ public class WristTest {
         for (int i = 0; i < 40; i++) {
             m_wrist.periodic();
             m_wrist.simulationPeriodic();
-            // System.out.printf("goal %8f position %8f motor %8f\n", m_wrist.m_pid.getSetpoint(), m_wrist.getAbsEncoderPos(), m_wrist.m_pidPower);
         }
 
         // make sure we are at the stow position
