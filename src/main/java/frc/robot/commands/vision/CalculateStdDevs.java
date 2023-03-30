@@ -105,7 +105,7 @@ public class CalculateStdDevs extends CommandBase {
       }
     }
     
-    // Print, log, and add the values to Shuffleboard
+    // Print and log values
     System.out.printf("Standard deviation values:\nX: %.5f\nY: %.5f\nRotation: %.5f\nDistance: %.5f\n",
       stdDevX, stdDevY, stdDevRot, closest);
     if (Constants.kLogging) {

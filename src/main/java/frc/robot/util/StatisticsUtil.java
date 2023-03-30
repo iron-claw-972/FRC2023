@@ -29,9 +29,7 @@ public class StatisticsUtil {
   }
 
   public static double stdDev(double[] data){
-    if(data.length == 0){
-      return 0;
-    }
+    if (data.length == 0 || data.length == 1) return 0;
     
     double mean = mean(data);
     
