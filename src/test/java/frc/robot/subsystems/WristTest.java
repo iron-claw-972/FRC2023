@@ -86,6 +86,9 @@ public class WristTest {
         // torque from current limited motor
         double torqueLimited = torqueAvailable * WristConstants.kContinuousCurrentLimit / gearbox.stallCurrentAmps;
         System.out.printf("Wrist torqueLimited   = %8.4f Nm\n", torqueLimited);
+        double torqueLimited2 = WristConstants.kContinuousCurrentLimit * gearbox.KtNMPerAmp * WristConstants.kGearRatio;
+        // System.out.printf("      KtNMPerAmp      = %8.4f Nm\n", torqueLimited2);
+        assertEquals(torqueLimited, torqueLimited2, 0.001);
 
         // estimated torque requirement
         double torqueRequired = 0.67 * WristConstants.kMomentOfInertia / WristConstants.kLength * Constants.kGravitationalAccel;
