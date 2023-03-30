@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Robot.RobotId;
 import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.DefaultDriveCommand;
@@ -21,7 +21,6 @@ import frc.robot.commands.auto.PathPlannerCommand;
 import frc.robot.commands.scoring.PositionIntake;
 import frc.robot.commands.scoring.PositionIntake.Position;
 import frc.robot.commands.scoring.intake.IntakeGamePiece;
-import frc.robot.commands.scoring.intake.OuttakeGamePiece;
 import frc.robot.constants.Constants;
 import frc.robot.constants.VisionConstants;
 import frc.robot.constants.swerve.DriveConstants;
@@ -298,16 +297,18 @@ public class RobotContainer {
           Commands.sequence(
               new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake),
               //TODO: the current path may result in the intake hitting the boarder
-              new PathPlannerCommand("Grid 1 Two Piece", 0, m_drive, true),
-              new PositionIntake(m_elevator, m_wrist, () -> true, Position.INTAKE),
-              new IntakeGamePiece(m_intake, () -> true, false)));
+              new PathPlannerCommand("Grid 1 Two Piece", 0, m_drive, true)
+                  .alongWith(new WaitCommand(1).andThen(
+                    new PositionIntake(m_elevator, m_wrist, () -> true, Position.INTAKE), 
+                    new IntakeGamePiece(m_intake, () -> true, false)))));
       m_autoCommand.addOption("ROUTINE 20: Grid 1 Intake Cube Top",
           Commands.sequence(
               new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake),
               //TODO: the current path may result in the intake hitting the boarder
-              new PathPlannerCommand("Grid 1 Two Piece", 0, m_drive, true),
-              new PositionIntake(m_elevator, m_wrist, () -> false, Position.INTAKE),
-              new IntakeGamePiece(m_intake, () -> false, false)));
+              new PathPlannerCommand("Grid 1 Two Piece", 0, m_drive, true)
+                  .alongWith(new WaitCommand(1).andThen(
+                    new PositionIntake(m_elevator, m_wrist, () -> false, Position.INTAKE), 
+                    new IntakeGamePiece(m_intake, () -> false, false)))));
 
       m_autoCommand.addOption("ROUTINE 21: Grid 9 Intake Cone Top",
           Commands.sequence(
