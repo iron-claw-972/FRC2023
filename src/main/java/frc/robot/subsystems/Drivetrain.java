@@ -43,7 +43,7 @@ import frc.robot.constants.VisionConstants;
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.constants.swerve.ModuleConstants;
 import frc.robot.util.LogManager;
-import frc.robot.util.SlewRateLimiter2D;
+import frc.robot.util.AcellerationLimiter2D;
 import frc.robot.util.Vision;
 /** 
  * Represents a swerve drive style drivetrain.
@@ -103,7 +103,7 @@ public class Drivetrain extends SubsystemBase {
   // modules needed to distinguish in chooser
   private Module m_prevModule;
 
-  SlewRateLimiter2D m_Limiter2d = new SlewRateLimiter2D();
+  AcellerationLimiter2D m_Limiter2d = new AcellerationLimiter2D();
 
   boolean m_visionEnabled = false;
 
