@@ -7,6 +7,7 @@ package frc.robot.util;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.constants.Constants;
 import frc.robot.constants.swerve.DriveConstants;
 
@@ -21,6 +22,7 @@ public class SlewRateLimiter2D {
     private double rotVel = 0;
     private double factor = 1;
     private double m_radius = (DriveConstants.kTrackWidth/2);
+    
     
     public void calculate(double xSpeed, double ySpeed, double rot){ 
 
@@ -40,6 +42,23 @@ public class SlewRateLimiter2D {
         rotVel = rotAccel/m_radius*Constants.kLoopTime * factor + m_prevRot;
     }
     
+    public void calculate(ChassisSpeeds m_speeds){ 
+
+        Translation2d m_Translation2d = new Translation2d(m_speeds.vxMetersPerSecond, m_speeds.vyMetersPerSecond);
+        Translation2d m_AccelTranslation = m_Translation2d.minus(m_prevTranslation2d).div(Constants.kLoopTime);
+        
+        double rotAccel = (m_speeds.omegaRadiansPerSecond-m_prevRot)/Constants.kLoopTime * m_radius;
+        double centrapidalAccel = Math.pow(m_prevRot,2)*m_radius;
+        double centrapidalmagnitude = Math.hypot(rotAccel,centrapidalAccel);
+        
+        if (m_AccelTranslation.getNorm() + centrapidalmagnitude > DriveConstants.kTranLim){
+          factor = DriveConstants.kTranLim/(m_AccelTranslation.getNorm() + centrapidalmagnitude);
+        }
+        
+        xVel = m_AccelTranslation.getX() * factor * Constants.kLoopTime + m_prevTranslation2d.getX();
+        yVel = m_AccelTranslation.getY() * Constants.kLoopTime * factor + m_prevTranslation2d.getY();
+        rotVel = rotAccel/m_radius*Constants.kLoopTime * factor + m_prevRot;
+    }
     public double getXvel(){
         return xVel;
     }
