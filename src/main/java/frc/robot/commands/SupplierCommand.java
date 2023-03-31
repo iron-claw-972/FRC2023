@@ -27,23 +27,23 @@ public class SupplierCommand extends CommandBase {
     } 
 
     @Override
-    public void initialize() {
+    public final void initialize() {
         m_command = m_commandSupplier.get();
         m_command.initialize();
     }
 
     @Override
-    public void execute() {
+    public final void execute() {
         m_command.execute();
     }
 
     @Override
-    public void end(boolean interrupted) {
+    public final void end(boolean interrupted) {
         m_command.end(interrupted);
     }
 
     @Override
-    public boolean isFinished() {
+    public final boolean isFinished() {
         return m_command.isFinished();
     }
 
