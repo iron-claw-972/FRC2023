@@ -36,7 +36,7 @@ public class PoseTransform extends CommandBase {
   
   @Override
   public void execute() {
-    m_drive.runChassisPID(m_finalPose.getX(), m_finalPose.getY(), m_finalPose.getRotation().getRadians()); 
+    m_drive.runChassisPID(m_finalPose); 
   }
 
   @Override
