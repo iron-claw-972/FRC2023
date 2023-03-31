@@ -8,14 +8,16 @@ import com.pathplanner.lib.PathPoint;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.auto.PathPlannerCommand;
 import frc.robot.subsystems.Drivetrain;
 
-public class GoToPose extends CommandBase {
+public class GoToPose extends SequentialCommandGroup {
 
   private Drivetrain m_drive;
-  private CommandBase m_command;
   private Supplier<Pose2d> m_poseSupplier;
 
   /**
@@ -26,13 +28,16 @@ public class GoToPose extends CommandBase {
   public GoToPose(Supplier<Pose2d> poseSupplier, Drivetrain drive) {
     m_poseSupplier = poseSupplier;
     m_drive = drive;
+    addCommands(
+      new SupplierCommand(()-> createCommand())
+    );
   }
 
   /**
    * Creates the PathPlanner command and schedules it
    */
-  @Override
-  public void initialize() {
+  public Command createCommand() {
+    Command command;
     // Gets the current position of the robot for the start of the path
     PathPoint point1 = PathPoint.fromCurrentHolonomicState(
       m_drive.getPose(),
@@ -58,7 +63,7 @@ public class GoToPose extends CommandBase {
     ).withControlLengths(0.001, 0.001);
 
     // Creates the command using the two points
-    m_command = new PathPlannerCommand(
+    command = new PathPlannerCommand(
       new ArrayList<PathPoint>(List.of(point1, point2)),
       m_drive,
       false
@@ -69,40 +74,19 @@ public class GoToPose extends CommandBase {
 
     // if greater than 4m or less than 20 cm, don't run it. If the path is too small pathplanner makes weird paths.
     if (dist > 4) {
-      m_command = new DoNothing();
+      command = new DoNothing();
       DriverStation.reportWarning("Alignment Path too long, doing nothing, GoToPose.java", false);
     } else if (dist < 0.2) {
-      m_command = new DoNothing();
+      command = new DoNothing();
       DriverStation.reportWarning("Alignment Path too short, doing nothing, GoToPose.java", false);
     } else {
       // Creates the command using the two points
-      m_command = new PathPlannerCommand(
+      command = new PathPlannerCommand(
         new ArrayList<PathPoint>(List.of(point1, point2)),
         m_drive,
         false
       );
     }
-
-    // Starts the command
-    m_command.schedule();
-  }
-
-  /**
-   * Stops the command and the drivetrain
-   * @param interrupted If the command is interrupted
-   */
-  @Override
-  public void end(boolean interrupted) {
-    m_command.cancel();
-    m_drive.stop();
-  }
-
-  /**
-   * Returns if the PathPlannerCommand exists and is finished
-   * @return If the command is finished
-   */
-  @Override
-  public boolean isFinished() {
-    return m_command != null && m_command.isFinished();
+    return command;
   }
 }
