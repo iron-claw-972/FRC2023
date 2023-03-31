@@ -306,7 +306,6 @@ public class RobotContainer {
       m_autoCommand.addOption("ROUTINE 19: Grid 1 Intake Cone Top",
           Commands.sequence(
               new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake),
-              //TODO: the current path may result in the intake hitting the boarder
               new PathPlannerCommand("Grid 1 Two Piece", 0, m_drive, true)
                   .alongWith(new WaitCommand(1).andThen(
                     new PositionIntake(m_elevator, m_wrist, () -> true, Position.INTAKE), 
@@ -314,7 +313,6 @@ public class RobotContainer {
       m_autoCommand.addOption("ROUTINE 20: Grid 1 Intake Cube Top",
           Commands.sequence(
               new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake),
-              //TODO: the current path may result in the intake hitting the boarder
               new PathPlannerCommand("Grid 1 Two Piece", 0, m_drive, true)
                   .alongWith(new WaitCommand(1).andThen(
                     new PositionIntake(m_elevator, m_wrist, () -> false, Position.INTAKE), 
@@ -323,33 +321,35 @@ public class RobotContainer {
       m_autoCommand.addOption("ROUTINE 21: Grid 9 Intake Cone Top",
           Commands.sequence(
               new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake),
-              //TODO: the current path may result in the intake hitting the charge station
-              new PathPlannerCommand("Grid 9 Two Piece", 0, m_drive, true),
-              new PositionIntake(m_elevator, m_wrist, () -> true, Position.INTAKE),
-              new IntakeGamePiece(m_intake, () -> true, false)));
+              new PathPlannerCommand("Grid 9 Two Piece", 0, m_drive, true)
+                .alongWith(new WaitCommand(1).andThen(
+                  new PositionIntake(m_elevator, m_wrist, () -> true, Position.INTAKE), 
+                  new IntakeGamePiece(m_intake, () -> true, false)))));
       m_autoCommand.addOption("ROUTINE 22: Grid 9 Intake Cube Top",
           Commands.sequence(
               new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake),
-              //TODO: the current path may result in the intake hitting the charge station
-              new PathPlannerCommand("Grid 9 Two Piece", 0, m_drive, true),
-              new PositionIntake(m_elevator, m_wrist, () -> false, Position.INTAKE),
-              new IntakeGamePiece(m_intake, () -> false, false)));
+              new PathPlannerCommand("Grid 9 Two Piece", 0, m_drive, true)
+                .alongWith(new WaitCommand(1).andThen(
+                  new PositionIntake(m_elevator, m_wrist, () -> false, Position.INTAKE), 
+                  new IntakeGamePiece(m_intake, () -> false, false)))));
 
       m_autoCommand.addOption("ROUTINE 23: Grid 1 Two Piece Cube Top",
           Commands.sequence(
               new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake),
-              new PathPlannerCommand("Grid 1 Two Piece", 0, m_drive, true),
-              new PositionIntake(m_elevator, m_wrist, () -> false, Position.INTAKE),
-              new IntakeGamePiece(m_intake, () -> false, false),
+              new PathPlannerCommand("Grid 1 Two Piece", 0, m_drive, true)
+                .alongWith(new WaitCommand(1).andThen(
+                  new PositionIntake(m_elevator, m_wrist, () -> false, Position.INTAKE), 
+                  new IntakeGamePiece(m_intake, () -> false, false))),
               new PathPlannerCommand("Grid 1 Two Piece", 1, m_drive, true),
               new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake, () -> false)));
 
       m_autoCommand.addOption("ROUTINE 24: Grid 9 Two Piece Cube Top",
           Commands.sequence(
               new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake),
-              new PathPlannerCommand("Grid 9 Two Piece", 0, m_drive, true),
-              new PositionIntake(m_elevator, m_wrist, () -> false, Position.INTAKE),
-              new IntakeGamePiece(m_intake, () -> false, false),
+              new PathPlannerCommand("Grid 9 Two Piece", 0, m_drive, true)
+                .alongWith(new WaitCommand(1).andThen(
+                  new PositionIntake(m_elevator, m_wrist, () -> false, Position.INTAKE), 
+                  new IntakeGamePiece(m_intake, () -> false, false))),
               new PathPlannerCommand("Grid 9 Two Piece", 1, m_drive, true),
               new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake, () -> false)));
     }
