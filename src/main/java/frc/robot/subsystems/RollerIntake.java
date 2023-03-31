@@ -8,6 +8,9 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.revrobotics.Rev2mDistanceSensor;
+import com.revrobotics.Rev2mDistanceSensor.Port;
+import com.revrobotics.Rev2mDistanceSensor.Unit;
 
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -28,22 +31,34 @@ public class RollerIntake extends SubsystemBase {
 
   private final WPI_TalonFX m_intakeMotor;
   private final ShuffleboardTab m_intakeTab;
+  private final Rev2mDistanceSensor m_distSensor;
 
   private IntakeMode m_mode;
   private GamePieceType m_heldPiece;
 
   private double m_power;
 
+
   public RollerIntake(ShuffleboardTab intakeTab) {
     m_intakeMotor = MotorFactory.createTalonFX(IntakeConstants.kIntakeMotorId, Constants.kRioCAN);
     m_intakeMotor.setNeutralMode(IntakeConstants.kNeutralMode);
     m_intakeMotor.enableVoltageCompensation(true);
+
+    if (RobotBase.isReal()) {
+      m_distSensor = new Rev2mDistanceSensor(Port.kMXP);
+      m_distSensor.setDistanceUnits(Unit.kMillimeters);
+      m_distSensor.setEnabled(true);
+      m_distSensor.setAutomaticMode(true);
+    } else {
+      m_distSensor = null;
+    }
 
     m_power = 0;
     m_mode = IntakeMode.DISABLED;
     m_heldPiece = GamePieceType.NONE;
 
     m_intakeTab = intakeTab;
+
 
     if (Constants.kUseTelemetry) setupShuffleboard();
 
@@ -92,6 +107,7 @@ public class RollerIntake extends SubsystemBase {
     m_intakeTab.addDouble("Intake Motor Current", () -> getCurrent());
     m_intakeTab.addDouble("Intake Power", () -> m_power);
     m_intakeTab.addString("Held Game Piece", () -> m_heldPiece.name());
+    m_intakeTab.addDouble("Cone distance from center", () -> getConePos());
   }
   
   public boolean containsGamePiece() {
@@ -120,5 +136,24 @@ public class RollerIntake extends SubsystemBase {
 
   public void setHeldGamePiece(GamePieceType m_type) {
     m_heldPiece = m_type;
+  }
+
+  /**
+   * @return The distance (meters) of the cone from the center of the intake as a double. Zero if no cone detected.
+   */
+  public double getConePos() {
+    // Get the range in millimeters
+    double range = -1;
+    if (RobotBase.isReal()) {
+      range = m_distSensor.getRange();
+    }
+
+    // Just assume center distance if it can't detect anything
+    if (range == -1 || (range / 1000.0) > IntakeConstants.kMaxDistanceSensorRange) {
+      return 0;
+    }
+
+    // Convert to meters and adjust to center offset
+    return (range / 1000.0) - IntakeConstants.kCenterDist;
   }
 } 
