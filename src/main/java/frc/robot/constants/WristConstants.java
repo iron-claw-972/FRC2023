@@ -60,6 +60,6 @@ public class WristConstants {
   public static final DCMotor kGearBox = DCMotor.getFalcon500(1);
   public static final double kGearRatio = 20/1 * 62/34 * 48/18;
   // moment of inertia represents how hard it is to angularly accelerate (ie spin) something
-  public static final double kMomentOfInertia = 24.109;
+  public static final double kMomentOfInertia = 0.00484445;
   public static final double kLength = Units.inchesToMeters(16.1);
 }
