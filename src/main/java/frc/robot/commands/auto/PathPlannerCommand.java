@@ -39,11 +39,11 @@ public class PathPlannerCommand extends SequentialCommandGroup {
   }
   
   public PathPlannerCommand(String pathGroupName, int pathIndex, Drivetrain drive) {
-    this(PathGroupLoader.getPathGroup(pathGroupName), pathIndex, drive, true); 
+    this(PathGroupLoader.getPathGroup(pathGroupName), pathIndex, drive, true, true, false); 
   }
   
   public PathPlannerCommand(String pathGroupName, int pathIndex, Drivetrain drive, boolean resetPose) {
-    this(PathGroupLoader.getPathGroup(pathGroupName), pathIndex, drive, resetPose); 
+    this(PathGroupLoader.getPathGroup(pathGroupName), pathIndex, drive, resetPose, true, false); 
   }
 
   public PathPlannerCommand(List<PathPlannerTrajectory> pathGroup, int pathIndex, Drivetrain drive, boolean resetPose){
