@@ -29,7 +29,7 @@ public class GoToPose extends SequentialCommandGroup {
     m_poseSupplier = poseSupplier;
     m_drive = drive;
     addCommands(
-      new SupplierCommand(()-> createCommand())
+      new SupplierCommand(() -> createCommand(), drive)
     );
   }
 
