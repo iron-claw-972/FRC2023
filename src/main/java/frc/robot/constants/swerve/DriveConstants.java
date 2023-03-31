@@ -106,7 +106,7 @@ public class DriveConstants {
   public static double kPathplannerHeadingI = 0;
   public static double kPathplannerHeadingD = 0;
   
-  public static double kPathplannerTranslationalP = 4;
+  public static double kPathplannerTranslationalP = 6;
   public static double kPathplannerTranslationalI = 0;
   public static double kPathplannerTranslationalD = 0;
 
@@ -148,7 +148,7 @@ public class DriveConstants {
   // Open loop prevents throttle from changing too quickly. 
   // It will limit it to time given (in seconds) to go from zero to full throttle.
   // A small open loop ramp (0.25) helps with tread wear, tipping, etc
-  public static final double kOpenLoopRamp = 0.1;
+  public static final double kOpenLoopRamp = 0.2;
   public static final double kClosedLoopRamp = 0.0;
 
   public static final double kWheelCircumference = kModuleConstants.wheelCircumference;

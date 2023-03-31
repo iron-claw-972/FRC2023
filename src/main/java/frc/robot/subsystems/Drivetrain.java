@@ -65,7 +65,9 @@ public class Drivetrain extends SubsystemBase {
   // Displays the field with the robots estimated pose on it
   private final Field2d m_fieldDisplay;
 
-  private boolean m_visionEnabled = false;
+  // If vision is enabled
+  // Do not change this. Instead, change kEnabled in VisionConstants
+  private boolean m_visionEnabled = true;
   private boolean m_chargeStationVision = false;
 
   // PID Controllers for chassis movement
@@ -238,10 +240,10 @@ public class Drivetrain extends SubsystemBase {
     m_poseEstimator.update(Rotation2d.fromDegrees(m_pigeon.getYaw()), getModulePositions());
 
     // Updates pose based on vision
-    if (m_visionEnabled) {
+    if (RobotBase.isReal() && m_visionEnabled && VisionConstants.kEnabled) {
 
-      // The angle should be greater than 5 degrees if it goes over the charge station
-      if (Math.abs(getPitch().getDegrees()) > 5 || Math.abs(getRoll().getDegrees()) > 5) {
+      // When the angle is greater than the threshold, then set charge station vision to true
+      if (Math.abs(getPitch().getDegrees()) > VisionConstants.kChargeStationAngle || Math.abs(getRoll().getDegrees()) > VisionConstants.kChargeStationAngle) {
         m_chargeStationVision = true;
       }
 
@@ -276,12 +278,13 @@ public class Drivetrain extends SubsystemBase {
         m_poseEstimator.addVisionMeasurement(
           estimatedPose.estimatedPose.toPose2d(),
           estimatedPose.timestampSeconds,
-          m_chargeStationVision ? VisionConstants.kChargeStationVisionPoseStdDevs.plus(
-            currentEstimatedPoseTranslation.getDistance(closestTagPoseTranslation) 
-            * VisionConstants.kVisionPoseStdDevFactor)
-            : VisionConstants.kBaseVisionPoseStdDevs);
-    }
-
+          m_chargeStationVision ? VisionConstants.kChargeStationVisionPoseStdDevs : 
+            VisionConstants.kBaseVisionPoseStdDevs.plus(
+              currentEstimatedPoseTranslation.getDistance(closestTagPoseTranslation) * VisionConstants.kVisionPoseStdDevFactor
+            )
+        );
+      }
+      
       // If it used vision after going over the charge station, it should trust vision normally again
       if (estimatedPoses.size() > 0) {
         m_chargeStationVision = false;
