@@ -105,7 +105,9 @@ public class Drivetrain extends SubsystemBase {
   // modules needed to distinguish in chooser
   private Module m_prevModule;
 
-  boolean m_visionEnabled = false;
+  // If vision is enabled
+  // Do not change this. Instead, change kEnabled in VisionConstants
+  boolean m_visionEnabled = true;
 
   int m_loggerStep = 0;
 
@@ -386,10 +388,10 @@ public class Drivetrain extends SubsystemBase {
       + DriveConstants.kRobotWidthWithBumpers/2, 0));
     }
     // Updates pose based on vision
-    if (m_visionEnabled) {
+    if (RobotBase.isReal() && m_visionEnabled && VisionConstants.kEnabled) {
 
-      // The angle should be greater than 5 degrees if it goes over the charge station
-      if (Math.abs(getPitch().getDegrees()) > 5 || Math.abs(getRoll().getDegrees()) > 5) {
+      // When the angle is greater than the threshold, then set charge station vision to true
+      if (Math.abs(getPitch().getDegrees()) > VisionConstants.kChargeStationAngle || Math.abs(getRoll().getDegrees()) > VisionConstants.kChargeStationAngle) {
         m_chargeStationVision = true;
       }
 
@@ -420,9 +422,10 @@ public class Drivetrain extends SubsystemBase {
         m_poseEstimator.addVisionMeasurement(
           estimatedPose.estimatedPose.toPose2d(),
           estimatedPose.timestampSeconds,
-          m_chargeStationVision ? VisionConstants.kChargeStationVisionPoseStdDevs.plus(
-            currentEstimatedPoseTranslation.getDistance(closestTagPoseTranslation) * VisionConstants.kVisionPoseStdDevFactor
-          ) : VisionConstants.kBaseVisionPoseStdDevs
+          m_chargeStationVision ? VisionConstants.kChargeStationVisionPoseStdDevs : 
+            VisionConstants.kBaseVisionPoseStdDevs.plus(
+              currentEstimatedPoseTranslation.getDistance(closestTagPoseTranslation) * VisionConstants.kVisionPoseStdDevFactor
+            )
         );
       }
       

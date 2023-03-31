@@ -1,5 +1,7 @@
 package frc.robot.controls;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -18,8 +20,8 @@ public class Ex3DProDriverConfig extends BaseDriverConfig {
   
   private final Ex3DProController kDriver = new Ex3DProController(OIConstants.kDriverJoy);
   
-  public Ex3DProDriverConfig(Drivetrain drive, ShuffleboardTab controllerTab, boolean shuffleboardUpdates) {
-    super(drive, controllerTab, shuffleboardUpdates);
+  public Ex3DProDriverConfig(Drivetrain drive, DoubleSupplier intakeOffset, ShuffleboardTab controllerTab, boolean shuffleboardUpdates) {
+    super(drive, intakeOffset, controllerTab, shuffleboardUpdates);
   }
   
   @Override

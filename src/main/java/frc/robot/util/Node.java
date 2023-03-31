@@ -9,6 +9,7 @@ import frc.robot.constants.VisionConstants;
 
 /**
  * Class to store data about scoring locations
+ * positions are stored from field border to barrier.
  */
 public class Node {
 
@@ -39,7 +40,7 @@ public class Node {
    * @param row
    *  row it's in (1 = bottom, 2 = middle, 3 = top)
    * @param column
-   *  column from field boundary to other boundary (1 to 9)
+   *  column from field boundary to loading zone (1 to 9)
    */
   public Node(Alliance alliance, int row, int column) {
 
@@ -56,30 +57,27 @@ public class Node {
     // Starting locations
     double x = 0;
     if (alliance == Alliance.Blue) {
-      x = VisionConstants.kAprilTags.get(5).pose.getX() + FieldConstants.kAprilTagOffset + FieldConstants.kRobotDistanceFromNodeTape;
+      x = FieldConstants.kAprilTags.get(5).pose.getX() + FieldConstants.kAprilTagOffset + VisionConstants.kGridDistanceAlignment;
     } else {
-      x = VisionConstants.kAprilTags.get(2).pose.getX() - FieldConstants.kAprilTagOffset - FieldConstants.kRobotDistanceFromNodeTape;
+      x = FieldConstants.kAprilTags.get(2).pose.getX() - FieldConstants.kAprilTagOffset - VisionConstants.kGridDistanceAlignment;
     }
 
     double y = 0;  
 
-    double yOffset = 0;
-
     // Distance from the field boundary to the boundary separating the grid and loading zone
     if (column % 3 == 0) {
-      yOffset = FieldConstants.kConeNodeOffset;
+      y = FieldConstants.kConeNodeOffset;
     } else if (column % 3 == 1) {
-      yOffset = -FieldConstants.kConeNodeOffset;
+      y = -FieldConstants.kConeNodeOffset;
     }
 
     if (column <= 3) {
-      y = VisionConstants.kAprilTags.get(7).pose.getY();
+      y += FieldConstants.kAprilTags.get(7).pose.getY();
     } else if (column <= 6) {
-      y = VisionConstants.kAprilTags.get(6).pose.getY();
+      y += FieldConstants.kAprilTags.get(6).pose.getY();
     } else {
-      y = VisionConstants.kAprilTags.get(5).pose.getY();
+      y += FieldConstants.kAprilTags.get(5).pose.getY();
     }
-    y += yOffset;
 
     Rotation2d rotation = new Rotation2d();
     if (alliance == Alliance.Blue) {
@@ -87,5 +85,4 @@ public class Node {
     }
     scorePose = new Pose2d(x, y, rotation);
   }
-
 }

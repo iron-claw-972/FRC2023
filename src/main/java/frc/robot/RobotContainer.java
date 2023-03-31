@@ -1,12 +1,10 @@
 package frc.robot;
 
-import com.pathplanner.lib.PathPlannerTrajectory;
+import java.util.function.DoubleSupplier;
 
-import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -20,17 +18,12 @@ import frc.robot.Robot.RobotId;
 import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.auto.DepositThenPath;
-import frc.robot.commands.auto.PathPlannerCommand;
-import frc.robot.commands.scoring.PositionIntake;
 import frc.robot.commands.scoring.PositionIntake.Position;
-import frc.robot.commands.scoring.intake.IntakeGamePiece;
-import frc.robot.commands.scoring.intake.OuttakeGamePiece;
 import frc.robot.constants.Constants;
 import frc.robot.constants.VisionConstants;
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.controls.BaseDriverConfig;
 import frc.robot.controls.GameControllerDriverConfig;
-import frc.robot.controls.ManualController;
 import frc.robot.controls.Operator;
 import frc.robot.controls.TestController;
 import frc.robot.subsystems.Drivetrain;
@@ -76,7 +69,6 @@ public class RobotContainer {
   private final BaseDriverConfig m_driver;
   private final Operator m_operator;
   private final TestController m_testController;
-  private final ManualController m_manualController;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer(RobotId robotId) {
@@ -94,16 +86,17 @@ public class RobotContainer {
 
         // Create Drivetrain
         m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab, m_vision);
-        m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
 
         m_intake = new RollerIntake(m_intakeTab);
         m_elevator = new Elevator(m_elevatorTab, () -> m_intake.containsGamePiece());
         m_wrist = new Wrist(m_wristTab);
 
-        m_operator = new Operator();
         m_testController = new TestController(m_wrist, m_intake, m_elevator);
-        m_manualController = new ManualController(m_intake, m_elevator);
   
+        m_operator = new Operator();
+
+        DoubleSupplier intakeDist = () -> m_intake.getConePos() * (DriverStation.getAlliance() == Alliance.Blue ? 1 : -1);
+        m_driver = new GameControllerDriverConfig(m_drive, intakeDist, m_operator, m_controllerTab, false);
         m_operator.configureControls(m_wrist, m_intake, m_elevator, m_vision);
         // m_testController.configureControls();
         // m_manualController.configureControls();
@@ -111,13 +104,11 @@ public class RobotContainer {
         // load paths before auto starts
         PathGroupLoader.loadPathGroups();
 
-        // add camera display
-        CameraServer.startAutomaticCapture();
-
         m_driver.configureControls();
 
         m_vision.setupVisionShuffleboard();
         m_driver.setupShuffleboard();
+        m_operator.setUpShuffleboard(m_controllerTab);
 
         m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive, m_driver));
 
@@ -132,7 +123,8 @@ public class RobotContainer {
 
         // Create Drivetrain, because every robot will have a drivetrain
         m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab, m_vision);
-        m_driver = new GameControllerDriverConfig(m_drive, m_controllerTab, false);
+        m_operator = new Operator();
+        m_driver = new GameControllerDriverConfig(m_drive, () -> 0, m_operator, m_controllerTab, false);
 
         DriverStation.reportWarning("Not registering subsystems and controls due to incorrect robot", false);
 
@@ -141,20 +133,16 @@ public class RobotContainer {
         m_elevator = null;
         m_wrist = null;
   
-        m_operator = null;
         m_testController = null;
-        m_manualController = null;
 
         // load paths before auto starts
         PathGroupLoader.loadPathGroups();
-
-        // add camera display
-        CameraServer.startAutomaticCapture();
 
         m_driver.configureControls();
 
         m_vision.setupVisionShuffleboard();
         m_driver.setupShuffleboard();
+        m_operator.setUpShuffleboard(m_controllerTab);
 
         m_drive.setDefaultCommand(new DefaultDriveCommand(m_drive, m_driver));
         
@@ -174,7 +162,6 @@ public class RobotContainer {
 
         m_operator = null;
         m_testController = null;
-        m_manualController = null;
         break;
     }
 
@@ -210,6 +197,9 @@ public class RobotContainer {
 
     if (m_drive != null) {
       m_drive.addTestCommands(m_testTab, testEntry);
+      m_testTab.add("Reset Odometry to node", new InstantCommand(() -> m_drive.resetOdometry(m_operator.getSelectedNode().scorePose)));
+      m_testTab.add("Reset Odometry to Blue Shelf", new InstantCommand(() -> m_drive.resetOdometry(VisionConstants.kBlueShelfAlignPose)));
+      m_testTab.add("Reset Odometry to Red Shelf", new InstantCommand(() -> m_drive.resetOdometry(VisionConstants.kRedShelfAlignPose)));
     }
 
     if (m_vision != null) {
@@ -290,6 +280,13 @@ public class RobotContainer {
    */
   public void updateHeldGamePiece() {
     m_intake.setHeldGamePiece(GamePieceType.CONE);
+  }
+
+  /**
+   * Resets the swerve modules to their absolute positions.
+   */
+  public void resetModules() {
+    m_drive.resetModulesToAbsolute();
   }
 
 }
