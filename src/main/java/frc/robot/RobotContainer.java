@@ -343,6 +343,7 @@ public class RobotContainer {
                   new PositionIntake(m_elevator, m_wrist, () -> false, Position.INTAKE), 
                   new IntakeGamePiece(m_intake, () -> false, false))),
               new PathPlannerCommand("Grid 1 Two Piece", 1, m_drive, true).deadlineWith(Commands.sequence(
+                new PositionIntake(m_elevator, m_wrist, () -> false, Position.STOW),
                 new WaitCommand(1.5),
                 new MoveElevator(m_elevator, ElevatorConstants.kAutoTop))),
               new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake, () -> false)));
@@ -355,6 +356,7 @@ public class RobotContainer {
                   new PositionIntake(m_elevator, m_wrist, () -> false, Position.INTAKE), 
                   new IntakeGamePiece(m_intake, () -> false, false))),
               new PathPlannerCommand("Grid 9 Two Piece", 1, m_drive, true).deadlineWith(Commands.sequence(
+                new PositionIntake(m_elevator, m_wrist, () -> false, Position.STOW),
                 new WaitCommand(1.5),
                 new MoveElevator(m_elevator, ElevatorConstants.kAutoTop))),
               new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake, () -> false)));
@@ -367,6 +369,7 @@ public class RobotContainer {
                   new PositionIntake(m_elevator, m_wrist, () -> false, Position.INTAKE), 
                   new IntakeGamePiece(m_intake, () -> false, false))),
               new PathPlannerCommand("Grid 1 Two Piece", 1, m_drive, true).deadlineWith(Commands.sequence(
+                new PositionIntake(m_elevator, m_wrist, () -> false, Position.STOW),
                 new WaitCommand(1.5),
                 new MoveElevator(m_elevator, ElevatorConstants.kAutoTop))),
               new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake, () -> false),
@@ -380,6 +383,7 @@ public class RobotContainer {
                   new PositionIntake(m_elevator, m_wrist, () -> false, Position.INTAKE), 
                   new IntakeGamePiece(m_intake, () -> false, false))),
               new PathPlannerCommand("Grid 9 Two Piece", 1, m_drive, true).deadlineWith(Commands.sequence(
+                new PositionIntake(m_elevator, m_wrist, () -> false, Position.STOW),
                 new WaitCommand(1.5),
                 new MoveElevator(m_elevator, ElevatorConstants.kAutoTop))),
               new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake, () -> false),
