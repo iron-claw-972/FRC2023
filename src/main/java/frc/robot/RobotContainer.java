@@ -23,8 +23,10 @@ import frc.robot.commands.auto.AutoDeposit;
 import frc.robot.commands.auto.PathPlannerCommand;
 import frc.robot.commands.scoring.PositionIntake;
 import frc.robot.commands.scoring.PositionIntake.Position;
+import frc.robot.commands.scoring.elevator.MoveElevator;
 import frc.robot.commands.scoring.intake.IntakeGamePiece;
 import frc.robot.constants.Constants;
+import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.VisionConstants;
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.controls.BaseDriverConfig;
@@ -322,14 +324,14 @@ public class RobotContainer {
           Commands.sequence(
               new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake),
               new PathPlannerCommand("Grid 9 Two Piece", 0, m_drive, true)
-                .alongWith(new WaitCommand(1).andThen(
+                .alongWith(new WaitCommand(1.5).andThen(
                   new PositionIntake(m_elevator, m_wrist, () -> true, Position.INTAKE), 
                   new IntakeGamePiece(m_intake, () -> true, false)))));
       m_autoCommand.addOption("ROUTINE 22: Grid 9 Intake Cube Top",
           Commands.sequence(
               new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake),
               new PathPlannerCommand("Grid 9 Two Piece", 0, m_drive, true)
-                .alongWith(new WaitCommand(1).andThen(
+                .alongWith(new WaitCommand(1.5).andThen(
                   new PositionIntake(m_elevator, m_wrist, () -> false, Position.INTAKE), 
                   new IntakeGamePiece(m_intake, () -> false, false)))));
 
@@ -347,10 +349,12 @@ public class RobotContainer {
           Commands.sequence(
               new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake),
               new PathPlannerCommand("Grid 9 Two Piece", 0, m_drive, true)
-                .alongWith(new WaitCommand(1).andThen(
+                .alongWith(new WaitCommand(1.75).andThen(
                   new PositionIntake(m_elevator, m_wrist, () -> false, Position.INTAKE), 
                   new IntakeGamePiece(m_intake, () -> false, false))),
-              new PathPlannerCommand("Grid 9 Two Piece", 1, m_drive, true),
+              new PathPlannerCommand("Grid 9 Two Piece", 1, m_drive, true).deadlineWith(Commands.sequence(
+                new WaitCommand(1.5),
+                new MoveElevator(m_elevator, ElevatorConstants.kAutoTop))),
               new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake, () -> false)));
     }
   }

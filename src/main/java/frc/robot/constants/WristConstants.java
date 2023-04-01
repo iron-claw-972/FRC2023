@@ -13,13 +13,13 @@ public class WristConstants {
   public static final int kPeakCurrentLimit = 45;
   public static final double kPeakCurrentDuration = 0.5;
 
-  public static final double kP = 2;
+  public static final double kP = 2.1;
   public static final double kI = 0;
   public static final double kD = 0;
   public static final double kF = 0;
 
   /** the gravity compensation amount as a percent of full motor power, scaled by a cosine term (this value is the max FF) */
-  public static final double kGravityCompensation = 0.08;
+  public static final double kGravityCompensation = 0.06;
 
   public static final double kTolerance = Units.rotationsToRadians(0.01);
   public static final double kMotorPowerClamp = 0.8;
@@ -47,7 +47,7 @@ public class WristConstants {
   public static final double kTopNodeConePos = Units.rotationsToRadians(0.070);
   
   public static final double kIntakeConePos = 0.1571; // 0.2199
-  public static final double kIntakeCubePos = -0.064;
+  public static final double kIntakeCubePos = -0.01;
   public static final double kIntakeShelfPos = Units.rotationsToRadians(0.035);
 
   /** Wrist position angle minimum (radians) */
