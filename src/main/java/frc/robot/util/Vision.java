@@ -175,9 +175,12 @@ public class Vision {
   }
 
   public void addTestCommands(ShuffleboardTab testTab, GenericEntry testEntry, Drivetrain drive){
-    GenericEntry visionTestEntry = m_shuffleboardTab.add("Distance Test Results\n(drive, vision, difference, % difference)", new int[]{0, 0, 0, 0}).getEntry();
-    testTab.add("Test vision (forward)", new TestVisionDistance(0.2, drive, this, visionTestEntry));
-    testTab.add("Test vision (backward)", new TestVisionDistance(-0.2, drive, this, visionTestEntry));
+    GenericEntry visionTestDriveEntry = m_shuffleboardTab.add("Distance Test Drive Distance", 0).getEntry();
+    GenericEntry visionTestVisionEntry = m_shuffleboardTab.add("Distance Test Vision Distance", 0).getEntry();
+    GenericEntry visionTestDiffEntry = m_shuffleboardTab.add("Distance Test Difference", 0).getEntry();
+    GenericEntry visionTestPercentDiffEntry = m_shuffleboardTab.add("Distance Test % Difference", 0).getEntry();
+    testTab.add("Test vision (forward)", new TestVisionDistance(0.2, drive, this, visionTestDriveEntry, visionTestVisionEntry, visionTestDiffEntry, visionTestPercentDiffEntry));
+    testTab.add("Test vision (backward)", new TestVisionDistance(-0.2, drive, this, visionTestDriveEntry, visionTestVisionEntry, visionTestDiffEntry, visionTestPercentDiffEntry));
     testTab.add("Align to 0 degrees", new TestVisionAlignment(0, drive, this));
     testTab.add("Align to 90 degrees", new TestVisionAlignment(Math.PI/2, drive, this));
     testTab.add("Align to -90 degrees", new TestVisionAlignment(-Math.PI/2, drive, this));

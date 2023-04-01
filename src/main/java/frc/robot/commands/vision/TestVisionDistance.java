@@ -19,8 +19,12 @@ public class TestVisionDistance extends CommandBase{
   private final Vision m_vision;
   private Translation2d m_visionStartTranslation, m_driveStartTranslation;
   private Pose2d m_currentPose = null;
-  private double[] m_outputData;
-  private GenericEntry m_visionTestEntry;
+  private double m_driveDistance;
+  private double m_visionDistance;
+  private GenericEntry m_visionTestDriveEntry;
+  private GenericEntry m_visionTestVisionEntry;
+  private GenericEntry m_visionTestDiffEntry;
+  private GenericEntry m_visionTestPercentDiffEntry; 
 
   private double m_speed;
 
@@ -34,13 +38,15 @@ public class TestVisionDistance extends CommandBase{
   // How many seconds between each data print
   private static final double kPrintDelay = 0.25;
 
-  public TestVisionDistance(double speed, Drivetrain drive, Vision vision, GenericEntry visionTestEntry){
+  public TestVisionDistance(double speed, Drivetrain drive, Vision vision, GenericEntry visionTestDriveEntry, GenericEntry visionTestVisionEntry, GenericEntry visionTestDiffEntry, GenericEntry visionTestPercentDiffEntry){
     addRequirements(drive);
     m_drive = drive;
     m_speed = speed;
     m_vision = vision;
-    m_outputData = new double[4];
-    m_visionTestEntry = visionTestEntry;
+    m_visionTestDriveEntry = visionTestDriveEntry;
+    m_visionTestVisionEntry = visionTestVisionEntry;
+    m_visionTestDiffEntry = visionTestDiffEntry;
+    m_visionTestPercentDiffEntry = visionTestPercentDiffEntry; 
   }
 
   @Override
@@ -54,7 +60,8 @@ public class TestVisionDistance extends CommandBase{
     m_currentPose = m_vision.getPose2d(m_drive.getPose());
     m_visionStartTranslation = m_currentPose.getTranslation();
     m_driveStartTranslation = m_drive.getPose().getTranslation();
-    m_outputData = new double[4];
+    m_driveDistance = 0;
+    m_visionDistance = 0;
   }
 
   @Override
@@ -69,25 +76,24 @@ public class TestVisionDistance extends CommandBase{
       // reset the timer
       m_endTimer.reset();
       // If kPrintDelay seconds have passed, print the data
-      double driveDistance = m_drive.getPose().getTranslation().getDistance(m_driveStartTranslation);
-      double visionDistance = m_currentPose.getTranslation().getDistance(m_visionStartTranslation);
-      m_outputData = new double[]{
-        driveDistance, visionDistance,
-        visionDistance - driveDistance, (visionDistance - driveDistance) / driveDistance * 100
-      };
+      m_driveDistance = m_drive.getPose().getTranslation().getDistance(m_driveStartTranslation);
+      m_visionDistance = m_currentPose.getTranslation().getDistance(m_visionStartTranslation);
+      m_visionTestDriveEntry.setDouble(m_driveDistance);
+      m_visionTestVisionEntry.setDouble(m_visionDistance);
+      m_visionTestDiffEntry.setDouble(m_visionDistance - m_driveDistance);
+      m_visionTestPercentDiffEntry.setDouble((m_visionDistance-m_driveDistance) / m_driveDistance * 100);
       if (m_printTimer.advanceIfElapsed(kPrintDelay)) {
-        System.out.println(m_outputData);
+        System.out.println(m_driveDistance + " " + m_visionDistance);
       }
       if(Constants.kLogging){
-        LogManager.addDouble("Vision/Distance Test Drive Distance", driveDistance);
-        LogManager.addDouble("Vision/Distance Test Vision Distance", visionDistance);
-        LogManager.addDouble("Vision/Distance Test Vision Error Value", visionDistance - driveDistance);
-        LogManager.addDouble("Vision/Distance Test Vision Error Percentage", (visionDistance - driveDistance) / driveDistance * 100);
+        LogManager.addDouble("Vision/Distance Test Drive Distance", m_driveDistance);
+        LogManager.addDouble("Vision/Distance Test Vision Distance", m_visionDistance);
+        LogManager.addDouble("Vision/Distance Test Vision Error Value", m_visionDistance - m_driveDistance);
+        LogManager.addDouble("Vision/Distance Test Vision Error Percentage", (m_visionDistance - m_driveDistance) / m_driveDistance * 100);
       }
     } else {
       m_endTimer.start();
     }
-    m_visionTestEntry.setDoubleArray(getOutputData());
   }
 
   @Override
@@ -101,7 +107,11 @@ public class TestVisionDistance extends CommandBase{
     return m_endTimer.hasElapsed(kEndDelay);
   }
 
-  public double[] getOutputData(){
-    return m_outputData;
+  public double getDriveDistance() {
+    return m_driveDistance;
+  }
+
+  public double getVisionDistance() {
+    return m_visionDistance;
   }
 }
