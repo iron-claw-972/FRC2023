@@ -24,6 +24,7 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -38,9 +39,11 @@ import frc.robot.commands.test.TestDriveVelocity;
 import frc.robot.commands.test.TestHeadingPID;
 import frc.robot.commands.test.TestSteerAngle;
 import frc.robot.constants.Constants;
+import frc.robot.constants.FieldConstants;
 import frc.robot.constants.VisionConstants;
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.constants.swerve.ModuleConstants;
+import frc.robot.util.DrawMechanism;
 import frc.robot.util.LogManager;
 import frc.robot.util.Vision;
 /** 
@@ -58,6 +61,7 @@ public class Drivetrain extends SubsystemBase {
 
   // Odometry
   private final SwerveDrivePoseEstimator m_poseEstimator;
+  private final DrawMechanism m_mechanism;
 
   // This is left intentionally public
   public final Module[] m_modules;
@@ -158,6 +162,7 @@ public class Drivetrain extends SubsystemBase {
       new Pose2d() // initial Odometry Location
     );
     m_poseEstimator.setVisionMeasurementStdDevs(VisionConstants.kBaseVisionPoseStdDevs);
+    m_mechanism = DrawMechanism.getInstance();
 
     m_xController = new PIDController(DriveConstants.kTranslationalP, 0, DriveConstants.kTranslationalD);
     m_yController = new PIDController(DriveConstants.kTranslationalP, 0, DriveConstants.kTranslationalD);
@@ -372,7 +377,16 @@ public class Drivetrain extends SubsystemBase {
   public void updateOdometry() {
     // Updates pose based on encoders and gyro. NOTE: must use yaw directly from gyro!
     m_poseEstimator.update(Rotation2d.fromDegrees(m_pigeon.getYaw()), getModulePositions());
-
+    if (DriverStation.getAlliance() == Alliance.Blue) {
+      m_mechanism.setDistanceToGrid(Math.max(m_poseEstimator.getEstimatedPosition().getX()
+      - (FieldConstants.kAprilTags.get(5).pose.getX() + FieldConstants.kAprilTagOffset)
+      - DriveConstants.kRobotWidthWithBumpers/2, 0));
+    }
+    else {
+      m_mechanism.setDistanceToGrid(Math.max(Math.abs(m_poseEstimator.getEstimatedPosition().getX()-FieldConstants.kFieldLength)
+      - (FieldConstants.kAprilTags.get(5).pose.getX() + FieldConstants.kAprilTagOffset)
+      - DriveConstants.kRobotWidthWithBumpers/2, 0));
+    }
     // Updates pose based on vision
     if (RobotBase.isReal() && m_visionEnabled && VisionConstants.kEnabled) {
 
