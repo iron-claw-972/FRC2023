@@ -14,7 +14,7 @@ import frc.robot.util.Vision;
 /**
  * Gathers data on the distance limits of the camera used for vision.
  */
-public class TestVisionDistance extends CommandBase{
+public class TestVisionDistance extends CommandBase {
   private final Drivetrain m_drive;
   private final Vision m_vision;
   private Translation2d m_visionStartTranslation, m_driveStartTranslation;
@@ -31,13 +31,18 @@ public class TestVisionDistance extends CommandBase{
   private final Timer m_endTimer = new Timer();
   private final Timer m_printTimer = new Timer();
 
-  // TODO: Should these values be in a constant file?
   // How many seconds of not seeing april tag before ending the command
   private static final double kEndDelay = 0.25;
 
   // How many seconds between each data print
-  private static final double kPrintDelay = 0.25;
+  private static final double kPrintDelay = 1;
 
+  /**
+   * Constructor for TestVisionDistance
+   * @param speed What speed to move at, negative if backward
+   * @param drive The drivetrain
+   * @param vision The vision
+   */
   public TestVisionDistance(double speed, Drivetrain drive, Vision vision, GenericEntry visionTestDriveEntry, GenericEntry visionTestVisionEntry, GenericEntry visionTestDiffEntry, GenericEntry visionTestPercentDiffEntry){
     addRequirements(drive);
     m_drive = drive;
@@ -49,8 +54,11 @@ public class TestVisionDistance extends CommandBase{
     m_visionTestPercentDiffEntry = visionTestPercentDiffEntry; 
   }
 
+  /**
+   * Starts the timers and disables vision for odometry
+   */
   @Override
-  public void initialize(){
+  public void initialize() {
 
     m_endTimer.reset();
     m_printTimer.restart();
@@ -64,13 +72,16 @@ public class TestVisionDistance extends CommandBase{
     m_visionDistance = 0;
   }
 
+  /**
+   * Drives the robot, finds the pose fromt he drivetrain and vision, and someimes prints the distances
+   */
   @Override
-  public void execute(){
+  public void execute() {
     m_drive.drive(m_speed, 0, 0, false, false);
     Pose2d newestPose = m_vision.getPose2d(m_currentPose, m_drive.getPose());
 
     // If the camera can see the apriltag
-    if (newestPose != null){
+    if (newestPose != null) {
       //update current pose
       m_currentPose = newestPose;
       // reset the timer
@@ -96,14 +107,21 @@ public class TestVisionDistance extends CommandBase{
     }
   }
 
+  /**
+   * Re-enables vision and stops the robot
+   */
   @Override
-  public void end(boolean interrupted){
+  public void end(boolean interrupted) {
     m_drive.enableVision(true);
     m_drive.stop();
   }
 
+  /**
+   * Returns if the command is finished
+   * @return If the end delay has elapsed
+   */
   @Override
-  public boolean isFinished(){
+  public boolean isFinished() {
     return m_endTimer.hasElapsed(kEndDelay);
   }
 

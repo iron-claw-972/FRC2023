@@ -1,11 +1,14 @@
 package frc.robot.controls;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.constants.OIConstants;
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.RollerIntake;
 import frc.robot.util.DynamicSlewRateLimiter;
 import frc.robot.util.Functions;
 
@@ -15,6 +18,8 @@ import frc.robot.util.Functions;
 public abstract class BaseDriverConfig {
 
   private final Drivetrain m_drive;
+
+  private final DoubleSupplier m_intakeOffset;
 
   private boolean m_shuffleboardUpdates = false;
 
@@ -48,12 +53,13 @@ public abstract class BaseDriverConfig {
    * @param controllerTab the shuffleboard controller tab
    * @param shuffleboardUpdates whether or not to update the shuffleboard
    */
-  public BaseDriverConfig(Drivetrain drive, ShuffleboardTab controllerTab, boolean shuffleboardUpdates) {
+  public BaseDriverConfig(Drivetrain drive, DoubleSupplier intakeOffset, ShuffleboardTab controllerTab, boolean shuffleboardUpdates) {
     m_headingLimiter.setContinuousLimits(-Math.PI,Math.PI);
     m_headingLimiter.enableContinuous(true);
     m_controllerTab = controllerTab;
     m_shuffleboardUpdates = shuffleboardUpdates;
     m_drive = drive;
+    m_intakeOffset = intakeOffset;
   }
 
   public double getForwardTranslation() {
@@ -76,6 +82,10 @@ public abstract class BaseDriverConfig {
 
   protected Drivetrain getDrivetrain() {
     return m_drive;
+  }
+
+  protected DoubleSupplier getIntakeOffset() {
+    return m_intakeOffset;
   }
 
   /**

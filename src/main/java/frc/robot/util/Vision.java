@@ -9,6 +9,7 @@ import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
@@ -23,9 +24,11 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.commands.vision.CalculateStdDevs;
 import frc.robot.commands.vision.TestVisionAlignment;
 import frc.robot.commands.vision.TestVisionDistance;
-import frc.robot.constants.Constants;
+import frc.robot.constants.FieldConstants;
 import frc.robot.constants.VisionConstants;
 import frc.robot.subsystems.Drivetrain;
 
@@ -50,7 +53,7 @@ public class Vision {
       m_aprilTagFieldLayout = AprilTagFields.k2023ChargedUp.loadAprilTagLayoutField();
     } catch (IOException e) {
       // If it can't find it, use the layout in the constants
-      m_aprilTagFieldLayout = new AprilTagFieldLayout(VisionConstants.kAprilTags, VisionConstants.kFieldLength, VisionConstants.kFieldWidth);
+      m_aprilTagFieldLayout = new AprilTagFieldLayout(FieldConstants.kAprilTags, FieldConstants.kFieldLength, FieldConstants.kFieldWidth);
       DriverStation.reportWarning("Could not find k2023ChargedUp.m_resourceFile, check that GradleRIO is updated to at least 2023.2.1 in build.gradle",  e.getStackTrace());
     }
     // Sets the origin to the right side of the blue alliance wall
@@ -71,16 +74,15 @@ public class Vision {
     ArrayList<EstimatedRobotPose> estimatedPoses = new ArrayList<>();
     for (int i = 0; i < m_cameras.size(); i++) {
       Optional<EstimatedRobotPose> estimatedPose = m_cameras.get(i).getEstimatedPose(referencePose);
-      // If the camera can see an april tag, add it to the array list
-      if (estimatedPose.isPresent() && estimatedPose.get().estimatedPose!=null) {
+      // If the camera can see an april tag that exists, add it to the array list
+      // April tags that don't exist might return a result that is present but doesn't have a pose
+      if (estimatedPose.isPresent() && estimatedPose.get().estimatedPose != null) {
         estimatedPoses.add(estimatedPose.get());
-        if(Constants.kLogging){
-          LogManager.addDoubleArray("Vison/EstimatedPose2d", new double[]{
-            estimatedPose.get().estimatedPose.getX(),
-            estimatedPose.get().estimatedPose.getY(),
-            estimatedPose.get().estimatedPose.getRotation().getZ()
-          });
-        }
+        LogManager.addDoubleArray("Vision/camera " + i + "/estimated pose2d", new double[] {
+          estimatedPose.get().estimatedPose.getX(),
+          estimatedPose.get().estimatedPose.getY(),
+          estimatedPose.get().estimatedPose.getRotation().getZ()
+        });
       }
     }
     return estimatedPoses;
@@ -102,23 +104,31 @@ public class Vision {
     ArrayList<EstimatedRobotPose> estimatedPoses = getEstimatedPoses(referencePose);
     Translation2d translation = new Translation2d();
     double rotation = 0;
-    //TODO: VERY LOW PRIORITY FOR FUTURE ROBOTS, make this scalable to more than 2 camera
-
+    
     if (estimatedPoses.size() == 1) return estimatedPoses.get(0).estimatedPose.toPose2d();
     
     if (estimatedPoses.size() == 2) {
       return new Pose2d(
-        estimatedPoses.get(0).estimatedPose.toPose2d().getTranslation().plus(
-        estimatedPoses.get(1).estimatedPose.toPose2d().getTranslation()
-        ).div(2),
-
+        estimatedPoses.get(0).estimatedPose.toPose2d().getTranslation()
+          .plus(estimatedPoses.get(1).estimatedPose.toPose2d().getTranslation())
+          .div(2),
+        
         new Rotation2d(Functions.modulusMidpoint(
           estimatedPoses.get(0).estimatedPose.toPose2d().getRotation().getRadians(),
           estimatedPoses.get(1).estimatedPose.toPose2d().getRotation().getRadians(),
-          -Math.PI, Math.PI
-        ))
+          -Math.PI, Math.PI)
+        )
       );
     }
+          
+    //TODO: VERY LOW PRIORITY FOR FUTURE ROBOTS, make the rotation average work with more than 2 cameras
+    // for(int i = 0; i < estimatedPoses.size(); i ++){
+    //   translation=translation.plus(estimatedPoses.get(i).estimatedPose.toPose2d().getTranslation());
+    // }
+
+    // if(posesUsed>0){
+    //   return new Pose2d(translation.div(estimatedPoses.size()), new Rotation2d());
+    // }
     return null;
   }
 
@@ -159,7 +169,8 @@ public class Vision {
         camera, 
         robotToCam
       );
-      photonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.CLOSEST_TO_REFERENCE_POSE);
+      photonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+      photonPoseEstimator.setReferencePose(new Pose2d());
     }
   
     /**
@@ -170,6 +181,18 @@ public class Vision {
     public Optional<EstimatedRobotPose> getEstimatedPose(Pose2d referencePose) {
       photonPoseEstimator.setReferencePose(referencePose);
       Optional<EstimatedRobotPose> pose = photonPoseEstimator.update();
+      
+      // if there is a pose, check the ambiguity isn't too high
+      if (pose.isPresent()) {
+        // go through all the targets
+        List<PhotonTrackedTarget> targetsUsed = pose.get().targetsUsed;
+        for (int i = 0; i < targetsUsed.size(); i++) {
+          // check their ambiguity, if it is above the highest wanted amount, return nothing
+          if (targetsUsed.get(i).getPoseAmbiguity() > VisionConstants.highestAmbiguity) {
+            return Optional.empty();
+          }
+        }
+      }
       return pose;
     }
   }

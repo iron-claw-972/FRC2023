@@ -88,6 +88,7 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
 
     m_robotContainer.updateHeldGamePiece();
+    m_robotContainer.resetModules();
 
     // Get the autonomous command.
     // This access is fast (about 14 microseconds) because the value is already resident in the Network Tables.
@@ -111,6 +112,7 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Teleop mode. */
   @Override
   public void teleopInit() {
+    m_robotContainer.resetModules();
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove

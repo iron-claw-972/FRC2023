@@ -14,7 +14,7 @@ This PR will..
 
 
 ## Tests Ran
-<!-- Explicity list the exact tests you ran. These should be the tests listed in the Testing and Evaluation section of your design doc, and of every merged design doc. List the actual result of the test and how it was within the measurement specified by the test. -->
+<!-- Make sure the code builds and that the code runs in the sim. -->
 
 
 ## Additional Notes
