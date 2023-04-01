@@ -78,11 +78,11 @@ public class DriveConstants {
   public static double kHeadingD = 0;
 
   //balance PID
-  public static double kBalanceP = 0.05;
+  public static double kBalanceP = 0.05; // 0.05
   public static double kBalanceI = 0;
   public static double kBalanceD = 0;
   // max output in m/s
-  public static final double kBalanceMaxOutput = 0.7;
+  public static final double kBalanceMaxOutput = 1.5; // 0.7
 
   //balance timer
   // when the balance command starts, it will run the pid normally for
@@ -91,12 +91,12 @@ public class DriveConstants {
   // the charge station some time to balance.
   // "A non-linear system requires non-linear control" - jerry
   // "If it's stupid but it works..." - Richie
-  public static double kBalanceNoStopPeriod = 2.5;
-  public static double kBalanceStopInterval = 0.5;
+  public static double kBalanceNoStopPeriod = 1.2;
+  public static double kBalanceStopInterval = 0.25; // 0.5
   public static double kBalanceStopDuration = 0.2;
 
   //translational PID
-  public static double kTranslationalP = 0.25;
+  public static double kTranslationalP = 0.25; // 0.25
   public static double kTranslationalD = 0;//0.001
 
   //The PIDs for PathPlanner Command
