@@ -390,6 +390,7 @@ public class RobotContainer {
               new PathPlannerCommand("Grid 9 Two Piece Engage", 0, m_drive, true),
               new BalanceCommand(m_drive)));
 
+      // Both 3pc routines WIP, not working
       m_autoCommand.addOption("Routine 27: Grid 1 Three Piece", 
           Commands.sequence(
               new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake),
@@ -409,8 +410,8 @@ public class RobotContainer {
               new PathPlannerCommand("Grid 1 Three Piece", 3, m_drive, true).deadlineWith(Commands.sequence(
                 new PositionIntake(m_elevator, m_wrist, () -> false, Position.STOW),
                 new WaitCommand(1.5),
-                new MoveElevator(m_elevator, ElevatorConstants.kAutoTop))),
-              new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake, () -> true)));
+                new MoveElevator(m_elevator, ElevatorConstants.kAutoMiddle))),
+              new AutoDeposit(Position.MIDDLE, m_elevator, m_wrist, m_intake, () -> true)));
 
       m_autoCommand.addOption("Routine 28: Grid 9 Three Piece",
           Commands.sequence(
@@ -431,8 +432,8 @@ public class RobotContainer {
               new PathPlannerCommand("Grid 9 Three Piece", 3, m_drive, true).deadlineWith(Commands.sequence(
                 new PositionIntake(m_elevator, m_wrist, () -> false, Position.STOW),
                 new WaitCommand(1.5),
-                new MoveElevator(m_elevator, ElevatorConstants.kAutoTop))),
-              new AutoDeposit(Position.TOP, m_elevator, m_wrist, m_intake, () -> true)));
+                new MoveElevator(m_elevator, ElevatorConstants.kAutoMiddle))),
+              new AutoDeposit(Position.MIDDLE, m_elevator, m_wrist, m_intake, () -> true)));
     }
   }
 
