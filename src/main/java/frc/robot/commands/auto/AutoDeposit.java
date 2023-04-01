@@ -49,12 +49,20 @@ public class AutoDeposit extends SequentialCommandGroup {
 
     // TODO: Add elevator and wrist constants for cube deposit positions
     if (depositPosition == Position.TOP) {
-      depositCommand = new MoveElevator(elevator, ElevatorConstants.kAutoTop).andThen(new RotateWrist(wrist, WristConstants.kAutoTop));
+      depositCommand = new MoveElevator(elevator, ElevatorConstants.kAutoTop);
     } else if (depositPosition == Position.MIDDLE) {
-      depositCommand = new MoveElevator(elevator, ElevatorConstants.kAutoMiddle).andThen(new RotateWrist(wrist, WristConstants.kAutoMiddle));
+      depositCommand = new MoveElevator(elevator, ElevatorConstants.kAutoMiddle);
     } else {
       // If hybrid, just shooting the came piece will make it land in the node
       depositCommand = new DoNothing();
+    }
+
+    if (isCone.getAsBoolean()) {
+      if (depositPosition == Position.TOP) {
+        depositCommand = new MoveElevator(elevator, ElevatorConstants.kAutoTop).alongWith(new RotateWrist(wrist, WristConstants.kAutoTop));
+      } else if (depositPosition == Position.MIDDLE) {
+        depositCommand = new MoveElevator(elevator, ElevatorConstants.kAutoMiddle).alongWith(new RotateWrist(wrist, WristConstants.kAutoMiddle));
+      }
     }
 
     addCommands(
