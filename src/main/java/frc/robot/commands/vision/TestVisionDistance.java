@@ -2,6 +2,7 @@ package frc.robot.commands.vision;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -19,6 +20,7 @@ public class TestVisionDistance extends CommandBase{
   private Translation2d m_visionStartTranslation, m_driveStartTranslation;
   private Pose2d m_currentPose = null;
   private double[] m_outputData;
+  private GenericEntry m_visionTestEntry;
 
   private double m_speed;
 
@@ -32,14 +34,13 @@ public class TestVisionDistance extends CommandBase{
   // How many seconds between each data print
   private static final double kPrintDelay = 0.25;
 
-  public TestVisionDistance(double speed, Drivetrain drive, Vision vision, ShuffleboardTab visionTab){
+  public TestVisionDistance(double speed, Drivetrain drive, Vision vision, GenericEntry visionTestEntry){
     addRequirements(drive);
     m_drive = drive;
     m_speed = speed;
     m_vision = vision;
     m_outputData = new double[4];
-    visionTab.addDoubleArray("Distance Test Results\n(drive, vision, difference, % difference)", 
-      ()->getOutputData());
+    m_visionTestEntry = visionTestEntry;
   }
 
   @Override
@@ -86,6 +87,7 @@ public class TestVisionDistance extends CommandBase{
     } else {
       m_endTimer.start();
     }
+    m_visionTestEntry.setDoubleArray(getOutputData());
   }
 
   @Override

@@ -20,6 +20,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.commands.vision.TestVisionAlignment;
@@ -174,8 +175,9 @@ public class Vision {
   }
 
   public void addTestCommands(ShuffleboardTab testTab, GenericEntry testEntry, Drivetrain drive){
-    testTab.add("Test vision (forward)", new TestVisionDistance(0.2, drive, this, m_shuffleboardTab));
-    testTab.add("Test vision (backward)", new TestVisionDistance(-0.2, drive, this, m_shuffleboardTab));
+    GenericEntry visionTestEntry = m_shuffleboardTab.add("Distance Test Results\n(drive, vision, difference, % difference)", new int[]{0, 0, 0, 0}).getEntry();
+    testTab.add("Test vision (forward)", new TestVisionDistance(0.2, drive, this, visionTestEntry));
+    testTab.add("Test vision (backward)", new TestVisionDistance(-0.2, drive, this, visionTestEntry));
     testTab.add("Align to 0 degrees", new TestVisionAlignment(0, drive, this));
     testTab.add("Align to 90 degrees", new TestVisionAlignment(Math.PI/2, drive, this));
     testTab.add("Align to -90 degrees", new TestVisionAlignment(-Math.PI/2, drive, this));
