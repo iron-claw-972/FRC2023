@@ -21,10 +21,6 @@ public class TestVisionDistance extends CommandBase {
   private Pose2d m_currentPose = null;
   private double m_driveDistance;
   private double m_visionDistance;
-  private GenericEntry m_visionTestDriveEntry;
-  private GenericEntry m_visionTestVisionEntry;
-  private GenericEntry m_visionTestDiffEntry;
-  private GenericEntry m_visionTestPercentDiffEntry; 
 
   private double m_speed;
 
@@ -43,15 +39,11 @@ public class TestVisionDistance extends CommandBase {
    * @param drive The drivetrain
    * @param vision The vision
    */
-  public TestVisionDistance(double speed, Drivetrain drive, Vision vision, GenericEntry visionTestDriveEntry, GenericEntry visionTestVisionEntry, GenericEntry visionTestDiffEntry, GenericEntry visionTestPercentDiffEntry){
+  public TestVisionDistance(double speed, Drivetrain drive, Vision vision){
     addRequirements(drive);
     m_drive = drive;
     m_speed = speed;
     m_vision = vision;
-    m_visionTestDriveEntry = visionTestDriveEntry;
-    m_visionTestVisionEntry = visionTestVisionEntry;
-    m_visionTestDiffEntry = visionTestDiffEntry;
-    m_visionTestPercentDiffEntry = visionTestPercentDiffEntry; 
   }
 
   /**
@@ -89,10 +81,10 @@ public class TestVisionDistance extends CommandBase {
       // If kPrintDelay seconds have passed, print the data
       m_driveDistance = m_drive.getPose().getTranslation().getDistance(m_driveStartTranslation);
       m_visionDistance = m_currentPose.getTranslation().getDistance(m_visionStartTranslation);
-      m_visionTestDriveEntry.setDouble(m_driveDistance);
-      m_visionTestVisionEntry.setDouble(m_visionDistance);
-      m_visionTestDiffEntry.setDouble(m_visionDistance - m_driveDistance);
-      m_visionTestPercentDiffEntry.setDouble((m_visionDistance-m_driveDistance) / m_driveDistance * 100);
+      m_vision.getVisionTestDriveEntry().setDouble(m_driveDistance);
+      m_vision.getVisionTestVisionEntry().setDouble(m_visionDistance);
+      m_vision.getVisionTestDiffEntry().setDouble(m_visionDistance - m_driveDistance);
+      m_vision.getVisionTestPercentDiffEntry().setDouble((m_visionDistance-m_driveDistance) / m_driveDistance * 100);
       if (m_printTimer.advanceIfElapsed(kPrintDelay)) {
         System.out.println(m_driveDistance + " " + m_visionDistance);
       }
