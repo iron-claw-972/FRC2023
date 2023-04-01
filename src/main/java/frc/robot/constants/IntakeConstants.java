@@ -22,7 +22,7 @@ public final class IntakeConstants {
    * The current that the intake motor will stop at in the {@link GamePieceType} command. This needs to be tested.
    */
   // TODO: Set these values to tested values
-  public static final double kCubeIntakeCurrentStopPoint = 25;
+  public static final double kCubeIntakeCurrentStopPoint = 20;
   public static final double kConeIntakeCurrentStopPoint = 25;
   
   /**

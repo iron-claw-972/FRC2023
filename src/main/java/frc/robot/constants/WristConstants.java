@@ -47,7 +47,7 @@ public class WristConstants {
   public static final double kTopNodeConePos = Units.rotationsToRadians(0.070);
   
   public static final double kIntakeConePos = 0.1571; // 0.2199
-  public static final double kIntakeCubePos = -0.01;
+  public static final double kIntakeCubePos = 0.08;
   public static final double kIntakeShelfPos = Units.rotationsToRadians(0.035);
 
   /** Wrist position angle minimum (radians) */
