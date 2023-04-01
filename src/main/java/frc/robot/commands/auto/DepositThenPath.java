@@ -15,14 +15,14 @@ import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.WristConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.RollerIntake;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Wrist;
 import frc.robot.util.GamePieceType;
 
 public class DepositThenPath extends SequentialCommandGroup {
 
   // TODO: refactor this to use seperate deposit Auto commands, and allow depositing Cubes
-  public DepositThenPath(String pathName, Position depositPosition, boolean doesPath, Drivetrain drive, Elevator elevator, Wrist wrist, RollerIntake intake) {
+  public DepositThenPath(String pathName, Position depositPosition, boolean doesPath, Drivetrain drive, Elevator elevator, Wrist wrist, Intake intake) {
     addRequirements(drive, elevator, wrist, intake);
 
     Command depositCommand;

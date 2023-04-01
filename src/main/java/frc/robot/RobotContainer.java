@@ -28,7 +28,7 @@ import frc.robot.controls.Operator;
 import frc.robot.controls.TestController;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.RollerIntake;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Wrist;
 import frc.robot.util.GamePieceType;
 import frc.robot.util.PathGroupLoader;
@@ -61,7 +61,7 @@ public class RobotContainer {
 
   // The robot's subsystems are defined here...
   private final Drivetrain m_drive;
-  private final RollerIntake m_intake;
+  private final Intake m_intake;
   private final Elevator m_elevator;
   private final Wrist m_wrist;
 
@@ -87,7 +87,7 @@ public class RobotContainer {
         // Create Drivetrain
         m_drive = new Drivetrain(m_drivetrainTab, m_swerveModulesTab, m_vision);
 
-        m_intake = new RollerIntake(m_intakeTab);
+        m_intake = new Intake(m_intakeTab);
         m_elevator = new Elevator(m_elevatorTab, () -> m_intake.containsGamePiece());
         m_wrist = new Wrist(m_wristTab);
 

@@ -15,8 +15,8 @@ import frc.robot.commands.scoring.wrist.RotateWrist;
 import frc.robot.constants.OIConstants;
 import frc.robot.constants.WristConstants;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.RollerIntake;
-import frc.robot.subsystems.RollerIntake.IntakeMode;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Intake.IntakeMode;
 import frc.robot.subsystems.Wrist;
 import frc.robot.util.GamePieceType;
 import frc.robot.util.Node;
@@ -40,7 +40,7 @@ public class Operator {
   /**
    * Configures the operator controls for the wrist, roller intake, elevator, and vision
    */
-  public void configureControls(Wrist wrist, RollerIntake intake, Elevator elevator, Vision vision) {
+  public void configureControls(Wrist wrist, Intake intake, Elevator elevator, Vision vision) {
 
     // calibrate elevator
     m_operator.get(Button.BACK).onTrue(new CalibrateElevator(elevator));

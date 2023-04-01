@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.constants.WristConstants;
-import frc.robot.subsystems.RollerIntake.IntakeMode;
+import frc.robot.subsystems.Intake.IntakeMode;
 
 /**
  * Mech2d representation of the robot mechanism and grid.
