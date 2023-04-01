@@ -3,6 +3,7 @@ package frc.robot.commands.auto;
 import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.DoNothing;
@@ -57,7 +58,7 @@ public class AutoDeposit extends SequentialCommandGroup {
     }
 
     addCommands(
-      new CalibrateElevator(elevator),
+      new ConditionalCommand(new DoNothing(), new CalibrateElevator(elevator), () -> elevator.isCalibrated()),
       depositCommand,
       new WaitCommand(0.25),
       new OuttakeGamePiece(intake, () -> (isCone.getAsBoolean() ? GamePieceType.CONE : GamePieceType.CUBE)),
