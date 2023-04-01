@@ -78,10 +78,10 @@ public class TestVisionDistance extends CommandBase{
         System.out.println(m_outputData);
       }
       if(Constants.kLogging){
-        LogManager.addDoubleArray("Vision/DistanceTest", new double[]{
-          driveDistance, visionDistance, 
-          visionDistance - driveDistance, (visionDistance - driveDistance) / driveDistance * 100
-        });
+        LogManager.addDouble("Vision/Distance Test Drive Distance", driveDistance);
+        LogManager.addDouble("Vision/Distance Test Vision Distance", visionDistance);
+        LogManager.addDouble("Vision/Distance Test Vision Error Value", visionDistance - driveDistance);
+        LogManager.addDouble("Vision/Distance Test Vision Error Percentage", (visionDistance - driveDistance) / driveDistance * 100);
       }
     } else {
       m_endTimer.start();
