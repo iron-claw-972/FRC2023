@@ -61,26 +61,26 @@ public class VisionConstants {
       ));
     } else {
       kCameras = new ArrayList<Pair<String, Transform3d>>(List.of(
-        new Pair<String, Transform3d>(
-          "Left_Camera",
-          new Transform3d(
-            new Translation3d(Units.inchesToMeters(8.996), Units.inchesToMeters(6.48), Units.inchesToMeters(37.44)),
-            new Rotation3d(Math.PI, Units.degreesToRadians(18), 0)
-          ))
-        ,
-        new Pair<String, Transform3d>(
-          "Right_Camera",
-          new Transform3d(
-            new Translation3d(Units.inchesToMeters(-0.75), Units.inchesToMeters(-7.125), Units.inchesToMeters(21)),
-            new Rotation3d(0, 0, Math.PI)
-          )
-        )
+        // new Pair<String, Transform3d>(
+        //   "Left_Camera",
+        //   new Transform3d(
+        //     new Translation3d(Units.inchesToMeters(8.996), Units.inchesToMeters(6.48), Units.inchesToMeters(37.44)),
+        //     new Rotation3d(Math.PI, Units.degreesToRadians(18), 0)
+        //   ))
+        // ,
+        // new Pair<String, Transform3d>(
+        //   "Right_Camera",
+        //   new Transform3d(
+        //     new Translation3d(Units.inchesToMeters(-0.75), Units.inchesToMeters(-7.125), Units.inchesToMeters(21)),
+        //     new Rotation3d(0, 0, Math.PI)
+        //   )
+        // )
       ));
     }
   }
 
   /** Poses that use targets with an ambiguity above this amount will be ignored */
-  public static final double highestAmbiguity = 0.04;
+  public static final double highestAmbiguity = 0.02;
 
   // TODO: check/tune vision weight
   // How much to trust vision measurements normally
@@ -100,5 +100,5 @@ public class VisionConstants {
 
   // Increasing this makes pose estimation trust vision measurements less as distance from Apriltags increases
   // This is how much is added to std dev for vision when closest visible Apriltag is 1 meter away
-  public static final double kVisionPoseStdDevFactor = 0.5;
+  public static final double kVisionPoseStdDevFactor = 1.0;
 }
