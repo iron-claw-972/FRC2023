@@ -116,12 +116,4 @@ public class TestVisionDistance extends CommandBase {
   public boolean isFinished() {
     return m_endTimer.hasElapsed(kEndDelay);
   }
-
-  public double getDriveDistance() {
-    return m_driveDistance;
-  }
-
-  public double getVisionDistance() {
-    return m_visionDistance;
-  }
 }
