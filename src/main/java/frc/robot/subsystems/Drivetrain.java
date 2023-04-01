@@ -413,7 +413,7 @@ public class Drivetrain extends SubsystemBase {
               currentEstimatedPoseTranslation.getDistance(closestTagPoseTranslation) * VisionConstants.kVisionPoseStdDevFactor
             )
         );
-        LogManager.addDouble("Vision/ClosestTag", 
+        LogManager.addDouble("Vision/ClosestTag Distance", 
           currentEstimatedPoseTranslation.getDistance(closestTagPoseTranslation)
         );
       }
