@@ -37,6 +37,10 @@ public class Vision {
   // A list of the cameras on the robot
   private ArrayList<VisionCamera> m_cameras = new ArrayList<>();
   private ShuffleboardTab m_shuffleboardTab;
+  private GenericEntry m_visionTestDriveEntry;
+  private GenericEntry m_visionTestVisionEntry;
+  private GenericEntry m_visionTestDiffEntry;
+  private GenericEntry m_visionTestPercentDiffEntry;
 
   /**
    * Creates a new instance of Vision
@@ -149,6 +153,10 @@ public class Vision {
   }
   
   public void setupVisionShuffleboard() {
+    GenericEntry visionTestDriveEntry = m_shuffleboardTab.add("Distance Test Drive Distance", 0).getEntry();
+    GenericEntry visionTestVisionEntry = m_shuffleboardTab.add("Distance Test Vision Distance", 0).getEntry();
+    GenericEntry visionTestDiffEntry = m_shuffleboardTab.add("Distance Test Difference", 0).getEntry();
+    GenericEntry visionTestPercentDiffEntry = m_shuffleboardTab.add("Distance Test % Difference", 0).getEntry();
   }
   
   class VisionCamera {
@@ -204,5 +212,21 @@ public class Vision {
     testTab.add("Align to 90 degrees", new TestVisionAlignment(Math.PI/2, drive, this));
     testTab.add("Align to -90 degrees", new TestVisionAlignment(-Math.PI/2, drive, this));
     testTab.add("Align to 180 degrees", new TestVisionAlignment(Math.PI, drive, this));
+  }
+
+  public GenericEntry getVisionTestDriveEntry() {
+    return m_visionTestDriveEntry;
+  }
+
+  public GenericEntry getVisionTestVisionEntry() {
+    return m_visionTestVisionEntry;
+  }
+
+  public GenericEntry getVisionTestDiffEntry() {
+    return m_visionTestDiffEntry;
+  }
+
+  public GenericEntry getVisionTestPercentDiffEntry() {
+    return m_visionTestPercentDiffEntry;
   }
 }
