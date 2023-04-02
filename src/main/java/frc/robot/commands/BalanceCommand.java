@@ -1,7 +1,5 @@
 package frc.robot.commands;
 
-import java.util.ArrayDeque;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Timer;
