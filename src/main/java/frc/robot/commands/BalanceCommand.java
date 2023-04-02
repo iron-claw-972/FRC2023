@@ -85,7 +85,6 @@ public class BalanceCommand extends CommandBase {
         m_timer.reset();
       }
     }
-    
 
     if (m_timer.get() > DriveConstants.kBalanceNoStopPeriod) {
       m_isStopping = true;
