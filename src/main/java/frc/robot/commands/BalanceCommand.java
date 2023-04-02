@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import java.util.ArrayDeque;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Timer;
@@ -17,6 +19,13 @@ public class BalanceCommand extends CommandBase {
   private boolean m_inverted;
   private boolean m_isStopping = false;
   private Timer m_timer = new Timer();
+
+  // Keep history of last angle measurements.
+  private static final int  kHistorySize = 5;
+  private ArrayDeque<Double> m_angleHistory = new ArrayDeque<Double>(kHistorySize);
+  // Start stopping once the current angle is less by kMaxAngleDiff degrees from 
+  // the one measured kHistorySize iterations ago.
+  private static final double kMaxAngleDiff = 2.5;
   
   /**
    * Attempts to balance the robot on the charge station. The robot must start partially on
@@ -76,9 +85,18 @@ public class BalanceCommand extends CommandBase {
         m_timer.reset();
       }
     }
+    
 
     if (m_timer.get() > DriveConstants.kBalanceNoStopPeriod) {
       m_isStopping = true;
+    }
+ 
+    m_angleHistory.addFirst(m_currentAngle);
+    if (m_angleHistory.size() >= kHistorySize) {
+      double oldest_measurement = m_angleHistory.removeLast();
+      if (m_currentAngle - oldest_measurement < -kMaxAngleDiff) {
+        m_isStopping = true;
+      }
     }
   }
   
