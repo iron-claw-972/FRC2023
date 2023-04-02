@@ -17,7 +17,6 @@ public class BalanceCommand extends CommandBase {
   private boolean m_inverted;
   private boolean m_isStopping = false;
   private Timer m_timer = new Timer();
-  private double m_prevGyro;
   
   /**
    * Attempts to balance the robot on the charge station. The robot must start partially on
