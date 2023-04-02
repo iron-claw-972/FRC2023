@@ -78,7 +78,7 @@ public class DriveConstants {
   public static double kHeadingD = 0;
 
   //balance PID
-  public static double kBalanceP = 0.05; // 0.05
+  public static double kBalanceP = 0.05;
   public static double kBalanceI = 0;
   public static double kBalanceD = 0;
   // max output in m/s
@@ -96,14 +96,14 @@ public class DriveConstants {
   public static double kBalanceStopDuration = 0.2;
 
   //translational PID
-  public static double kTranslationalP = 0.25; // 0.25
+  public static double kTranslationalP = 0.25;
   public static double kTranslationalD = 0;//0.001
 
   //The PIDs for PathPlanner Command
   public static double kPathplannerHeadingP = 3;
   public static double kPathplannerHeadingD = 0;
   
-  public static double kPathplannerTranslationalP = 6; // 6
+  public static double kPathplannerTranslationalP = 6;
   public static double kPathplannerTranslationalD = 0;
 
   // CAN
