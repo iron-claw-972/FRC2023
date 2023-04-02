@@ -5,6 +5,7 @@ import java.util.function.BooleanSupplier;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.IntakeConstants;
@@ -51,6 +52,7 @@ public class IntakeGamePiece extends CommandBase {
   
   @Override
   public boolean isFinished() {
+    if (RobotBase.isSimulation()) return true;
     if (m_runsForever) return false;
 
     if (m_type == GamePieceType.CUBE) {

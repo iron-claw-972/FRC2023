@@ -82,7 +82,7 @@ public class DriveConstants {
   public static double kBalanceI = 0;
   public static double kBalanceD = 0;
   // max output in m/s
-  public static final double kBalanceMaxOutput = 0.7;
+  public static final double kBalanceMaxOutput = 1.5; // 0.7
 
   //balance timer
   // when the balance command starts, it will run the pid normally for
@@ -91,8 +91,8 @@ public class DriveConstants {
   // the charge station some time to balance.
   // "A non-linear system requires non-linear control" - jerry
   // "If it's stupid but it works..." - Richie
-  public static double kBalanceNoStopPeriod = 2.5;
-  public static double kBalanceStopInterval = 0.5;
+  public static double kBalanceNoStopPeriod = 1.2;
+  public static double kBalanceStopInterval = 0.25; // 0.5
   public static double kBalanceStopDuration = 0.2;
 
   //translational PID
@@ -144,7 +144,7 @@ public class DriveConstants {
   // Open loop prevents throttle from changing too quickly. 
   // It will limit it to time given (in seconds) to go from zero to full throttle.
   // A small open loop ramp (0.25) helps with tread wear, tipping, etc
-  public static final double kOpenLoopRamp = 0.2;
+  public static final double kOpenLoopRamp = 0.25;
   public static final double kClosedLoopRamp = 0.0;
 
   public static final double kWheelCircumference = kModuleConstants.wheelCircumference;

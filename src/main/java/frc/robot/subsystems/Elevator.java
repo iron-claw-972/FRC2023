@@ -315,6 +315,14 @@ public class Elevator extends SubsystemBase {
   public void setIsCalibrated() {
     m_isCalibrated = true;
   }
+  
+  /**
+   * Is the elevator calibrated. Positional control will not work unless the
+   * elevator is calibrated (the motor encoder zero is reset to the positional zero)
+   */
+  public boolean isCalibrated() {
+    return m_isCalibrated;
+  }
 
   /**The periodic method for the subsystem, it runs forever from the moment that the robot is enabled */
   @Override

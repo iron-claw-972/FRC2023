@@ -9,6 +9,7 @@ import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -176,7 +177,7 @@ public class Vision {
         camera, 
         robotToCam
       );
-      photonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+      photonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.CLOSEST_TO_REFERENCE_POSE);
       photonPoseEstimator.setReferencePose(new Pose2d());
     }
   
@@ -187,12 +188,14 @@ public class Vision {
      */
     public Optional<EstimatedRobotPose> getEstimatedPose(Pose2d referencePose) {
       photonPoseEstimator.setReferencePose(referencePose);
-      Optional<EstimatedRobotPose> pose = photonPoseEstimator.update();
+
+      PhotonPipelineResult cameraResult = camera.getLatestResult();
       
-      // if there is a pose, check the ambiguity isn't too high
-      if (pose.isPresent()) {
+      // if there is a target detected and not in the past, 
+      // check the ambiguity isn't too high
+      if (cameraResult.hasTargets() && cameraResult.getTimestampSeconds() > 0) {
         // go through all the targets
-        List<PhotonTrackedTarget> targetsUsed = pose.get().targetsUsed;
+        List<PhotonTrackedTarget> targetsUsed = cameraResult.targets;
         for (int i = 0; i < targetsUsed.size(); i++) {
           // check their ambiguity, if it is above the highest wanted amount, return nothing
           if (targetsUsed.get(i).getPoseAmbiguity() > VisionConstants.highestAmbiguity) {
@@ -200,6 +203,9 @@ public class Vision {
           }
         }
       }
+
+      Optional<EstimatedRobotPose> pose = photonPoseEstimator.update(cameraResult);
+
       return pose;
     }
   }
