@@ -9,8 +9,8 @@ import frc.robot.commands.scoring.wrist.RotateWrist;
 import frc.robot.constants.OIConstants;
 import frc.robot.constants.WristConstants;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.RollerIntake;
-import frc.robot.subsystems.RollerIntake.IntakeMode;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Intake.IntakeMode;
 import frc.robot.subsystems.Wrist;
 import lib.controllers.GameController;
 import lib.controllers.GameController.Button;
@@ -19,11 +19,11 @@ import lib.controllers.GameController.DPad;
 public class TestController {
   
   private GameController test = new GameController(OIConstants.kTestJoy);
-  private RollerIntake m_intake;
+  private Intake m_intake;
   private Elevator m_elevator;
   private Wrist m_wrist;
   
-  public TestController(Wrist wrist, RollerIntake intake, Elevator elevator) {
+  public TestController(Wrist wrist, Intake intake, Elevator elevator) {
     m_intake = intake;
     m_elevator = elevator;
     m_wrist = wrist;
