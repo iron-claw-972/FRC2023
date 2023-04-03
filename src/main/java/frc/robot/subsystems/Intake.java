@@ -24,7 +24,7 @@ import frc.robot.util.LogManager;
 import frc.robot.util.MotorFactory;
 
 
-public class RollerIntake extends SubsystemBase {
+public class Intake extends SubsystemBase {
 
   public enum IntakeMode {
     INTAKE_CUBE, OUTTAKE_CUBE, INTAKE_CONE, OUTTAKE_CONE, DISABLED
@@ -40,7 +40,7 @@ public class RollerIntake extends SubsystemBase {
   private double m_power;
 
 
-  public RollerIntake(ShuffleboardTab intakeTab) {
+  public Intake(ShuffleboardTab intakeTab) {
     m_intakeMotor = MotorFactory.createTalonFX(IntakeConstants.kIntakeMotorId, Constants.kRioCAN);
     m_intakeMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(
       IntakeConstants.kEnableCurrentLimit,
