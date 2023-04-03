@@ -22,14 +22,14 @@ public final class IntakeConstants {
    * The current that the intake motor will stop at in the {@link GamePieceType} command. This needs to be tested.
    */
   // TODO: Set these values to tested values
-  public static final double kCubeIntakeCurrentStopPoint = 5;
-  public static final double kConeIntakeCurrentStopPoint = 5;
+  public static final double kCubeIntakeCurrentStopPoint = 20;
+  public static final double kConeIntakeCurrentStopPoint = 25;
   
   /**
    * How many seconds the outtake will run for. This needs to be tested.
    */
   // TODO: set this to a tested value
-  public static final double kOuttakeTime = 0.5;
+  public static final double kOuttakeTime = 0.6;
   /**
    * How many seconds the intake will run for before starting to detect currents for {@link IntakeGamePiece}.
    * This needs to be tested.

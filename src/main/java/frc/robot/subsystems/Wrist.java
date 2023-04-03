@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
-import edu.wpi.first.wpilibj.simulation.DutyCycleEncoderSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -28,6 +27,7 @@ public class Wrist extends SubsystemBase {
   private final ShuffleboardTab m_wristTab;
   private boolean m_enabled = true;
   private double m_pidPower = 0;
+  private double m_power = 0;
 
   /** Physics Simulator for the wrist. takes in a motor voltage and calculates how much the arm will move. */
   private final SingleJointedArmSim m_armSim =
@@ -54,6 +54,7 @@ public class Wrist extends SubsystemBase {
       WristConstants.kPeakCurrentDuration);
     m_motor.setNeutralMode(WristConstants.kNeutralMode);
     m_motor.setInverted(WristConstants.kMotorInvert); 
+    m_motor.enableVoltageCompensation(true);
 
     m_wristTab = wristTab;
 
@@ -109,16 +110,16 @@ public class Wrist extends SubsystemBase {
    * Sets the motor power, clamping it and ensuring it will not activate below/above the min/max positions
    */
   public void setMotorPower(double power) {
-    power = MathUtil.clamp(power, -WristConstants.kMotorPowerClamp, WristConstants.kMotorPowerClamp);
+    m_power = MathUtil.clamp(power, -WristConstants.kMotorPowerClamp, WristConstants.kMotorPowerClamp);
     
-    if (getAbsEncoderPos() <= WristConstants.kMinPos && power < 0) {
-      power = 0;
+    if (getAbsEncoderPos() <= WristConstants.kMinPos && m_power < 0) {
+      m_power = 0;
     }
-    if (getAbsEncoderPos() >= WristConstants.kMaxPos && power > 0) {
-      power = 0;
+    if (getAbsEncoderPos() >= WristConstants.kMaxPos && m_power > 0) {
+      m_power = 0;
     }
     
-    m_motor.set(power);
+    m_motor.set(m_power);
   }
 
   public void setEnabled(boolean enable) {
@@ -137,16 +138,18 @@ public class Wrist extends SubsystemBase {
 
   public void updateLogs() {
     LogManager.addDouble("Wrist/position", getAbsEncoderPos());
-    LogManager.addDouble("Wrist/motor power", m_motor.get());
+    LogManager.addDouble("Wrist/motor power", m_power);
     LogManager.addDouble("Wrist/pidOutput", m_pidPower);
   }
 
   public void setupShuffleboardTab() {
     m_wristTab.addNumber("Wrist Position", () -> getAbsEncoderPos());
     m_wristTab.add("wrist PID", m_pid);
-    m_wristTab.addNumber("wrist power final", () -> m_motor.get());
+    m_wristTab.addNumber("wrist power final", () -> m_power);
     m_wristTab.addNumber("Wrist PID output", () -> m_pidPower);
     m_wristTab.addNumber("Wrist Error", () -> m_pid.getSetpoint() - getAbsEncoderPos());
+    m_wristTab.addBoolean("At Setpoint", () -> reachedSetpoint());
+    m_wristTab.addNumber("Current Draw", () -> m_motor.getSupplyCurrent());
   }
 
   public void simulationPeriodic() {

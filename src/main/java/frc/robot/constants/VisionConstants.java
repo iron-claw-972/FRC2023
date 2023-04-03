@@ -80,7 +80,7 @@ public class VisionConstants {
   }
 
   /** Poses that use targets with an ambiguity above this amount will be ignored */
-  public static final double highestAmbiguity = 0.04;
+  public static final double highestAmbiguity = 0.02;
 
   // TODO: check/tune vision weight
   // How much to trust vision measurements normally
@@ -100,5 +100,5 @@ public class VisionConstants {
 
   // Increasing this makes pose estimation trust vision measurements less as distance from Apriltags increases
   // This is how much is added to std dev for vision when closest visible Apriltag is 1 meter away
-  public static final double kVisionPoseStdDevFactor = 0.5;
+  public static final double kVisionPoseStdDevFactor = 1.0;
 }
