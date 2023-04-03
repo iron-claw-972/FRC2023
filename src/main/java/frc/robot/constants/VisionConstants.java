@@ -80,14 +80,14 @@ public class VisionConstants {
   }
 
   /** Poses that use targets with an ambiguity above this amount will be ignored */
-  public static final double highestAmbiguity = 0.04;
+  public static final double highestAmbiguity = 0.02;
 
   // TODO: check/tune vision weight
   // How much to trust vision measurements normally
   public static final Matrix<N3, N1> kBaseVisionPoseStdDevs = new MatBuilder<>(Nat.N3(), Nat.N1()).fill(
     0.5, // x in meters (default=0.9)
     0.5, // y in meters (default=0.9)
-    100 // heading in radians. The gyroscope is very accurate, so as long as it is reset correctly it is unnecessary to correct it with vision
+    1000 // heading in radians. The gyroscope is very accurate, so as long as it is reset correctly it is unnecessary to correct it with vision
   );
 
   // How much to trust vision after passing over the charge station
@@ -95,10 +95,10 @@ public class VisionConstants {
   public static final Matrix<N3, N1> kChargeStationVisionPoseStdDevs = new MatBuilder<>(Nat.N3(), Nat.N1()).fill(
     0.001, // x in meters
     0.001, // y in meters
-    100 // heading in radians. The gyroscope is very accurate, so as long as it is reset correctly it is unnecessary to correct it with vision
+    1000 // heading in radians. The gyroscope is very accurate, so as long as it is reset correctly it is unnecessary to correct it with vision
   );
 
   // Increasing this makes pose estimation trust vision measurements less as distance from Apriltags increases
   // This is how much is added to std dev for vision when closest visible Apriltag is 1 meter away
-  public static final double kVisionPoseStdDevFactor = 0.5;
+  public static final double kVisionPoseStdDevFactor = 1.0;
 }
