@@ -154,7 +154,7 @@ public class DriveConstants {
 
   public static final boolean kInvertGyro = false; // Make sure gyro is CCW+ CW- // FIXME: Swerve
   
-  public static final double kSlowDriveFactor = 0.3;
+  public static final double kSlowDriveFactor = 0.2;
   public static final double kSlowRotFactor = 0.1;
 
   /**
