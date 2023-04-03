@@ -16,7 +16,7 @@ import frc.robot.commands.scoring.wrist.RotateWrist;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.WristConstants;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.RollerIntake;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Wrist;
 import frc.robot.util.GamePieceType;
 
@@ -29,7 +29,7 @@ public class AutoDeposit extends SequentialCommandGroup {
    * @param wrist
    * @param intake
    */
-  public AutoDeposit(Position depositPosition, Elevator elevator, Wrist wrist, RollerIntake intake) {
+  public AutoDeposit(Position depositPosition, Elevator elevator, Wrist wrist, Intake intake) {
     this(depositPosition, elevator, wrist, intake, () -> true);
   }
 
@@ -42,7 +42,7 @@ public class AutoDeposit extends SequentialCommandGroup {
    * @param intake the intake subsystem
    * @param isCone a boolean supplier that returns true if the intake is holding a cone, false if cube
    */
-  public AutoDeposit(Position depositPosition, Elevator elevator, Wrist wrist, RollerIntake intake, BooleanSupplier isCone) {
+  public AutoDeposit(Position depositPosition, Elevator elevator, Wrist wrist, Intake intake, BooleanSupplier isCone) {
     addRequirements(elevator, wrist, intake);
 
     Command depositCommand;

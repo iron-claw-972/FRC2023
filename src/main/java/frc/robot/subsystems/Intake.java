@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.Rev2mDistanceSensor;
 import com.revrobotics.Rev2mDistanceSensor.Port;
@@ -23,7 +24,7 @@ import frc.robot.util.LogManager;
 import frc.robot.util.MotorFactory;
 
 
-public class RollerIntake extends SubsystemBase {
+public class Intake extends SubsystemBase {
 
   public enum IntakeMode {
     INTAKE_CUBE, OUTTAKE_CUBE, INTAKE_CONE, OUTTAKE_CONE, DISABLED
@@ -39,8 +40,14 @@ public class RollerIntake extends SubsystemBase {
   private double m_power;
 
 
-  public RollerIntake(ShuffleboardTab intakeTab) {
+  public Intake(ShuffleboardTab intakeTab) {
     m_intakeMotor = MotorFactory.createTalonFX(IntakeConstants.kIntakeMotorId, Constants.kRioCAN);
+    m_intakeMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(
+      IntakeConstants.kEnableCurrentLimit,
+      IntakeConstants.kContinuousCurrentLimit,
+      IntakeConstants.kPeakCurrentLimit,
+      IntakeConstants.kPeakCurrentDuration
+    ));
     m_intakeMotor.setNeutralMode(IntakeConstants.kNeutralMode);
     m_intakeMotor.enableVoltageCompensation(true);
 
