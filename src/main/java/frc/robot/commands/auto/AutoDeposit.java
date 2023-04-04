@@ -72,7 +72,6 @@ public class AutoDeposit extends SequentialCommandGroup {
     addCommands(
       new ConditionalCommand(new DoNothing(), new CalibrateElevator(elevator), () -> elevator.isCalibrated()),
       depositCommand,
-      new WaitCommand(0.25),
       new OuttakeGamePiece(intake, () -> (isCone.getAsBoolean() ? GamePieceType.CONE : GamePieceType.CUBE)),
       stows ? new PositionIntake(elevator, wrist, isCone, Position.STOW) : new DoNothing()
     );
