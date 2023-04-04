@@ -475,4 +475,11 @@ public class RobotContainer {
     m_drive.resetModulesToAbsolute();
   }
 
+  /**
+   * Sets whether or not the drivetrain uses vision to update odometry
+   */
+  public void setVisionEnabled(boolean enabled) {
+    m_drive.enableVision(enabled);
+  }
+
 }
