@@ -6,7 +6,6 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.subsystems.Intake;
@@ -20,6 +19,16 @@ public class IntakeGamePiece extends CommandBase {
   private final BooleanSupplier m_isCone;
   private final boolean m_runsForever;
   private Debouncer m_stallDebouncer = new Debouncer(IntakeConstants.kIntakeStallTime, DebounceType.kBoth);
+
+  /**
+   * Spins the intake until the game piece is inside the intake.
+   * @param intake the intake subsystem
+   * @param gamePieceType intaking a cone or cube?
+   * @param runsForever if the command should end, or run forever. If false, will end based on motor currents
+   */
+  public IntakeGamePiece(Intake intake, GamePieceType gamePieceType, boolean runsForever) {
+    this(intake, () -> gamePieceType == GamePieceType.CONE, runsForever);
+  }
 
   /**
    * Spins the intake until the game piece is inside the intake.

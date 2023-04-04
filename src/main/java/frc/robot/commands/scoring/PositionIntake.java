@@ -12,8 +12,30 @@ import frc.robot.constants.WristConstants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Wrist;
+import frc.robot.util.GamePieceType;
 
 public class PositionIntake extends SequentialCommandGroup {
+  
+  /**
+   * Moves the elevator and the wrist to the position, factoring in game piece type.
+   * Uses constants from ElevatorConstants.java and WristConstants.java
+   * @param elevator the elevator subsystem
+   * @param wrist the wrist subsystem
+   * @param gamePieceType the game piece to score
+   * @param position what position to move the elevator/wrist to
+   */
+  public PositionIntake(Elevator elevator, Wrist wrist, GamePieceType gamePieceType, Position position) {
+    this(elevator, wrist, () -> gamePieceType == GamePieceType.CONE, position);
+  }
+
+  /**
+   * Moves the elevator and the wrist to the position, factoring in game piece type.
+   * Uses constants from ElevatorConstants.java and WristConstants.java
+   * @param elevator the elevator subsystem
+   * @param wrist the wrist subsystem
+   * @param isConeSupplier a supplier outputting true if the game piece is a cone, false if it is a cube
+   * @param position what position to move the elevator/wrist to
+   */
   public PositionIntake(Elevator elevator, Wrist wrist, BooleanSupplier isConeSupplier, Position position) {
     addRequirements(elevator, wrist);
     addCommands(
@@ -51,6 +73,9 @@ public class PositionIntake extends SequentialCommandGroup {
     );
   }
 
+  /**
+   * A enum representing what positions the elevator and wrist can move to 
+   */
   public enum Position {
     TOP, MIDDLE, BOTTOM, SHELF, INTAKE, STOW
   }

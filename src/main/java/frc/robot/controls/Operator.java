@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.scoring.PositionIntake;
+import frc.robot.commands.scoring.Stow;
 import frc.robot.commands.scoring.PositionIntake.Position;
 import frc.robot.commands.scoring.elevator.CalibrateElevator;
 import frc.robot.commands.scoring.intake.IntakeGamePiece;
@@ -61,22 +62,22 @@ public class Operator {
         new InstantCommand(() -> intake.setHeldGamePiece(GamePieceType.CONE)),
         // for shelf, to not hit the shelf, move wrist slightly first
         new RotateWrist(wrist, WristConstants.kBottomNodeCubePos),
-        new PositionIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, Position.STOW)
+        new Stow(elevator, wrist)
       ));
     
     // stow
-    m_operator.get(Button.RB).onTrue(new PositionIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, Position.STOW));
+    m_operator.get(Button.RB).onTrue(new Stow(elevator, wrist));
 
     // intake
     m_operator.get(Button.LB).onTrue(
       new PositionIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, Position.INTAKE).alongWith(new IntakeGamePiece(intake, m_operator.RIGHT_TRIGGER_BUTTON, true)))
       .onFalse(new SequentialCommandGroup(
         new InstantCommand(() -> intake.setMode(IntakeMode.DISABLED)),
-        new PositionIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, Position.STOW)
+        new Stow(elevator, wrist)
       ));
 
     // outtake
-    m_operator.get(m_operator.LEFT_TRIGGER_BUTTON).onTrue(new OuttakeGamePiece(intake)).onFalse(new PositionIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, Position.STOW).andThen(new InstantCommand(() -> intake.setMode(IntakeMode.DISABLED), intake)));
+    m_operator.get(m_operator.LEFT_TRIGGER_BUTTON).onTrue(new OuttakeGamePiece(intake)).onFalse(new Stow(elevator, wrist).andThen(new InstantCommand(() -> intake.setMode(IntakeMode.DISABLED), intake)));
 
     // spin intake
     m_operator.get(Button.START).onTrue(new IntakeGamePiece(intake, m_operator.RIGHT_TRIGGER_BUTTON, true)).onFalse(new InstantCommand(() -> intake.setMode(IntakeMode.DISABLED), intake));
