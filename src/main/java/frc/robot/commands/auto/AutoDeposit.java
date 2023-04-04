@@ -25,24 +25,26 @@ public class AutoDeposit extends SequentialCommandGroup {
   /**
    * Deposit a game piece in the given row during auto. This command assumes that the robot is already in the correct column position and that the intake is already holding a game piece. This will not automatically detect the game piece. It will assume that the game piece is a cone.
    * @param depositPosition
+   * @param stows stows after running
    * @param elevator
    * @param wrist
    * @param intake
    */
-  public AutoDeposit(Position depositPosition, Elevator elevator, Wrist wrist, Intake intake) {
-    this(depositPosition, elevator, wrist, intake, () -> true);
+  public AutoDeposit(Position depositPosition, boolean stows, Elevator elevator, Wrist wrist, Intake intake) {
+    this(depositPosition, stows, elevator, wrist, intake, () -> true);
   }
 
   /**
    * Deposit a game piece in the given row during auto. This command assumes that the robot is already in the correct column position and that the intake is already holding a game piece.
    * 
    * @param depositPosition the row to deposit the game piece in
+   * @param stows stows after running
    * @param elevator the elevator subsystem
    * @param wrist the wrist subsystem
    * @param intake the intake subsystem
    * @param isCone a boolean supplier that returns true if the intake is holding a cone, false if cube
    */
-  public AutoDeposit(Position depositPosition, Elevator elevator, Wrist wrist, Intake intake, BooleanSupplier isCone) {
+  public AutoDeposit(Position depositPosition, boolean stows, Elevator elevator, Wrist wrist, Intake intake, BooleanSupplier isCone) {
     addRequirements(elevator, wrist, intake);
 
     Command depositCommand;
@@ -59,9 +61,11 @@ public class AutoDeposit extends SequentialCommandGroup {
 
     if (isCone.getAsBoolean()) {
       if (depositPosition == Position.TOP) {
-        depositCommand = new MoveElevator(elevator, ElevatorConstants.kAutoTop).alongWith(new RotateWrist(wrist, WristConstants.kAutoTop));
+        depositCommand = new MoveElevator(elevator, ElevatorConstants.kAutoTop)
+          .alongWith(new WaitCommand(0.6).andThen(new RotateWrist(wrist, WristConstants.kAutoTop)));
       } else if (depositPosition == Position.MIDDLE) {
-        depositCommand = new MoveElevator(elevator, ElevatorConstants.kAutoMiddle).alongWith(new RotateWrist(wrist, WristConstants.kAutoMiddle));
+        depositCommand = new MoveElevator(elevator, ElevatorConstants.kAutoMiddle)
+          .alongWith(new WaitCommand(0.4).andThen(new RotateWrist(wrist, WristConstants.kAutoMiddle)));
       }
     }
 
@@ -70,7 +74,7 @@ public class AutoDeposit extends SequentialCommandGroup {
       depositCommand,
       new WaitCommand(0.25),
       new OuttakeGamePiece(intake, () -> (isCone.getAsBoolean() ? GamePieceType.CONE : GamePieceType.CUBE)),
-      new PositionIntake(elevator, wrist, isCone, Position.STOW)
+      stows ? new PositionIntake(elevator, wrist, isCone, Position.STOW) : new DoNothing()
     );
   }
 }
