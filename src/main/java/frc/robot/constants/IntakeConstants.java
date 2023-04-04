@@ -12,7 +12,7 @@ public final class IntakeConstants {
 
   // intake speeds
   public static final double kIntakeCubePower = 0.8;
-  public static final double kOuttakeCubePower = -0.8;
+  public static final double kOuttakeCubePower = -0.6;
   public static final double kIntakeConePower = -0.8;
   public static final double kOuttakeConePower = 0.6;
 

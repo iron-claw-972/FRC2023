@@ -22,7 +22,7 @@ public class WristConstants {
   /** the gravity compensation amount as a percent of full motor power, scaled by a cosine term (this value is the max FF) */
   public static final double kGravityCompensation = 0.045;
 
-  public static final double kTolerance = 0.01;
+  public static final double kTolerance = 0.02;
   public static final double kMotorPowerClamp = 0.8;
 
   public static final TalonFXInvertType kMotorInvert = TalonFXInvertType.CounterClockwise;

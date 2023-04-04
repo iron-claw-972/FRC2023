@@ -20,6 +20,7 @@ import frc.robot.Robot.RobotId;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.auto.AutoDeposit;
 import frc.robot.commands.auto.BalanceCommand;
+import frc.robot.commands.auto.GridNineTwoPiece;
 import frc.robot.commands.auto.PathPlannerCommand;
 import frc.robot.commands.scoring.PositionIntake;
 import frc.robot.commands.scoring.PositionIntake.Position;
@@ -380,25 +381,18 @@ public class RobotContainer {
       
       m_autoCommand.addOption("ROUTINE 26: Grid 9 Two Piece Cube Top Engage",
           Commands.sequence(
-              new AutoDeposit(Position.TOP, false, m_elevator, m_wrist, m_intake),
-              new PathPlannerCommand("Grid 9 Two Piece", 0, m_drive, true)
-                .alongWith(new PositionIntake(m_elevator, m_wrist, () -> false, Position.STOW).andThen(
-                  new WaitCommand(0.8), 
-                  Commands.parallel(
-                    new PositionIntake(m_elevator, m_wrist, () -> false, Position.INTAKE), 
-                    new IntakeGamePiece(m_intake, () -> false, false))
-                  )),
-              new PathPlannerCommand("Grid 9 Two Piece", 1, m_drive, true).deadlineWith(Commands.sequence(
-                new PositionIntake(m_elevator, m_wrist, () -> false, Position.STOW),
-                new WaitCommand(1.0),
-                new MoveElevator(m_elevator, ElevatorConstants.kAutoTop))),
-              new AutoDeposit(Position.TOP, false, m_elevator, m_wrist, m_intake, () -> false),
+              new GridNineTwoPiece(m_drive, m_elevator, m_wrist, m_intake),
               new PathPlannerCommand("Grid 9 Two Piece Engage", 0, m_drive, true)
                 .alongWith(new PositionIntake(m_elevator, m_wrist, () -> false, Position.STOW)),
               new BalanceCommand(m_drive)));
 
+      m_autoCommand.addOption("Routine 27: Grid 6 Engage Mobility", Commands.sequence(
+        new AutoDeposit(Position.TOP, true, m_elevator, m_wrist, m_intake),
+        new PathPlannerCommand("Grid 6 Engage", 0, m_drive, true),
+        new BalanceCommand(m_drive)));
+
       // Both 3pc routines WIP, not working
-      m_autoCommand.addOption("Routine 27: Grid 1 Three Piece", 
+      m_autoCommand.addOption("Routine 28: Grid 1 Three Piece", 
           Commands.sequence(
               new AutoDeposit(Position.TOP, true, m_elevator, m_wrist, m_intake),
               new PathPlannerCommand("Grid 1 Three Piece", 0, m_drive, true)
@@ -420,7 +414,7 @@ public class RobotContainer {
                 new MoveElevator(m_elevator, ElevatorConstants.kAutoMiddle))),
               new AutoDeposit(Position.MIDDLE, true, m_elevator, m_wrist, m_intake, () -> true)));
 
-      m_autoCommand.addOption("Routine 28: Grid 9 Three Piece",
+      m_autoCommand.addOption("Routine 29: Grid 9 Three Piece",
           Commands.sequence(
               new AutoDeposit(Position.TOP, true, m_elevator, m_wrist, m_intake),
               new PathPlannerCommand("Grid 9 Three Piece", 0, m_drive, true)
@@ -442,7 +436,7 @@ public class RobotContainer {
                 new MoveElevator(m_elevator, ElevatorConstants.kAutoMiddle))),
               new AutoDeposit(Position.MIDDLE, true, m_elevator, m_wrist, m_intake, () -> true)));
         
-        m_autoCommand.addOption("Routine 29: Grid 9 Three Piece Hybrid",
+        m_autoCommand.addOption("Routine 30: Grid 9 Three Piece Hybrid",
           Commands.sequence(
               new AutoDeposit(Position.BOTTOM, true, m_elevator, m_wrist, m_intake, () -> false),
               new PathPlannerCommand("Grid 9 Three Piece Hybrid", 0, m_drive, true)
