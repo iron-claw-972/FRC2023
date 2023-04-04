@@ -386,6 +386,7 @@ public class RobotContainer {
 
       m_autoCommand.addOption("Routine 27: Grid 6 Engage Mobility", Commands.sequence(
         new AutoDeposit(Position.TOP, true, m_elevator, m_wrist, m_intake),
+        //TODO: rename pathplanner file path "Grid 6 Engage Mobility", but first delete from comp robot
         new PathPlannerCommand("Grid 6 Engage", 0, m_drive, true),
         new BalanceCommand(m_drive)));
 
