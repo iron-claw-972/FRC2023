@@ -90,6 +90,9 @@ public class Robot extends TimedRobot {
     m_robotContainer.updateHeldGamePiece();
     m_robotContainer.resetModules();
 
+    // In auto, only use odometry.
+    m_robotContainer.setVisionEnabled(false);
+
     // Get the autonomous command.
     // This access is fast (about 14 microseconds) because the value is already resident in the Network Tables.
     // There was a problem last year because the operation also installed about over a dozen items (taking more than 20 ms).
@@ -113,6 +116,10 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     m_robotContainer.resetModules();
+    
+    // In teleop, may enable vision for use for grid/shelf alignment
+    m_robotContainer.setVisionEnabled(true);
+
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove

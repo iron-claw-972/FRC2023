@@ -3,6 +3,7 @@ package frc.robot.controls;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.scoring.PositionIntake;
+import frc.robot.commands.scoring.Stow;
 import frc.robot.commands.scoring.PositionIntake.Position;
 import frc.robot.commands.scoring.elevator.CalibrateElevator;
 import frc.robot.commands.scoring.wrist.RotateWrist;
@@ -65,6 +66,6 @@ public class TestController {
     test.get(Button.RIGHT_JOY).onTrue(new RotateWrist(m_wrist, WristConstants.kStowPos));
 
     // stow
-    test.get(Button.BACK).onTrue(new PositionIntake(m_elevator, m_wrist, test.RIGHT_TRIGGER_BUTTON, Position.STOW));
+    test.get(Button.BACK).onTrue(new Stow(m_elevator, m_wrist));
   }
 }

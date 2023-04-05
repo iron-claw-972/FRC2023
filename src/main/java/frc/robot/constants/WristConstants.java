@@ -14,7 +14,7 @@ public class WristConstants {
   public static final int kPeakCurrentLimit = 50;
   public static final double kPeakCurrentDuration = 0.5;
 
-  public static final double kP = 1.9;
+  public static final double kP = 2;
   public static final double kI = 0;
   public static final double kD = 0;
   public static final double kF = 0;
@@ -22,7 +22,7 @@ public class WristConstants {
   /** the gravity compensation amount as a percent of full motor power, scaled by a cosine term (this value is the max FF) */
   public static final double kGravityCompensation = 0.045;
 
-  public static final double kTolerance = 0.01;
+  public static final double kTolerance = 0.02;
   public static final double kMotorPowerClamp = 0.8;
 
   public static final TalonFXInvertType kMotorInvert = TalonFXInvertType.CounterClockwise;
@@ -38,7 +38,7 @@ public class WristConstants {
 
   public static final double kAutoTop = Units.rotationsToRadians(0.070);
 
-  public static final double kStowPos = 1.96;
+  public static final double kStowPos = 1.95;
   public static final double kBottomNodeCubePos = Units.rotationsToRadians(0.170);
   public static final double kMiddleNodeCubePos = 0.551; //Units.rotationsToRadians(0.170);
   public static final double kTopNodeCubePos = Units.rotationsToRadians(0.270);

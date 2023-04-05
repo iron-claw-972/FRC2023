@@ -91,7 +91,7 @@ public class DriveConstants {
   // the charge station some time to balance.
   // "A non-linear system requires non-linear control" - jerry
   // "If it's stupid but it works..." - Richie
-  public static double kBalanceNoStopPeriod = 1.2;
+  public static double kBalanceNoStopPeriod = 1.1;
   public static double kBalanceStopInterval = 0.25; // 0.5
   public static double kBalanceStopDuration = 0.2;
 
