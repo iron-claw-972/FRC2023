@@ -39,7 +39,11 @@ public class OuttakeGamePiece extends CommandBase {
   @Override
   public void initialize() {
     if (m_heldPiece.get().equals(GamePieceType.CUBE)) {
-      m_intake.setMode(IntakeMode.OUTTAKE_CUBE);
+      if (DriverStation.isAutonomous()) {
+        m_intake.setMode(IntakeMode.OUTTAKE_CUBE_AUTO);
+      } else {
+        m_intake.setMode(IntakeMode.OUTTAKE_CUBE);
+      }
     } else if (m_heldPiece.get().equals(GamePieceType.CONE)) {
       m_intake.setMode(IntakeMode.OUTTAKE_CONE);
     } else {

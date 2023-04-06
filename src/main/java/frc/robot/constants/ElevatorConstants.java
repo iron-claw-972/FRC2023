@@ -75,9 +75,9 @@ public class ElevatorConstants {
 
     public static final double kIntakeConeHeight = Conversions.ElevatorExtensionToHeight(Units.inchesToMeters(0));
     public static final double kIntakeCubeHeight = kIntakeConeHeight;
+
     public static final double kTopConeHeight = Conversions.ElevatorExtensionToHeight(Units.inchesToMeters(46));
-    
-    public static final double kTopCubeHeight = Conversions.ElevatorExtensionToHeight(Units.inchesToMeters(50));
+    public static final double kTopCubeHeight = Conversions.ElevatorExtensionToHeight(Units.inchesToMeters(44));
     public static final double kMiddleConeHeight = 0.9; //Units.inchesToMeters(40);
     public static final double kMiddleCubeHeight = Units.inchesToMeters(35);
     public static final double kBottomConeHeight = Conversions.ElevatorExtensionToHeight(Units.inchesToMeters(6));
@@ -86,7 +86,7 @@ public class ElevatorConstants {
     public static final double kStowHeight = Conversions.ElevatorExtensionToHeight(Units.inchesToMeters(0));
 
     public static final double kAutoMiddle = 0.771;
-    public static final double kAutoTop = 1.294;
+    public static final double kAutoTop = 1.29;
 
     public static final double kCalibrationPower = -0.2;
     public static final double kMotorRamp = 0.1;
