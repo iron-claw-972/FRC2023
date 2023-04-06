@@ -91,6 +91,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.resetModules();
 
     // In auto, only use odometry.
+    // Note: some autos reenable vision, ex. grid 1 autos becuase of cable tray
     m_robotContainer.setVisionEnabled(false);
 
     // Get the autonomous command.

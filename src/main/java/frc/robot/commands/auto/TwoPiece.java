@@ -15,22 +15,29 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Wrist;
 import frc.robot.util.GamePieceType;
 
-public class GridNineTwoPiece extends SequentialCommandGroup {
+public class TwoPiece extends SequentialCommandGroup {
 
   /**
-   * Runs an auto from grid 9 (closest to the loading zone) that deposits the preloaded game piece, drives to 
-   * the staged game piece nearest to grid 9, then scores that one. Does not stow at the end.
+   * Runs an auto from grid 1 or 9 (closest to the field boundary/loading zone) that deposits the preloaded game piece, drives to 
+   * the staged game piece nearest, then scores that one. Does not stow at the end.
+   * @param isGrid9 if it should run the grid 9 path or the grid 1 path
    * @param drive
    * @param elevator
    * @param wrist
    * @param intake
    */
-  public GridNineTwoPiece(Drivetrain drive, Elevator elevator, Wrist wrist, Intake intake) {
+  public TwoPiece(boolean isGrid9, Drivetrain drive, Elevator elevator, Wrist wrist, Intake intake) {
+    
+    String path = "Grid 9 Two Piece";
+    if (!isGrid9) {
+      path = "Grid 1 Two Piece";
+    }
+
     addCommands(
       // start by depositing in the top. Do not stow, will run in parallel for speed
       new AutoDeposit(Position.TOP, GamePieceType.CONE, false, elevator, wrist, intake),
       // drive to second GP...
-      new PathPlannerCommand("Grid 9 Two Piece", 0, drive, true)
+      new PathPlannerCommand(path, 0, drive, true)
         // In parallel,
         .alongWith(
           // stow, and then after 0.8 sec put the intake down and spin the intake for cube
@@ -38,18 +45,20 @@ public class GridNineTwoPiece extends SequentialCommandGroup {
           new WaitCommand(0.8), 
           Commands.parallel(
             new PositionIntake(elevator, wrist, GamePieceType.CUBE, Position.INTAKE), 
-            // note false for runs forever, will wait until detects cube in intake
-            new IntakeGamePiece(intake, GamePieceType.CUBE, false)
+            // note false for runs forever, will wait until detects cube in intake or 3 seconds pass
+            new IntakeGamePiece(intake, GamePieceType.CUBE, false).withTimeout(3)
           )
         )),
       // after intake has finished, drive back to grid
-      new PathPlannerCommand("Grid 9 Two Piece", 1, drive, false)
+      new PathPlannerCommand(path, 1, drive, false)
         // while driving back to grid, first stow then start moving to score position
         // not vital that we move to score position, so it is a deadline group -- if the drive command finishes, so do 
         // the commands moving the elevator. AutoDeposit() will start as soon as it finishes driving, which will move the subsystems
         .deadlineWith(Commands.sequence(
           new Stow(elevator, wrist),
-          new WaitCommand(1.0),
+          // if in grid 1, it shouldn't extend the elevator as early 
+          // because the robot can tip on the cable tray
+          new WaitCommand(isGrid9 ? 1.0 : 3.0),
           new MoveElevator(elevator, ElevatorConstants.kAutoTop)
         )),
       // And finally, score GP 2! It will not stow, for compatibility with later autos...

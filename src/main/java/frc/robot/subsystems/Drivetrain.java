@@ -418,13 +418,16 @@ public class Drivetrain extends SubsystemBase {
           }
         }
 
+        double visionFactor = (currentEstimatedPoseTranslation.getDistance(closestTagPoseTranslation) * VisionConstants.kVisionPoseStdDevFactor) - 1;
+        visionFactor = Math.max(0, visionFactor);
+
         // Adds the vision measurement for this camera
         m_poseEstimator.addVisionMeasurement(
           estimatedPose.estimatedPose.toPose2d(),
           estimatedPose.timestampSeconds,
           m_chargeStationVision ? VisionConstants.kChargeStationVisionPoseStdDevs :
             VisionConstants.kBaseVisionPoseStdDevs.plus(
-              currentEstimatedPoseTranslation.getDistance(closestTagPoseTranslation) * VisionConstants.kVisionPoseStdDevFactor
+              visionFactor
             )
         );
         LogManager.addDouble("Vision/ClosestTag Distance", 
@@ -436,7 +439,6 @@ public class Drivetrain extends SubsystemBase {
       if (estimatedPoses.size()>0) {
         m_chargeStationVision = false;
       }
-      m_fieldDisplay.setRobotPose(m_poseEstimator.getEstimatedPosition());
     }
   }
 
@@ -564,9 +566,10 @@ public class Drivetrain extends SubsystemBase {
    * Sets up the shuffleboard tab for the drivetrain.
    */
   private void setupDrivetrainShuffleboard() {
-    if (!Constants.kUseTelemetry) return;
 
     m_drivetrainTab.add("Field", m_fieldDisplay);
+    if (!Constants.kUseTelemetry) return;
+
 
     m_drivetrainTab.add("Balance PID", m_balancePID);
 

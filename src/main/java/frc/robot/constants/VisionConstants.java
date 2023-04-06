@@ -85,16 +85,16 @@ public class VisionConstants {
   // TODO: check/tune vision weight
   // How much to trust vision measurements normally
   public static final Matrix<N3, N1> kBaseVisionPoseStdDevs = new MatBuilder<>(Nat.N3(), Nat.N1()).fill(
-    0.5, // x in meters (default=0.9)
-    0.5, // y in meters (default=0.9)
+    0.9, // x in meters (default=0.9)
+    0.9, // y in meters (default=0.9)
     1000 // heading in radians. The gyroscope is very accurate, so as long as it is reset correctly it is unnecessary to correct it with vision
   );
 
   // How much to trust vision after passing over the charge station
   // Should be lower to correct pose after charge station
   public static final Matrix<N3, N1> kChargeStationVisionPoseStdDevs = new MatBuilder<>(Nat.N3(), Nat.N1()).fill(
-    0.001, // x in meters
-    0.001, // y in meters
+    0.01, // x in meters
+    0.01, // y in meters
     1000 // heading in radians. The gyroscope is very accurate, so as long as it is reset correctly it is unnecessary to correct it with vision
   );
 
