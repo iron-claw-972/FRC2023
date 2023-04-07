@@ -27,6 +27,7 @@ import frc.robot.commands.scoring.Stow;
 import frc.robot.commands.scoring.PositionIntake.Position;
 import frc.robot.commands.scoring.elevator.MoveElevator;
 import frc.robot.commands.scoring.intake.IntakeGamePiece;
+import frc.robot.commands.scoring.intake.OuttakeGamePiece;
 import frc.robot.constants.Constants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.VisionConstants;
@@ -394,13 +395,30 @@ public class RobotContainer {
             new PathPlannerCommand("Grid 9 Three Piece", 0, m_drive, true)
               .alongWith(Commands.sequence( 
                   new Stow(m_elevator, m_wrist), 
-                  new WaitCommand(1),
+                  new WaitCommand(0.75),
                   new PositionIntake(m_elevator, m_wrist, GamePieceType.CUBE, Position.INTAKE)
                     .alongWith(new IntakeGamePiece(m_intake, GamePieceType.CUBE, false))
               )),
             new PathPlannerCommand("Grid 9 Three Piece", 1, m_drive, true)
-              .alongWith(new Stow(m_elevator, m_wrist)),
-            new AutoDeposit(Position.BOTTOM, GamePieceType.CUBE, true, m_elevator, m_wrist, m_intake)
+              .alongWith(Commands.sequence(
+                new Stow(m_elevator, m_wrist),
+                new WaitCommand(2.5),
+                new OuttakeGamePiece(m_intake, () -> GamePieceType.CUBE)
+              ))
+          ));
+
+        m_autoCommand.addOption("Routine 30: Grid 9 Two Piece Intake 1",
+          Commands.sequence(
+            new TwoPiece(true, m_drive, m_elevator, m_wrist, m_intake),
+            new PathPlannerCommand("Grid 9 Three Piece", 0, m_drive, true)
+              .alongWith(Commands.sequence( 
+                  new Stow(m_elevator, m_wrist), 
+                  new WaitCommand(0.75),
+                  new PositionIntake(m_elevator, m_wrist, GamePieceType.CUBE, Position.INTAKE)
+                    .alongWith(new IntakeGamePiece(m_intake, GamePieceType.CUBE, false))
+              )),
+            new PathPlannerCommand("Grid 9 Three Piece", 1, m_drive, true)
+              .alongWith(new Stow(m_elevator, m_wrist))
           ));
         
         // m_autoCommand.addOption("Routine 30: Grid 9 Three Piece Hybrid",
