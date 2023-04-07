@@ -366,10 +366,18 @@ public class RobotContainer {
 
       m_autoCommand.addOption("Routine 27: Grid 4/6 Engage Mobility", Commands.sequence(
         new AutoDeposit(Position.TOP, true, m_elevator, m_wrist, m_intake),
-        //TODO: rename pathplanner file path "Grid 6 Engage Mobility", but first delete from comp robot
-        new PathPlannerCommand("Grid 6 Engage", 0, m_drive, true),
+        new PathPlannerCommand("Grid 6 Engage Mobility", 0, m_drive, true),
         new BalanceCommand(m_drive)));
 
+      m_autoCommand.addOption("Routine 31: Grid 4/6 Engage with Intake", Commands.sequence(
+        new AutoDeposit(Position.TOP, true, m_elevator, m_wrist, m_intake),
+        new PathPlannerCommand("Grid 6 Engage Intake", 0, m_drive, true)
+          .alongWith(Commands.sequence(
+            new WaitCommand(2.2),
+            new PositionIntake(m_elevator, m_wrist, GamePieceType.CUBE, Position.INTAKE)
+              .alongWith(new IntakeGamePiece(m_intake, GamePieceType.CUBE, false))
+          )),
+        new BalanceCommand(m_drive).alongWith(new Stow(m_elevator, m_wrist))));
       
       
       // THREE PIECE ROUTINES
@@ -385,8 +393,11 @@ public class RobotContainer {
                     .alongWith(new IntakeGamePiece(m_intake, GamePieceType.CUBE, false))
                 )),
               new PathPlannerCommand("Grid 1 Three Piece", 1, m_drive, true)
-                .alongWith(new Stow(m_elevator, m_wrist)),
-              new AutoDeposit(Position.BOTTOM, GamePieceType.CUBE, true, m_elevator, m_wrist, m_intake)
+                .alongWith(Commands.sequence(
+                  new Stow(m_elevator, m_wrist),
+                  new WaitCommand(3),
+                  new OuttakeGamePiece(m_intake, () -> GamePieceType.CUBE)
+                ))
           ));
 
       m_autoCommand.addOption("Routine 29: Grid 9 Three Piece",
