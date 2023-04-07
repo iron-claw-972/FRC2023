@@ -376,33 +376,29 @@ public class RobotContainer {
           Commands.sequence(
               new InstantCommand(() -> setVisionEnabled(true)),
               new TwoPiece(false, m_drive, m_elevator, m_wrist, m_intake),
-              new PathPlannerCommand("Grid 1 Three Piece", 2, m_drive, true)
+              new PathPlannerCommand("Grid 1 Three Piece", 0, m_drive, true)
                 .alongWith(Commands.sequence(
                   new Stow(m_elevator, m_wrist),
                   new WaitCommand(1),
-                  new PositionIntake(m_elevator, m_wrist, GamePieceType.CONE, Position.INTAKE)
-                    .alongWith(new IntakeGamePiece(m_intake, GamePieceType.CONE, false))
+                  new PositionIntake(m_elevator, m_wrist, GamePieceType.CUBE, Position.INTAKE)
+                    .alongWith(new IntakeGamePiece(m_intake, GamePieceType.CUBE, false))
                 )),
-              new PathPlannerCommand("Grid 1 Three Piece", 3, m_drive, true)
-                .deadlineWith(Commands.sequence(
-                  new Stow(m_elevator, m_wrist),
-                  new WaitCommand(1.5),
-                  new MoveElevator(m_elevator, ElevatorConstants.kAutoMiddle)
-                )),
-              new AutoDeposit(Position.MIDDLE, GamePieceType.CONE, true, m_elevator, m_wrist, m_intake)
+              new PathPlannerCommand("Grid 1 Three Piece", 1, m_drive, true)
+                .alongWith(new Stow(m_elevator, m_wrist)),
+              new AutoDeposit(Position.BOTTOM, GamePieceType.CUBE, true, m_elevator, m_wrist, m_intake)
           ));
 
       m_autoCommand.addOption("Routine 29: Grid 9 Three Piece",
           Commands.sequence(
             new TwoPiece(true, m_drive, m_elevator, m_wrist, m_intake),
-            new PathPlannerCommand("Grid 9 Three Piece", 2, m_drive, true)
+            new PathPlannerCommand("Grid 9 Three Piece", 0, m_drive, true)
               .alongWith(Commands.sequence( 
                   new Stow(m_elevator, m_wrist), 
                   new WaitCommand(1),
                   new PositionIntake(m_elevator, m_wrist, GamePieceType.CUBE, Position.INTAKE)
                     .alongWith(new IntakeGamePiece(m_intake, GamePieceType.CUBE, false))
               )),
-            new PathPlannerCommand("Grid 9 Three Piece", 3, m_drive, true)
+            new PathPlannerCommand("Grid 9 Three Piece", 1, m_drive, true)
               .alongWith(new Stow(m_elevator, m_wrist)),
             new AutoDeposit(Position.BOTTOM, GamePieceType.CUBE, true, m_elevator, m_wrist, m_intake)
           ));
