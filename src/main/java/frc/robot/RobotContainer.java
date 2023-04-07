@@ -402,7 +402,7 @@ public class RobotContainer {
             new PathPlannerCommand("Grid 9 Three Piece", 1, m_drive, true)
               .alongWith(Commands.sequence(
                 new Stow(m_elevator, m_wrist),
-                new WaitCommand(2.5),
+                new WaitCommand(3),
                 new OuttakeGamePiece(m_intake, () -> GamePieceType.CUBE)
               ))
           ));
