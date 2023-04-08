@@ -368,17 +368,6 @@ public class RobotContainer {
         new AutoDeposit(Position.TOP, true, m_elevator, m_wrist, m_intake),
         new PathPlannerCommand("Grid 6 Engage Mobility", 0, m_drive, true),
         new BalanceCommand(m_drive)));
-
-      m_autoCommand.addOption("Routine 31: Grid 4/6 Engage with Intake", Commands.sequence(
-        new AutoDeposit(Position.TOP, true, m_elevator, m_wrist, m_intake),
-        new PathPlannerCommand("Grid 6 Engage Intake", 0, m_drive, true)
-          .alongWith(Commands.sequence(
-            new WaitCommand(2.2),
-            new PositionIntake(m_elevator, m_wrist, GamePieceType.CUBE, Position.INTAKE)
-              .alongWith(new IntakeGamePiece(m_intake, GamePieceType.CUBE, false))
-          )),
-        new BalanceCommand(m_drive).alongWith(new Stow(m_elevator, m_wrist))));
-      
       
       // THREE PIECE ROUTINES
       m_autoCommand.addOption("Routine 28: Grid 1 Three Piece", 
@@ -433,6 +422,17 @@ public class RobotContainer {
               .alongWith(new Stow(m_elevator, m_wrist))
           ));
         
+        m_autoCommand.addOption("Routine 31: Grid 4/6 Engage with Intake", Commands.sequence(
+          new AutoDeposit(Position.TOP, true, m_elevator, m_wrist, m_intake),
+          new PathPlannerCommand("Grid 6 Engage Intake", 0, m_drive, true)
+            .alongWith(Commands.sequence(
+              new WaitCommand(2.2),
+              new PositionIntake(m_elevator, m_wrist, GamePieceType.CUBE, Position.INTAKE)
+                .alongWith(new IntakeGamePiece(m_intake, GamePieceType.CUBE, false))
+            )),
+          new BalanceCommand(m_drive).alongWith(new Stow(m_elevator, m_wrist))));
+        
+
         // m_autoCommand.addOption("Routine 30: Grid 9 Three Piece Hybrid",
         //   Commands.sequence(
         //       new AutoDeposit(Position.BOTTOM, GamePieceType.CONE, true, m_elevator, m_wrist, m_intake),
