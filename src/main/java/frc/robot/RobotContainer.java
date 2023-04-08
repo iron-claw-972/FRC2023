@@ -383,6 +383,7 @@ public class RobotContainer {
       // THREE PIECE ROUTINES
       m_autoCommand.addOption("Routine 28: Grid 1 Three Piece", 
           Commands.sequence(
+              // for grid 1, going over the cable tray, so enable vision
               new InstantCommand(() -> setVisionEnabled(true)),
               new TwoPiece(false, m_drive, m_elevator, m_wrist, m_intake),
               new PathPlannerCommand("Grid 1 Three Piece", 0, m_drive, false)
