@@ -41,7 +41,7 @@ public class WristConstants {
   public static final double kStowPos = 1.95;
   public static final double kBottomNodeCubePos = Units.rotationsToRadians(0.170);
   public static final double kMiddleNodeCubePos = 0.551; //Units.rotationsToRadians(0.170);
-  public static final double kTopNodeCubePos = Units.rotationsToRadians(0.270);
+  public static final double kTopNodeCubePos = kStowPos; //Units.rotationsToRadians(0.270);
 
   public static final double kBottomNodeConePos = Units.rotationsToRadians(0.070);
   public static final double kMiddleNodeConePos = Units.rotationsToRadians(0.070);
