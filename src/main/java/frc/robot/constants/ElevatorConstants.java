@@ -86,7 +86,8 @@ public class ElevatorConstants {
     public static final double kStowHeight = Conversions.ElevatorExtensionToHeight(Units.inchesToMeters(0));
 
     public static final double kAutoMiddle = 0.771;
-    public static final double kAutoTop = 1.29;
+    public static final double kAutoTopCone = 1.29;
+    public static final double kAutoTopCube = 1.24;
 
     public static final double kCalibrationPower = -0.2;
     public static final double kMotorRamp = 0.1;

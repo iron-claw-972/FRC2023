@@ -51,7 +51,7 @@ public class AutoDeposit extends SequentialCommandGroup {
 
     // TODO: Add elevator and wrist constants for cube deposit positions
     if (depositPosition == Position.TOP) {
-      depositCommand = new MoveElevator(elevator, ElevatorConstants.kAutoTop);
+      depositCommand = new MoveElevator(elevator, ElevatorConstants.kAutoTopCube);
     } else if (depositPosition == Position.MIDDLE) {
       depositCommand = new MoveElevator(elevator, ElevatorConstants.kAutoMiddle);
     } else {
@@ -61,7 +61,7 @@ public class AutoDeposit extends SequentialCommandGroup {
 
     if (gamePieceType == GamePieceType.CONE) {
       if (depositPosition == Position.TOP) {
-        depositCommand = new MoveElevator(elevator, ElevatorConstants.kAutoTop)
+        depositCommand = new MoveElevator(elevator, ElevatorConstants.kAutoTopCone)
           .alongWith(new WaitCommand(0.6).andThen(new RotateWrist(wrist, WristConstants.kAutoTop)));
       } else if (depositPosition == Position.MIDDLE) {
         depositCommand = new MoveElevator(elevator, ElevatorConstants.kAutoMiddle)
