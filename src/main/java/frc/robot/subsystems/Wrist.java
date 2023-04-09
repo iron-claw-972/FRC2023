@@ -28,6 +28,7 @@ public class Wrist extends SubsystemBase {
   private boolean m_enabled = true;
   private double m_pidPower = 0;
   private double m_power = 0;
+  private double m_lastPos = 0;
 
   /** Physics Simulator for the wrist. takes in a motor voltage and calculates how much the arm will move. */
   private final SingleJointedArmSim m_armSim =
@@ -73,6 +74,7 @@ public class Wrist extends SubsystemBase {
     }
   }
 
+
   /**
    * Set the Wrist's desired position.
    * @param setpoint the desired arm position (in rotations)
@@ -112,10 +114,11 @@ public class Wrist extends SubsystemBase {
   public void setMotorPower(double power) {
     m_power = MathUtil.clamp(power, -WristConstants.kMotorPowerClamp, WristConstants.kMotorPowerClamp);
     
-    if (getAbsEncoderPos() <= WristConstants.kMinPos && m_power < 0) {
+    double pos = getAbsEncoderPos();
+    if (pos <= WristConstants.kMinPos && m_power < 0) {
       m_power = 0;
     }
-    if (getAbsEncoderPos() >= WristConstants.kMaxPos && m_power > 0) {
+    if (pos >= WristConstants.kMaxPos && m_power > 0) {
       m_power = 0;
     }
     
@@ -130,10 +133,14 @@ public class Wrist extends SubsystemBase {
    * @return the absolute encoder position in rotations, zero being facing forward
    */
   public double getAbsEncoderPos() {
-    if (RobotBase.isSimulation()) return m_armSim.getAngleRads();
     // inverted to make rotating towards stow positive
     // offset makes flat, facing out, zero
-    return (-m_absEncoder.getAbsolutePosition() + WristConstants.kEncoderOffset) * 2 * Math.PI; 
+    double pos = (-m_absEncoder.getAbsolutePosition() + WristConstants.kEncoderOffset) * 2 * Math.PI; 
+    if (pos > WristConstants.kMaxPos) {
+      pos = m_lastPos;
+    }
+    m_lastPos = pos;
+    return m_lastPos; 
   }
 
   public void updateLogs() {

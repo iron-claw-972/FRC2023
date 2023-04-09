@@ -100,7 +100,7 @@ public class DriveConstants {
   public static double kTranslationalD = 0;//0.001
 
   //The PIDs for PathPlanner Command
-  public static double kPathplannerHeadingP = 3;
+  public static double kPathplannerHeadingP = 3.5;
   public static double kPathplannerHeadingD = 0;
   
   public static double kPathplannerTranslationalP = 6;

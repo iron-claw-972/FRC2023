@@ -4,7 +4,9 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -85,6 +87,7 @@ public class RobotContainer {
 
     // PowerDistribution m_PDModule = new PowerDistribution(1, ModuleType.kRev);
     // m_PDModule.clearStickyFaults();
+    // m_PDModule.close();
 
     switch (robotId) {
       case SwerveCompetition:
@@ -373,7 +376,7 @@ public class RobotContainer {
       m_autoCommand.addOption("Routine 28: Grid 1 Three Piece", 
           Commands.sequence(
               // for grid 1, going over the cable tray, so enable vision
-              new InstantCommand(() -> setVisionEnabled(true)),
+              new InstantCommand(() -> setVisionEnabled(false)),
               new TwoPiece(false, m_drive, m_elevator, m_wrist, m_intake),
               new PathPlannerCommand("Grid 1 Three Piece", 0, m_drive, false)
                 .alongWith(Commands.sequence(

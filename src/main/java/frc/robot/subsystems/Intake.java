@@ -32,7 +32,7 @@ public class Intake extends SubsystemBase {
 
   private final WPI_TalonFX m_intakeMotor;
   private final ShuffleboardTab m_intakeTab;
-  private final Rev2mDistanceSensor m_distSensor;
+  // private final Rev2mDistanceSensor m_distSensor;
 
   private IntakeMode m_mode;
   private GamePieceType m_heldPiece;
@@ -51,14 +51,14 @@ public class Intake extends SubsystemBase {
     m_intakeMotor.setNeutralMode(IntakeConstants.kNeutralMode);
     m_intakeMotor.enableVoltageCompensation(true);
 
-    if (RobotBase.isReal()) {
-      m_distSensor = new Rev2mDistanceSensor(Port.kMXP);
-      m_distSensor.setDistanceUnits(Unit.kMillimeters);
-      m_distSensor.setEnabled(true);
-      m_distSensor.setAutomaticMode(true);
-    } else {
-      m_distSensor = null;
-    }
+    // if (RobotBase.isReal()) {
+    //   m_distSensor = new Rev2mDistanceSensor(Port.kMXP);
+    //   m_distSensor.setDistanceUnits(Unit.kMillimeters);
+    //   m_distSensor.setEnabled(true);
+    //   m_distSensor.setAutomaticMode(true);
+    // } else {
+    //   m_distSensor = null;
+    // }
 
     m_power = 0;
     m_mode = IntakeMode.DISABLED;
@@ -154,9 +154,9 @@ public class Intake extends SubsystemBase {
   public double getConePos() {
     // Get the range in millimeters
     double range = -1;
-    if (RobotBase.isReal()) {
-      range = m_distSensor.getRange();
-    }
+    // if (RobotBase.isReal()) {
+    //   range = m_distSensor.getRange();
+    // }
 
     // Just assume center distance if it can't detect anything
     if (range == -1 || (range / 1000.0) > IntakeConstants.kMaxDistanceSensorRange) {

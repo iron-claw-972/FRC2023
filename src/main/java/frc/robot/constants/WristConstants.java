@@ -41,20 +41,20 @@ public class WristConstants {
   public static final double kStowPos = 1.95;
   public static final double kBottomNodeCubePos = Units.rotationsToRadians(0.170);
   public static final double kMiddleNodeCubePos = 0.551; //Units.rotationsToRadians(0.170);
-  public static final double kTopNodeCubePos = kStowPos; //Units.rotationsToRadians(0.270);
+  public static final double kTopNodeCubePos = Units.rotationsToRadians(0.270);
 
   public static final double kBottomNodeConePos = Units.rotationsToRadians(0.070);
   public static final double kMiddleNodeConePos = Units.rotationsToRadians(0.070);
   public static final double kTopNodeConePos = Units.rotationsToRadians(0.070);
   
-  public static final double kIntakeConePos = 0.2; //0.14 //blue tread: 0.1571; // 0.2199
+  public static final double kIntakeConePos = 0.14; //0.2 //blue tread: 0.1571; // 0.2199
   public static final double kIntakeCubePos = 0.1;
   public static final double kIntakeShelfPos = Units.rotationsToRadians(0.035);
 
   /** Wrist position angle minimum (radians) */
   public static final double kMinPos = -0.25;
   /** Wrist position angle maximum (radians) */
-  public static final double kMaxPos = kStowPos;
+  public static final double kMaxPos = 1.97;
 
   //SIM
   // to know how much the arm will move with a certain power, the sim needs to know the motor, gear ratio, MOI, and length
