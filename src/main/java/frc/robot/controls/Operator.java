@@ -118,7 +118,7 @@ public class Operator {
         getSelectedNode().scorePose.getRotation().getDegrees()
       )
     });
-    tab.addInteger("Column Alignment", () -> getSelectedNode().column);
+    tab.addDouble("Column Alignment", () -> getSelectedNode().column);
   }
 
   /**
