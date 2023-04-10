@@ -24,6 +24,7 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -38,9 +39,11 @@ import frc.robot.commands.test.TestDriveVelocity;
 import frc.robot.commands.test.TestHeadingPID;
 import frc.robot.commands.test.TestSteerAngle;
 import frc.robot.constants.Constants;
+import frc.robot.constants.FieldConstants;
 import frc.robot.constants.VisionConstants;
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.constants.swerve.ModuleConstants;
+import frc.robot.util.DrawMechanism;
 import frc.robot.util.LogManager;
 import frc.robot.util.Vision;
 /** 
@@ -58,6 +61,7 @@ public class Drivetrain extends SubsystemBase {
 
   // Odometry
   private final SwerveDrivePoseEstimator m_poseEstimator;
+  private final DrawMechanism m_mechanism;
 
   // This is left intentionally public
   public final Module[] m_modules;
@@ -101,7 +105,9 @@ public class Drivetrain extends SubsystemBase {
   // modules needed to distinguish in chooser
   private Module m_prevModule;
 
-  boolean m_visionEnabled = false;
+  // If vision is enabled
+  // Do not change this. Instead, change kEnabled in VisionConstants
+  boolean m_visionEnabled = true;
 
   int m_loggerStep = 0;
 
@@ -156,6 +162,7 @@ public class Drivetrain extends SubsystemBase {
       new Pose2d() // initial Odometry Location
     );
     m_poseEstimator.setVisionMeasurementStdDevs(VisionConstants.kBaseVisionPoseStdDevs);
+    m_mechanism = DrawMechanism.getInstance();
 
     m_xController = new PIDController(DriveConstants.kTranslationalP, 0, DriveConstants.kTranslationalD);
     m_yController = new PIDController(DriveConstants.kTranslationalP, 0, DriveConstants.kTranslationalD);
@@ -370,12 +377,21 @@ public class Drivetrain extends SubsystemBase {
   public void updateOdometry() {
     // Updates pose based on encoders and gyro. NOTE: must use yaw directly from gyro!
     m_poseEstimator.update(Rotation2d.fromDegrees(m_pigeon.getYaw()), getModulePositions());
-
+    // if (DriverStation.getAlliance() == Alliance.Blue) {
+    //   m_mechanism.setDistanceToGrid(Math.max(m_poseEstimator.getEstimatedPosition().getX()
+    //   - (FieldConstants.kAprilTags.get(5).pose.getX() + FieldConstants.kAprilTagOffset)
+    //   - DriveConstants.kRobotWidthWithBumpers/2, 0));
+    // }
+    // else {
+    //   m_mechanism.setDistanceToGrid(Math.max(Math.abs(m_poseEstimator.getEstimatedPosition().getX()-FieldConstants.kFieldLength)
+    //   - (FieldConstants.kAprilTags.get(5).pose.getX() + FieldConstants.kAprilTagOffset)
+    //   - DriveConstants.kRobotWidthWithBumpers/2, 0));
+    // }
     // Updates pose based on vision
-    if (m_visionEnabled) {
+    if (RobotBase.isReal() && m_visionEnabled && VisionConstants.kEnabled) {
 
-      // The angle should be greater than 5 degrees if it goes over the charge station
-      if (Math.abs(getPitch().getDegrees()) > 5 || Math.abs(getRoll().getDegrees()) > 5) {
+      // When the angle is greater than the threshold, then set charge station vision to true
+      if (Math.abs(getPitch().getDegrees()) > VisionConstants.kChargeStationAngle || Math.abs(getRoll().getDegrees()) > VisionConstants.kChargeStationAngle) {
         m_chargeStationVision = true;
       }
 
@@ -402,13 +418,20 @@ public class Drivetrain extends SubsystemBase {
           }
         }
 
+        double visionFactor = (currentEstimatedPoseTranslation.getDistance(closestTagPoseTranslation) * VisionConstants.kVisionPoseStdDevFactor) - 1;
+        visionFactor = Math.max(0, visionFactor);
+
         // Adds the vision measurement for this camera
         m_poseEstimator.addVisionMeasurement(
           estimatedPose.estimatedPose.toPose2d(),
           estimatedPose.timestampSeconds,
-          m_chargeStationVision ? VisionConstants.kChargeStationVisionPoseStdDevs.plus(
-            currentEstimatedPoseTranslation.getDistance(closestTagPoseTranslation) * VisionConstants.kVisionPoseStdDevFactor
-          ) : VisionConstants.kBaseVisionPoseStdDevs
+          m_chargeStationVision ? VisionConstants.kChargeStationVisionPoseStdDevs :
+            VisionConstants.kBaseVisionPoseStdDevs.plus(
+              visionFactor
+            )
+        );
+        LogManager.addDouble("Vision/ClosestTag Distance", 
+          currentEstimatedPoseTranslation.getDistance(closestTagPoseTranslation)
         );
       }
       
@@ -416,7 +439,6 @@ public class Drivetrain extends SubsystemBase {
       if (estimatedPoses.size()>0) {
         m_chargeStationVision = false;
       }
-      m_fieldDisplay.setRobotPose(m_poseEstimator.getEstimatedPosition());
     }
   }
 
@@ -544,9 +566,10 @@ public class Drivetrain extends SubsystemBase {
    * Sets up the shuffleboard tab for the drivetrain.
    */
   private void setupDrivetrainShuffleboard() {
-    if (!Constants.kUseTelemetry) return;
 
     m_drivetrainTab.add("Field", m_fieldDisplay);
+    if (!Constants.kUseTelemetry) return;
+
 
     m_drivetrainTab.add("Balance PID", m_balancePID);
 

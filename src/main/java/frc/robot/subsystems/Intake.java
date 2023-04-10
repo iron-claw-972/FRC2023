@@ -7,12 +7,12 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.Rev2mDistanceSensor;
 import com.revrobotics.Rev2mDistanceSensor.Port;
 import com.revrobotics.Rev2mDistanceSensor.Unit;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -24,15 +24,15 @@ import frc.robot.util.LogManager;
 import frc.robot.util.MotorFactory;
 
 
-public class RollerIntake extends SubsystemBase {
+public class Intake extends SubsystemBase {
 
   public enum IntakeMode {
-    INTAKE_CUBE, OUTTAKE_CUBE, INTAKE_CONE, OUTTAKE_CONE, DISABLED
+    INTAKE_CUBE, OUTTAKE_CUBE, OUTTAKE_CUBE_AUTO, INTAKE_CONE, OUTTAKE_CONE, DISABLED
   }
 
   private final WPI_TalonFX m_intakeMotor;
   private final ShuffleboardTab m_intakeTab;
-  private final Rev2mDistanceSensor m_distSensor;
+  // private final Rev2mDistanceSensor m_distSensor;
 
   private IntakeMode m_mode;
   private GamePieceType m_heldPiece;
@@ -40,19 +40,25 @@ public class RollerIntake extends SubsystemBase {
   private double m_power;
 
 
-  public RollerIntake(ShuffleboardTab intakeTab) {
+  public Intake(ShuffleboardTab intakeTab) {
     m_intakeMotor = MotorFactory.createTalonFX(IntakeConstants.kIntakeMotorId, Constants.kRioCAN);
+    m_intakeMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(
+      IntakeConstants.kEnableCurrentLimit,
+      IntakeConstants.kContinuousCurrentLimit,
+      IntakeConstants.kPeakCurrentLimit,
+      IntakeConstants.kPeakCurrentDuration
+    ));
     m_intakeMotor.setNeutralMode(IntakeConstants.kNeutralMode);
     m_intakeMotor.enableVoltageCompensation(true);
 
-    if (RobotBase.isReal()) {
-      m_distSensor = new Rev2mDistanceSensor(Port.kMXP);
-      m_distSensor.setDistanceUnits(Unit.kMillimeters);
-      m_distSensor.setEnabled(true);
-      m_distSensor.setAutomaticMode(true);
-    } else {
-      m_distSensor = null;
-    }
+    // if (RobotBase.isReal()) {
+    //   m_distSensor = new Rev2mDistanceSensor(Port.kMXP);
+    //   m_distSensor.setDistanceUnits(Unit.kMillimeters);
+    //   m_distSensor.setEnabled(true);
+    //   m_distSensor.setAutomaticMode(true);
+    // } else {
+    //   m_distSensor = null;
+    // }
 
     m_power = 0;
     m_mode = IntakeMode.DISABLED;
@@ -84,6 +90,9 @@ public class RollerIntake extends SubsystemBase {
         break;
       case OUTTAKE_CUBE: 
         m_power = IntakeConstants.kOuttakeCubePower;
+        break;  
+      case OUTTAKE_CUBE_AUTO: 
+        m_power = IntakeConstants.kOuttakeCubePowerAuto;
         break;  
       case INTAKE_CONE: 
         m_power = IntakeConstants.kIntakeConePower;
@@ -140,21 +149,21 @@ public class RollerIntake extends SubsystemBase {
   }
 
   /**
-   * @return The distance (meters) of the cone from the center of the intake as a double
+   * @return The distance (meters) of the cone from the center of the intake as a double. Zero if no cone detected.
    */
   public double getConePos() {
     // Get the range in millimeters
     double range = -1;
-    if (RobotBase.isReal()) {
-      range = m_distSensor.getRange();
-    }
+    // if (RobotBase.isReal()) {
+    //   range = m_distSensor.getRange();
+    // }
 
     // Just assume center distance if it can't detect anything
-    if (range == -1) {
+    if (range == -1 || (range / 1000.0) > IntakeConstants.kMaxDistanceSensorRange) {
       return 0;
     }
 
-    // Convert to meters and clamp to reasonable values
-    return MathUtil.clamp((range / 1000.0), 0, IntakeConstants.kMaxDistanceSensorRange) - IntakeConstants.kCenterDist;
+    // Convert to meters and adjust to center offset
+    return (range / 1000.0) - IntakeConstants.kCenterDist;
   }
 } 

@@ -29,6 +29,8 @@ public class Wrist extends SubsystemBase {
 
   private boolean m_enabled = true;
   private double m_pidPower = 0;
+  private double m_power = 0;
+  private double m_lastPos = 0;
 
   /** Physics Simulator for the wrist. takes in a motor voltage and calculates how much the arm will move. */
   private SingleJointedArmSim m_armSim;
@@ -43,6 +45,7 @@ public class Wrist extends SubsystemBase {
       WristConstants.kPeakCurrentDuration);
     m_motor.setNeutralMode(WristConstants.kNeutralMode);
     m_motor.setInverted(WristConstants.kMotorInvert); 
+    m_motor.enableVoltageCompensation(true);
 
     // configure the encoder
     m_absEncoder = new DutyCycleEncoder(WristConstants.kAbsEncoderPort);
@@ -86,6 +89,7 @@ public class Wrist extends SubsystemBase {
       m_absEncoderSim = new DutyCycleEncoderSim(m_absEncoder);
     }
   }
+
 
   /**
    * Set the Wrist's desired position.
@@ -131,18 +135,20 @@ public class Wrist extends SubsystemBase {
    * Sets the motor power, clamping it and ensuring it will not activate below/above the min/max positions
    */
   private void setMotorPower(double power) {
-    // clamp power to a safe range
-    power = MathUtil.clamp(power, -WristConstants.kMotorPowerClamp, WristConstants.kMotorPowerClamp);
+
+    m_power = MathUtil.clamp(power, -WristConstants.kMotorPowerClamp, WristConstants.kMotorPowerClamp);
     
-    // TODO: Is this code needed? PID is only caller, and it should set reasonable values.
-    if (getAbsEncoderPos() <= WristConstants.kMinPos && power < 0) {
-      power = 0;
+    double pos = getAbsEncoderPos();
+
+    // double safety check incase encoder outputs weird values again
+    if (pos <= WristConstants.kMinPos && m_power < 0) {
+      m_power = 0;
     }
-    if (getAbsEncoderPos() >= WristConstants.kMaxPos && power > 0) {
-      power = 0;
+    if (pos >= WristConstants.kMaxPos && m_power > 0) {
+      m_power = 0;
     }
     
-    m_motor.set(power);
+    m_motor.set(m_power);
   }
 
   public void setEnabled(boolean enable) {
@@ -153,29 +159,28 @@ public class Wrist extends SubsystemBase {
    * @return the absolute encoder position in rotations, zero being facing forward
    */
   public double getAbsEncoderPos() {
-    // This is the wrong way to simulate the encoder. Should just use m_absEncoder.getDistance()
-    // if (RobotBase.isSimulation()) return m_armSim.getAngleRads();
-    // inverted to make rotating towards stow positive
-    // offset makes flat, facing out, zero
-    // return (-m_absEncoder.getAbsolutePosition() + WristConstants.kEncoderOffset) * 2 * Math.PI; 
-
+    double pos = m_absEncoder.getDistance();
+    if (pos > WristConstants.kMaxPos || pos > WristConstants.kMaxPos) {
+      pos = m_lastPos;
+    }
     return m_absEncoder.getDistance();
   }
 
   // changed to private method; not called from outside
   private void updateLogs() {
     LogManager.addDouble("Wrist/position", getAbsEncoderPos());
-    LogManager.addDouble("Wrist/motor power", m_motor.get());
+    LogManager.addDouble("Wrist/motor power", m_power);
     LogManager.addDouble("Wrist/pidOutput", m_pidPower);
   }
 
-  // change to private method; not called from outside
   private void setupShuffleboardTab(ShuffleboardTab wristTab) {
     wristTab.addNumber("Wrist Position", () -> getAbsEncoderPos());
     wristTab.add("wrist PID", m_pid);
-    wristTab.addNumber("wrist power final", () -> m_motor.get());
+    wristTab.addNumber("wrist power final", () -> m_power);
     wristTab.addNumber("Wrist PID output", () -> m_pidPower);
     wristTab.addNumber("Wrist Error", () -> m_pid.getSetpoint() - getAbsEncoderPos());
+    wristTab.addBoolean("At Setpoint", () -> reachedSetpoint());
+    wristTab.addNumber("Current Draw", () -> m_motor.getSupplyCurrent());
   }
 
   @Override

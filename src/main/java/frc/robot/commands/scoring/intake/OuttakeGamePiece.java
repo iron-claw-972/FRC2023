@@ -6,13 +6,13 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.IntakeConstants;
-import frc.robot.subsystems.RollerIntake;
-import frc.robot.subsystems.RollerIntake.IntakeMode;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Intake.IntakeMode;
 import frc.robot.util.GamePieceType;
 
 public class OuttakeGamePiece extends CommandBase {
 
-  private final RollerIntake m_intake; 
+  private final Intake m_intake; 
   private final Supplier<GamePieceType> m_heldPiece;
   private final Timer m_timer;
 
@@ -20,7 +20,7 @@ public class OuttakeGamePiece extends CommandBase {
    * Spins the outtake for a set amount of time.
    * @param intake the intake subsystem
    */
-  public OuttakeGamePiece(RollerIntake intake) {
+  public OuttakeGamePiece(Intake intake) {
     this(intake, () -> intake.getHeldGamePiece());
   }
 
@@ -29,7 +29,7 @@ public class OuttakeGamePiece extends CommandBase {
    * @param intake the intake subsystem
    * @param piece the piece to outtake
    */
-  public OuttakeGamePiece(RollerIntake intake, Supplier<GamePieceType> piece) {
+  public OuttakeGamePiece(Intake intake, Supplier<GamePieceType> piece) {
     m_intake = intake; 
     m_heldPiece = piece;
     m_timer = new Timer();
@@ -39,7 +39,11 @@ public class OuttakeGamePiece extends CommandBase {
   @Override
   public void initialize() {
     if (m_heldPiece.get().equals(GamePieceType.CUBE)) {
-      m_intake.setMode(IntakeMode.OUTTAKE_CUBE);
+      if (DriverStation.isAutonomous()) {
+        m_intake.setMode(IntakeMode.OUTTAKE_CUBE_AUTO);
+      } else {
+        m_intake.setMode(IntakeMode.OUTTAKE_CUBE);
+      }
     } else if (m_heldPiece.get().equals(GamePieceType.CONE)) {
       m_intake.setMode(IntakeMode.OUTTAKE_CONE);
     } else {
