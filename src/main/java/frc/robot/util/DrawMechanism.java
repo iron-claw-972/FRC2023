@@ -59,7 +59,8 @@ public class DrawMechanism {
     Color8Bit colorIntakeCubeIn = new Color8Bit(69, 1, 115);
     Color8Bit colorIntakeCubeOut = new Color8Bit(184, 93, 245);
     // color for holding cone in
-    Color8Bit colorHoldGamePiece = new Color8Bit(148, 16,204)
+    // is green
+    Color8Bit colorHoldGamePiece = new Color8Bit(18, 255,18);
 
 
     private DrawMechanism() {
