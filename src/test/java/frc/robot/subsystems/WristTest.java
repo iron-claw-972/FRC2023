@@ -81,11 +81,11 @@ public class WristTest {
 
     // the gearing will increase the available torque
     double torqueAvailable = torqueStall * WristConstants.kGearRatio;
-    System.out.printf("Wrist torqueAvailable = %8.4f Nm\n", torqueAvailable);
+    System.out.printf("Wrist torqueAvailable       = %8.4f Nm\n", torqueAvailable);
 
     // torque from current limited motor
     double torqueLimited = torqueAvailable * WristConstants.kContinuousCurrentLimit / gearbox.stallCurrentAmps;
-    System.out.printf("Wrist torqueLimited   = %8.4f Nm\n", torqueLimited);
+    System.out.printf("Wrist torqueLimited         = %8.4f Nm\n", torqueLimited);
     double torqueLimited2 = WristConstants.kContinuousCurrentLimit * gearbox.KtNMPerAmp * WristConstants.kGearRatio;
     // System.out.printf(" KtNMPerAmp = %8.4f Nm\n", torqueLimited2);
     assertEquals(torqueLimited, torqueLimited2, 0.001);
@@ -93,27 +93,27 @@ public class WristTest {
     // estimated torque requirement
     double torqueRequired = 0.67 * WristConstants.kMomentOfInertia / WristConstants.kLength
         * Constants.kGravitationalAccel;
-    System.out.printf("Wrist torque          = %8.4f Nm\n", torqueRequired);
+    System.out.printf("Wrist torque                = %8.4f Nm\n", torqueRequired);
 
     // torque added per tick
     double torqueAdd = WristConstants.kP * (2.0 * Math.PI / 1024.0) * torqueAvailable;
-    System.out.printf("Wrist torque step     = %8.4f Nm\n", torqueAdd);
+    System.out.printf("Wrist torque step           = %8.4f Nm\n", torqueAdd);
 
     double ratioTorqueRequiredToAvailable = torqueRequired / torqueAvailable;
-    System.out.printf("Wrist ratio of torque required to torque available        = %8.4f PWM\n", ratioTorqueRequiredToAvailable);
+    System.out.printf("torque required / available = %8.4f PWM\n", ratioTorqueRequiredToAvailable);
     // System.out.printf("Wrist fraction amps = %8.4f\n", fraction *
     // gearbox.stallCurrentAmps);
 
-    System.out.printf("Wrist gravity comp    = %8.4f PWM\n", WristConstants.kGravityCompensation);
+    System.out.printf("Wrist gravity comp          = %8.4f PWM\n", WristConstants.kGravityCompensation);
 
     double ohms = gearbox.rOhms;
     double ampsContinuous = WristConstants.kContinuousCurrentLimit;
     double wattsContinuous = ampsContinuous * ampsContinuous * ohms;
-    System.out.printf("Wrist max power       = %8.4f Watts\n", wattsContinuous);
+    System.out.printf("Wrist max power             = %8.4f Watts\n", wattsContinuous);
 
     double amps = torqueRequired / WristConstants.kGearRatio / gearbox.KtNMPerAmp;
     double wattsRequired = amps * amps * ohms;
-    System.out.printf("Wrist expected power  = %8.4f Watts\n", wattsRequired);
+    System.out.printf("Wrist expected power        = %8.4f Watts\n", wattsRequired);
   }
 
   /**

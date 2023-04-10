@@ -79,9 +79,7 @@ public class Wrist extends SubsystemBase {
         // prevents moving past min/max
         WristConstants.kMinPos,
         WristConstants.kMaxPos,
-        true, // will simulate gravity
-        // TODO: this calculation is wrong: DutyCycleEncoder has resolution of 1 Revolution / 1024.
-        VecBuilder.fill(2*Math.PI / FalconConstants.kResolution) // a deviation of one motor tick in the angle
+        true // will simulate gravity
       );
 
       // make the encoder simulator
