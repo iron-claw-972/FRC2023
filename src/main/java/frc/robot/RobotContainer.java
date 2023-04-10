@@ -42,6 +42,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Wrist;
+import frc.robot.util.Blinkin;
 import frc.robot.util.GamePieceType;
 import frc.robot.util.PathGroupLoader;
 import frc.robot.util.Vision;
@@ -206,7 +207,9 @@ public class RobotContainer {
    */
   public void addTestCommands() {
     GenericEntry testEntry = m_testTab.add("Test Results", false).getEntry();
+    GenericEntry blinkinId = m_testTab.add("Blinkin Id",0.65).getEntry();
     m_testTab.add("Cancel Command", new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
+    m_testTab.add("Color", new InstantCommand( () -> Blinkin.setTableInput(blinkinId.getDouble(0.65))));
 
     if (m_drive != null) {
       m_drive.addTestCommands(m_testTab, testEntry);
