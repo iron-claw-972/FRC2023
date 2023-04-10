@@ -15,7 +15,7 @@ public final class IntakeConstants {
   public static final double kOuttakeCubePower = -0.6;
   public static final double kIntakeConePower = -0.8;
   public static final double kOuttakeConePower = 0.6;
-  public static final double kHoldConePower = 0.5;
+  public static final double kHoldConePower = -0.5;
   public static final double kHoldGamePieceTimer = 0.5;
   
   public static final double kOuttakeCubePowerAuto = -0.8;
