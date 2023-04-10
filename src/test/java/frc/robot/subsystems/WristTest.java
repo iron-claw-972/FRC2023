@@ -276,7 +276,7 @@ public class WristTest {
       m_wrist.simulationPeriodic();
     }
 
-    // make sure we are at the stow position
+    // make sure we are at the new position
     assertEquals(WristConstants.kAutoTop, m_wrist.getAbsEncoderPos(), 0.03);
 
     assertTrue(m_wrist.reachedSetpoint());
