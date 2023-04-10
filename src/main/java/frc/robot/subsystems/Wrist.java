@@ -163,7 +163,8 @@ public class Wrist extends SubsystemBase {
     if (pos > WristConstants.kMaxPos || pos > WristConstants.kMaxPos) {
       pos = m_lastPos;
     }
-    return m_absEncoder.getDistance();
+    m_lastPos = pos;
+    return pos;
   }
 
   // changed to private method; not called from outside
