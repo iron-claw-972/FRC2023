@@ -52,7 +52,7 @@ public class WristConstants {
   public static final double kIntakeShelfPos = Units.rotationsToRadians(0.035);
 
   /** Wrist position angle minimum (radians) */
-  public static final double kMinPos = -0.25;
+  public static final double kMinPos = -0.16;
   /** Wrist position angle maximum (radians) */
   public static final double kMaxPos = 1.97;
 

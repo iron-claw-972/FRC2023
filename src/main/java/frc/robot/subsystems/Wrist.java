@@ -160,7 +160,7 @@ public class Wrist extends SubsystemBase {
    */
   public double getAbsEncoderPos() {
     double pos = m_absEncoder.getDistance();
-    if (pos > WristConstants.kMaxPos || pos > WristConstants.kMaxPos) {
+    if (pos > WristConstants.kMaxPos || pos < WristConstants.kMinPos) {
       pos = m_lastPos;
     }
     m_lastPos = pos;
