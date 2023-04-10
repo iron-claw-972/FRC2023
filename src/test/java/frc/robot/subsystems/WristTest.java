@@ -64,11 +64,10 @@ public class WristTest {
     // want the resolution to be less than 3 mm (about 0.125 inches)
     assertTrue(arcError < 0.003);
 
-    // kTolerance is much worse
+    // kTolerance is worse
     arcError = WristConstants.kTolerance * WristConstants.kLength;
-    // TODO: WristConstants.kTolerance is large (26 mm)
     System.out.printf("Wrist height tolerance  = %8f meters (%8f inches)\n", arcError, Units.metersToInches(arcError));
-    assertTrue(arcError < 0.03);
+    assertTrue(arcError < 0.01);
   }
 
   /**
@@ -100,8 +99,8 @@ public class WristTest {
     double torqueAdd = WristConstants.kP * (2.0 * Math.PI / 1024.0) * torqueAvailable;
     System.out.printf("Wrist torque step     = %8.4f Nm\n", torqueAdd);
 
-    double fraction = torqueRequired / torqueAvailable;
-    System.out.printf("Wrist fraction        = %8.4f PWM\n", fraction);
+    double ratioTorqueRequiredToAvailable = torqueRequired / torqueAvailable;
+    System.out.printf("Wrist ratio of torque required to torque available        = %8.4f PWM\n", ratioTorqueRequiredToAvailable);
     // System.out.printf("Wrist fraction amps = %8.4f\n", fraction *
     // gearbox.stallCurrentAmps);
 

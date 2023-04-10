@@ -167,7 +167,6 @@ public class Wrist extends SubsystemBase {
     return pos;
   }
 
-  // changed to private method; not called from outside
   private void updateLogs() {
     LogManager.addDouble("Wrist/position", getAbsEncoderPos());
     LogManager.addDouble("Wrist/motor power", m_power);
