@@ -133,6 +133,7 @@ public class Wrist extends SubsystemBase {
    * @return the absolute encoder position in rotations, zero being facing forward
    */
   public double getAbsEncoderPos() {
+    if (RobotBase.isSimulation()) return m_armSim.getAngleRads();
     // inverted to make rotating towards stow positive
     // offset makes flat, facing out, zero
     double pos = (-m_absEncoder.getAbsolutePosition() + WristConstants.kEncoderOffset) * 2 * Math.PI; 
