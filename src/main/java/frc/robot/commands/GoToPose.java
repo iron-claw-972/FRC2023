@@ -13,12 +13,15 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.auto.PathPlannerCommand;
+import frc.robot.constants.AutoConstants;
 import frc.robot.subsystems.Drivetrain;
 
 public class GoToPose extends SequentialCommandGroup {
 
   private Drivetrain m_drive;
   private Supplier<Pose2d> m_poseSupplier;
+  private double m_maxSpeed;
+  private double m_maxAccel;
 
   /**
    * Uses PathPlanner to go to a pose
@@ -27,6 +30,23 @@ public class GoToPose extends SequentialCommandGroup {
    */
   public GoToPose(Supplier<Pose2d> poseSupplier, Drivetrain drive) {
     m_poseSupplier = poseSupplier;
+    m_maxSpeed = AutoConstants.kMaxAutoSpeed;
+    m_maxSpeed = AutoConstants.kMaxAutoAccel;
+    m_drive = drive;
+    addCommands(
+      new SupplierCommand(() -> createCommand(), drive)
+    );
+  }
+
+    /**
+   * Uses PathPlanner to go to a pose
+   * @param poseSupplier The supplier for the pose to use
+   * @param drive The drivetrain
+   */
+  public GoToPose(Supplier<Pose2d> poseSupplier, double maxSpeed, double maxAccel, Drivetrain drive) {
+    m_poseSupplier = poseSupplier;
+    m_maxSpeed = maxSpeed;
+    m_maxAccel = maxAccel;
     m_drive = drive;
     addCommands(
       new SupplierCommand(() -> createCommand(), drive)
@@ -66,7 +86,9 @@ public class GoToPose extends SequentialCommandGroup {
     command = new PathPlannerCommand(
       new ArrayList<PathPoint>(List.of(point1, point2)),
       m_drive,
-      false
+      false,
+      m_maxSpeed,
+      m_maxAccel
     );
 
     // get the distance to the pose.
@@ -79,14 +101,8 @@ public class GoToPose extends SequentialCommandGroup {
     } else if (dist < 0.2) {
       command = new DoNothing();
       DriverStation.reportWarning("Alignment Path too short, doing nothing, GoToPose.java", false);
-    } else {
-      // Creates the command using the two points
-      command = new PathPlannerCommand(
-        new ArrayList<PathPoint>(List.of(point1, point2)),
-        m_drive,
-        false
-      );
     }
+
     return command;
   }
 }

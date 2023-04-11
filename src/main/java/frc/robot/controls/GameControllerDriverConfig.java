@@ -11,10 +11,11 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
-import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.GoToPose;
 import frc.robot.commands.GoToPosePID;
 import frc.robot.commands.SetFormationX;
+import frc.robot.commands.auto.BalanceCommand;
+import frc.robot.constants.AutoConstants;
 import frc.robot.constants.FieldConstants;
 import frc.robot.constants.OIConstants;
 import frc.robot.constants.VisionConstants;
@@ -58,7 +59,13 @@ public class GameControllerDriverConfig extends BaseDriverConfig {
       // don't move the robot in the Y
       getDrivetrain().getPose().getY(),
       // facing upwards
-      new Rotation2d(Math.PI/2)), 
+      new Rotation2d(Math.PI/2)),
+      
+      // max speed
+      AutoConstants.kMaxAutoSpeed, 
+      // max accel
+      AutoConstants.kMaxAutoAccel + 1,
+      
       getDrivetrain())
     );
 

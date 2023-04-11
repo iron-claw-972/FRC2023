@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.constants.WristConstants;
-import frc.robot.subsystems.RollerIntake.IntakeMode;
+import frc.robot.subsystems.Intake.IntakeMode;
 
 /**
  * Mech2d representation of the robot mechanism and grid.
@@ -58,6 +58,10 @@ public class DrawMechanism {
     // purple color for cube intake/outtake - lighter is outtake
     Color8Bit colorIntakeCubeIn = new Color8Bit(69, 1, 115);
     Color8Bit colorIntakeCubeOut = new Color8Bit(184, 93, 245);
+    // color for holding cone in
+    // is green
+    Color8Bit colorHoldGamePiece = new Color8Bit(18, 255,18);
+
 
     private DrawMechanism() {
         // define colors for the linkages
@@ -278,6 +282,9 @@ public class DrawMechanism {
                 break;
             case OUTTAKE_CUBE:
                 m_intake.setColor(colorIntakeCubeOut);
+                break;
+            case HOLD_GAME_PIECE:
+                m_intake.setColor(colorHoldGamePiece);
                 break;
             default:
                 break;

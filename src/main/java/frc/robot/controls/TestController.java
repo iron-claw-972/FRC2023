@@ -3,14 +3,15 @@ package frc.robot.controls;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.scoring.PositionIntake;
+import frc.robot.commands.scoring.Stow;
 import frc.robot.commands.scoring.PositionIntake.Position;
 import frc.robot.commands.scoring.elevator.CalibrateElevator;
 import frc.robot.commands.scoring.wrist.RotateWrist;
 import frc.robot.constants.OIConstants;
 import frc.robot.constants.WristConstants;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.RollerIntake;
-import frc.robot.subsystems.RollerIntake.IntakeMode;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Intake.IntakeMode;
 import frc.robot.subsystems.Wrist;
 import lib.controllers.GameController;
 import lib.controllers.GameController.Button;
@@ -19,11 +20,11 @@ import lib.controllers.GameController.DPad;
 public class TestController {
   
   private GameController test = new GameController(OIConstants.kTestJoy);
-  private RollerIntake m_intake;
+  private Intake m_intake;
   private Elevator m_elevator;
   private Wrist m_wrist;
   
-  public TestController(Wrist wrist, RollerIntake intake, Elevator elevator) {
+  public TestController(Wrist wrist, Intake intake, Elevator elevator) {
     m_intake = intake;
     m_elevator = elevator;
     m_wrist = wrist;
@@ -65,6 +66,6 @@ public class TestController {
     test.get(Button.RIGHT_JOY).onTrue(new RotateWrist(m_wrist, WristConstants.kStowPos));
 
     // stow
-    test.get(Button.BACK).onTrue(new PositionIntake(m_elevator, m_wrist, test.RIGHT_TRIGGER_BUTTON, Position.STOW));
+    test.get(Button.BACK).onTrue(new Stow(m_elevator, m_wrist));
   }
 }

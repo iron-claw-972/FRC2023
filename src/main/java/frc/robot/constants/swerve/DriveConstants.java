@@ -83,18 +83,19 @@ public class DriveConstants {
   public static double kBalanceI = 0;
   public static double kBalanceD = 0;
   // max output in m/s
-  public static final double kBalanceMaxOutput = 0.7;
+  public static final double kBalanceMaxOutput = 1.5; // 0.7
 
   //balance timer
-  // when the balance command starts, it will run the pid normally for
-  // kBalanceNoStopPeriod seconds. Then, every kBalanceStopInterval seconds,
-  // it will stop the motors for kBalanceStopDuration seconds to help give
-  // the charge station some time to balance.
+  // when the balance command starts, it will run the pid normally until
+  // the angle decreases by at least kMaxAngleDiffDegrees or until kBalanceNoStopPeriod elapses. 
+  // Then, every kBalanceStopInterval seconds, it will stop the motors 
+  // for kBalanceStopDuration seconds to help give the charge station some time to balance.
   // "A non-linear system requires non-linear control" - jerry
   // "If it's stupid but it works..." - Richie
-  public static double kBalanceNoStopPeriod = 2.5;
-  public static double kBalanceStopInterval = 0.5;
-  public static double kBalanceStopDuration = 0.2;
+  public static double kBalanceNoStopPeriod = 1.2;
+  public static double kBalanceStopInterval = 0.3; // 0.5
+  public static double kBalanceStopDuration = 0.15;
+  public static double kMaxAngleDiffDegrees = 2.5;
 
   //translational PID
   public static double kTranslationalP = 0.25;
@@ -102,7 +103,7 @@ public class DriveConstants {
   public static double kTranslationalD = 0;//0.001
 
   //The PIDs for PathPlanner Command
-  public static double kPathplannerHeadingP = 3;
+  public static double kPathplannerHeadingP = 3.5;
   public static double kPathplannerHeadingI = 0;
   public static double kPathplannerHeadingD = 0;
   
@@ -148,7 +149,7 @@ public class DriveConstants {
   // Open loop prevents throttle from changing too quickly. 
   // It will limit it to time given (in seconds) to go from zero to full throttle.
   // A small open loop ramp (0.25) helps with tread wear, tipping, etc
-  public static final double kOpenLoopRamp = 0.2;
+  public static final double kOpenLoopRamp = 0.25;
   public static final double kClosedLoopRamp = 0.0;
 
   public static final double kWheelCircumference = kModuleConstants.wheelCircumference;
@@ -158,7 +159,7 @@ public class DriveConstants {
 
   public static final boolean kInvertGyro = false; // Make sure gyro is CCW+ CW- // FIXME: Swerve
   
-  public static final double kSlowDriveFactor = 0.3;
+  public static final double kSlowDriveFactor = 0.2;
   public static final double kSlowRotFactor = 0.1;
 
   /**

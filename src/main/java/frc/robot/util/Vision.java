@@ -9,6 +9,7 @@ import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -37,6 +38,10 @@ public class Vision {
   // A list of the cameras on the robot
   private ArrayList<VisionCamera> m_cameras = new ArrayList<>();
   private ShuffleboardTab m_shuffleboardTab;
+  private GenericEntry m_visionTestDriveEntry;
+  private GenericEntry m_visionTestVisionEntry;
+  private GenericEntry m_visionTestDiffEntry;
+  private GenericEntry m_visionTestPercentDiffEntry;
 
   /**
    * Creates a new instance of Vision
@@ -149,6 +154,10 @@ public class Vision {
   }
   
   public void setupVisionShuffleboard() {
+    GenericEntry visionTestDriveEntry = m_shuffleboardTab.add("Distance Test Drive Distance", 0).getEntry();
+    GenericEntry visionTestVisionEntry = m_shuffleboardTab.add("Distance Test Vision Distance", 0).getEntry();
+    GenericEntry visionTestDiffEntry = m_shuffleboardTab.add("Distance Test Difference", 0).getEntry();
+    GenericEntry visionTestPercentDiffEntry = m_shuffleboardTab.add("Distance Test % Difference", 0).getEntry();
   }
   
   class VisionCamera {
@@ -168,7 +177,7 @@ public class Vision {
         camera, 
         robotToCam
       );
-      photonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+      photonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.CLOSEST_TO_REFERENCE_POSE);
       photonPoseEstimator.setReferencePose(new Pose2d());
     }
   
@@ -179,12 +188,14 @@ public class Vision {
      */
     public Optional<EstimatedRobotPose> getEstimatedPose(Pose2d referencePose) {
       photonPoseEstimator.setReferencePose(referencePose);
-      Optional<EstimatedRobotPose> pose = photonPoseEstimator.update();
+
+      PhotonPipelineResult cameraResult = camera.getLatestResult();
       
-      // if there is a pose, check the ambiguity isn't too high
-      if (pose.isPresent()) {
+      // if there is a target detected and not in the past, 
+      // check the ambiguity isn't too high
+      if (cameraResult.hasTargets() && cameraResult.getTimestampSeconds() > 0) {
         // go through all the targets
-        List<PhotonTrackedTarget> targetsUsed = pose.get().targetsUsed;
+        List<PhotonTrackedTarget> targetsUsed = cameraResult.targets;
         for (int i = 0; i < targetsUsed.size(); i++) {
           // check their ambiguity, if it is above the highest wanted amount, return nothing
           if (targetsUsed.get(i).getPoseAmbiguity() > VisionConstants.highestAmbiguity) {
@@ -192,6 +203,9 @@ public class Vision {
           }
         }
       }
+
+      Optional<EstimatedRobotPose> pose = photonPoseEstimator.update(cameraResult);
+
       return pose;
     }
   }
@@ -204,5 +218,21 @@ public class Vision {
     testTab.add("Align to 90 degrees", new TestVisionAlignment(Math.PI/2, drive, this));
     testTab.add("Align to -90 degrees", new TestVisionAlignment(-Math.PI/2, drive, this));
     testTab.add("Align to 180 degrees", new TestVisionAlignment(Math.PI, drive, this));
+  }
+
+  public GenericEntry getVisionTestDriveEntry() {
+    return m_visionTestDriveEntry;
+  }
+
+  public GenericEntry getVisionTestVisionEntry() {
+    return m_visionTestVisionEntry;
+  }
+
+  public GenericEntry getVisionTestDiffEntry() {
+    return m_visionTestDiffEntry;
+  }
+
+  public GenericEntry getVisionTestPercentDiffEntry() {
+    return m_visionTestPercentDiffEntry;
   }
 }

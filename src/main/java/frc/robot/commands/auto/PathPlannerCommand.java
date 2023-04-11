@@ -37,6 +37,14 @@ public class PathPlannerCommand extends SequentialCommandGroup {
       waypoints.get(1)
     ))), 0, drive, false, useAllianceColor, true);
   }
+
+  public PathPlannerCommand(ArrayList<PathPoint> waypoints, Drivetrain drive, boolean useAllianceColor, double maxSpeed, double maxAccel) {
+    this(new ArrayList<PathPlannerTrajectory>(Arrays.asList(PathPlanner.generatePath(
+      new PathConstraints(maxSpeed, maxAccel),
+      waypoints.get(0),
+      waypoints.get(1)
+    ))), 0, drive, false, useAllianceColor, true);
+  }
   
   public PathPlannerCommand(String pathGroupName, int pathIndex, Drivetrain drive) {
     this(PathGroupLoader.getPathGroup(pathGroupName), pathIndex, drive, true, true, false); 

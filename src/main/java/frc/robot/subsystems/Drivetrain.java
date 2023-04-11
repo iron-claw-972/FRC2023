@@ -24,6 +24,7 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -38,9 +39,11 @@ import frc.robot.commands.test.TestDriveVelocity;
 import frc.robot.commands.test.TestHeadingPID;
 import frc.robot.commands.test.TestSteerAngle;
 import frc.robot.constants.Constants;
+import frc.robot.constants.FieldConstants;
 import frc.robot.constants.VisionConstants;
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.constants.swerve.ModuleConstants;
+import frc.robot.util.DrawMechanism;
 import frc.robot.util.LogManager;
 import frc.robot.util.Vision;
 
@@ -54,6 +57,8 @@ import frc.robot.util.Vision;
  * 4: Back right
  */
 public class Drivetrain extends SubsystemBase {
+
+  private final DrawMechanism m_mechanism;
 
   // This is left intentionally public
   public final Module[] m_modules;
@@ -158,6 +163,7 @@ public class Drivetrain extends SubsystemBase {
       new Pose2d() // initial Odometry Location
     );
     m_poseEstimator.setVisionMeasurementStdDevs(VisionConstants.kBaseVisionPoseStdDevs);
+    m_mechanism = DrawMechanism.getInstance();
 
     // initialize chassis PIDs
     m_xController = new PIDController(
@@ -238,7 +244,16 @@ public class Drivetrain extends SubsystemBase {
   public void updateOdometry() {
     // Updates pose based on encoders and gyro. NOTE: must use yaw directly from gyro!
     m_poseEstimator.update(Rotation2d.fromDegrees(m_pigeon.getYaw()), getModulePositions());
-
+    // if (DriverStation.getAlliance() == Alliance.Blue) {
+    //   m_mechanism.setDistanceToGrid(Math.max(m_poseEstimator.getEstimatedPosition().getX()
+    //   - (FieldConstants.kAprilTags.get(5).pose.getX() + FieldConstants.kAprilTagOffset)
+    //   - DriveConstants.kRobotWidthWithBumpers/2, 0));
+    // }
+    // else {
+    //   m_mechanism.setDistanceToGrid(Math.max(Math.abs(m_poseEstimator.getEstimatedPosition().getX()-FieldConstants.kFieldLength)
+    //   - (FieldConstants.kAprilTags.get(5).pose.getX() + FieldConstants.kAprilTagOffset)
+    //   - DriveConstants.kRobotWidthWithBumpers/2, 0));
+    // }
     // Updates pose based on vision
     if (RobotBase.isReal() && m_visionEnabled && VisionConstants.kEnabled) {
 
@@ -274,14 +289,20 @@ public class Drivetrain extends SubsystemBase {
           }
         }
 
+        double visionFactor = (currentEstimatedPoseTranslation.getDistance(closestTagPoseTranslation) * VisionConstants.kVisionPoseStdDevFactor) - 1;
+        visionFactor = Math.max(0, visionFactor);
+
         // Adds the vision measurement for this camera
         m_poseEstimator.addVisionMeasurement(
           estimatedPose.estimatedPose.toPose2d(),
           estimatedPose.timestampSeconds,
-          m_chargeStationVision ? VisionConstants.kChargeStationVisionPoseStdDevs : 
+          m_chargeStationVision ? VisionConstants.kChargeStationVisionPoseStdDevs :
             VisionConstants.kBaseVisionPoseStdDevs.plus(
-              currentEstimatedPoseTranslation.getDistance(closestTagPoseTranslation) * VisionConstants.kVisionPoseStdDevFactor
+              visionFactor
             )
+        );
+        LogManager.addDouble("Vision/ClosestTag Distance", 
+          currentEstimatedPoseTranslation.getDistance(closestTagPoseTranslation)
         );
       }
       
@@ -289,7 +310,6 @@ public class Drivetrain extends SubsystemBase {
       if (estimatedPoses.size() > 0) {
         m_chargeStationVision = false;
       }
-      m_fieldDisplay.setRobotPose(m_poseEstimator.getEstimatedPosition());
     }
   }
 
@@ -596,9 +616,9 @@ public class Drivetrain extends SubsystemBase {
    * Sets up the shuffleboard tab for the drivetrain.
    */
   private void setupDrivetrainShuffleboard() {
-    if (!Constants.kUseTelemetry) return;
 
     m_drivetrainTab.add("Field", m_fieldDisplay);
+    if (!Constants.kUseTelemetry) return;
 
     m_drivetrainTab.add("Balance PID", m_balancePID);
 
@@ -606,16 +626,16 @@ public class Drivetrain extends SubsystemBase {
     m_headingEntry = m_drivetrainTab.add("Set Heading (-pi to pi)", 0).getEntry();
     m_xPosEntry = m_drivetrainTab.add("Input X pos(m)", 0).getEntry();
     m_yPosEntry = m_drivetrainTab.add("Input Y pos(m)", 0).getEntry();
-
+    
     // add PID controllers
     m_drivetrainTab.add("xController", getXController());
     m_drivetrainTab.add("yController", getYController());
     m_drivetrainTab.add("rotationController", getRotationController());
-
+    
     m_drivetrainTab.add("PP xController", getPathplannerXController());
     m_drivetrainTab.add("PP yController", getPathplannerYController());
     m_drivetrainTab.add("PP rotationController", getPathplannerRotationController());
-
+    
     // add angles
     m_drivetrainTab.addNumber("Yaw (deg)", () -> getYaw().getDegrees());
     m_drivetrainTab.addNumber("estimated X", () -> m_poseEstimator.getEstimatedPosition().getX());
@@ -623,7 +643,7 @@ public class Drivetrain extends SubsystemBase {
     m_drivetrainTab.addNumber("getPitch", () -> m_pigeon.getPitch());
     m_drivetrainTab.addNumber("getRoll", () -> m_pigeon.getRoll());
     m_drivetrainTab.addNumber("pigeon yaw", () -> m_pigeon.getYaw());
-
+    
     m_drivetrainTab.addNumber("Gyro X", () -> getAngularRate(0));
     m_drivetrainTab.addNumber("Gyro Y", () -> getAngularRate(1));
     m_drivetrainTab.addNumber("Gyro Z", () -> getAngularRate(2));

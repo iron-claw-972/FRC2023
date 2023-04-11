@@ -1,5 +1,16 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import frc.robot.constants.Constants;
+import frc.robot.constants.swerve.DriveConstants;
+import frc.robot.constants.swerve.ModuleConstants;
+import frc.robot.util.Conversions;
+import frc.robot.util.LogManager;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
@@ -64,7 +75,6 @@ public class Module extends SubsystemBase {
     setupShuffleboard();
   }
 
-  
   @Override
   public void periodic() {
     
@@ -82,11 +92,12 @@ public class Module extends SubsystemBase {
    * resets steer motor's integrated encoder using CANcoder's reading
    */
   public void resetToAbsolute() {
-    m_angleMotor.setSelectedSensorPosition(Conversions.degreesToFalcon(
-      getCANcoder().getDegrees(),
-      DriveConstants.kAngleGearRatio
-    ));
-    
+    m_angleMotor.setSelectedSensorPosition(
+      Conversions.degreesToFalcon(
+        getCANcoder().getDegrees(),
+        DriveConstants.kAngleGearRatio
+      )
+    );
   }
 
   private void configDriveMotor() {
@@ -187,9 +198,27 @@ public class Module extends SubsystemBase {
       double velocity = Conversions.MPSToFalcon(
         desiredState.speedMetersPerSecond, 
         DriveConstants.kWheelCircumference,
-        DriveConstants.kDriveGearRatio);
+        DriveConstants.kDriveGearRatio
+      );
+
       m_driveMotor.set(ControlMode.Velocity, velocity, DemandType.ArbitraryFeedForward,
         feedforward.calculate(desiredState.speedMetersPerSecond));
+    }
+    if(Constants.kLogging){
+      double motorSpeed = Conversions.falconToMPS(m_driveMotor.getSelectedSensorVelocity(), DriveConstants.kWheelCircumference,
+        DriveConstants.kDriveGearRatio);
+      LogManager.addDouble("Swerve/Modules/DriveSpeed/" + m_moduleAbbr,
+          motorSpeed
+      );
+      LogManager.addDouble("Swerve/Modules/DriveSpeedError/" + m_moduleAbbr,
+          motorSpeed-desiredState.speedMetersPerSecond
+      );
+      LogManager.addDouble("Swerve/Modules/DriveVoltage/" + m_moduleAbbr,
+          m_driveMotor.getMotorOutputVoltage()
+      );
+      LogManager.addDouble("Swerve/Modules/DriveCurrent/" + m_moduleAbbr,
+          m_driveMotor.getStatorCurrent()
+      );
     }
   }
 
@@ -223,8 +252,29 @@ public class Module extends SubsystemBase {
     m_desiredState.angle = new Rotation2d(angle);
 
     m_angleMotor.set(ControlMode.Position, Conversions.degreesToFalcon(
-      rotation2d.getDegrees(), DriveConstants.kAngleGearRatio
+      rotation2d.getDegrees(), 
+      DriveConstants.kAngleGearRatio
     ));
+    if(Constants.kLogging){
+      double position = Conversions.falconToDegrees(m_angleMotor.getSelectedSensorPosition(), 
+        DriveConstants.kAngleGearRatio);
+      LogManager.addDouble("Swerve/Modules/SteerPosition/" + m_moduleAbbr,
+          position
+      );
+      LogManager.addDouble("Swerve/Modules/SteerPositionError/" + m_moduleAbbr,
+          position-rotation2d.getDegrees()
+      );
+      LogManager.addDouble("Swerve/Modules/SteerVelocity/" + m_moduleAbbr,
+          Conversions.falconToDegrees(m_angleMotor.getSelectedSensorVelocity(), 
+            DriveConstants.kAngleGearRatio)
+      );
+      LogManager.addDouble("Swerve/Modules/SteerVoltage/" + m_moduleAbbr,
+          m_angleMotor.getMotorOutputVoltage()
+      );
+      LogManager.addDouble("Swerve/Modules/SteerCurrent/" + m_moduleAbbr,
+          m_angleMotor.getStatorCurrent()
+      );
+    }
   }
 
   /**
@@ -248,7 +298,13 @@ public class Module extends SubsystemBase {
    * @param voltage voltage to set drive motor to in volts
    */
   public void setDriveVoltage(double voltage) {
+    m_angleMotor.set(ControlMode.Position, Conversions.degreesToFalcon(0, DriveConstants.kAngleGearRatio));
     m_driveMotor.set(ControlMode.PercentOutput, voltage / Constants.kRobotVoltage);
+    if(Constants.kLogging){
+      LogManager.addDouble("Swerve/Modules/DriveCharacterizationVoltage/" + m_moduleAbbr,
+        voltage
+      );
+    }
   }
   /**
    * sets voltage of steer motor
@@ -256,14 +312,20 @@ public class Module extends SubsystemBase {
    */
   public void setSteerVoltage(double voltage) {
     m_angleMotor.set(ControlMode.PercentOutput, voltage / Constants.kRobotVoltage);
+    if(Constants.kLogging){
+      LogManager.addDouble("Swerve/Modules/AngleCharacterizationVoltage/" + m_moduleAbbr,
+        voltage
+      );
+    }
   }
-
+  
   /**
    * sets state deadband enable status used for not running the module if desired speed is too low
    * @param enable should state deadband be enabled
    */
   public void enableStateDeadband(boolean enabled) {
     m_stateDeadband = enabled;
+    LogManager.addBoolean("Swerve/Modules/StateDeadband/" + m_moduleAbbr, enabled);
   }
   /**
    * sets swerve module state optimization enable status used to find least steer angle rotation needed
@@ -271,6 +333,7 @@ public class Module extends SubsystemBase {
    */
   public void setOptimize(boolean enable) {
     m_optimizeStates = enable;
+    LogManager.addBoolean("Swerve/Modules/Optimized/" + m_moduleAbbr, enable);
   }
   
   /**

@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.auto;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -17,12 +17,15 @@ public class BalanceCommand extends CommandBase {
   private boolean m_inverted;
   private boolean m_isStopping = false;
   private Timer m_timer = new Timer();
+
+  // max angle the robot has seen
+  private double m_maxAngle;  
   
   /**
    * Attempts to balance the robot on the charge station. The robot must start partially on
    * the charge station.
-   * <p>Uses a PID, and after a short time will stutter up the charge station to allow the charge station to balance
-   * naturally. Currently the command does not end.
+   * <p>Uses a PID, and after the angle begins to decrease (with a timeout) it will stutter up 
+   * the charge station to allow the charge station to balance naturally. Currently the command does not end.
    * @param drive the drive subsystem
    */
   public BalanceCommand(Drivetrain drive) {
@@ -54,6 +57,7 @@ public class BalanceCommand extends CommandBase {
 
     m_timer.reset();
     m_isStopping = false;
+    m_maxAngle = m_usePitch ? m_drive.getPitch().getDegrees() : m_drive.getRoll().getDegrees();
   }
   
   @Override
@@ -66,9 +70,13 @@ public class BalanceCommand extends CommandBase {
     m_output = MathUtil.clamp(m_pid.calculate(m_currentAngle), -DriveConstants.kBalanceMaxOutput, DriveConstants.kBalanceMaxOutput);
 
     // TODO: consider using heading PID to keep drive straight
-    m_drive.drive( (m_inverted ? -1 : 1) * m_output, 0, 0, true, true);
-    
-    // after DriveConstants.kBalanceNoStopPeriod, will stop every DriveConstants.kBalanceStopInterval seconds 
+    if (m_isStopping) {
+      m_drive.drive( (m_inverted ? -1 : 1) * m_output, 0, 0, true, true);
+    } else {
+      m_drive.drive( (m_inverted ? -1 : 1) * Math.copySign(1, m_output), 0, 0, true, true);
+    }
+
+    // after m_isStopping is true (see code below this if statement), will stop every DriveConstants.kBalanceStopInterval seconds 
     // for DriveConstants.kBalanceStopDuration seconds, to give charge station time to balance. See DriveConstants.java
     if (m_isStopping && m_timer.get() >= DriveConstants.kBalanceStopInterval) {
       m_drive.stop();
@@ -77,14 +85,18 @@ public class BalanceCommand extends CommandBase {
       }
     }
 
-    if (m_timer.get() > DriveConstants.kBalanceNoStopPeriod) {
+    // set the max angle in case the angle has increased
+    m_maxAngle = Math.max(m_maxAngle, m_currentAngle);
+
+    // if the time has elapsed, or if the angle has changed more than kMaxAngleDiff, start stopping
+    if (m_timer.get() > DriveConstants.kBalanceNoStopPeriod || m_maxAngle - m_currentAngle > DriveConstants.kMaxAngleDiffDegrees) {
       m_isStopping = true;
     }
   }
   
   @Override
   public boolean isFinished() {
-    return false;
+    return m_pid.atSetpoint();
   }
   
   @Override
