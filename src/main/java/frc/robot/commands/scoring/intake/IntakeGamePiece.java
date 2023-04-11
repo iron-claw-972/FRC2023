@@ -64,33 +64,31 @@ public class IntakeGamePiece extends CommandBase {
   @Override
   public boolean isFinished() {
     if (RobotBase.isSimulation()) return true;
-    if (m_runsForever) return false;
 
-    boolean currentAtStopPoint = m_stallDebouncer.calculate(
-      m_intake.getCurrent() >= IntakeConstants.kConeIntakeCurrentStopPoint
-    );
+    boolean currentAtStopPoint = true;
 
     if (m_type == GamePieceType.CUBE) {
-      if (currentAtStopPoint) {
-        Blinkin.setColor(Colors.VIOLET);
-      } else {
-        Blinkin.setColor(Colors.RED);
-      }
-
-      return currentAtStopPoint;
-
+      currentAtStopPoint = m_stallDebouncer.calculate(
+        m_intake.getCurrent() >= IntakeConstants.kCubeIntakeCurrentStopPoint
+      );
     } else if (m_type == GamePieceType.CONE) {
-      if (currentAtStopPoint) {
+      currentAtStopPoint = m_stallDebouncer.calculate(
+        m_intake.getCurrent() >= IntakeConstants.kConeIntakeCurrentStopPoint
+      );
+    }
+
+    if (currentAtStopPoint) {
+      if (m_type == GamePieceType.CONE) {
         Blinkin.setColor(Colors.YELLOW);
       } else {
-        Blinkin.setColor(Colors.RED);
+        Blinkin.setColor(Colors.VIOLET);
       }
-
-      return currentAtStopPoint;
-
+    } else {
+      Blinkin.setColor(Colors.RED);
     }
-    DriverStation.reportWarning("IntakeGamePiece Command missing GamePieceType", false);
-    return true;
+
+    if (m_runsForever) return false;
+    return currentAtStopPoint;
   }
 
 }
