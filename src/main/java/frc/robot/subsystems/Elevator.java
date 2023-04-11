@@ -327,6 +327,16 @@ public class Elevator extends SubsystemBase {
   /**The periodic method for the subsystem, it runs forever from the moment that the robot is enabled */
   @Override
   public void periodic() {
+    
+    // automatically calibrate if the limitswitch is on
+    if (!m_isCalibrated && isBottomLimitSwitchReached()) {
+      zeroEncoder();
+      toggleSoftLimits(true);
+      setIsCalibrated();
+      setDesiredPosition(0.02);
+      setMode(ElevatorMode.POSITION);
+    }
+
     //calculate the position error. We will use this to stop the motors when the top or bottom limit switches are hit. 
     //The motor know the error already for PID usage.
     double positionError = m_desiredPosition - getPosition();
