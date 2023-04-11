@@ -1,14 +1,12 @@
 package frc.robot.util;
 
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.constants.Constants;
 
 public class Blinkin {
   
   static private Spark m_ledController;
-  static private double currColor = 0;
+  static private double currColor = Colors.ORANGE.m_id;
 
   /**
    * gets the static instance of the Spark Max controller used for the Blinkin control
@@ -39,8 +37,6 @@ public class Blinkin {
   public static void colorPeriodic() {
     getController().set(currColor);
   }
-
- 
 
   /**
    * Blinkin enum contains the numerical ids so you don't need to reference the table for patterns/colors in the documentation
