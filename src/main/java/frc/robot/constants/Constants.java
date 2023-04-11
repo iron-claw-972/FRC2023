@@ -18,7 +18,10 @@ public final class Constants {
   public static final String kRobotIdKey = "RobotId";
 
   public static final boolean kLogging = true;
-  public static final boolean kUseTelemetry = false;
 
+  // this is not a constant...
+  public static boolean kUseTelemetry = false;
+
+  // port for the led controller, the Blinkin
   public static final int kBlinkinPort = 0;
 }
