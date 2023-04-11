@@ -24,7 +24,7 @@ import lib.controllers.PS5Controller.PS5Axis;
 import lib.controllers.PS5Controller.PS5Button;
 
 /**
- * Driver controls for the generic game controller.
+ * Driver controls for the PS5 controller
  */
 public class PS5ControllerConfig extends BaseDriverConfig {
   
@@ -78,27 +78,6 @@ public class PS5ControllerConfig extends BaseDriverConfig {
 
     // Resets the modules to absolute if they are having the unresolved zeroing error
     kDriver.get(PS5Button.CROSS).onTrue(new InstantCommand(() -> getDrivetrain().resetModulesToAbsolute()));
-    
-    // TODO: test chassis PID alignment
-    // // Moves to the selected scoring position using PID
-    // kDriver.get(DPad.LEFT).whileTrue(new GoToPosePID(() -> getNodePose(), getDrivetrain()));
-    
-    // // Moves to the single substation using PID
-    // kDriver.get(DPad.DOWN).whileTrue(new GoToPosePID(() -> new Pose2d(
-    //   // the single substation X
-    //   DriverStation.getAlliance() == Alliance.Blue ? FieldConstants.kBlueSingleSubstationX : FieldConstants.kRedSingleSubstationX, 
-    //   // don't move the robot in the Y
-    //   getDrivetrain().getPose().getY(),
-    //   // facing upwards
-    //   new Rotation2d(Math.PI/2)),
-    //   getDrivetrain())
-    // );
-
-    // // Moves to the shelf using PID
-    // kDriver.get(DPad.RIGHT).whileTrue(new GoToPosePID(() -> (
-    //   DriverStation.getAlliance() == Alliance.Blue ? VisionConstants.kBlueShelfAlignPose : VisionConstants.kRedShelfAlignPose),
-    //   getDrivetrain())
-    // );
   }
 
   public Pose2d getNodePose() {
