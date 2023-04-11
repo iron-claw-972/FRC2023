@@ -81,19 +81,19 @@ public class Operator {
     m_operator.get(m_operator.LEFT_TRIGGER_BUTTON).onTrue(new OuttakeGamePiece(intake)).onFalse(new Stow(elevator, wrist).andThen(new InstantCommand(() -> intake.setMode(IntakeMode.DISABLED), intake)));
 
     // spin intake
-    m_operator.get(Button.START).onTrue(new IntakeGamePiece(intake, m_operator.RIGHT_TRIGGER_BUTTON, true)).onFalse(new InstantCommand(() -> intake.setMode(IntakeMode.DISABLED), intake));
+    m_operator.get(DPad.DOWN).onTrue(new IntakeGamePiece(intake, m_operator.RIGHT_TRIGGER_BUTTON, true)).onFalse(new InstantCommand(() -> intake.setMode(IntakeMode.DISABLED), intake));
   
     // Selects which column to score in
     m_operator.get(m_operator.LEFT_STICK_LEFT).onTrue(new InstantCommand(() -> selectColumn(9, true)));
-    m_operator.get(m_operator.LEFT_STICK_DOWN).onTrue(new InstantCommand(() -> selectColumn(8, true)));
+    m_operator.get(m_operator.LEFT_STICK_UP).onTrue(new InstantCommand(() -> selectColumn(8, true)));
     m_operator.get(m_operator.LEFT_STICK_RIGHT).onTrue(new InstantCommand(() -> selectColumn(7, true)));
     
     m_operator.get(DPad.LEFT).onTrue(new InstantCommand(() -> selectColumn(6, true)));
-    m_operator.get(DPad.DOWN).onTrue(new InstantCommand(() -> selectColumn(5, true)));
+    m_operator.get(DPad.UP).onTrue(new InstantCommand(() -> selectColumn(5, true)));
     m_operator.get(DPad.RIGHT).onTrue(new InstantCommand(() -> selectColumn(4, true)));
 
     m_operator.get(m_operator.RIGHT_STICK_LEFT).onTrue(new InstantCommand(() -> selectColumn(3, true)));
-    m_operator.get(m_operator.RIGHT_STICK_DOWN).onTrue(new InstantCommand(() -> selectColumn(2, true)));
+    m_operator.get(m_operator.RIGHT_STICK_UP).onTrue(new InstantCommand(() -> selectColumn(2, true)));
     m_operator.get(m_operator.RIGHT_STICK_RIGHT).onTrue(new InstantCommand(() -> selectColumn(1, true)));
 
     // Selects the row
