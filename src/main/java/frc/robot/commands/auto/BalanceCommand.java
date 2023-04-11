@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.auto;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -74,8 +74,11 @@ public class BalanceCommand extends CommandBase {
     m_output = MathUtil.clamp(m_pid.calculate(m_currentAngle), -DriveConstants.kBalanceMaxOutput, DriveConstants.kBalanceMaxOutput);
 
     // TODO: consider using heading PID to keep drive straight
-    m_drive.drive( (m_inverted ? -1 : 1) * m_output, 0, 0, true, true);
-    
+    if (m_isStopping) {
+      m_drive.drive( (m_inverted ? -1 : 1) * m_output, 0, 0, true, true);
+    } else {
+      m_drive.drive( (m_inverted ? -1 : 1) * Math.copySign(1, m_output), 0, 0, true, true);
+    }
     // after DriveConstants.kBalanceNoStopPeriod, will stop every DriveConstants.kBalanceStopInterval seconds 
     // for DriveConstants.kBalanceStopDuration seconds, to give charge station time to balance. See DriveConstants.java
     if (m_isStopping && m_timer.get() >= DriveConstants.kBalanceStopInterval) {
@@ -96,7 +99,7 @@ public class BalanceCommand extends CommandBase {
   
   @Override
   public boolean isFinished() {
-    return false;
+    return m_pid.atSetpoint();
   }
   
   @Override

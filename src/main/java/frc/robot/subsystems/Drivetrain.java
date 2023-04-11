@@ -377,16 +377,16 @@ public class Drivetrain extends SubsystemBase {
   public void updateOdometry() {
     // Updates pose based on encoders and gyro. NOTE: must use yaw directly from gyro!
     m_poseEstimator.update(Rotation2d.fromDegrees(m_pigeon.getYaw()), getModulePositions());
-    if (DriverStation.getAlliance() == Alliance.Blue) {
-      m_mechanism.setDistanceToGrid(Math.max(m_poseEstimator.getEstimatedPosition().getX()
-      - (FieldConstants.kAprilTags.get(5).pose.getX() + FieldConstants.kAprilTagOffset)
-      - DriveConstants.kRobotWidthWithBumpers/2, 0));
-    }
-    else {
-      m_mechanism.setDistanceToGrid(Math.max(Math.abs(m_poseEstimator.getEstimatedPosition().getX()-FieldConstants.kFieldLength)
-      - (FieldConstants.kAprilTags.get(5).pose.getX() + FieldConstants.kAprilTagOffset)
-      - DriveConstants.kRobotWidthWithBumpers/2, 0));
-    }
+    // if (DriverStation.getAlliance() == Alliance.Blue) {
+    //   m_mechanism.setDistanceToGrid(Math.max(m_poseEstimator.getEstimatedPosition().getX()
+    //   - (FieldConstants.kAprilTags.get(5).pose.getX() + FieldConstants.kAprilTagOffset)
+    //   - DriveConstants.kRobotWidthWithBumpers/2, 0));
+    // }
+    // else {
+    //   m_mechanism.setDistanceToGrid(Math.max(Math.abs(m_poseEstimator.getEstimatedPosition().getX()-FieldConstants.kFieldLength)
+    //   - (FieldConstants.kAprilTags.get(5).pose.getX() + FieldConstants.kAprilTagOffset)
+    //   - DriveConstants.kRobotWidthWithBumpers/2, 0));
+    // }
     // Updates pose based on vision
     if (RobotBase.isReal() && m_visionEnabled && VisionConstants.kEnabled) {
 
@@ -418,13 +418,16 @@ public class Drivetrain extends SubsystemBase {
           }
         }
 
+        double visionFactor = (currentEstimatedPoseTranslation.getDistance(closestTagPoseTranslation) * VisionConstants.kVisionPoseStdDevFactor) - 1;
+        visionFactor = Math.max(0, visionFactor);
+
         // Adds the vision measurement for this camera
         m_poseEstimator.addVisionMeasurement(
           estimatedPose.estimatedPose.toPose2d(),
           estimatedPose.timestampSeconds,
           m_chargeStationVision ? VisionConstants.kChargeStationVisionPoseStdDevs :
             VisionConstants.kBaseVisionPoseStdDevs.plus(
-              currentEstimatedPoseTranslation.getDistance(closestTagPoseTranslation) * VisionConstants.kVisionPoseStdDevFactor
+              visionFactor
             )
         );
         LogManager.addDouble("Vision/ClosestTag Distance", 
@@ -436,7 +439,6 @@ public class Drivetrain extends SubsystemBase {
       if (estimatedPoses.size()>0) {
         m_chargeStationVision = false;
       }
-      m_fieldDisplay.setRobotPose(m_poseEstimator.getEstimatedPosition());
     }
   }
 
@@ -564,9 +566,10 @@ public class Drivetrain extends SubsystemBase {
    * Sets up the shuffleboard tab for the drivetrain.
    */
   private void setupDrivetrainShuffleboard() {
-    if (!Constants.kUseTelemetry) return;
 
     m_drivetrainTab.add("Field", m_fieldDisplay);
+    if (!Constants.kUseTelemetry) return;
+
 
     m_drivetrainTab.add("Balance PID", m_balancePID);
 

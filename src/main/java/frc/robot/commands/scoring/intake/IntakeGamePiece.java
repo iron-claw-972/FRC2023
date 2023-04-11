@@ -5,16 +5,16 @@ import java.util.function.BooleanSupplier;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.IntakeConstants;
-import frc.robot.subsystems.RollerIntake;
-import frc.robot.subsystems.RollerIntake.IntakeMode;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Intake.IntakeMode;
 import frc.robot.util.GamePieceType;
 
 public class IntakeGamePiece extends CommandBase {
 
-  private final RollerIntake m_intake; 
+  private final Intake m_intake; 
   private GamePieceType m_type;
   private final BooleanSupplier m_isCone;
   private final boolean m_runsForever;
@@ -23,10 +23,20 @@ public class IntakeGamePiece extends CommandBase {
   /**
    * Spins the intake until the game piece is inside the intake.
    * @param intake the intake subsystem
+   * @param gamePieceType intaking a cone or cube?
+   * @param runsForever if the command should end, or run forever. If false, will end based on motor currents
+   */
+  public IntakeGamePiece(Intake intake, GamePieceType gamePieceType, boolean runsForever) {
+    this(intake, () -> gamePieceType == GamePieceType.CONE, runsForever);
+  }
+
+  /**
+   * Spins the intake until the game piece is inside the intake.
+   * @param intake the intake subsystem
    * @param isCone a supplier that when the command starts, checks if will intake a cone or cube
    * @param runsForever if the command should end, or run forever. If false, will end based on motor currents
    */
-  public IntakeGamePiece(RollerIntake intake, BooleanSupplier isCone, boolean runsForever) {
+  public IntakeGamePiece(Intake intake, BooleanSupplier isCone, boolean runsForever) {
     m_intake = intake;
     m_isCone = isCone;
     m_runsForever = runsForever;
@@ -51,6 +61,7 @@ public class IntakeGamePiece extends CommandBase {
   
   @Override
   public boolean isFinished() {
+    if (RobotBase.isSimulation()) return true;
     if (m_runsForever) return false;
 
     if (m_type == GamePieceType.CUBE) {

@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.constants.OIConstants;
 import frc.robot.constants.swerve.DriveConstants;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.RollerIntake;
+import frc.robot.subsystems.Intake;
 import frc.robot.util.DynamicSlewRateLimiter;
 import frc.robot.util.Functions;
 
