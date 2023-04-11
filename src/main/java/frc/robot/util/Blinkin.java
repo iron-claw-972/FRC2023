@@ -5,20 +5,21 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import frc.robot.constants.Constants;
 
 public class Blinkin {
   
   static private CANSparkMax m_ledController;
   
   private static CANSparkMax getController() {
-    if (m_ledController == null) m_ledController = new CANSparkMax(0, MotorType.kBrushless);
+    if (m_ledController == null) m_ledController = new CANSparkMax(Constants.kBlinkinPort, MotorType.kBrushless);
     return m_ledController;
   }
   
   public static void setTableInput(double tableInput) {
     getController().set(tableInput);
   }
-  
+
   public static void setColor(Colors color){
     getController().set(color.m_id);
   }

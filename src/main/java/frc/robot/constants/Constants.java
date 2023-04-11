@@ -19,4 +19,6 @@ public final class Constants {
 
   public static final boolean kLogging = true;
   public static final boolean kUseTelemetry = false;
+
+  public static final int kBlinkinPort = 0;
 }
