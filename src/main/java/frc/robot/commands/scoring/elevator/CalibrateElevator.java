@@ -2,6 +2,7 @@ package frc.robot.commands.scoring.elevator;
 
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.constants.ElevatorConstants;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Elevator.ElevatorMode;
 
@@ -25,11 +26,13 @@ public class CalibrateElevator extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
-    m_elevator.zeroEncoder();
-    m_elevator.toggleSoftLimits(true);
-    m_elevator.setIsCalibrated();
-    m_elevator.setDesiredPosition(0.02);
-    m_elevator.setMode(ElevatorMode.POSITION);
+    if (!interrupted) {
+      m_elevator.zeroEncoder();
+      m_elevator.toggleSoftLimits(true);
+      m_elevator.setIsCalibrated();
+      m_elevator.setDesiredPosition(ElevatorConstants.kPostCalibrationPosition);
+      m_elevator.setMode(ElevatorMode.POSITION);
+    }
   }
 
   @Override

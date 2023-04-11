@@ -30,7 +30,7 @@ public class Elevator extends SubsystemBase {
   private final WPI_TalonFX m_motor;
   private final DigitalInput m_bottomLimitSwitch;
   private final DigitalInput m_topLimitSwitch;
-  private double m_desiredPosition = 0.02;
+  private double m_desiredPosition = ElevatorConstants.kPostCalibrationPosition;
   private double m_desiredPower = 0;
   private boolean m_isCalibrated;
 
@@ -333,7 +333,7 @@ public class Elevator extends SubsystemBase {
       zeroEncoder();
       toggleSoftLimits(true);
       setIsCalibrated();
-      setDesiredPosition(0.02);
+      setDesiredPosition(ElevatorConstants.kPostCalibrationPosition);
       setMode(ElevatorMode.POSITION);
     }
 
