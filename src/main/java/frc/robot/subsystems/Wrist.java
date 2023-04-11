@@ -27,7 +27,6 @@ public class Wrist extends SubsystemBase {
   protected final DutyCycleEncoder m_absEncoder;
   protected DutyCycleEncoderSim m_absEncoderSim;
 
-  private boolean m_enabled = true;
   private double m_pidPower = 0;
   private double m_power = 0;
   private double m_lastPos = 0;
@@ -46,6 +45,9 @@ public class Wrist extends SubsystemBase {
     m_motor.setNeutralMode(WristConstants.kNeutralMode);
     m_motor.setInverted(WristConstants.kMotorInvert); 
     m_motor.enableVoltageCompensation(true);
+
+    // config deadband to be less, may be powering at small values to keep it up
+    m_motor.configNeutralDeadband(0.005);
 
     // configure the encoder
     m_absEncoder = new DutyCycleEncoder(WristConstants.kAbsEncoderPort);
@@ -102,21 +104,19 @@ public class Wrist extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (m_enabled) {
-      // obtain the wrist position
-      double position = getAbsEncoderPos();
+    // obtain the wrist position
+    double position = getAbsEncoderPos();
 
-      // calculate the PID power level
-      // for safety, clamp the setpoint to prevent tuning with SmartDashboard/Shuffleboard from commanding out of range
-      // This method continually changes the setpoint.
-      m_pidPower = m_pid.calculate(position, MathUtil.clamp(m_pid.getSetpoint(), WristConstants.kMinPos, WristConstants.kMaxPos));
-      
-      // calculate the value of kGravityCompensation
-      double feedforwardPower = WristConstants.kGravityCompensation * Math.cos(position);
+    // calculate the PID power level
+    // for safety, clamp the setpoint to prevent tuning with SmartDashboard/Shuffleboard from commanding out of range
+    // This method continually changes the setpoint.
+    m_pidPower = m_pid.calculate(position, MathUtil.clamp(m_pid.getSetpoint(), WristConstants.kMinPos, WristConstants.kMaxPos));
+    
+    // calculate the value of kGravityCompensation
+    double feedforwardPower = WristConstants.kGravityCompensation * Math.cos(position);
 
-      // set the motor power
-      setMotorPower(m_pidPower + feedforwardPower);
-    }
+    // set the motor power
+    setMotorPower(m_pidPower + feedforwardPower);
 
     if (Constants.kLogging) updateLogs();
   }
@@ -147,10 +147,6 @@ public class Wrist extends SubsystemBase {
     }
     
     m_motor.set(m_power);
-  }
-
-  public void setEnabled(boolean enable) {
-    m_enabled = enable;
   }
 
   /**

@@ -102,6 +102,8 @@ public class Elevator extends SubsystemBase {
     );
     m_motor.configReverseSoftLimitThreshold(Units.inchesToMeters(0));
 
+    m_motor.configNeutralDeadband(0.005);
+
     toggleSoftLimits(false);
   }
 
