@@ -106,7 +106,7 @@ public class Blinkin {
     RED(0.61),
     ORANGE(0.65),
     GOLD(0.67),
-    YELLoW(0.69),
+    YELLOW(0.69),
     LIME(0.73),
     GREEN(0.77),
     AQUA(0.81),
