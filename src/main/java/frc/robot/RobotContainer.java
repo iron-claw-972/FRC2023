@@ -436,10 +436,11 @@ public class RobotContainer {
               new WaitCommand(2.2),
               new PositionIntake(m_elevator, m_wrist, GamePieceType.CUBE, Position.INTAKE)
                 .alongWith(new IntakeGamePiece(m_intake, GamePieceType.CUBE, false)),
-              new WaitCommand(2),
               new Stow(m_elevator, m_wrist)
             )),
-          new BalanceCommand(m_drive, 1.2).alongWith(new Stow(m_elevator, m_wrist)).andThen(new WaitCommand(0.2).andThen(new AutoDeposit(Position.BOTTOM, GamePieceType.CUBE, true, m_elevator, m_wrist, m_intake)))));
+          new AutoDeposit(Position.BOTTOM, GamePieceType.CUBE, true, m_elevator, m_wrist, m_intake),
+          new BalanceCommand(m_drive, 0.5)
+        ));
         
 
         // m_autoCommand.addOption("Routine 30: Grid 9 Three Piece Hybrid",

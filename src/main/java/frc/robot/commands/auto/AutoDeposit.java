@@ -55,7 +55,7 @@ public class AutoDeposit extends SequentialCommandGroup {
     } else if (depositPosition == Position.MIDDLE) {
       depositCommand = new MoveElevator(elevator, ElevatorConstants.kAutoMiddle);
     } else {
-      depositCommand = new RotateWrist(wrist, WristConstants.kAutoBottom);
+      depositCommand = new PositionIntake(elevator, wrist, () -> false, Position.BOTTOM);
     }
 
     if (gamePieceType == GamePieceType.CONE) {
