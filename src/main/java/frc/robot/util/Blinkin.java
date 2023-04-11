@@ -18,9 +18,11 @@ public class Blinkin {
   public static void setTableInput(double tableInput) {
     getController().set(tableInput);
   }
+  
   public static void setColor(Colors color){
     getController().set(color.m_id);
   }
+
   enum Colors{
     RAINBOW_RAINBOW_PALETTE(-0.99),
     RAINBOW_PARTY_PALETE(-0.97),
@@ -119,16 +121,10 @@ public class Blinkin {
     DARK_GRAY(0.97),
     BLACK(0.99);
 
-
-
     public final double m_id;
     Colors(double id){
       m_id = id;
     }
-
-    
-
   }
-  
   
 }
