@@ -30,7 +30,7 @@ public class Elevator extends SubsystemBase {
   private final WPI_TalonFX m_motor;
   private final DigitalInput m_bottomLimitSwitch;
   private final DigitalInput m_topLimitSwitch;
-  private double m_desiredPosition = 0.02;
+  private double m_desiredPosition = ElevatorConstants.kPostCalibrationPosition;
   private double m_desiredPower = 0;
   private boolean m_isCalibrated;
 
@@ -327,6 +327,16 @@ public class Elevator extends SubsystemBase {
   /**The periodic method for the subsystem, it runs forever from the moment that the robot is enabled */
   @Override
   public void periodic() {
+    
+    // automatically calibrate if the bottom limitswitch is on
+    if (!m_isCalibrated && isBottomLimitSwitchReached()) {
+      zeroEncoder();
+      toggleSoftLimits(true);
+      setIsCalibrated();
+      setDesiredPosition(ElevatorConstants.kPostCalibrationPosition);
+      setMode(ElevatorMode.POSITION);
+    }
+
     //calculate the position error. We will use this to stop the motors when the top or bottom limit switches are hit. 
     //The motor know the error already for PID usage.
     double positionError = m_desiredPosition - getPosition();

@@ -52,15 +52,23 @@ public class WristConstants {
   public static final double kIntakeShelfPos = Units.rotationsToRadians(0.035);
 
   /** Wrist position angle minimum (radians) */
-  public static final double kMinPos = -0.25;
+  public static final double kMinPos = -0.16;
   /** Wrist position angle maximum (radians) */
   public static final double kMaxPos = 1.97;
 
   //SIM
   // to know how much the arm will move with a certain power, the sim needs to know the motor, gear ratio, MOI, and length
   public static final DCMotor kGearBox = DCMotor.getFalcon500(1);
-  public static final double kGearRatio = 20/1 * 62/34 * 48/18;
-  // moment of inertia represents how hard it is to angularly accelerate (ie spin) something
-  public static final double kMomentOfInertia = 0.00484445;
+  public static final double kGearRatio = (20.0/1.0) * (62.0/34.0) * (48.0/18.0);
+  
+  //calculate MOI using the center of gravity distance and weight
+  public static double kCOGWeight = Units.lbsToKilograms(7.3);
+  public static double kCOGDistance = Units.inchesToMeters(8.11);
+  
+  /** Wrist moment of inertia represents how hard it is to angularly accelerate (ie spin) something. */
+  public static final double kMomentOfInertia = kCOGWeight * kCOGDistance * kCOGDistance; // 0.1405
+
+
+  /** Length of the wrist joint (meters). Used in simulation and estimating accuracy. */
   public static final double kLength = Units.inchesToMeters(16.1);
 }

@@ -4,13 +4,15 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.DoNothing;
 import frc.robot.commands.scoring.PositionIntake;
 import frc.robot.commands.scoring.Stow;
 import frc.robot.commands.scoring.PositionIntake.Position;
 import frc.robot.commands.scoring.elevator.CalibrateElevator;
-import frc.robot.commands.scoring.intake.HoldGamePiece;
+import frc.robot.commands.scoring.intake.HoldCone;
 import frc.robot.commands.scoring.intake.IntakeGamePiece;
 import frc.robot.commands.scoring.intake.OuttakeGamePiece;
 import frc.robot.commands.scoring.wrist.RotateWrist;
@@ -51,11 +53,14 @@ public class Operator {
     m_operator.get(DPad.UP).onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
 
     //top
-    m_operator.get(Button.Y).onTrue(new PositionIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, Position.TOP).alongWith(new HoldGamePiece(intake)));
+    m_operator.get(Button.Y).onTrue(new PositionIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, Position.TOP)
+      .alongWith(new ConditionalCommand(new HoldCone(intake), new DoNothing(), m_operator.RIGHT_TRIGGER_BUTTON)));
     //middle
-    m_operator.get(Button.X).onTrue(new PositionIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, Position.MIDDLE).alongWith(new HoldGamePiece(intake)));
+    m_operator.get(Button.X).onTrue(new PositionIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, Position.MIDDLE)
+      .alongWith(new ConditionalCommand(new HoldCone(intake), new DoNothing(), m_operator.RIGHT_TRIGGER_BUTTON)));
     //bottom
-    m_operator.get(Button.A).onTrue(new PositionIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, Position.BOTTOM).alongWith(new HoldGamePiece(intake)));
+    m_operator.get(Button.A).onTrue(new PositionIntake(elevator, wrist, m_operator.RIGHT_TRIGGER_BUTTON, Position.BOTTOM)
+      .alongWith(new ConditionalCommand(new HoldCone(intake), new DoNothing(), m_operator.RIGHT_TRIGGER_BUTTON)));
     //shelf
     m_operator.get(Button.B).onTrue(new PositionIntake(elevator, wrist, () -> true, Position.SHELF).alongWith(new IntakeGamePiece(intake, () -> true, true)))
       .onFalse(new SequentialCommandGroup( 
@@ -81,19 +86,19 @@ public class Operator {
     m_operator.get(m_operator.LEFT_TRIGGER_BUTTON).onTrue(new OuttakeGamePiece(intake)).onFalse(new Stow(elevator, wrist).andThen(new InstantCommand(() -> intake.setMode(IntakeMode.DISABLED), intake)));
 
     // spin intake
-    m_operator.get(Button.START).onTrue(new IntakeGamePiece(intake, m_operator.RIGHT_TRIGGER_BUTTON, true)).onFalse(new InstantCommand(() -> intake.setMode(IntakeMode.DISABLED), intake));
+    m_operator.get(DPad.DOWN).onTrue(new IntakeGamePiece(intake, m_operator.RIGHT_TRIGGER_BUTTON, true)).onFalse(new InstantCommand(() -> intake.setMode(IntakeMode.DISABLED), intake));
   
     // Selects which column to score in
     m_operator.get(m_operator.LEFT_STICK_LEFT).onTrue(new InstantCommand(() -> selectColumn(9, true)));
-    m_operator.get(m_operator.LEFT_STICK_DOWN).onTrue(new InstantCommand(() -> selectColumn(8, true)));
+    m_operator.get(m_operator.LEFT_STICK_UP).onTrue(new InstantCommand(() -> selectColumn(8, true)));
     m_operator.get(m_operator.LEFT_STICK_RIGHT).onTrue(new InstantCommand(() -> selectColumn(7, true)));
     
     m_operator.get(DPad.LEFT).onTrue(new InstantCommand(() -> selectColumn(6, true)));
-    m_operator.get(DPad.DOWN).onTrue(new InstantCommand(() -> selectColumn(5, true)));
+    m_operator.get(DPad.UP).onTrue(new InstantCommand(() -> selectColumn(5, true)));
     m_operator.get(DPad.RIGHT).onTrue(new InstantCommand(() -> selectColumn(4, true)));
 
     m_operator.get(m_operator.RIGHT_STICK_LEFT).onTrue(new InstantCommand(() -> selectColumn(3, true)));
-    m_operator.get(m_operator.RIGHT_STICK_DOWN).onTrue(new InstantCommand(() -> selectColumn(2, true)));
+    m_operator.get(m_operator.RIGHT_STICK_UP).onTrue(new InstantCommand(() -> selectColumn(2, true)));
     m_operator.get(m_operator.RIGHT_STICK_RIGHT).onTrue(new InstantCommand(() -> selectColumn(1, true)));
 
     // Selects the row
