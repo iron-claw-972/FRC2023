@@ -89,7 +89,7 @@ public class BalanceCommand extends CommandBase {
     m_maxAngle = Math.max(m_maxAngle, m_currentAngle);
 
     // if the time has elapsed, or if the angle has changed more than kMaxAngleDiff, start stopping
-    if (m_timer.get() > DriveConstants.kBalanceNoStopPeriod || m_maxAngle - m_currentAngle > DriveConstants.kMaxAngleDiff) {
+    if (m_timer.get() > DriveConstants.kBalanceNoStopPeriod || m_maxAngle - m_currentAngle > DriveConstants.kMaxAngleDiffDegrees) {
       m_isStopping = true;
     }
   }

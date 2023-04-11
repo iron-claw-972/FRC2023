@@ -86,7 +86,7 @@ public class DriveConstants {
 
   //balance timer
   // when the balance command starts, it will run the pid normally until
-  // the angle decreases by at least kMaxAngleDiff or until kBalanceNoStopPeriod elapses. 
+  // the angle decreases by at least kMaxAngleDiffDegrees or until kBalanceNoStopPeriod elapses. 
   // Then, every kBalanceStopInterval seconds, it will stop the motors 
   // for kBalanceStopDuration seconds to help give the charge station some time to balance.
   // "A non-linear system requires non-linear control" - jerry
@@ -94,7 +94,7 @@ public class DriveConstants {
   public static double kBalanceNoStopPeriod = 1.2;
   public static double kBalanceStopInterval = 0.3; // 0.5
   public static double kBalanceStopDuration = 0.15;
-  public static double kMaxAngleDiff = 2.5;
+  public static double kMaxAngleDiffDegrees = 2.5;
 
   //translational PID
   public static double kTranslationalP = 0.25;
