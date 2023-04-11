@@ -117,7 +117,7 @@ public class Wrist extends SubsystemBase {
     double feedforwardPower = WristConstants.kGravityCompensation * Math.cos(position);
 
     // set the motor power
-    setMotorPower(feedforwardPower);
+    setMotorPower(m_pidPower + feedforwardPower);
 
     if (Constants.kLogging) updateLogs();
   }
