@@ -189,11 +189,8 @@ public class Wrist extends SubsystemBase {
     // update the physics simulation, telling it how much time has passed, and it will calculate how much the wrist has moved
     m_armSim.update(Constants.kLoopTime);
 
-    // Cleaner encoder implementation: we know the angle now, so set the encoder to that value
-    // ARGH! .setDistance() is setting rotations, so use .set()
-    // This will be fixed in a later WPILIB release: https://github.com/wpilibsuite/allwpilib/pull/5147
-    // m_absEncoderSim.setDistance(m_armSim.getAngleRads());
-    m_absEncoderSim.set(m_armSim.getAngleRads() / m_absEncoder.getDistancePerRotation());
+    // set the distance to what we get from the sim
+    m_absEncoderSim.setDistance(m_armSim.getAngleRads());
 
     // calculate the battery voltage based on the theoretical drawn amps.
     // TODO: this is the wrong way to calculate battery voltage; it needs the sum of all currents.
