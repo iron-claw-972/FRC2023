@@ -21,4 +21,7 @@ public final class Constants {
 
   // this is not a constant...
   public static boolean kUseTelemetry = false;
+
+  // port for the led controller, the Blinkin
+  public static final int kBlinkinPort = 0;
 }

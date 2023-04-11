@@ -16,10 +16,8 @@ public class BalanceCommand extends CommandBase {
   private boolean m_usePitch;
   private boolean m_inverted;
   private boolean m_isStopping = false;
+  private final double m_noStopPeriod;
   private Timer m_timer = new Timer();
-
-  // max angle the robot has seen
-  private double m_maxAngle;  
   
   /**
    * Attempts to balance the robot on the charge station. The robot must start partially on
@@ -31,6 +29,22 @@ public class BalanceCommand extends CommandBase {
   public BalanceCommand(Drivetrain drive) {
     m_drive = drive;
     m_pid = drive.getBalanceController();
+    m_noStopPeriod = DriveConstants.kBalanceNoStopPeriod;
+    addRequirements(drive);
+  }
+
+    /**
+   * Attempts to balance the robot on the charge station. The robot must start partially on
+   * the charge station.
+   * <p>Uses a PID, and after the angle begins to decrease (with a timeout) it will stutter up 
+   * the charge station to allow the charge station to balance naturally. Currently the command does not end.
+   * @param drive the drive subsystem
+   * @param noStopPeriod the length of time not to stop for before stuttering the PID
+   */
+  public BalanceCommand(Drivetrain drive, double noStopPeriod) {
+    m_drive = drive;
+    m_pid = drive.getBalanceController();
+    m_noStopPeriod = noStopPeriod;
     addRequirements(drive);
   }
   
@@ -57,7 +71,7 @@ public class BalanceCommand extends CommandBase {
 
     m_timer.reset();
     m_isStopping = false;
-    m_maxAngle = m_usePitch ? m_drive.getPitch().getDegrees() : m_drive.getRoll().getDegrees();
+    // m_maxAngle = Math.abs(m_usePitch ? m_drive.getPitch().getDegrees() : m_drive.getRoll().getDegrees());
   }
   
   @Override
@@ -86,10 +100,10 @@ public class BalanceCommand extends CommandBase {
     }
 
     // set the max angle in case the angle has increased
-    m_maxAngle = Math.max(m_maxAngle, m_currentAngle);
+    // m_maxAngle = Math.max(Math.abs(m_maxAngle), Math.abs(m_currentAngle));
 
     // if the time has elapsed, or if the angle has changed more than kMaxAngleDiff, start stopping
-    if (m_timer.get() > DriveConstants.kBalanceNoStopPeriod || m_maxAngle - m_currentAngle > DriveConstants.kMaxAngleDiffDegrees) {
+    if (m_timer.get() > DriveConstants.kBalanceNoStopPeriod) {
       m_isStopping = true;
     }
   }

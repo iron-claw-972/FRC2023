@@ -45,7 +45,7 @@ public final class IntakeConstants {
    * This needs to be tested.
    */
   //TODO: set this to a tested value
-  public static final double kIntakeStallTime = 0.15;
+  public static final double kIntakeStallTime = 0.2;
 
   /**
   * Distance sensor value when the game piece is in the center
