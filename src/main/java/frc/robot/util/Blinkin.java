@@ -18,7 +18,7 @@ public class Blinkin {
     getController().set(tableInput);
   }
 
-  public static void setColor(Colors color){
+  public static void setColor(Colors color) {
     getController().set(color.m_id);
   }
 
