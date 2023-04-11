@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.Constants;
+import frc.robot.util.Blinkin;
 import frc.robot.util.LogManager;
 
 /**
@@ -65,7 +66,7 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-
+    Blinkin.colorPeriodic();
     LogManager.log();
   }
 
