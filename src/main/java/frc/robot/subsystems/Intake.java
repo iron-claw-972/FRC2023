@@ -27,7 +27,7 @@ import frc.robot.util.MotorFactory;
 public class Intake extends SubsystemBase {
 
   public enum IntakeMode {
-    INTAKE_CUBE, OUTTAKE_CUBE, OUTTAKE_CUBE_AUTO, INTAKE_CONE, OUTTAKE_CONE, DISABLED
+    INTAKE_CUBE, OUTTAKE_CUBE, OUTTAKE_CUBE_AUTO, INTAKE_CONE, OUTTAKE_CONE, DISABLED, HOLD_GAME_PIECE
   }
 
   private final WPI_TalonFX m_intakeMotor;
@@ -102,6 +102,9 @@ public class Intake extends SubsystemBase {
         break;       
       case DISABLED: 
         m_power = 0;
+        break;
+      case HOLD_GAME_PIECE:
+        m_power = IntakeConstants.kHoldConePower;
         break;
     }
     setMotorPower(m_power);
