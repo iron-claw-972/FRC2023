@@ -54,7 +54,7 @@ public class Blinkin {
     RAINBOW_LAVE_PALETTE(-0.93),
     RAINBOW_FOREST_PALETTE(-0.91),
     RAINBOW_GLITTER(-0.89),
-    CONFETTI(0.87),
+    CONFETTI(-0.87),
     SHOT_RED(-0.85),
     SHOT_BLUE(-0.83),
     SHOT_WHITE(-0.81),

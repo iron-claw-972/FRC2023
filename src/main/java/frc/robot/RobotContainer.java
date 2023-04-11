@@ -210,7 +210,7 @@ public class RobotContainer {
     GenericEntry testEntry = m_testTab.add("Test Results", false).getEntry();
     GenericEntry blinkinId = m_testTab.add("Blinkin Id",0.65).getEntry();
     m_testTab.add("Cancel Command", new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
-    m_testTab.add("Color", new InstantCommand( () -> Blinkin.setTableInput(blinkinId.getDouble(0.65))));
+    m_testTab.add("Color", new InstantCommand( () -> Blinkin.setColor(blinkinId.getDouble(0.65))));
 
     if (m_drive != null) {
       m_drive.addTestCommands(m_testTab, testEntry);
