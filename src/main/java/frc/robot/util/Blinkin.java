@@ -8,7 +8,8 @@ import frc.robot.constants.Constants;
 public class Blinkin {
   
   static private Spark m_ledController;
-  
+  static private double currColor = 0;
+
   /**
    * gets the static instance of the Spark Max controller used for the Blinkin control
    */
@@ -24,16 +25,22 @@ public class Blinkin {
    * 
    * @param tableInput numerical input for Pattern/Color to use
    */
-  public static void setTableInput(double tableInput) {
-    getController().set(tableInput);
+  public static void setColor(double tableInput) {
+    currColor = tableInput;
   }
   /**
    * sets pattern/color for Blinkin using Blinkin enum so you don't need to reference the table for numerical ids in the documentation
    * @param color Pattern/Color to use
    */
   public static void setColor(Colors color) {
-    getController().set(color.m_id);
+    currColor = color.m_id;
   }
+
+  public static void colorPeriodic() {
+    getController().set(currColor);
+  }
+
+ 
 
   /**
    * Blinkin enum contains the numerical ids so you don't need to reference the table for patterns/colors in the documentation
@@ -145,6 +152,9 @@ public class Blinkin {
     public final double m_id;
     Colors(double id){
       m_id = id;
+    }
+    public double getID(){
+      return m_id;
     }
   }
   
