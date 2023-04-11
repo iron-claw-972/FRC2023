@@ -153,9 +153,6 @@ public class Blinkin {
     Colors(double id){
       m_id = id;
     }
-    public double getID(){
-      return m_id;
-    }
   }
   
 }
