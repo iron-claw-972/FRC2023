@@ -27,7 +27,6 @@ public class Wrist extends SubsystemBase {
   protected final DutyCycleEncoder m_absEncoder;
   protected DutyCycleEncoderSim m_absEncoderSim;
 
-  private boolean m_enabled = true;
   private double m_pidPower = 0;
   private double m_power = 0;
   private double m_lastPos = 0;
@@ -148,10 +147,6 @@ public class Wrist extends SubsystemBase {
     }
     
     m_motor.set(m_power);
-  }
-
-  public void setEnabled(boolean enable) {
-    m_enabled = enable;
   }
 
   /**
