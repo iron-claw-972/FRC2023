@@ -328,7 +328,7 @@ public class Elevator extends SubsystemBase {
   @Override
   public void periodic() {
     
-    // automatically calibrate if the limitswitch is on
+    // automatically calibrate if the bottom limitswitch is on
     if (!m_isCalibrated && isBottomLimitSwitchReached()) {
       zeroEncoder();
       toggleSoftLimits(true);
