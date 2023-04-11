@@ -34,9 +34,9 @@ public class WristConstants {
   /** wrist absolute encoder offset (rotations). */
   public static final double kEncoderOffset = 0.687; // Black tread: 0.687, blue tread: 0.704
 
-  public static final double kAutoMiddle = Units.rotationsToRadians(0.132);
-
   public static final double kAutoTop = Units.rotationsToRadians(0.070);
+  public static final double kAutoMiddle = Units.rotationsToRadians(0.132);
+  public static final double kAutoBottom = 1.9;
 
   public static final double kStowPos = 1.95;
   public static final double kBottomNodeCubePos = Units.rotationsToRadians(0.170);

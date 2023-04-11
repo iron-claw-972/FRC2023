@@ -94,7 +94,7 @@ public class DriveConstants {
   public static double kBalanceNoStopPeriod = 1.2;
   public static double kBalanceStopInterval = 0.3; // 0.5
   public static double kBalanceStopDuration = 0.15;
-  public static double kMaxAngleDiffDegrees = 2.5;
+  public static double kMaxAngleDiffDegrees = 1.0;
 
   //translational PID
   public static double kTranslationalP = 0.25;

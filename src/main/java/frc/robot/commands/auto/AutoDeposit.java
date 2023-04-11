@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.DoNothing;
+import frc.robot.commands.scoring.PositionIntake;
 import frc.robot.commands.scoring.Stow;
 import frc.robot.commands.scoring.PositionIntake.Position;
 import frc.robot.commands.scoring.elevator.CalibrateElevator;
@@ -47,16 +48,14 @@ public class AutoDeposit extends SequentialCommandGroup {
   public AutoDeposit(Position depositPosition, GamePieceType gamePieceType, boolean stows, Elevator elevator, Wrist wrist, Intake intake) {
     addRequirements(elevator, wrist, intake);
 
-    Command depositCommand;
+    Command depositCommand = new DoNothing();
 
-    // TODO: Add elevator and wrist constants for cube deposit positions
     if (depositPosition == Position.TOP) {
       depositCommand = new MoveElevator(elevator, ElevatorConstants.kAutoTopCube).alongWith(new RotateWrist(wrist, WristConstants.kTopNodeCubePos));
     } else if (depositPosition == Position.MIDDLE) {
       depositCommand = new MoveElevator(elevator, ElevatorConstants.kAutoMiddle);
     } else {
-      // If hybrid, just shooting the came piece will make it land in the node
-      depositCommand = new DoNothing();
+      depositCommand = new RotateWrist(wrist, WristConstants.kAutoBottom);
     }
 
     if (gamePieceType == GamePieceType.CONE) {

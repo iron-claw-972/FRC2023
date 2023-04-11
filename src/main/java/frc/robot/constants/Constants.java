@@ -20,7 +20,7 @@ public final class Constants {
   public static final boolean kLogging = true;
 
   // this is not a constant...
-  public static boolean kUseTelemetry = false;
+  public static boolean kUseTelemetry = true;
 
   // port for the led controller, the Blinkin
   public static final int kBlinkinPort = 0;
