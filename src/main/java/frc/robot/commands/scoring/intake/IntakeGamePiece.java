@@ -10,7 +10,9 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Intake.IntakeMode;
+import frc.robot.util.Blinkin;
 import frc.robot.util.GamePieceType;
+import frc.robot.util.Blinkin.Colors;
 
 public class IntakeGamePiece extends CommandBase {
 
@@ -64,14 +66,28 @@ public class IntakeGamePiece extends CommandBase {
     if (RobotBase.isSimulation()) return true;
     if (m_runsForever) return false;
 
+    boolean currentAtStopPoint = m_stallDebouncer.calculate(
+      m_intake.getCurrent() >= IntakeConstants.kConeIntakeCurrentStopPoint
+    );
+
     if (m_type == GamePieceType.CUBE) {
-      return m_stallDebouncer.calculate(
-        m_intake.getCurrent() >= IntakeConstants.kCubeIntakeCurrentStopPoint
-      );
+      if (currentAtStopPoint) {
+        Blinkin.setColor(Colors.VIOLET);
+      } else {
+        Blinkin.setColor(Colors.RED);
+      }
+
+      return currentAtStopPoint;
+
     } else if (m_type == GamePieceType.CONE) {
-      return m_stallDebouncer.calculate(
-        m_intake.getCurrent() >= IntakeConstants.kConeIntakeCurrentStopPoint
-      );
+      if (currentAtStopPoint) {
+        Blinkin.setColor(Colors.YELLoW);
+      } else {
+        Blinkin.setColor(Colors.RED);
+      }
+
+      return currentAtStopPoint;
+
     }
     DriverStation.reportWarning("IntakeGamePiece Command missing GamePieceType", false);
     return true;

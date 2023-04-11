@@ -1,18 +1,16 @@
 package frc.robot.util;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.constants.Constants;
 
 public class Blinkin {
   
-  static private CANSparkMax m_ledController;
+  static private Spark m_ledController;
   
-  private static CANSparkMax getController() {
-    if (m_ledController == null) m_ledController = new CANSparkMax(Constants.kBlinkinPort, MotorType.kBrushless);
+  private static Spark getController() {
+    if (m_ledController == null) m_ledController = new Spark(Constants.kBlinkinPort);
     return m_ledController;
   }
   
@@ -24,7 +22,7 @@ public class Blinkin {
     getController().set(color.m_id);
   }
 
-  enum Colors{
+  public enum Colors{
     RAINBOW_RAINBOW_PALETTE(-0.99),
     RAINBOW_PARTY_PALETE(-0.97),
     RAINBOW_OCEAN_PALETTE(-0.95),
