@@ -45,6 +45,8 @@ public class Wrist extends SubsystemBase {
       WristConstants.kPeakCurrentDuration);
     m_motor.setNeutralMode(WristConstants.kNeutralMode);
     m_motor.setInverted(WristConstants.kMotorInvert); 
+
+    m_motor.configVoltageCompSaturation(Constants.kRobotVoltage);
     m_motor.enableVoltageCompensation(true);
 
     // configure the encoder
