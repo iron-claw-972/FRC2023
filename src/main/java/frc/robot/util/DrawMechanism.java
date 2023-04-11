@@ -58,6 +58,10 @@ public class DrawMechanism {
     // purple color for cube intake/outtake - lighter is outtake
     Color8Bit colorIntakeCubeIn = new Color8Bit(69, 1, 115);
     Color8Bit colorIntakeCubeOut = new Color8Bit(184, 93, 245);
+    // color for holding cone in
+    // is green
+    Color8Bit colorHoldGamePiece = new Color8Bit(18, 255,18);
+
 
     private DrawMechanism() {
         // define colors for the linkages
@@ -278,6 +282,9 @@ public class DrawMechanism {
                 break;
             case OUTTAKE_CUBE:
                 m_intake.setColor(colorIntakeCubeOut);
+                break;
+            case HOLD_GAME_PIECE:
+                m_intake.setColor(colorHoldGamePiece);
                 break;
             default:
                 break;
