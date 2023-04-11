@@ -26,12 +26,12 @@ import lib.controllers.PS5Controller.PS5Button;
 /**
  * Driver controls for the PS5 controller
  */
-public class PS5ControllerConfig extends BaseDriverConfig {
+public class PS5ControllerDriverConfig extends BaseDriverConfig {
   
   private final PS5Controller kDriver = new PS5Controller(OIConstants.kDriverJoy);
   private final Operator m_operator;
 
-  public PS5ControllerConfig(Drivetrain drive, DoubleSupplier intakeOffset, Operator operator, ShuffleboardTab controllerTab, boolean shuffleboardUpdates) {
+  public PS5ControllerDriverConfig(Drivetrain drive, DoubleSupplier intakeOffset, Operator operator, ShuffleboardTab controllerTab, boolean shuffleboardUpdates) {
     super(drive, intakeOffset, controllerTab, shuffleboardUpdates);
     m_operator = operator;
   }
