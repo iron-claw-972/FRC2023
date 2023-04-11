@@ -18,11 +18,11 @@ public class BalanceCommand extends CommandBase {
   private boolean m_isStopping = false;
   private Timer m_timer = new Timer();
 
-  // Pitch at the start of the command.
-  private double m_startingAngle;  
+  // max angle the robot has seen
+  private double m_maxAngle;  
   
   // Start stopping once the current angle differs by more than kMaxAngleDiff degrees from 
-  // the m_startingAngle.
+  // the m_maxAngle.
   private static final double kMaxAngleDiff = 2.5;
   
   /**
@@ -61,7 +61,7 @@ public class BalanceCommand extends CommandBase {
 
     m_timer.reset();
     m_isStopping = false;
-    m_startingAngle = m_usePitch ? m_drive.getPitch().getDegrees() : m_drive.getRoll().getDegrees();
+    m_maxAngle = m_usePitch ? m_drive.getPitch().getDegrees() : m_drive.getRoll().getDegrees();
   }
   
   @Override
@@ -92,7 +92,8 @@ public class BalanceCommand extends CommandBase {
       m_isStopping = true;
     }
 
-    if (m_currentAngle - m_startingAngle < -kMaxAngleDiff) {
+    m_maxAngle = Math.max(m_maxAngle, m_currentAngle);
+    if (m_currentAngle - m_maxAngle < -kMaxAngleDiff) {
       m_isStopping = true;
     }
   }
