@@ -31,7 +31,7 @@ public class Blinkin {
    * sets pattern/color for Blinkin using Blinkin enum so you don't need to reference the table for numerical ids in the documentation
    * @param color Pattern/Color to use
    */
-  public static void setColor(Colors color){
+  public static void setColor(Colors color) {
     getController().set(color.m_id);
   }
 
