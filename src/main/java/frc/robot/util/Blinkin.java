@@ -9,19 +9,36 @@ public class Blinkin {
   
   static private Spark m_ledController;
   
+  /**
+   * gets the static instance of the Spark Max controller used for the Blinkin control
+   */
   private static Spark getController() {
     if (m_ledController == null) m_ledController = new Spark(Constants.kBlinkinPort);
     return m_ledController;
   }
   
+  /**
+   * sends a double input to the Blinkin colilationg to a pattern/color to use
+   * the double input's pattern/color is based on the table in the documentation
+   * https://www.revrobotics.com/content/docs/REV-11-1105-UM.pdf
+   * 
+   * @param tableInput numerical input for Pattern/Color to use
+   */
   public static void setTableInput(double tableInput) {
     getController().set(tableInput);
   }
-
+  /**
+   * sets pattern/color for Blinkin using Blinkin enum so you don't need to reference the table for numerical ids in the documentation
+   * @param color Pattern/Color to use
+   */
   public static void setColor(Colors color){
     getController().set(color.m_id);
   }
 
+  /**
+   * Blinkin enum contains the numerical ids so you don't need to reference the table for patterns/colors in the documentation
+   * https://www.revrobotics.com/content/docs/REV-11-1105-UM.pdf
+   */
   public enum Colors{
     RAINBOW_RAINBOW_PALETTE(-0.99),
     RAINBOW_PARTY_PALETTE(-0.97),
@@ -91,6 +108,10 @@ public class Blinkin {
     BREATH_FAST_TWO(0.31),
     SHOT_TWO(0.33),
     STROBE_TWO(0.35),
+    BREATH_SLOW_COLOR_TWO(0.29),
+    BREATH_FAST_COLOR_TWO(0.31),
+    SHOT_COLOR_TWO(0.33),
+    STROBE_COLOR_TWO(0.35),
     SPARKLE_ONE_TWO(0.37),
     SPARKLE_TWO_ONE(0.39),
     COLOR_GRADIENT_ONE_TWO(0.41),
