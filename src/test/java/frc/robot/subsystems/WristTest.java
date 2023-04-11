@@ -52,7 +52,7 @@ public class WristTest {
   @Test
   public void testWristAccuracy() {
     // angular accuracy of the encoder
-    double deltaRadians = 2.0 * Math.PI / 1024.0;
+    double deltaRadians = 2.0 * Math.PI / 1024.0;// resulution of encoder in radians
 
     // convert to arc error
     double arcError = deltaRadians * WristConstants.kLength;
@@ -88,12 +88,12 @@ public class WristTest {
     // System.out.printf(" KtNMPerAmp = %8.4f Nm\n", torqueLimited2);
     assertEquals(torqueLimited, torqueLimited2, 0.001);
 
-    // estimated torque requirement
+    // estimated torque requirement to overcome gravity
     double torqueRequired = 0.67 * WristConstants.kMomentOfInertia / WristConstants.kLength
         * Constants.kGravitationalAccel;
     System.out.printf("Wrist torque                = %8.4f Nm\n", torqueRequired);
 
-    // torque added per tick
+    // torque added per tick (for the PID P output)
     double torqueAdd = WristConstants.kP * (2.0 * Math.PI / 1024.0) * torqueAvailable;
     System.out.printf("Wrist torque step           = %8.4f Nm\n", torqueAdd);
 
