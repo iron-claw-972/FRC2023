@@ -42,7 +42,7 @@ public class Blinkin {
    * Blinkin enum contains the numerical ids so you don't need to reference the table for patterns/colors in the documentation
    * https://www.revrobotics.com/content/docs/REV-11-1105-UM.pdf
    */
-  public enum Colors{
+  public enum Colors {
     // Fixed Palette Pattern
     RAINBOW_RAINBOW_PALETTE(-0.99),
     RAINBOW_PARTY_PALETTE(-0.97),

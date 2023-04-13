@@ -84,7 +84,7 @@ public class IntakeGamePiece extends CommandBase {
         Blinkin.setColor(Colors.VIOLET);
       }
     } else {
-      Blinkin.setColor(Colors.RED);
+      Blinkin.setColor(Colors.STROBE_TWO);
     }
 
     if (m_runsForever) return false;
