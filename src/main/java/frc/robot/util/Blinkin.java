@@ -11,7 +11,7 @@ public class Blinkin {
   private static boolean isDualColor = false;
   private static double[] dualColors;
   private static int dualColorIndex = 0;
-  private static Timer m_timer = new Timer();
+  private static final Timer m_timer = new Timer();
 
   /**
    * gets the static instance of the Spark Max controller used for the Blinkin control
@@ -29,6 +29,7 @@ public class Blinkin {
    * @param tableInput numerical input for Pattern/Color to use
    */
   public static void setColor(double tableInput) {
+    isDualColor = false;
     currColor = tableInput;
   }
   /**
@@ -36,6 +37,7 @@ public class Blinkin {
    * @param color Pattern/Color to use
    */
   public static void setColor(Colors color) {
+    isDualColor = false;
     currColor = color.m_id;
   }
 
@@ -50,17 +52,26 @@ public class Blinkin {
   }
 
   /**
-   * Blinks team colors, orange and black, on Blinkin
+   * Blinks a single color on the LEDs.
+   * @param color
+   */
+  public static void blinkColor(Colors color) {
+    setDualColor(color, Colors.BLACK);
+  }
+
+  /**
+   * Blinks team colors, orange and black, on Blinkin. Black will turn LEDs off, so really only orange is shown.
    */
   public static void blinkTeamColors() {
     setDualColor(Colors.ORANGE, Colors.BLACK);
   }
 
   /**
-   * Periodic method for cycling colors on Blinkin
+   * Periodic method for cycling colors on Blinkin. Checks if timer has passed 0.5 seconds, and if it has
+   * color will be changed.
    */
   public static void dualColorPeriodic() {
-    if (m_timer.hasElapsed(0.6)) {
+    if (m_timer.hasElapsed(0.5)) {
       m_timer.reset();
       if (dualColorIndex == 0) {
         getController().set(dualColors[1]);
