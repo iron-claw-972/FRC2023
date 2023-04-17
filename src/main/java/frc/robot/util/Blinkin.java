@@ -83,7 +83,10 @@ public class Blinkin {
     }
   }
 
-  private static void colorPeriodic() {
+  /**
+   * Periodic method to update the LED colors on the blinkin
+   */
+  public static void colorPeriodic() {
     if (isDualColor) {
       dualColorPeriodic();
     } else {
