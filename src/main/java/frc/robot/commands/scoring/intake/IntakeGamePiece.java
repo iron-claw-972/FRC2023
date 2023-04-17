@@ -84,7 +84,11 @@ public class IntakeGamePiece extends CommandBase {
         Blinkin.setColor(Colors.VIOLET);
       }
     } else {
-      Blinkin.blinkTeamColors();
+      if (m_type == GamePieceType.CONE){
+       Blinkin.blinkColor(Colors.YELLOW);
+      } else {
+        Blinkin.blinkColor(Colors.VIOLET);
+      }
     }
 
     if (m_runsForever) return false;

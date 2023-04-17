@@ -42,7 +42,7 @@ public class Blinkin {
   }
 
   /**
-   * Sets colors for dual color mode. These colors will be cycled on the Blinkin every 600 milliseconds
+   * Sets colors for dual color mode. These colors will be cycled on the Blinkin every 500 milliseconds
    * @param color1 First color to be displayed
    * @param color2 Second color to be displayed
    */
@@ -70,18 +70,20 @@ public class Blinkin {
    * Periodic method for cycling colors on Blinkin. Checks if timer has passed 0.5 seconds, and if it has
    * color will be changed.
    */
-  public static void dualColorPeriodic() {
+  private static void dualColorPeriodic() {
     if (m_timer.hasElapsed(0.5)) {
       m_timer.reset();
       if (dualColorIndex == 0) {
         getController().set(dualColors[1]);
+        dualColorIndex = 1;
       } else if (dualColorIndex == 1) {
         getController().set(dualColors[0]);
+        dualColorIndex = 0;
       }
     }
   }
 
-  public static void colorPeriodic() {
+  private static void colorPeriodic() {
     if (isDualColor) {
       dualColorPeriodic();
     } else {
