@@ -1,12 +1,17 @@
 package frc.robot.util;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import frc.robot.constants.Constants;
 
 public class Blinkin {
   
-  static private Spark m_ledController;
-  static private double currColor = Colors.ORANGE.m_id;
+  private static Spark m_ledController;
+  private static double currColor = Colors.ORANGE.m_id;
+  private static boolean isDualColor = false;
+  private static double[] dualColors;
+  private static int dualColorIndex = 0;
+  private static final Timer m_timer = new Timer();
 
   /**
    * gets the static instance of the Spark Max controller used for the Blinkin control
@@ -24,6 +29,7 @@ public class Blinkin {
    * @param tableInput numerical input for Pattern/Color to use
    */
   public static void setColor(double tableInput) {
+    isDualColor = false;
     currColor = tableInput;
   }
   /**
@@ -31,18 +37,65 @@ public class Blinkin {
    * @param color Pattern/Color to use
    */
   public static void setColor(Colors color) {
+    isDualColor = false;
     currColor = color.m_id;
   }
 
-  public static void colorPeriodic() {
-    getController().set(currColor);
+  /**
+   * Sets colors for dual color mode. These colors will be cycled on the Blinkin every 500 milliseconds
+   * @param color1 First color to be displayed
+   * @param color2 Second color to be displayed
+   */
+  public static void setDualColor(Colors color1, Colors color2) {
+    isDualColor = true;
+    dualColors = new double[] {color1.m_id, color2.m_id};
+  }
+
+  /**
+   * Blinks a single color on the LEDs.
+   * @param color
+   */
+  public static void blinkColor(Colors color) {
+    setDualColor(color, Colors.BLACK);
+  }
+
+  /**
+   * Blinks team colors, orange and black, on Blinkin. Black will turn LEDs off, so really only orange is shown.
+   */
+  public static void blinkTeamColors() {
+    setDualColor(Colors.ORANGE, Colors.BLACK);
+  }
+
+  /**
+   * Periodic method for cycling colors on Blinkin. Checks if timer has passed 0.5 seconds, and if it has
+   * color will be changed.
+   */
+  private static void dualColorPeriodic() {
+    if (m_timer.hasElapsed(0.5)) {
+      m_timer.reset();
+      if (dualColorIndex == 0) {
+        getController().set(dualColors[1]);
+        dualColorIndex = 1;
+      } else if (dualColorIndex == 1) {
+        getController().set(dualColors[0]);
+        dualColorIndex = 0;
+      }
+    }
+  }
+
+  private static void colorPeriodic() {
+    if (isDualColor) {
+      dualColorPeriodic();
+    } else {
+      getController().set(currColor);
+    }
   }
 
   /**
    * Blinkin enum contains the numerical ids so you don't need to reference the table for patterns/colors in the documentation
    * https://www.revrobotics.com/content/docs/REV-11-1105-UM.pdf
    */
-  public enum Colors{
+  public enum Colors {
     // Fixed Palette Pattern
     RAINBOW_RAINBOW_PALETTE(-0.99),
     RAINBOW_PARTY_PALETTE(-0.97),
