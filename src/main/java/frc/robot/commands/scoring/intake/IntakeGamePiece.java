@@ -59,6 +59,7 @@ public class IntakeGamePiece extends CommandBase {
   public void end(boolean interrupted) {
     m_intake.setHeldGamePiece(m_type);
     m_intake.setMode(IntakeMode.DISABLED);
+    Blinkin.setColor(Colors.BLACK);
   }
   
   @Override
@@ -84,8 +85,8 @@ public class IntakeGamePiece extends CommandBase {
         Blinkin.setColor(Colors.VIOLET);
       }
     } else {
-      if (m_type == GamePieceType.CONE){
-       Blinkin.blinkColor(Colors.YELLOW);
+      if (m_type == GamePieceType.CONE) {
+        Blinkin.blinkColor(Colors.YELLOW);
       } else {
         Blinkin.blinkColor(Colors.VIOLET);
       }

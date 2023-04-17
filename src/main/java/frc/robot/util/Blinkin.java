@@ -12,6 +12,7 @@ public class Blinkin {
   private static double[] dualColors;
   private static int dualColorIndex = 0;
   private static final Timer m_timer = new Timer();
+  private static boolean timerRunning = false;
 
   /**
    * gets the static instance of the Spark Max controller used for the Blinkin control
@@ -49,6 +50,7 @@ public class Blinkin {
   public static void setDualColor(Colors color1, Colors color2) {
     isDualColor = true;
     dualColors = new double[] {color1.m_id, color2.m_id};
+    getController().set(dualColors[0]);
   }
 
   /**
