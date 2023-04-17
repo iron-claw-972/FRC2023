@@ -71,8 +71,8 @@ public class Blinkin {
    * color will be changed.
    */
   private static void dualColorPeriodic() {
-    if (m_timer.hasElapsed(0.5)) {
-      m_timer.reset();
+    m_timer.start();
+    if (m_timer.advanceIfElapsed(0.5)) {
       if (dualColorIndex == 0) {
         getController().set(dualColors[1]);
         dualColorIndex = 1;
