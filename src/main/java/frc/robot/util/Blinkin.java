@@ -49,6 +49,7 @@ public class Blinkin {
   public static void setDualColor(Colors color1, Colors color2) {
     isDualColor = true;
     dualColors = new double[] {color1.m_id, color2.m_id};
+    getController().set(dualColors[0]);
   }
 
   /**
@@ -90,6 +91,9 @@ public class Blinkin {
     if (isDualColor) {
       dualColorPeriodic();
     } else {
+      m_timer.reset();
+      m_timer.stop();
+      dualColorIndex = 0;
       getController().set(currColor);
     }
   }
