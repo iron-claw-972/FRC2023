@@ -59,7 +59,7 @@ public class IntakeGamePiece extends CommandBase {
   public void end(boolean interrupted) {
     m_intake.setHeldGamePiece(m_type);
     m_intake.setMode(IntakeMode.DISABLED);
-    Blinkin.setColor(Colors.BLACK);
+    Blinkin.blinkTeamColors();
   }
   
   @Override
