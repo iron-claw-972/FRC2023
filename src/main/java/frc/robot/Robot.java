@@ -75,6 +75,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
+    Blinkin.blinkTeamColors();
     CommandScheduler.getInstance().cancelAll();
   }
 
@@ -90,6 +91,8 @@ public class Robot extends TimedRobot {
 
     m_robotContainer.updateHeldGamePiece();
     m_robotContainer.resetModules();
+
+    Blinkin.blinkTeamColors();
 
     // In auto, only use odometry.
     // Note: some autos reenable vision, ex. grid 1 autos becuase of cable tray

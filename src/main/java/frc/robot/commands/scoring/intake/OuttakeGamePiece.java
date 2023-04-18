@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Intake.IntakeMode;
+import frc.robot.util.Blinkin;
 import frc.robot.util.GamePieceType;
 
 public class OuttakeGamePiece extends CommandBase {
@@ -58,6 +59,7 @@ public class OuttakeGamePiece extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_intake.setMode(IntakeMode.DISABLED);
+    Blinkin.blinkTeamColors();
   }
   
   @Override

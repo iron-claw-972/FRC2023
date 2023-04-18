@@ -12,7 +12,6 @@ public class Blinkin {
   private static double[] dualColors;
   private static int dualColorIndex = 0;
   private static final Timer m_timer = new Timer();
-  private static boolean timerRunning = false;
 
   /**
    * gets the static instance of the Spark Max controller used for the Blinkin control
@@ -92,6 +91,9 @@ public class Blinkin {
     if (isDualColor) {
       dualColorPeriodic();
     } else {
+      m_timer.reset();
+      m_timer.stop();
+      dualColorIndex = 0;
       getController().set(currColor);
     }
   }
