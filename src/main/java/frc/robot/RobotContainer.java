@@ -394,23 +394,22 @@ public class RobotContainer {
                 ))
           ));
 
-      m_autoCommand.addOption("Routine 29: Grid 9 Three Piece",
-          Commands.sequence(
-            new TwoPiece(true, m_drive, m_elevator, m_wrist, m_intake),
-            new PathPlannerCommand("Grid 9 Three Piece", 0, m_drive, false)
-              .alongWith(Commands.sequence( 
-                  new Stow(m_elevator, m_wrist), 
-                  new WaitCommand(0.75),
-                  new PositionIntake(m_elevator, m_wrist, GamePieceType.CUBE, Position.INTAKE)
-                    .alongWith(new IntakeGamePiece(m_intake, GamePieceType.CUBE, false))
-              )),
-            new PathPlannerCommand("Grid 9 Three Piece", 1, m_drive, false)
-              .alongWith(Commands.sequence(
-                new Stow(m_elevator, m_wrist),
-                new WaitCommand(2),
-                new OuttakeGamePiece(m_intake, () -> GamePieceType.CUBE)
-              ))
-          ));
+      m_autoCommand.addOption("Routine 29: Grid 9 Three Piece", Commands.sequence(
+        new TwoPiece(true, m_drive, m_elevator, m_wrist, m_intake),
+        new PathPlannerCommand("Grid 9 Three Piece", 0, m_drive, false)
+          .alongWith(Commands.sequence( 
+            new Stow(m_elevator, m_wrist), 
+            new WaitCommand(0.75),
+            new PositionIntake(m_elevator, m_wrist, GamePieceType.CUBE, Position.INTAKE)
+              .alongWith(new IntakeGamePiece(m_intake, GamePieceType.CUBE, false))
+          )),
+        new PathPlannerCommand("Grid 9 Three Piece", 1, m_drive, false)
+          .alongWith(Commands.sequence(
+            new Stow(m_elevator, m_wrist),
+            new WaitCommand(2),
+            new OuttakeGamePiece(m_intake, () -> GamePieceType.CUBE)
+          ))
+      ));
 
         // m_autoCommand.addOption("Routine 30: Grid 9 Two Piece Intake 1",
         //   Commands.sequence(
@@ -436,8 +435,25 @@ public class RobotContainer {
                 .alongWith(new IntakeGamePiece(m_intake, GamePieceType.CUBE, false)),
               new Stow(m_elevator, m_wrist)
             )),
-          new AutoDeposit(Position.BOTTOM, GamePieceType.CUBE, true, m_elevator, m_wrist, m_intake),
-          new BalanceCommand(m_drive, 0.2)
+            new BalanceCommand(m_drive, 0.2)
+        ));
+
+        m_autoCommand.addOption("Routine 32: Grid 4/6 Engage with Shoot", Commands.sequence(
+          new AutoDeposit(Position.TOP, false, m_elevator, m_wrist, m_intake),
+          new PathPlannerCommand("Grid 6 Engage Intake", 0, m_drive, true)
+            .deadlineWith(Commands.sequence(
+              new Stow(m_elevator, m_wrist),
+              new WaitCommand(2.2),
+              new PositionIntake(m_elevator, m_wrist, GamePieceType.CUBE, Position.INTAKE)
+                .alongWith(new IntakeGamePiece(m_intake, GamePieceType.CUBE, false)),
+              new Stow(m_elevator, m_wrist)
+            )),
+            // move intake up while outtaking - might help shoot cube further
+            new PositionIntake(m_elevator, m_wrist, () -> false, Position.BOTTOM)
+              .alongWith(Commands.sequence(
+                new WaitCommand(0.1),
+                new OuttakeGamePiece(m_intake, () -> GamePieceType.CUBE))),
+            new BalanceCommand(m_drive, 0.2)
         ));
         
 
