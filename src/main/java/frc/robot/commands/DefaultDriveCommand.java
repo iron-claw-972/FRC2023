@@ -59,7 +59,7 @@ public class DefaultDriveCommand extends CommandBase {
         sideTranslation,
         rotation,
         true,
-        true
+        false
       );
     }
   }
