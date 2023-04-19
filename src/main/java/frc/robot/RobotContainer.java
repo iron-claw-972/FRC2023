@@ -358,7 +358,6 @@ public class RobotContainer {
 
       m_autoCommand.addOption("ROUTINE 25: Grid 1 Two Piece Cube Top Engage",
           Commands.sequence(
-              new InstantCommand(() -> setVisionEnabled(true)),
               new TwoPiece(false, m_drive, m_elevator, m_wrist, m_intake),
               new PathPlannerCommand("Grid 1 Two Piece Engage", 0, m_drive, true)
                 .alongWith(new Stow(m_elevator, m_wrist)),
@@ -379,8 +378,6 @@ public class RobotContainer {
       // THREE PIECE ROUTINES
       m_autoCommand.addOption("Routine 28: Grid 1 Three Piece", 
           Commands.sequence(
-              // for grid 1, going over the cable tray, so enable vision
-              new InstantCommand(() -> setVisionEnabled(false)),
               new TwoPiece(false, m_drive, m_elevator, m_wrist, m_intake),
               new PathPlannerCommand("Grid 1 Three Piece", 0, m_drive, false)
                 .alongWith(Commands.sequence(
@@ -430,16 +427,17 @@ public class RobotContainer {
         //   ));
         
         m_autoCommand.addOption("Routine 31: Grid 4/6 Engage with Intake", Commands.sequence(
-          new AutoDeposit(Position.TOP, true, m_elevator, m_wrist, m_intake),
+          new AutoDeposit(Position.TOP, false, m_elevator, m_wrist, m_intake),
           new PathPlannerCommand("Grid 6 Engage Intake", 0, m_drive, true)
             .deadlineWith(Commands.sequence(
+              new Stow(m_elevator, m_wrist),
               new WaitCommand(2.2),
               new PositionIntake(m_elevator, m_wrist, GamePieceType.CUBE, Position.INTAKE)
                 .alongWith(new IntakeGamePiece(m_intake, GamePieceType.CUBE, false)),
               new Stow(m_elevator, m_wrist)
             )),
           new AutoDeposit(Position.BOTTOM, GamePieceType.CUBE, true, m_elevator, m_wrist, m_intake),
-          new BalanceCommand(m_drive, 0.5)
+          new BalanceCommand(m_drive, 0.2)
         ));
         
 
