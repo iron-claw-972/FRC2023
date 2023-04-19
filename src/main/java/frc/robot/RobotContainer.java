@@ -451,8 +451,9 @@ public class RobotContainer {
             // move intake up while outtaking - might help shoot cube further
             new PositionIntake(m_elevator, m_wrist, () -> false, Position.BOTTOM)
               .alongWith(Commands.sequence(
-                new WaitCommand(0.1),
-                new OuttakeGamePiece(m_intake, () -> GamePieceType.CUBE))),
+                new WaitCommand(0.05),
+                new OuttakeGamePiece(m_intake, () -> GamePieceType.CUBE)
+              )),
             new BalanceCommand(m_drive, 0.2)
         ));
         
