@@ -14,9 +14,9 @@ public class WristConstants {
   public static final int kPeakCurrentLimit = 50;
   public static final double kPeakCurrentDuration = 0.5;
 
-  public static final double kP = 2;
+  public static final double kP = 1.5;
   public static final double kI = 0;
-  public static final double kD = 0.07;
+  public static final double kD = 0.0;
   public static final double kF = 0;
 
   /** the gravity compensation amount as a percent of full motor power, scaled by a cosine term (this value is the max FF) */
