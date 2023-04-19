@@ -68,12 +68,12 @@ public class Blinkin {
   }
 
   /**
-   * Periodic method for cycling colors on Blinkin. Checks if timer has passed 0.5 seconds, and if it has
+   * Periodic method for cycling colors on Blinkin. Checks if timer has passed the blink time, and if it has
    * color will be changed.
    */
   private static void dualColorPeriodic() {
     m_timer.start();
-    if (m_timer.advanceIfElapsed(0.5)) {
+    if (m_timer.advanceIfElapsed(0.25)) {
       if (dualColorIndex == 0) {
         getController().set(dualColors[1]);
         dualColorIndex = 1;
