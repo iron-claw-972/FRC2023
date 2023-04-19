@@ -32,7 +32,7 @@ public class ElevatorConstants {
     public static final double kBottomI = 0;
     public static final double kBottomD = 0;
     public static final double kBottomF = 0;
-    public static final double kBottomGravityCompensation = 0.1;
+    public static final double kBottomGravityCompensation = 0.02;
 
     // Slot 1
     public static final double kBottomWithConeP = kBottomP;
@@ -46,7 +46,7 @@ public class ElevatorConstants {
     public static final double kTopI = kBottomI;
     public static final double kTopD = kBottomD;
     public static final double kTopF = kBottomF;
-    public static final double kTopGravityCompensation = 0.3;
+    public static final double kTopGravityCompensation = 0.03;
 
     // Slot 3
     public static final double kTopWithConeP = kTopP;
