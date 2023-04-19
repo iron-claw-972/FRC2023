@@ -50,7 +50,7 @@ public class PS5ControllerDriverConfig extends BaseDriverConfig {
     )));
 
     // set the wheels to X
-    kDriver.get(PS5Button.SQUARE).onTrue(new SetFormationX(super.getDrivetrain()));
+    kDriver.get(PS5Button.SQUARE).whileTrue(new SetFormationX(super.getDrivetrain()));
 
     // Moves to the selected scoring position using Path Planner
     kDriver.get(PS5Button.TRIANGLE).whileTrue(new GoToPose(() -> getNodePose(), getDrivetrain()));

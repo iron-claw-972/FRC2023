@@ -23,6 +23,11 @@ public class DefaultDriveCommand extends CommandBase {
     m_driver = driver;
     addRequirements(swerve);
   }
+  
+  @Override
+  public void initialize() {
+    m_swerve.enableStateDeadband(true);
+  }
 
   @Override
   public void execute() {

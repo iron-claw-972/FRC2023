@@ -20,8 +20,7 @@ public class SetFormationX extends SequentialCommandGroup {
         new SwerveModuleState(0, new Rotation2d(Units.degreesToRadians(-45))),
         new SwerveModuleState(0, new Rotation2d(Units.degreesToRadians(-45))),
         new SwerveModuleState(0, new Rotation2d(Units.degreesToRadians(45)))
-      }), drive),
-      new InstantCommand(() -> drive.enableStateDeadband(true), drive)
+      }), drive)
     );
   }
 }
