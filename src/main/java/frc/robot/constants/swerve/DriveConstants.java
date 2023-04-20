@@ -58,7 +58,7 @@ public class DriveConstants {
   public static int kEncoderFrontLeft = 40;
   public static double kSteerOffsetFrontLeft = 0.058291152119637;//-3.060285486280918+Math.PI;
   
-  public static int kDriveFrontRight = 33; 
+  public static int kDriveFrontRight = 11; 
   public static int kSteerFrontRight = 30;
   public static int kEncoderFrontRight = 41; 
   public static double kSteerOffsetFrontRight = -2.994324445724487;//-3.001994334161282;

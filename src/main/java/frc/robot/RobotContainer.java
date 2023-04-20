@@ -428,33 +428,33 @@ public class RobotContainer {
         m_autoCommand.addOption("Routine 31: Grid 4/6 Engage with Intake", Commands.sequence(
           new AutoDeposit(Position.TOP, false, m_elevator, m_wrist, m_intake),
           new PathPlannerCommand("Grid 6 Engage Intake", 0, m_drive, true)
-            .deadlineWith(Commands.sequence(
+            .alongWith(Commands.sequence(
               new Stow(m_elevator, m_wrist),
               new WaitCommand(2.2),
               new PositionIntake(m_elevator, m_wrist, GamePieceType.CUBE, Position.INTAKE)
-                .alongWith(new IntakeGamePiece(m_intake, GamePieceType.CUBE, false)),
+                .alongWith(new IntakeGamePiece(m_intake, GamePieceType.CUBE, false).withTimeout(1.5)),
               new Stow(m_elevator, m_wrist)
             )),
-            new BalanceCommand(m_drive, 0.2)
+          new BalanceCommand(m_drive, 0.0)
         ));
 
         m_autoCommand.addOption("Routine 32: Grid 4/6 Engage with Shoot", Commands.sequence(
           new AutoDeposit(Position.TOP, false, m_elevator, m_wrist, m_intake),
-          new PathPlannerCommand("Grid 6 Engage Intake", 0, m_drive, true)
+          new PathPlannerCommand("Grid 6 Engage Shoot", 0, m_drive, true)
             .deadlineWith(Commands.sequence(
               new Stow(m_elevator, m_wrist),
               new WaitCommand(2.2),
               new PositionIntake(m_elevator, m_wrist, GamePieceType.CUBE, Position.INTAKE)
-                .alongWith(new IntakeGamePiece(m_intake, GamePieceType.CUBE, false)),
+                .alongWith(new IntakeGamePiece(m_intake, GamePieceType.CUBE, false).withTimeout(1.5)),
               new Stow(m_elevator, m_wrist)
             )),
-            // move intake up while outtaking - might help shoot cube further
-            new PositionIntake(m_elevator, m_wrist, () -> false, Position.BOTTOM)
-              .alongWith(Commands.sequence(
-                new WaitCommand(0.05),
-                new OuttakeGamePiece(m_intake, () -> GamePieceType.CUBE)
-              )),
-            new BalanceCommand(m_drive, 0.2)
+          // move intake up while outtaking - might help shoot cube further
+          new PositionIntake(m_elevator, m_wrist, () -> false, Position.BOTTOM)
+            .alongWith(Commands.sequence(
+              new WaitCommand(0.05),
+              new OuttakeGamePiece(m_intake, () -> GamePieceType.CUBE)
+            )),
+          new BalanceCommand(m_drive, 0.2)
         ));
         
 
