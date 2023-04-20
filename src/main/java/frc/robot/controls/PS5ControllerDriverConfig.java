@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import frc.robot.commands.GoToPose;
 import frc.robot.commands.SetFormationX;
 import frc.robot.commands.auto.BalanceCommand;
@@ -50,7 +51,7 @@ public class PS5ControllerDriverConfig extends BaseDriverConfig {
     )));
 
     // set the wheels to X
-    kDriver.get(PS5Button.SQUARE).whileTrue(new SetFormationX(super.getDrivetrain()));
+    kDriver.get(PS5Button.SQUARE).whileTrue(new RepeatCommand(new SetFormationX(super.getDrivetrain())));
 
     // Moves to the selected scoring position using Path Planner
     kDriver.get(PS5Button.TRIANGLE).whileTrue(new GoToPose(() -> getNodePose(), getDrivetrain()));
