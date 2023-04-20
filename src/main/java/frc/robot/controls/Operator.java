@@ -84,13 +84,14 @@ public class Operator {
         new Stow(elevator, wrist)
       ));
 
+    // LED controls
     m_operator.get(Button.LEFT_JOY).onTrue(new ConditionalCommand(
       new InstantCommand(() -> Blinkin.blinkColor(Colors.YELLOW)),
       new InstantCommand(() -> Blinkin.blinkColor(Colors.VIOLET)), 
       m_operator.RIGHT_TRIGGER_BUTTON));
 
     // outtake
-    m_operator.get(m_operator.LEFT_TRIGGER_BUTTON).onTrue(new OuttakeGamePiece(intake)).onFalse(new Stow(elevator, wrist).andThen(new InstantCommand(() -> intake.setMode(IntakeMode.DISABLED), intake)));
+    m_operator.get(m_operator.LEFT_TRIGGER_BUTTON).whileTrue(new OuttakeGamePiece(intake)).onFalse(new Stow(elevator, wrist));
 
     // spin intake
     m_operator.get(DPad.DOWN).onTrue(new IntakeGamePiece(intake, m_operator.RIGHT_TRIGGER_BUTTON, true)).onFalse(new InstantCommand(() -> intake.setMode(IntakeMode.DISABLED), intake));
