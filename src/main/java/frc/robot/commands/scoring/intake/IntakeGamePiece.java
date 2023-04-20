@@ -79,15 +79,15 @@ public class IntakeGamePiece extends CommandBase {
 
     if (currentAtStopPoint) {
       if (m_type == GamePieceType.CONE) {
-        Blinkin.setColor(Colors.YELLOW);
-      } else {
-        Blinkin.setColor(Colors.VIOLET);
-      }
-    } else {
-      if (m_type == GamePieceType.CONE) {
         Blinkin.blinkColor(Colors.YELLOW);
       } else {
         Blinkin.blinkColor(Colors.VIOLET);
+      }
+    } else {
+      if (m_type == GamePieceType.CONE) {
+        Blinkin.setColor(Colors.YELLOW);
+      } else {
+        Blinkin.setColor(Colors.VIOLET);
       }
     }
 

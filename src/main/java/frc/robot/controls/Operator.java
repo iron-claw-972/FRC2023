@@ -22,9 +22,11 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Intake.IntakeMode;
 import frc.robot.subsystems.Wrist;
+import frc.robot.util.Blinkin;
 import frc.robot.util.GamePieceType;
 import frc.robot.util.Node;
 import frc.robot.util.Vision;
+import frc.robot.util.Blinkin.Colors;
 import lib.controllers.GameController;
 import lib.controllers.GameController.Button;
 import lib.controllers.GameController.DPad;
@@ -81,6 +83,11 @@ public class Operator {
         new InstantCommand(() -> intake.setMode(IntakeMode.DISABLED)),
         new Stow(elevator, wrist)
       ));
+
+    m_operator.get(Button.LEFT_JOY).onTrue(new ConditionalCommand(
+      new InstantCommand(() -> Blinkin.blinkColor(Colors.YELLOW)),
+      new InstantCommand(() -> Blinkin.blinkColor(Colors.VIOLET)), 
+      m_operator.RIGHT_TRIGGER_BUTTON));
 
     // outtake
     m_operator.get(m_operator.LEFT_TRIGGER_BUTTON).onTrue(new OuttakeGamePiece(intake)).onFalse(new Stow(elevator, wrist).andThen(new InstantCommand(() -> intake.setMode(IntakeMode.DISABLED), intake)));
