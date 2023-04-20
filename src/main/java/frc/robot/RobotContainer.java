@@ -398,7 +398,7 @@ public class RobotContainer {
         new TwoPiece(true, m_drive, m_elevator, m_wrist, m_intake),
         new PathPlannerCommand("Grid 9 Three Piece", 0, m_drive, false)
           .alongWith(Commands.sequence( 
-            new Stow(m_elevator, m_wrist), 
+            new Stow(m_elevator, m_wrist),
             new WaitCommand(0.75),
             new PositionIntake(m_elevator, m_wrist, GamePieceType.CUBE, Position.INTAKE)
               .alongWith(new IntakeGamePiece(m_intake, GamePieceType.CUBE, false))
@@ -406,7 +406,7 @@ public class RobotContainer {
         new PathPlannerCommand("Grid 9 Three Piece", 1, m_drive, false)
           .alongWith(Commands.sequence(
             new Stow(m_elevator, m_wrist),
-            new WaitCommand(2),
+            new WaitCommand(1.2),
             new OuttakeGamePiece(m_intake, () -> GamePieceType.CUBE)
           ))
       ));

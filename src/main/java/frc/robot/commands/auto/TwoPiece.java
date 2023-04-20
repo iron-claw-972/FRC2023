@@ -8,7 +8,9 @@ import frc.robot.commands.scoring.Stow;
 import frc.robot.commands.scoring.PositionIntake.Position;
 import frc.robot.commands.scoring.elevator.MoveElevator;
 import frc.robot.commands.scoring.intake.IntakeGamePiece;
+import frc.robot.commands.scoring.wrist.RotateWrist;
 import frc.robot.constants.ElevatorConstants;
+import frc.robot.constants.WristConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
@@ -56,10 +58,10 @@ public class TwoPiece extends SequentialCommandGroup {
         // the commands moving the elevator. AutoDeposit() will start as soon as it finishes driving, which will move the subsystems
         .deadlineWith(Commands.sequence(
           new Stow(elevator, wrist),
-          // if in grid 1, it shouldn't extend the elevator as early 
+          // if in grid 1, it shouldn't extend the elevator/wrist as early 
           // because the robot can tip on the cable tray
           new WaitCommand(isGrid9 ? 1.0 : 3.0),
-          new MoveElevator(elevator, ElevatorConstants.kAutoTopCube)
+          new MoveElevator(elevator, ElevatorConstants.kAutoTopCube).alongWith(new RotateWrist(wrist, WristConstants.kTopNodeCubePos))
         )),
       // And finally, score GP 2! It will not stow, for compatibility with later autos...
       new AutoDeposit(Position.TOP, GamePieceType.CUBE, false, elevator, wrist, intake)
