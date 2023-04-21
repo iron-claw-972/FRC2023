@@ -2,6 +2,8 @@ package frc.robot;
 
 import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -257,14 +259,24 @@ public class RobotContainer {
       //     new AutoDeposit(Position.BOTTOM, true, m_elevator, m_wrist, m_intake),
       //     new PathPlannerCommand("Grid 6 Engage No Mobility", 0, m_drive, true),
       //     new BalanceCommand(m_drive)));
-      // m_autoCommand.addOption("ROUTINE 5: Grid 6 Engage Mid", Commands.sequence(
-      //     new AutoDeposit(Position.MIDDLE, true, m_elevator, m_wrist, m_intake),
-      //     new PathPlannerCommand("Grid 6 Engage No Mobility", 0, m_drive, true),
-      //     new BalanceCommand(m_drive)));
-      m_autoCommand.addOption("ROUTINE 6: Grid 4/6 Engage Top NEW!!", Commands.sequence(
-          new AutoDeposit(Position.TOP, true, m_elevator, m_wrist, m_intake),
-          new PathPlannerCommand("Grid 6 Engage New", 0, m_drive, true),
-          new BalanceCommand(m_drive, 0.7)));
+
+      m_autoCommand.addOption("Just Score", Commands.sequence(
+        // reset yaw to correct direction
+        new InstantCommand(
+          () -> m_drive.setYaw(new Rotation2d(DriverStation.getAlliance() == Alliance.Red ? 0 : Math.PI))
+        ),
+        new AutoDeposit(Position.TOP, GamePieceType.CONE, true, m_elevator, m_wrist, m_intake)
+      ));
+      
+      // m_autoCommand.addOption("ROUTINE 6: Grid 4/6 Engage Top NEW!!", Commands.sequence(
+      //     new AutoDeposit(Position.TOP, true, m_elevator, m_wrist, m_intake),
+      //     new PathPlannerCommand("Grid 6 Engage New", 0, m_drive, true),
+      //     new BalanceCommand(m_drive, 0.7)));
+
+      // m_autoCommand.addOption("SPIN2WIN Engage", Commands.sequence(
+      //   new AutoDeposit(Position.TOP, true, m_elevator, m_wrist, m_intake),
+      //   new PathPlannerCommand("Grid 6 Engage Spin", 0, m_drive, true),
+      //   new BalanceCommand(m_drive, 0.7)));
 
       // m_autoCommand.addOption("ROUTINE 7: Grid 1 Mobility Hybrid", Commands.sequence(
       //     new AutoDeposit(Position.BOTTOM, true, m_elevator, m_wrist, m_intake),
@@ -370,10 +382,10 @@ public class RobotContainer {
                 .alongWith(new Stow(m_elevator, m_wrist)),
               new BalanceCommand(m_drive)));
 
-      m_autoCommand.addOption("Routine 27: Grid 4/6 Engage Mobility", Commands.sequence(
-        new AutoDeposit(Position.TOP, true, m_elevator, m_wrist, m_intake),
-        new PathPlannerCommand("Grid 6 Engage Mobility", 0, m_drive, true),
-        new BalanceCommand(m_drive)));
+      // m_autoCommand.addOption("Routine 27: Grid 4/6 Engage Mobility", Commands.sequence(
+      //   new AutoDeposit(Position.TOP, true, m_elevator, m_wrist, m_intake),
+      //   new PathPlannerCommand("Grid 6 Engage Mobility", 0, m_drive, true),
+      //   new BalanceCommand(m_drive)));
       
       // THREE PIECE ROUTINES
       m_autoCommand.addOption("Routine 28: Grid 1 Three Piece", 
@@ -425,37 +437,60 @@ public class RobotContainer {
         //       .alongWith(new Stow(m_elevator, m_wrist))
         //   ));
         
-        m_autoCommand.addOption("Routine 31: Grid 4/6 Engage with Intake", Commands.sequence(
-          new AutoDeposit(Position.TOP, false, m_elevator, m_wrist, m_intake),
-          new PathPlannerCommand("Grid 6 Engage Intake", 0, m_drive, true)
-            .alongWith(Commands.sequence(
-              new Stow(m_elevator, m_wrist),
-              new WaitCommand(2.2),
-              new PositionIntake(m_elevator, m_wrist, GamePieceType.CUBE, Position.INTAKE)
-                .alongWith(new IntakeGamePiece(m_intake, GamePieceType.CUBE, false).withTimeout(1.5)),
-              new Stow(m_elevator, m_wrist)
-            )),
-          new BalanceCommand(m_drive, 0.0)
-        ));
+        // m_autoCommand.addOption("Routine 31: Grid 4/6 Engage with Intake", Commands.sequence(
+        //   new AutoDeposit(Position.TOP, false, m_elevator, m_wrist, m_intake),
+        //   new PathPlannerCommand("Grid 6 Engage Intake", 0, m_drive, true)
+        //     .alongWith(Commands.sequence(
+        //       new Stow(m_elevator, m_wrist),
+        //       new WaitCommand(2.2),
+        //       new PositionIntake(m_elevator, m_wrist, GamePieceType.CUBE, Position.INTAKE)
+        //         .alongWith(new IntakeGamePiece(m_intake, GamePieceType.CUBE, false).withTimeout(1.5)),
+        //       new Stow(m_elevator, m_wrist)
+        //     )),
+        //   new BalanceCommand(m_drive, 0.0)
+        // ));
 
-        m_autoCommand.addOption("Routine 32: Grid 4/6 Engage with Shoot", Commands.sequence(
-          new AutoDeposit(Position.TOP, false, m_elevator, m_wrist, m_intake),
-          new PathPlannerCommand("Grid 6 Engage Shoot", 0, m_drive, true)
-            .deadlineWith(Commands.sequence(
-              new Stow(m_elevator, m_wrist),
-              new WaitCommand(2.2),
-              new PositionIntake(m_elevator, m_wrist, GamePieceType.CUBE, Position.INTAKE)
-                .alongWith(new IntakeGamePiece(m_intake, GamePieceType.CUBE, false).withTimeout(1.5)),
-              new Stow(m_elevator, m_wrist)
-            )),
-          // move intake up while outtaking - might help shoot cube further
-          new PositionIntake(m_elevator, m_wrist, () -> false, Position.BOTTOM)
-            .alongWith(Commands.sequence(
-              new WaitCommand(0.05),
-              new OuttakeGamePiece(m_intake, () -> GamePieceType.CUBE)
-            )),
-          new BalanceCommand(m_drive, 0.2)
-        ));
+        // m_autoCommand.addOption("Routine XXX: SECRET (WORKING?????) ENGAGE>>???", Commands.sequence(
+        //   new AutoDeposit(Position.TOP, false, m_elevator, m_wrist, m_intake),
+        //   new PathPlannerCommand("Grid 6 Engage Intake", 0, m_drive, true)
+        //     .alongWith(new Stow(m_elevator, m_wrist))
+        //     // won't run full path
+        //     .withTimeout(1.75),
+        //   new BalanceCommand(m_drive, 0.0)
+        // ));
+
+        // m_autoCommand.addOption("Routine 33: PUSH DOWN ENGAGE ?", Commands.sequence(
+        //   new AutoDeposit(Position.TOP, true, m_elevator, m_wrist, m_intake),
+        //   new PathPlannerCommand("Grid 6 Engage Push Down", 0, m_drive, true),
+        //   new PositionIntake(m_elevator, m_wrist, GamePieceType.CUBE, Position.INTAKE),
+        //   new PathPlannerCommand("Grid 6 Engage Push Down", 1, m_drive, true)
+        //     .alongWith(Commands.sequence(new WaitCommand(0.5), new Stow(m_elevator, m_wrist))),
+        //   new BalanceCommand(m_drive, 0.0)
+        // ));
+        
+        // m_autoCommand.addOption("ROUTINE 34: Grid 6 Engage OLD", Commands.sequence(
+        //     new AutoDeposit(Position.TOP, true, m_elevator, m_wrist, m_intake),
+        //     new PathPlannerCommand("Grid 6 Engage No Mobility", 0, m_drive, true),
+        //     new BalanceCommand(m_drive)));
+
+        // m_autoCommand.addOption("Routine 32: Grid 4/6 Engage with Shoot", Commands.sequence(
+        //   new AutoDeposit(Position.TOP, false, m_elevator, m_wrist, m_intake),
+        //   new PathPlannerCommand("Grid 6 Engage Shoot", 0, m_drive, true)
+        //     .deadlineWith(Commands.sequence(
+        //       new Stow(m_elevator, m_wrist),
+        //       new WaitCommand(2.2),
+        //       new PositionIntake(m_elevator, m_wrist, GamePieceType.CUBE, Position.INTAKE)
+        //         .alongWith(new IntakeGamePiece(m_intake, GamePieceType.CUBE, false).withTimeout(1.5)),
+        //       new Stow(m_elevator, m_wrist)
+        //     )),
+        //   // move intake up while outtaking - might help shoot cube further
+        //   new PositionIntake(m_elevator, m_wrist, () -> false, Position.BOTTOM)
+        //     .alongWith(Commands.sequence(
+        //       new WaitCommand(0.05),
+        //       new OuttakeGamePiece(m_intake, () -> GamePieceType.CUBE)
+        //     )),
+        //   new BalanceCommand(m_drive, 0.2)
+        // ));
         
 
         // m_autoCommand.addOption("Routine 30: Grid 9 Three Piece Hybrid",
