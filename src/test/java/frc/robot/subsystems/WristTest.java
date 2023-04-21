@@ -199,7 +199,7 @@ public class WristTest {
     assertTrue(m_wrist.reachedSetpoint());
 
     // change the setpoint
-    m_wrist.setSetpoint(WristConstants.kAutoTop);
+    m_wrist.setSetpoint(WristConstants.kAutoTopCone);
 
     // Iterate
     for (int i = 0; i < 40; i++) {
@@ -208,7 +208,7 @@ public class WristTest {
     }
 
     // make sure we are at the new position
-    assertEquals(WristConstants.kAutoTop, m_wrist.getAbsEncoderPos(), 0.03);
+    assertEquals(WristConstants.kAutoTopCone, m_wrist.getAbsEncoderPos(), 0.03);
 
     assertTrue(m_wrist.reachedSetpoint());
   }

@@ -61,7 +61,7 @@ public class TwoPiece extends SequentialCommandGroup {
           // if in grid 1, it shouldn't extend the elevator/wrist as early 
           // because the robot can tip on the cable tray
           new WaitCommand(isGrid9 ? 1.0 : 3.0),
-          new MoveElevator(elevator, ElevatorConstants.kAutoTopCube).alongWith(new RotateWrist(wrist, WristConstants.kTopNodeCubePos))
+          new MoveElevator(elevator, ElevatorConstants.kTopCubeHeight).alongWith(new RotateWrist(wrist, WristConstants.kTopNodeCubePos))
         )),
       // And finally, score GP 2! It will not stow, for compatibility with later autos...
       new AutoDeposit(Position.TOP, GamePieceType.CUBE, false, elevator, wrist, intake)

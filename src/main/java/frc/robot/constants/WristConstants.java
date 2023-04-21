@@ -34,21 +34,24 @@ public class WristConstants {
   /** wrist absolute encoder offset (rotations). */
   public static final double kEncoderOffset = 0.687; // Black tread: 0.687, blue tread: 0.704
 
-  public static final double kAutoTop = Units.rotationsToRadians(0.070);
-  public static final double kAutoMiddle = Units.rotationsToRadians(0.132);
-
   public static final double kStowPos = 1.95;
+
+  // Cube Positions
   public static final double kBottomNodeCubePos = Units.rotationsToRadians(0.170);
   public static final double kMiddleNodeCubePos = 0.551; //Units.rotationsToRadians(0.170);
   public static final double kTopNodeCubePos = 1.022;
 
+  // Cone positions
   public static final double kBottomNodeConePos = Units.rotationsToRadians(0.070);
   public static final double kMiddleNodeConePos = Units.rotationsToRadians(0.070);
   public static final double kTopNodeConePos = Units.rotationsToRadians(0.070);
+
+  public static final double kAutoTopCone = Units.rotationsToRadians(0.070);
+  public static final double kAutoMiddle = Units.rotationsToRadians(0.132);
   
   public static final double kIntakeConePos = 0.18; // //blue tread: 0.1571; // 0.2199
-  public static final double kIntakeCubePos = 0.1;
-  public static final double kIntakeShelfPos = 0.22;
+  public static final double kIntakeCubePos = 0.055;
+  public static final double kIntakeShelfPos = 0.23;
 
   public static final double kIntakeAltShelfPos = 1.35;
 

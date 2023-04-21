@@ -50,21 +50,22 @@ public class AutoDeposit extends SequentialCommandGroup {
 
     Command depositCommand = new DoNothing();
 
-    if (depositPosition == Position.TOP) {
-      depositCommand = new MoveElevator(elevator, ElevatorConstants.kAutoTopCube).alongWith(new RotateWrist(wrist, WristConstants.kTopNodeCubePos));
-    } else if (depositPosition == Position.MIDDLE) {
-      depositCommand = new MoveElevator(elevator, ElevatorConstants.kAutoMiddle);
-    } else {
-      depositCommand = new PositionIntake(elevator, wrist, () -> false, Position.BOTTOM);
-    }
 
     if (gamePieceType == GamePieceType.CONE) {
+      // Cone scoring
       if (depositPosition == Position.TOP) {
         depositCommand = new MoveElevator(elevator, ElevatorConstants.kAutoTopCone)
-          .alongWith(new WaitCommand(0.6).andThen(new RotateWrist(wrist, WristConstants.kAutoTop)));
+          .alongWith(new WaitCommand(0.6).andThen(new RotateWrist(wrist, WristConstants.kAutoTopCone)));
       } else if (depositPosition == Position.MIDDLE) {
         depositCommand = new MoveElevator(elevator, ElevatorConstants.kAutoMiddle)
           .alongWith(new WaitCommand(0.4).andThen(new RotateWrist(wrist, WristConstants.kAutoMiddle)));
+      }
+    } else {
+      // Cube scoring
+      if (depositPosition == Position.TOP || depositPosition == Position.MIDDLE) {
+        depositCommand = new PositionIntake(elevator, wrist, GamePieceType.CUBE, depositPosition);
+      } else {
+        depositCommand = new PositionIntake(elevator, wrist, () -> false, Position.BOTTOM);
       }
     }
 
