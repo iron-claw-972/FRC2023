@@ -33,8 +33,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.commands.test.CircleDrive;
-import frc.robot.commands.test.DriveFeedForwardCharacterization;
-import frc.robot.commands.test.SteerFeedForwardCharacterizationSingle;
 import frc.robot.commands.test.TestDriveVelocity;
 import frc.robot.commands.test.TestHeadingPID;
 import frc.robot.commands.test.TestSteerAngle;
@@ -515,36 +513,6 @@ public class Drivetrain extends SubsystemBase {
       m_modules[i].stop();
     }
   }
-
-  /**
-   * Sets up feedforward savers.
-   */
-  private void setUpFeedforwardSavers() {
-    m_driveStaticFeedForwardSaver = new Double[] {
-      m_modules[0].getDriveFeedForwardKS(),
-      m_modules[1].getDriveFeedForwardKS(),
-      m_modules[2].getDriveFeedForwardKS(),
-      m_modules[3].getDriveFeedForwardKS()
-    };
-    m_driveVelFeedForwardSaver = new Double[] {
-      m_modules[0].getDriveFeedForwardKV(),
-      m_modules[1].getDriveFeedForwardKV(),
-      m_modules[2].getDriveFeedForwardKV(),
-      m_modules[3].getDriveFeedForwardKV()
-    };
-    m_steerStaticFeedForwardSaver = new Double[] {
-      m_modules[0].getSteerFeedForwardKS(),
-      m_modules[1].getSteerFeedForwardKS(),
-      m_modules[2].getSteerFeedForwardKS(),
-      m_modules[3].getSteerFeedForwardKS()
-    };
-    m_steerVelFeedForwardSaver = new Double[] {
-      m_modules[0].getSteerFeedForwardKV(),
-      m_modules[1].getSteerFeedForwardKV(),
-      m_modules[2].getSteerFeedForwardKV(),
-      m_modules[3].getSteerFeedForwardKV()
-    };
-  }
   
   public Double[] getDriveStaticFeedforwardArray() {
     return m_driveStaticFeedForwardSaver;
@@ -612,8 +580,6 @@ public class Drivetrain extends SubsystemBase {
       m_moduleChooser.addOption("Front Right", m_modules[1]);
       m_moduleChooser.addOption("Back Left", m_modules[2]);
       m_moduleChooser.addOption("Back Right", m_modules[3]);
-
-      setUpFeedforwardSavers();
       
       // inputs
       m_swerveModulesTab.add("Module Chooser", m_moduleChooser);
@@ -713,48 +679,6 @@ public class Drivetrain extends SubsystemBase {
     //   }
     // }
         
-    //set selected module
-    m_moduleChooser.getSelected().setDriveFeedForwardValues(
-      m_driveStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()],
-      m_driveVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]
-    );
-  }
-
-  /**
-   * Updates the steer module feedforward values on shuffleboard.
-   */
-  public void updateSteerModuleFeedforwardShuffleboard() {
-    if (!Constants.kUseTelemetry) return;
-    
-    //revert to previous saved feed forward data if changed
-    if (m_prevModule != m_moduleChooser.getSelected()) {
-      m_steerStaticFeedforwardEntry.setDouble(
-        m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]
-      );
-      m_steerVelocityFeedforwardEntry.setDouble(
-        m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]
-      );
-      m_prevModule = m_moduleChooser.getSelected();
-    }
-    
-    // update saved feedforward data
-    m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()] = 
-      m_steerStaticFeedforwardEntry.getDouble(0);
-    m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()] = 
-      m_steerVelocityFeedforwardEntry.getDouble(0);
-    
-    //to set all modules to same feedforward values if all
-    // if (m_module.getSelected() == m_allModule) {
-    //   for(int i = 0; i < 4; i++) {
-    //     m_modules[i].setDriveFeedForwardValues(m_steerStaticFeedForwardSaver[m_module.getSelected().getId()], m_steerVelFeedForwardSaver[m_module.getSelected().getId()]);
-    //   }
-    // }
-    
-    //set selected module
-    m_moduleChooser.getSelected().setDriveFeedForwardValues(
-      m_steerStaticFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()],
-      m_steerVelFeedForwardSaver[m_moduleChooser.getSelected().getModuleIndex()]
-    );
   }
   
   public Module getModuleChoosen() {
@@ -768,8 +692,6 @@ public class Drivetrain extends SubsystemBase {
   public void addTestCommands(ShuffleboardTab testTab, GenericEntry testEntry)  {
     if (Constants.kUseTelemetry) {
       testTab.add("Circle Drive", new CircleDrive(this));
-      testTab.add("Drive FeedForward", new DriveFeedForwardCharacterization(this));
-      testTab.add("Steer Single FeedForward", new SteerFeedForwardCharacterizationSingle(this));
       testTab.add("Test Drive Velocity", new TestDriveVelocity(this, testEntry));
       testTab.add("Heading PID", new TestHeadingPID(this, testEntry));
       testTab.add("Steer angle", new TestSteerAngle(this, testEntry));

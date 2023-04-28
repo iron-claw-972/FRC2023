@@ -296,14 +296,6 @@ public class Module extends SubsystemBase {
     return getDesiredState().speedMetersPerSecond - getState().speedMetersPerSecond;
   }
 
-  public double getDriveFeedForwardKV() {
-    return DriveConstants.kDriveKV;
-  }
-
-  public double getDriveFeedForwardKS() {
-    return DriveConstants.kDriveKS;
-  }
-
   public void stop() {
     m_driveMotor.set(0);
     m_angleMotor.set(0);
@@ -315,17 +307,6 @@ public class Module extends SubsystemBase {
 
   public void setSteerVoltage(double voltage) {
    //with voltage compensation enabled do not use setVoltage
-  }
-
-  public void setDriveFeedForwardValues(double kS, double kV) {    
-  }
-
-  public double getSteerFeedForwardKV() {
-    return 0;
-  }
-
-  public double getSteerFeedForwardKS() {
-    return 0;
   }
 
   public void setAngle(Rotation2d rotation2d) {
