@@ -75,6 +75,7 @@ public class DriveConstants {
 
   // heading PID
   public static double kHeadingP = 4.6;
+  public static double kHeadingI = 0;
   public static double kHeadingD = 0;
 
   //balance PID
@@ -98,13 +99,16 @@ public class DriveConstants {
 
   //translational PID
   public static double kTranslationalP = 0.25;
+  public static double kTranslationalI = 0;
   public static double kTranslationalD = 0;//0.001
 
   //The PIDs for PathPlanner Command
   public static double kPathplannerHeadingP = 3.5;
+  public static double kPathplannerHeadingI = 0;
   public static double kPathplannerHeadingD = 0;
   
   public static double kPathplannerTranslationalP = 6;
+  public static double kPathplannerTranslationalI = 0;
   public static double kPathplannerTranslationalD = 0;
 
   // CAN
