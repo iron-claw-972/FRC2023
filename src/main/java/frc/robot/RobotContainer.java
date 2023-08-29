@@ -113,7 +113,7 @@ public class RobotContainer {
         m_operator = new Operator();
 
         DoubleSupplier intakeDist = () -> m_intake.getConePos() * (DriverStation.getAlliance() == Alliance.Blue ? 1 : -1);
-        m_driver = new PS5ControllerDriverConfig(m_drive, intakeDist, m_operator, m_controllerTab, false);
+        m_driver = new GameControllerDriverConfig(m_drive, intakeDist, m_operator, m_controllerTab, false);
         m_operator.configureControls(m_wrist, m_intake, m_elevator, m_vision);
         // m_testController.configureControls();
         // m_manualController.configureControls();
