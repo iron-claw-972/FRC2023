@@ -377,16 +377,7 @@ public class Drivetrain extends SubsystemBase {
   public void updateOdometry() {
     // Updates pose based on encoders and gyro. NOTE: must use yaw directly from gyro!
     m_poseEstimator.update(Rotation2d.fromDegrees(m_pigeon.getYaw()), getModulePositions());
-    // if (DriverStation.getAlliance() == Alliance.Blue) {
-    //   m_mechanism.setDistanceToGrid(Math.max(m_poseEstimator.getEstimatedPosition().getX()
-    //   - (FieldConstants.kAprilTags.get(5).pose.getX() + FieldConstants.kAprilTagOffset)
-    //   - DriveConstants.kRobotWidthWithBumpers/2, 0));
-    // }
-    // else {
-    //   m_mechanism.setDistanceToGrid(Math.max(Math.abs(m_poseEstimator.getEstimatedPosition().getX()-FieldConstants.kFieldLength)
-    //   - (FieldConstants.kAprilTags.get(5).pose.getX() + FieldConstants.kAprilTagOffset)
-    //   - DriveConstants.kRobotWidthWithBumpers/2, 0));
-    // }
+
     // Updates pose based on vision
     if (RobotBase.isReal() && m_visionEnabled && VisionConstants.kEnabled) {
 
