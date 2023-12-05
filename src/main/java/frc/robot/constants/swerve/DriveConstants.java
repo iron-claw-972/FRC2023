@@ -58,19 +58,19 @@ public class DriveConstants {
   public static int kEncoderFrontLeft = 40;
   public static double kSteerOffsetFrontLeft = 0.058291152119637;//-3.060285486280918+Math.PI;
   
-  public static int kDriveFrontRight = 11; 
+  public static int kDriveFrontRight = 11;
   public static int kSteerFrontRight = 30;
-  public static int kEncoderFrontRight = 41; 
+  public static int kEncoderFrontRight = 41;
   public static double kSteerOffsetFrontRight = -2.994324445724487;//-3.001994334161282;
   
   public static int kDriveBackLeft = 16;
   public static int kSteerBackLeft = 18;
-  public static int kEncoderBackLeft = 42; 
+  public static int kEncoderBackLeft = 42;
   public static double kSteerOffsetBackLeft = -2.540267050266266;//0.650406539440155+Math.PI;
   
   public static int kDriveBackRight = 32;
   public static int kSteerBackRight = 35;
-  public static int kEncoderBackRight = 43; 
+  public static int kEncoderBackRight = 43;
   public static double kSteerOffsetBackRight = 2.626169800758362;//2.771897681057453;
 
   // heading PID
