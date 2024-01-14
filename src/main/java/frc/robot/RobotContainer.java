@@ -287,7 +287,12 @@ public class RobotContainer {
       m_autoCommand.addOption("ROUTINE 9: Grid 1 Mobility Top", Commands.sequence(
           new AutoDeposit(Position.TOP, true, m_elevator, m_wrist, m_intake),
           new PathPlannerCommand("Grid 1 Mobility", 0, m_drive, true)));
-
+      
+      
+      m_autoCommand.addOption("2024 Test Path", Commands.sequence(
+            new AutoDeposit(Position.TOP, true, m_elevator, m_wrist, m_intake),
+            
+            new PathPlannerCommand("Dream Bottom 4 Piece 4 5", 0, m_drive, true)));
       // m_autoCommand.addOption("ROUTINE 10: Grid 9 Mobility Hybrid", Commands.sequence(
       //     new AutoDeposit(Position.BOTTOM, true, m_elevator, m_wrist, m_intake),
       //     new PathPlannerCommand("Grid 9 Mobility", 0, m_drive, true)));

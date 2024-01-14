@@ -6,7 +6,6 @@ import org.photonvision.EstimatedRobotPose;
 
 import com.ctre.phoenix.sensors.Pigeon2.AxisDirection;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
-import com.pathplanner.lib.PathPlannerTrajectory;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -833,5 +832,9 @@ public class Drivetrain extends SubsystemBase {
     //   desiredStates[7] - actualStates[7]
     // };
     // LogManager.addDoubleArray("Swerve/error swerve states", errorStates);
+  }
+
+  public void setVisionEnabled(boolean enabled){
+    m_visionEnabled = enabled;
   }
 }

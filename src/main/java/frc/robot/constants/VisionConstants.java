@@ -25,6 +25,8 @@ public class VisionConstants {
   // If vision is enabled
   public static final boolean kEnabled = true;
 
+  public static final boolean ENABLED_GO_TO_POSE = true;
+
   // The angle to use charge station vision at in degrees. 
   // If the pitch or the roll of the robot is above this amount, it will trust vision more for a bit.
   public static final double kChargeStationAngle = 2.5;
