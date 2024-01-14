@@ -66,7 +66,7 @@ public class PositionIntake extends SequentialCommandGroup {
           isConeSupplier
         )),
         Map.entry(Position.STOW,
-          new MoveElevator(elevator, ElevatorConstants.kStowHeight).alongWith(new RotateWrist(wrist, WristConstants.kStowPos))
+          new MoveElevator(elevator, ElevatorConstants.kIntakeCubeHeight).alongWith(new RotateWrist(wrist, WristConstants.kIntakeCubePos))
         )
         
       ), () -> position)

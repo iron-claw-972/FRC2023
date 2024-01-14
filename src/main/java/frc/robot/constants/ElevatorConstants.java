@@ -74,7 +74,7 @@ public class ElevatorConstants {
     public static final double kElevatorAngle = Units.degreesToRadians(55.0);
 
     public static final double kIntakeConeHeight = Conversions.ElevatorExtensionToHeight(Units.inchesToMeters(0));
-    public static final double kIntakeCubeHeight = kIntakeConeHeight;
+    public static final double kIntakeCubeHeight = -1;
 
     public static final double kTopConeHeight = Conversions.ElevatorExtensionToHeight(Units.inchesToMeters(46));
     public static final double kTopCubeHeight = 1.363;//Conversions.ElevatorExtensionToHeight(Units.inchesToMeters(44));
